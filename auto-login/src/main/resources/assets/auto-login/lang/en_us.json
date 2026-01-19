@@ -1,0 +1,6 @@
+{
+	"command.autologin.set": "Password saved (encrypted) locally.",
+	"command.autologin.clear": "Saved password cleared.",
+	"command.autologin.toggle.on": "Auto-login enabled.",
+	"command.autologin.toggle.off": "Auto-login disabled."
+}

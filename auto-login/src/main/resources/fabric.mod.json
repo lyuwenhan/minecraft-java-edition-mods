@@ -1,0 +1,21 @@
+{
+	"schemaVersion": 1,
+	"id": "auto-login",
+	"version": "${version}",
+	"name": "Auto Login",
+	"description": "Automatically logs in to auth servers using a locally encrypted password",
+	"authors": [
+		"Wenhan"
+	],
+	"environment": "client",
+	"entrypoints": {
+		"client": [
+			"com.example.autologin.AutoLoginMod"
+		]
+	},
+	"depends": {
+		"fabricloader": ">=0.18.0",
+		"fabric-api": "*",
+		"minecraft": "1.21.11"
+	}
+}
