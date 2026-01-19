@@ -1,7 +1,7 @@
 {
 	"schemaVersion": 1,
 	"id": "hide-password",
-	"version": "1.0.0",
+	"version": "${version}",
 	"name": "Hide Password",
 	"description": "Hide password arguments in chat commands",
 	"authors": [
