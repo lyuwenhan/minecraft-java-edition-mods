@@ -1,0 +1,24 @@
+{
+	"schemaVersion": 1,
+	"id": "hide-password",
+	"version": "1.0.0",
+	"name": "Hide Password",
+	"description": "Hide password arguments in chat commands",
+	"authors": [
+		"Wenhan"
+	],
+	"icon": "assets/hide-password/icon.png",
+	"environment": "client",
+	"entrypoints": {
+		"main": [
+			"com.example.hidepassword.HidePasswordMod"
+		]
+	},
+	"mixins": [
+		"hide-password.mixins.json"
+	],
+	"depends": {
+		"fabricloader": ">=0.18.0",
+		"minecraft": "1.21.11"
+	}
+}
