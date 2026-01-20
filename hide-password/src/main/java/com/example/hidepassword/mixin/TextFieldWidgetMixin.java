@@ -30,6 +30,7 @@ public abstract class TextFieldWidgetMixin {
             "/register",
             "/reg",
             "/changepassword",
+            "/autologin set",
             "/account unregister",
             "/account changepassword"
     );
