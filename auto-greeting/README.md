@@ -39,14 +39,13 @@ Notes:
 ```
 /auto-greeting self status
 /auto-greeting self add Hello
+/auto-greeting self add I'm @player.
 /auto-greeting self list
-/auto-greeting self off
 
 /auto-greeting other status
 /auto-greeting other add Hi @player, welcome!
 /auto-greeting other add Good luck, @player! 1
 /auto-greeting other list
-/auto-greeting other off
 ```
 
 `@player` will be replaced with the target player’s username automatically.
