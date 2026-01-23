@@ -56,12 +56,14 @@ public class AutoGreetingMod implements ClientModInitializer {
 						ctx.getSource().sendFeedback(Text.literal("Auto greeting enabled."));
 						return 1;
 					}))
+					
 					.then(literal("off").executes(ctx -> {
 						CONFIG.selfEnabled = false;
 						CONFIG.save();
 						ctx.getSource().sendFeedback(Text.literal("Auto greeting disabled."));
 						return 1;
 					}))
+
 					.then(literal("toggle").executes(ctx -> {
 						CONFIG.selfEnabled = !CONFIG.selfEnabled;
 						CONFIG.save();
@@ -116,7 +118,6 @@ public class AutoGreetingMod implements ClientModInitializer {
 					}))
 
 					.then(literal("remove")
-
 						.executes(ctx -> {
 							if (CONFIG.selfGreetings.isEmpty()) {
 								ctx.getSource().sendFeedback(Text.literal("Nothing to remove."));
@@ -169,12 +170,14 @@ public class AutoGreetingMod implements ClientModInitializer {
 						ctx.getSource().sendFeedback(Text.literal("Auto greeting enabled."));
 						return 1;
 					}))
+					
 					.then(literal("off").executes(ctx -> {
 						CONFIG.otherEnabled = false;
 						CONFIG.save();
 						ctx.getSource().sendFeedback(Text.literal("Auto greeting disabled."));
 						return 1;
 					}))
+
 					.then(literal("toggle").executes(ctx -> {
 						CONFIG.otherEnabled = !CONFIG.otherEnabled;
 						CONFIG.save();
@@ -185,7 +188,6 @@ public class AutoGreetingMod implements ClientModInitializer {
 					}))
 
 					.then(literal("add")
-
 						.then(argument("message", StringArgumentType.greedyString())
 							.executes(ctx -> {
 								CONFIG.otherGreetings.add(
@@ -230,7 +232,6 @@ public class AutoGreetingMod implements ClientModInitializer {
 					}))
 
 					.then(literal("remove")
-
 						.executes(ctx -> {
 							if (CONFIG.otherGreetings.isEmpty()) {
 								ctx.getSource().sendFeedback(Text.literal("Nothing to remove."));
