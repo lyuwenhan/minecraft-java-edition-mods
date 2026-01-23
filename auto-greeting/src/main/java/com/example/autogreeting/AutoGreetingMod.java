@@ -41,7 +41,6 @@ public class AutoGreetingMod implements ClientModInitializer {
 		});
 
 		ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) -> {
-
 			dispatcher.register(literal("autogreet")
 				.then(literal("self")
 					.then(literal("status").executes(ctx -> {
