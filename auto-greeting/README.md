@@ -12,15 +12,21 @@ Client-side Fabric mod that automatically sends greeting messages when you join 
 ## Commands
 
 ```
-/autogreet status
-/autogreet on
-/autogreet off
-/autogreet toggle
+/auto-greeting self on
+/auto-greeting self off
+/auto-greeting self status
+/auto-greeting self add <message> [index]
+/auto-greeting self remove [index]
+/auto-greeting self removeAll
+/auto-greeting self list
 
-/autogreet add <message> [index]
-/autogreet remove [index]
-/autogreet removeAll
-/autogreet list
+/auto-greeting other on
+/auto-greeting other off
+/auto-greeting other status
+/auto-greeting other add <message> [index]
+/auto-greeting other remove [index]
+/auto-greeting other removeAll
+/auto-greeting other list
 ```
 
 Notes:
@@ -31,14 +37,19 @@ Notes:
 ### Examples
 
 ```
-/autogreet status
-/autogreet add Hello everyone!
-/autogreet add /msg admin hi 1
-/autogreet list
-/autogreet remove 2
-/autogreet remove
-/autogreet removeAll
+/auto-greeting self status
+/auto-greeting self add Hello
+/auto-greeting self list
+/auto-greeting self off
+
+/auto-greeting other status
+/auto-greeting other add Hi @player, welcome!
+/auto-greeting other add Good luck, @player! 1
+/auto-greeting other list
+/auto-greeting other off
 ```
+
+`@player` will be replaced with the target player’s username automatically.
 
 ## Security
 

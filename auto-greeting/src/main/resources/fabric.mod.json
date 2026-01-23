@@ -13,6 +13,9 @@
 			"com.example.autogreeting.AutoGreetingMod"
 		]
 	},
+	"mixins": [
+		"auto-greeting.mixins.json"
+	],
 	"depends": {
 		"fabricloader": ">=0.18.0",
 		"fabric-api": "*",
