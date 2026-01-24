@@ -43,12 +43,6 @@ Client-side Fabric mod that automatically sends greeting messages when you join 
 
 Fully command list are on the bottom
 
-Notes:
-- index is optional and 1-based
-- add <message> [index]: insert as the index-th item (before existing), or append if omitted/out of range
-- remove [index]: remove specified item, or last if omitted
-
-
 ### Self Greeting Placeholders
 
 When sending messages for **yourself** (`/autogreet self ...`), the following placeholders are supported:
@@ -84,25 +78,15 @@ When sending messages for **other players joining** (`/autogreet other ...`), th
 #### Example
 
 ```text
-/autogreet other message add Welcome @player!
-/autogreet other message add Hello @player (@UUID)
+/autogreet other message add "Welcome @player!"
+/autogreet other message add "Hello @player (@UUID)"
 ```
-
-### Escaping Placeholders
-
-To prevent a placeholder from being replaced, prefix it with a backslash (`\`):
-
-```text
-/autogreet self message add This will replace @player
-/autogreet self message add This will show \@player
-```
-
-Result:
-- `@player` → replaced
-- `\@player` → literal `@player`
 
 ### Notes
 
+- index is optional and 1-based
+- add <message> [index]: insert as the index-th item (before existing), or append if omitted/out of range
+- remove [index]: remove specified item, or last if omitted
 - All numeric values are formatted with **up to 3 decimal places**, with trailing zeros removed.
 - Placeholders are replaced **client-side only**.
 - No data is sent to the server beyond normal chat messages.
