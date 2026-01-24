@@ -12,7 +12,6 @@ Client-side Fabric mod that automatically sends greeting messages when you join 
 ## Commands
 
 ```
-
 /autogreet self status
 /autogreet self status enable
 /autogreet self status disable
