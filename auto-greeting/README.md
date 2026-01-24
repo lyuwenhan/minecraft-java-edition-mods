@@ -12,21 +12,124 @@ Client-side Fabric mod that automatically sends greeting messages when you join 
 ## Commands
 
 ```
-/auto-greeting self on
-/auto-greeting self off
-/auto-greeting self status
-/auto-greeting self add <message> [index]
-/auto-greeting self remove [index]
-/auto-greeting self removeAll
-/auto-greeting self list
 
-/auto-greeting other on
-/auto-greeting other off
-/auto-greeting other status
-/auto-greeting other add <message> [index]
-/auto-greeting other remove [index]
-/auto-greeting other removeAll
-/auto-greeting other list
+/autogreet self status
+/autogreet self status enable
+/autogreet self status disable
+/autogreet self status toggle
+
+/autogreet self message add <message>
+/autogreet self message add <message> [index]
+/autogreet self message remove
+/autogreet self message remove [index]
+/autogreet self message remove all
+/autogreet self message list
+
+/autogreet other status
+/autogreet other status enable
+/autogreet other status disable
+/autogreet other status toggle
+
+/autogreet other message add <message>
+/autogreet other message add <message> [index]
+/autogreet other message remove
+/autogreet other message remove [index]
+/autogreet other message remove all
+/autogreet other message list
+
+/autogreet other blacklist match equal add <message>
+/autogreet other blacklist match equal remove
+/autogreet other blacklist match equal remove [index]
+/autogreet other blacklist match equal remove all
+/autogreet other blacklist match equal list
+/autogreet other blacklist match contain add <message>
+/autogreet other blacklist match contain remove
+/autogreet other blacklist match contain remove [index]
+/autogreet other blacklist match contain remove all
+/autogreet other blacklist match contain list
+/autogreet other blacklist match startWith add <message>
+/autogreet other blacklist match startWith remove
+/autogreet other blacklist match startWith remove [index]
+/autogreet other blacklist match startWith remove all
+/autogreet other blacklist match startWith list
+/autogreet other blacklist match endWith add <message>
+/autogreet other blacklist match endWith remove
+/autogreet other blacklist match endWith remove [index]
+/autogreet other blacklist match endWith remove all
+/autogreet other blacklist match endWith list
+/autogreet other blacklist match list
+
+/autogreet other blacklist except equal add <message>
+/autogreet other blacklist except equal remove
+/autogreet other blacklist except equal remove [index]
+/autogreet other blacklist except equal remove all
+/autogreet other blacklist except equal list
+/autogreet other blacklist except contain add <message>
+/autogreet other blacklist except contain remove
+/autogreet other blacklist except contain remove [index]
+/autogreet other blacklist except contain remove all
+/autogreet other blacklist except contain list
+/autogreet other blacklist except startWith add <message>
+/autogreet other blacklist except startWith remove
+/autogreet other blacklist except startWith remove [index]
+/autogreet other blacklist except startWith remove all
+/autogreet other blacklist except startWith list
+/autogreet other blacklist except endWith add <message>
+/autogreet other blacklist except endWith remove
+/autogreet other blacklist except endWith remove [index]
+/autogreet other blacklist except endWith remove all
+/autogreet other blacklist except endWith list
+/autogreet other blacklist except list
+
+/autogreet other blacklist list
+/autogreet other blacklist clear
+
+/autogreet other whitelist match equal add <message>
+/autogreet other whitelist match equal remove
+/autogreet other whitelist match equal remove [index]
+/autogreet other whitelist match equal remove all
+/autogreet other whitelist match equal list
+/autogreet other whitelist match contain add <message>
+/autogreet other whitelist match contain remove
+/autogreet other whitelist match contain remove [index]
+/autogreet other whitelist match contain remove all
+/autogreet other whitelist match contain list
+/autogreet other whitelist match startWith add <message>
+/autogreet other whitelist match startWith remove
+/autogreet other whitelist match startWith remove [index]
+/autogreet other whitelist match startWith remove all
+/autogreet other whitelist match startWith list
+/autogreet other whitelist match endWith add <message>
+/autogreet other whitelist match endWith remove
+/autogreet other whitelist match endWith remove [index]
+/autogreet other whitelist match endWith remove all
+/autogreet other whitelist match endWith list
+/autogreet other whitelist match list
+
+/autogreet other whitelist except equal add <message>
+/autogreet other whitelist except equal remove
+/autogreet other whitelist except equal remove [index]
+/autogreet other whitelist except equal remove all
+/autogreet other whitelist except equal list
+/autogreet other whitelist except contain add <message>
+/autogreet other whitelist except contain remove
+/autogreet other whitelist except contain remove [index]
+/autogreet other whitelist except contain remove all
+/autogreet other whitelist except contain list
+/autogreet other whitelist except startWith add <message>
+/autogreet other whitelist except startWith remove
+/autogreet other whitelist except startWith remove [index]
+/autogreet other whitelist except startWith remove all
+/autogreet other whitelist except startWith list
+/autogreet other whitelist except endWith add <message>
+/autogreet other whitelist except endWith remove
+/autogreet other whitelist except endWith remove [index]
+/autogreet other whitelist except endWith remove all
+/autogreet other whitelist except endWith list
+/autogreet other whitelist except list
+
+/autogreet other whitelist list
+/autogreet other whitelist clear
 ```
 
 Notes:
@@ -37,15 +140,16 @@ Notes:
 ### Examples
 
 ```
-/auto-greeting self status
-/auto-greeting self add Hello
-/auto-greeting self add I'm @player.
-/auto-greeting self list
+/autogreet self status
+/autogreet self add Hello
+/autogreet self add I'm @player.
+/autogreet self list
 
-/auto-greeting other status
-/auto-greeting other add Hi @player, welcome!
-/auto-greeting other add Good luck, @player! 1
-/auto-greeting other list
+/autogreet other status
+/autogreet other add Hi @player, welcome!
+/autogreet other add Good luck, @player! 1
+/autogreet other list
+/autogreet other blacklist match startWith add bot_
 ```
 
 `@player` will be replaced with the target player’s username automatically.
