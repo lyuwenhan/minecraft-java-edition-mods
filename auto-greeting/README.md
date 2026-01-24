@@ -36,6 +36,78 @@ Client-side Fabric mod that automatically sends greeting messages when you join 
 /autogreet other message remove all
 /autogreet other message list
 
+/autogreet other blacklist ...
+/autogreet other whitelist ...
+```
+
+Fully command list are on the bottom
+
+Notes:
+- index is optional and 1-based
+- add <message> [index]: insert as the index-th item (before existing), or append if omitted/out of range
+- remove [index]: remove specified item, or last if omitted
+
+### Examples
+
+```
+/autogreet self status
+/autogreet self add Hello
+/autogreet self add I'm @player.
+/autogreet self list
+
+/autogreet other status
+/autogreet other add Hi @player, welcome!
+/autogreet other add Good luck, @player! 1
+/autogreet other list
+/autogreet other blacklist match startWith add bot_
+```
+
+`@player` will be replaced with the target player’s username automatically.
+
+## Security
+
+- No password storage
+- No encryption
+- No server interaction beyond normal chat
+
+## Supported Versions
+
+- Minecraft 1.21.11
+- Fabric Loader 0.18+
+- Fabric API
+- Java 21
+
+## License
+
+MIT
+
+## Fully command list
+
+```
+/autogreet self status
+/autogreet self status enable
+/autogreet self status disable
+/autogreet self status toggle
+
+/autogreet self message add <message>
+/autogreet self message add <message> [index]
+/autogreet self message remove
+/autogreet self message remove [index]
+/autogreet self message remove all
+/autogreet self message list
+
+/autogreet other status
+/autogreet other status enable
+/autogreet other status disable
+/autogreet other status toggle
+
+/autogreet other message add <message>
+/autogreet other message add <message> [index]
+/autogreet other message remove
+/autogreet other message remove [index]
+/autogreet other message remove all
+/autogreet other message list
+
 /autogreet other blacklist match equal add <message>
 /autogreet other blacklist match equal remove
 /autogreet other blacklist match equal remove [index]
@@ -130,42 +202,3 @@ Client-side Fabric mod that automatically sends greeting messages when you join 
 /autogreet other whitelist list
 /autogreet other whitelist clear
 ```
-
-Notes:
-- index is optional and 1-based
-- add <message> [index]: insert as the index-th item (before existing), or append if omitted/out of range
-- remove [index]: remove specified item, or last if omitted
-
-### Examples
-
-```
-/autogreet self status
-/autogreet self add Hello
-/autogreet self add I'm @player.
-/autogreet self list
-
-/autogreet other status
-/autogreet other add Hi @player, welcome!
-/autogreet other add Good luck, @player! 1
-/autogreet other list
-/autogreet other blacklist match startWith add bot_
-```
-
-`@player` will be replaced with the target player’s username automatically.
-
-## Security
-
-- No password storage
-- No encryption
-- No server interaction beyond normal chat
-
-## Supported Versions
-
-- Minecraft 1.21.11
-- Fabric Loader 0.18+
-- Fabric API
-- Java 21
-
-## License
-
-MIT
