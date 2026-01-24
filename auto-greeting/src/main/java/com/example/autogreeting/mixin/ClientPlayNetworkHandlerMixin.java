@@ -26,6 +26,7 @@ public class ClientPlayNetworkHandlerMixin {
 
 		packet.getEntries().forEach(entry -> {
 			String name = entry.profile().name();
+			String uuid = entry.profile().id().toString();
 
 			if(AutoGreetingMod.CONFIG.otherBlacklist.match(name) && !AutoGreetingMod.CONFIG.otherBlacklistExcept.match(name)) {
 				return;
@@ -39,7 +40,7 @@ public class ClientPlayNetworkHandlerMixin {
 				return;
 			}
 
-			AutoGreetingDelay.greetAfter1Second(name);
+			AutoGreetingDelay.greetAfter1Second(name, uuid);
 		});
 	}
 }

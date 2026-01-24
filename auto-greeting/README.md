@@ -5,6 +5,7 @@ Client-side Fabric mod that automatically sends greeting messages when you join 
 ## Features
 
 - Auto-send chat messages on server join
+- Auto-send chat messages while others join
 - Supports multiple messages
 - Supports commands and plain chat
 - Client-only, safe for multiplayer servers
@@ -47,6 +48,65 @@ Notes:
 - add <message> [index]: insert as the index-th item (before existing), or append if omitted/out of range
 - remove [index]: remove specified item, or last if omitted
 
+
+### Self Greeting Placeholders
+
+When sending messages for **yourself** (`/autogreet self ...`), the following placeholders are supported:
+
+|Placeholder|Description|
+|------------|------------|
+|`@player`|Your player name|
+|`@UUID`|Your UUID|
+|`@X`|Your X coordinate (up to 3 decimals)|
+|`@Y`|Your Y coordinate (up to 3 decimals)|
+|`@Z`|Your Z coordinate (up to 3 decimals)|
+|`@health`|Your current health|
+|`@level`|Your experience level|
+
+#### Example
+
+```text
+/autogreet self message add "Hello, I'm @player at (@X, @Y, @Z)"
+/autogreet self message add "HP: @health|Level: @level"
+```
+
+### Other Player Greeting Placeholders
+
+When sending messages for **other players joining** (`/autogreet other ...`), the following placeholders are supported:
+
+|Placeholder|Description|
+|------------|------------|
+|`@player`|Joining player's name|
+|`@UUID`|Joining player's UUID|
+
+> Note: Position, health, and level placeholders are **not available** for other players.
+
+#### Example
+
+```text
+/autogreet other message add Welcome @player!
+/autogreet other message add Hello @player (@UUID)
+```
+
+### Escaping Placeholders
+
+To prevent a placeholder from being replaced, prefix it with a backslash (`\`):
+
+```text
+/autogreet self message add This will replace @player
+/autogreet self message add This will show \@player
+```
+
+Result:
+- `@player` → replaced
+- `\@player` → literal `@player`
+
+### Notes
+
+- All numeric values are formatted with **up to 3 decimal places**, with trailing zeros removed.
+- Placeholders are replaced **client-side only**.
+- No data is sent to the server beyond normal chat messages.
+
 ### Examples
 
 ```
@@ -61,8 +121,6 @@ Notes:
 /autogreet other list
 /autogreet other blacklist match startWith add bot_
 ```
-
-`@player` will be replaced with the target player’s username automatically.
 
 ## Security
 

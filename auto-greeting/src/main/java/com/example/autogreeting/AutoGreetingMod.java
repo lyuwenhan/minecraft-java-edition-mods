@@ -11,6 +11,8 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.minecraft.text.Text;
 import java.util.ArrayList;
 import java.util.List;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import static net.fabricmc.fabric.api.client.command.v2.ClientCommandManager.*;
 
 public class AutoGreetingMod implements ClientModInitializer {
@@ -147,23 +149,52 @@ public class AutoGreetingMod implements ClientModInitializer {
 		return buildStringListNode(name, title, list, operation, operation);
 	}
 
+	private static String fmt(double v) {
+		return BigDecimal.valueOf(v)
+				.setScale(3, RoundingMode.HALF_UP)
+				.stripTrailingZeros()
+				.toPlainString();
+	}
+
+
 	@Override
 	public void onInitializeClient() {
 		ClientPlayConnectionEvents.JOIN.register((handler, sender, client) -> {
 			AutoGreetingMod.joinWorldAt = System.currentTimeMillis();
-			if (!CONFIG.selfEnabled) return;
+			if (!CONFIG.selfEnabled) {
+				return;
+			}
 
 			client.execute(() -> {
-				if (client.player == null) return;
+				if (client.player == null) {
+					return;
+				}
 
 				String playerName = client.player.getName().getString();
+				String playerUUID = client.player.getUuid().toString();
+
+				String playerX = fmt(client.player.getX());
+				String playerY = fmt(client.player.getY());
+				String playerZ = fmt(client.player.getZ());
+
+				String health = fmt(client.player.getHealth());
+				String level = Integer.toString(client.player.experienceLevel);
 
 				for (String msg : CONFIG.selfGreetings) {
-					if (msg == null || msg.isBlank()) continue;
+					if (msg == null || msg.isBlank()) {
+						continue;
+					}
 
 					msg = msg.trim();
 
-					String finalMsg = msg.replace("@player", playerName);
+					String finalMsg = msg
+						.replace("@player", playerName)
+						.replace("@UUID", playerUUID)
+						.replace("@X", playerX)
+						.replace("@Y", playerY)
+						.replace("@Z", playerZ)
+						.replace("@health", health)
+						.replace("@level", level);
 					if (msg.startsWith("/")) {
 						client.player.networkHandler.sendChatCommand(finalMsg.substring(1));
 					} else {

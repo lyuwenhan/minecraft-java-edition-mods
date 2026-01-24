@@ -8,50 +8,79 @@ import java.util.Iterator;
 import java.util.Map;
 
 public class AutoGreetingDelay {
-	private static final Map<String, Integer> pending = new HashMap<>();
+
+	private static final Map<String, PendingGreeting> pending = new HashMap<>();
 	private static boolean registered = false;
 
-	public static void greetAfter1Second(String playerName) {
-		pending.put(playerName, 20);
+	public static void greetAfter1Second(String playerName, String uuid) {
+		if (pending.containsKey(uuid)) {
+			return;
+		}
+
+		pending.put(uuid, new PendingGreeting(playerName, uuid, 20));
 		registerIfNeeded();
 	}
 
 	private static void registerIfNeeded() {
-		if (registered) return;
+		if (registered) {
+			return;
+		}
 		registered = true;
 
 		ClientTickEvents.END_CLIENT_TICK.register(client -> {
-			if (client.player == null) return;
+			if (client.player == null) {
+				return;
+			}
+			if (pending.isEmpty()) {
+				return;
+			}
 
-			Iterator<Map.Entry<String, Integer>> it = pending.entrySet().iterator();
+			Iterator<PendingGreeting> it = pending.values().iterator();
 			while (it.hasNext()) {
-				Map.Entry<String, Integer> e = it.next();
-				int left = e.getValue() - 1;
+				PendingGreeting p = it.next();
+				p.ticksLeft--;
 
-				if (left <= 0) {
-					if (!AutoGreetingMod.CONFIG.otherEnabled) {
-						it.remove();
+				if (p.ticksLeft > 0) {
+					continue;
+				}
+
+				if (!AutoGreetingMod.CONFIG.otherEnabled) {
+					it.remove();
+					continue;
+				}
+
+				for (String msg : AutoGreetingMod.CONFIG.otherGreetings) {
+					if (msg == null || msg.isBlank()) {
 						continue;
 					}
 
-					for (String msg : AutoGreetingMod.CONFIG.otherGreetings) {
-						if (msg == null || msg.isBlank()) continue;
+					msg = msg.trim();
 
-						msg = msg.trim();
+					String finalMsg = msg
+						.replace("@player", p.playerName)
+						.replace("@UUID", p.uuid);
 
-						String finalMsg = msg.replace("@player", e.getKey());
-
-						if (msg.startsWith("/")) {
-							client.player.networkHandler.sendChatCommand(finalMsg.substring(1));
-						} else {
-							client.player.networkHandler.sendChatMessage(finalMsg);
-						}
+					if (msg.startsWith("/")) {
+						client.player.networkHandler.sendChatCommand(finalMsg.substring(1));
+					} else {
+						client.player.networkHandler.sendChatMessage(finalMsg);
 					}
-					it.remove();
-				} else {
-					e.setValue(left);
 				}
+
+				it.remove();
 			}
 		});
+	}
+
+	private static class PendingGreeting {
+		final String playerName;
+		final String uuid;
+		int ticksLeft;
+
+		PendingGreeting(String playerName, String uuid, int ticksLeft) {
+			this.playerName = playerName;
+			this.uuid = uuid;
+			this.ticksLeft = ticksLeft;
+		}
 	}
 }
