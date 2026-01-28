@@ -1,0 +1,24 @@
+{
+	"schemaVersion": 1,
+	"id": "player-highlighter",
+	"version": "${version}",
+	"name": "Player highlighter",
+	"description": "Client-side Fabric mod that renders all players with a glowing outline, independent of server-side effects..",
+	"authors": [
+		"Wenhan"
+	],
+	"environment": "client",
+	"entrypoints": {
+		"client": [
+			"com.example.playerhighlighter.PlayerHighlighterMod"
+		]
+	},
+	"mixins": [
+		"playerhighlighter.mixins.json"
+	],
+	"depends": {
+		"fabricloader": ">=0.18.0",
+		"fabric-api": "*",
+		"minecraft": "1.21.11"
+	}
+}
