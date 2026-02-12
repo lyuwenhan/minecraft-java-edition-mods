@@ -49,7 +49,7 @@ public class PlayerHighlighterMod implements ClientModInitializer {
 						net.minecraft.text.Text.literal(
 							"Keep Player Highlight: " + (config.keep ? "ON" : "OFF")
 						),
-						false
+						true
 					);
 				}
 			}

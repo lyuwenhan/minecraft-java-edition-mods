@@ -17,7 +17,7 @@ import java.util.List;
 
 public final class HudIconRenderer {
 
-	private static final Identifier ICON = Identifier.of("playerhighlighter", "textures/gui/target.png");
+	private static final Identifier ICON = Identifier.of("player-highlighter", "textures/gui/target.png");
 
 	public static void register() {
 		HudRenderCallback.EVENT.register(HudIconRenderer::render);
