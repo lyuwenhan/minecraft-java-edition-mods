@@ -1,0 +1,54 @@
+name: Build Needed Chrome Extensions
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - "data/**"
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+
+      - run: chmod +x ./gradlew
+
+      - name: Run build script
+        id: build
+        continue-on-error: true
+        run: node scripts/build-if-needed.js
+
+      - name: Commit and push status updates
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          if [ -n "$(git status --porcelain)" ]; then
+            git add .
+            git commit -m "Auto-build chrome extensions by github-actions[bot]"
+            git push
+          else
+            echo "No changes detected, skipping commit."
+          fi
+
+      - name: Fail workflow if build failed
+        if: steps.build.outcome == 'failure'
+        run: |
+          echo "Build failed."
+          exit 1
