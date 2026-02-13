@@ -42,9 +42,8 @@ for (const dir of dirs) {
 				recursive: true
 			});
 			const settingPath = path.join(extPath, "build.gradle");
-			const version = fs.readFileSync(settingPath, "utf8")?.match(/^version = "(.+)"$/)?.[1];
+			const version = fs.readFileSync(settingPath, "utf8")?.match(/^version = "(.+)"/)?.[1];
 			if (!version) {
-				hasError = true;
 				console.warn(`${dir}: Version not found.`);
 				continue
 			}
@@ -72,13 +71,17 @@ for (const dir of dirs) {
 			});
 			const exportPath = path.join(extPath, "build", "libs", `${dir}-${version}.jar`);
 			if (fs.existsSync(exportPath)) {
-				const targetPath = path.join(extensionsDir, "jars", `${dir}-${version}.jar`);
+				const jarDir = path.join(extensionsDir, "jars");
+				fs.mkdirSync(jarDir, {
+					recursive: true
+				});
+				const targetPath = path.join(jarDir, `${dir}-${version}.jar`);
 				fs.copyFileSync(exportPath, targetPath);
 				console.log(`README copied: ${exportPath} -> ${targetPath}`)
 			} else {
 				hasError = true;
-				console.warn(`Exported jar not found`)
-				continue;
+				console.warn(`Exported jar not found`);
+				continue
 			}
 			const manifestPath = path.join(extPath, "src", "main", "resources", "fabric.mod.json");
 			const manifest = JSON.parse(fs.readFileSync(manifestPath, "utf8"));
