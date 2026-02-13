@@ -7,7 +7,7 @@
 	"authors": [
 		"Wenhan"
 	],
-	"icon": "assets/hide-password/icon.png",
+	"icon": "assets/player-highlighter/icon.png",
 	"environment": "client",
 	"entrypoints": {
 		"main": [
