@@ -7,9 +7,10 @@
 	"authors": [
 		"Wenhan"
 	],
+	"icon": "assets/hide-password/icon.png",
 	"environment": "client",
 	"entrypoints": {
-		"client": [
+		"main": [
 			"com.example.playerhighlighter.PlayerHighlighterMod"
 		]
 	},
@@ -18,7 +19,6 @@
 	],
 	"depends": {
 		"fabricloader": ">=0.18.0",
-		"fabric-api": "*",
 		"minecraft": "1.21.11"
 	}
 }
