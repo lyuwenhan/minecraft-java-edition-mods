@@ -26,8 +26,7 @@ jobs:
         with:
           distribution: temurin
           java-version: 21
-
-      - uses: gradle/gradle-build-action@v3
+          cache: gradle
 
       - run: chmod +x ./gradlew
 
