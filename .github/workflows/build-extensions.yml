@@ -6,7 +6,7 @@ on:
     branches:
       - main
     paths-ignore:
-      - "data/**"
+      - "docs/**"
 
 permissions:
   contents: write
@@ -26,6 +26,8 @@ jobs:
         with:
           distribution: temurin
           java-version: 21
+
+      - uses: gradle/gradle-build-action@v3
 
       - run: chmod +x ./gradlew
 
