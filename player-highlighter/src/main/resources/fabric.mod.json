@@ -10,7 +10,7 @@
 	"icon": "assets/player-highlighter/icon.png",
 	"environment": "client",
 	"entrypoints": {
-		"main": [
+		"client": [
 			"com.example.playerhighlighter.PlayerHighlighterMod"
 		]
 	},
