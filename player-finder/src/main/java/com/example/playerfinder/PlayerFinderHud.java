@@ -2,18 +2,18 @@ package com.example.playerfinder;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.world.ClientWorld;
+import net.minecraft.entity.Entity;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 
 public class PlayerFinderHud {
 	public static void render(DrawContext context) {
 		MinecraftClient client = MinecraftClient.getInstance();
-		ClientPlayerEntity self = client.player;
 		ClientWorld world = client.world;
+		Entity camera = client.getCameraEntity();
 
-		if (self == null || world == null) return;
+		if (camera == null || world == null) return;
 		if (client.options.hudHidden) return;
 
 		int baseX = 8;
@@ -21,10 +21,10 @@ public class PlayerFinderHud {
 		int screenHeight = context.getScaledWindowHeight();
 		int y = screenHeight - 22 - 8;
 
-		Vec3d selfPos = new Vec3d(self.getX(), self.getY(), self.getZ());
+		Vec3d cameraPos = new Vec3d(camera.getX(), camera.getY(), camera.getZ());
 
 		for (var player : world.getPlayers()) {
-			if (player == self) continue;
+			if (player == camera) continue;
 
 			Vec3d targetPos = new Vec3d(
 					player.getX(),
@@ -32,11 +32,11 @@ public class PlayerFinderHud {
 					player.getZ()
 			);
 
-			double dx = targetPos.x - selfPos.x;
-			double dz = targetPos.z - selfPos.z;
+			double dx = targetPos.x - cameraPos.x;
+			double dz = targetPos.z - cameraPos.z;
 
 			int distance = (int) Math.sqrt(dx * dx + dz * dz);
-			String arrow = getArrow(self, targetPos);
+			String arrow = getArrow(camera, targetPos);
 			float health = player.getHealth();
 
 			int x = baseX;
@@ -78,7 +78,7 @@ public class PlayerFinderHud {
 		}
 	}
 
-	private static String getArrow(ClientPlayerEntity self, Vec3d targetPos) {
+	private static String getArrow(Entity self, Vec3d targetPos) {
 		Vec3d selfPos = new Vec3d(self.getX(), self.getY(), self.getZ());
 
 		double dx = targetPos.x - selfPos.x;
