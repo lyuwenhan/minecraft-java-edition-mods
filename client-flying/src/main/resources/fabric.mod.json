@@ -1,0 +1,22 @@
+{
+	"schemaVersion": 1,
+	"id": "client-flying",
+	"version": "${version}",
+	"name": "Client Flying",
+	"description": "A client-side Fabric mod that enables flight in Survival and Adventure modes while automatically handling Elytra conflicts and continuously syncing movement behavior.",
+	"authors": [
+		"Wenhan"
+	],
+	"icon": "assets/client-flying/icon.png",
+	"environment": "client",
+	"entrypoints": {
+		"client": [
+			"com.example.clientflying.ClientFlyingMod"
+		]
+	},
+	"depends": {
+		"fabricloader": ">=0.18.0",
+		"fabric-api": "*",
+		"minecraft": "1.21.11"
+	}
+}
