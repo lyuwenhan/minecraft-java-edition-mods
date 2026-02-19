@@ -34,7 +34,7 @@ public class ClientFlyingMod implements ClientModInitializer {
 				}
 				ClientPlayNetworkHandler net = client.getNetworkHandler();
 				if (net != null){
-					if(isElytra && (needEly || client.player.isGliding())){
+					if(isElytra){
 						if(needEly){
 							net.sendPacket(new ClientCommandC2SPacket(
 								client.player,
