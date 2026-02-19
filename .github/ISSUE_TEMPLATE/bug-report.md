@@ -2,6 +2,7 @@
 name: Bug report - <Mod name> - <Version>
 about: Create a report to help us improve
 title: Bug report - <Mod name> - <Version>
+labels: bug
 assignees: lyuwenhan
 
 ---
