@@ -23,28 +23,39 @@ public class ClientFlyingMod implements ClientModInitializer {
 				ItemStack chestStack = client.player.getEquippedStack(EquipmentSlot.CHEST);
 				boolean isElytra = chestStack.isOf(Items.ELYTRA);
 				boolean isInAir = !client.player.isOnGround();
+				boolean needEly = false;
 				if (isOkMode) {
 					if(isInAir && isElytra == client.player.getAbilities().allowFlying){
 						client.player.getAbilities().flying = !isElytra;
+						needEly = isElytra;
 					}
 					client.player.getAbilities().allowFlying = !isElytra;
 					client.player.sendAbilitiesUpdate();
 				}
 				ClientPlayNetworkHandler net = client.getNetworkHandler();
 				if (net != null){
-					double x = client.player.getX();
-					double y = client.player.getY();
-					double z = client.player.getZ();
+					if(isElytra && (needEly || client.player.isGliding())){
+						if(needEly){
+							net.sendPacket(new ClientCommandC2SPacket(
+								client.player,
+								ClientCommandC2SPacket.Mode.START_FALL_FLYING
+							));
+						}
+					}else{
+						double x = client.player.getX();
+						double y = client.player.getY();
+						double z = client.player.getZ();
 
-					float yaw = client.player.getYaw();
-					float pitch = client.player.getPitch();
+						float yaw = client.player.getYaw();
+						float pitch = client.player.getPitch();
 
-					net.sendPacket(new PlayerMoveC2SPacket.Full(
-						x, y, z,
-						yaw, pitch,
-						true,
-						client.player.horizontalCollision
-					));
+						net.sendPacket(new PlayerMoveC2SPacket.Full(
+							x, y, z,
+							yaw, pitch,
+							true,
+							client.player.horizontalCollision
+						));
+					}
 				}
 			}
 		});
