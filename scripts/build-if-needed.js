@@ -74,7 +74,7 @@ for (const dir of dirs) {
 			if (fs.existsSync(exportPath)) {
 				const targetPath = path.join(jarDir, `${dir}-${version}.jar`);
 				fs.copyFileSync(exportPath, targetPath);
-				console.log(`README copied: ${exportPath} -> ${targetPath}`)
+				console.log(`Exported jar copied: ${exportPath} -> ${targetPath}`)
 			} else {
 				hasError = true;
 				console.warn(`Exported jar not found`);
