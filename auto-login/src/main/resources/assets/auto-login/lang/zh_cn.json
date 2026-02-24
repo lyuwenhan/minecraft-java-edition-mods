@@ -1,0 +1,6 @@
+{
+	"command.autologin.set": "密码（加密后）已成功保存至本地。",
+	"command.autologin.clear": "本地存储的密码已删除。",
+	"command.autologin.toggle.on": "自动登录功能已启用。",
+	"command.autologin.toggle.off": "自动登录功能已禁用。"
+}
