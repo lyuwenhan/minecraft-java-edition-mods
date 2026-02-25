@@ -45,9 +45,7 @@ public class AutoLoginMod implements ClientModInitializer {
 								MinecraftClient mc = MinecraftClient.getInstance();
 								ServerInfo server = mc.getCurrentServerEntry();
 								if (server == null) {
-									ctx.getSource().sendFeedback(
-										Text.literal("Not connected to a server.")
-									);
+									ctx.getSource().sendFeedback(Text.literal("Not connected to a server."));
 									return 0;
 								}
 
@@ -68,13 +66,9 @@ public class AutoLoginMod implements ClientModInitializer {
 									cfg.servers.put(server.address, cred);
 									cfg.save();
 
-									ctx.getSource().sendFeedback(
-										Text.translatable("command.autologin.set")
-									);
+									ctx.getSource().sendFeedback(Text.translatable("command.autologin.set"));
 								} catch (Exception e) {
-									ctx.getSource().sendFeedback(
-										Text.literal("Failed to save password.")
-									);
+									ctx.getSource().sendFeedback(Text.literal("Failed to save password."));
 								}
 								return 1;
 							})
@@ -84,9 +78,7 @@ public class AutoLoginMod implements ClientModInitializer {
 					.then(literal("login").executes(ctx -> {
 						MinecraftClient mc = MinecraftClient.getInstance();
 						mc.execute(() -> tryAutoLogin(mc));
-						ctx.getSource().sendFeedback(
-							Text.literal("Auto-login executed.")
-						);
+						ctx.getSource().sendFeedback(Text.literal("Auto-login executed."));
 						return 1;
 					}))
 
@@ -101,25 +93,19 @@ public class AutoLoginMod implements ClientModInitializer {
 						cfg.servers.remove(server.address);
 						cfg.save();
 
-						ctx.getSource().sendFeedback(
-							Text.translatable("command.autologin.clear")
-						);
+						ctx.getSource().sendFeedback(Text.translatable("command.autologin.clear"));
 						return 1;
 					}))
 
 					.then(literal("on").executes(ctx -> {
 						toggleForCurrentServer(true);
-						ctx.getSource().sendFeedback(
-							Text.translatable("command.autologin.toggle.on")
-						);
+						ctx.getSource().sendFeedback(Text.translatable("command.autologin.toggle.on"));
 						return 1;
 					}))
 
 					.then(literal("off").executes(ctx -> {
 						toggleForCurrentServer(false);
-						ctx.getSource().sendFeedback(
-							Text.translatable("command.autologin.toggle.off")
-						);
+						ctx.getSource().sendFeedback(Text.translatable("command.autologin.toggle.off"));
 						return 1;
 					}))
 			);
@@ -163,8 +149,7 @@ public class AutoLoginMod implements ClientModInitializer {
 	}
 
 	private static char[] masterKey() {
-		String s = System.getProperty("user.name")
-				 + System.getProperty("os.name");
+		String s = System.getProperty("user.name") + System.getProperty("os.name");
 		return s.toCharArray();
 	}
 }
