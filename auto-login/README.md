@@ -1,3 +1,5 @@
+# 语言/Language
+[中文](README_CN.md) ｜[EN](README.md)
 # Auto Login
 
 Client-side Fabric mod that automatically logs you into
