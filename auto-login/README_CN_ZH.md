@@ -1,5 +1,7 @@
-# 语言/Language
-[中文](README_CN.md) ｜[EN](README.md)
+# Language/语言
+
+[EN/English](README.md) | [CN-ZH/中文](README_CN_ZH.md)
+
 # 自动登录 
 
 一个客户端 Fabric 模组，可在加入需要认证的 Minecraft 服务器（如 EasyAuth、AuthMe）时自动登录，密码采用本地加密存储。
