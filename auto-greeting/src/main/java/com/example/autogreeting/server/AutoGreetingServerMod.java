@@ -33,8 +33,7 @@ public class AutoGreetingServerMod implements DedicatedServerModInitializer {
 
 		int i = 1;
 		for (String s : list) {
-			int index = i++;
-			src.sendFeedback(() -> Text.literal(index + ". " + s), false);
+			src.sendFeedback(() -> Text.literal(i++ + ". " + s), false);
 		}
 	}
 
@@ -45,20 +44,18 @@ public class AutoGreetingServerMod implements DedicatedServerModInitializer {
 		boolean allowDupe,
 		boolean allowAddIndex
 	) {
-		RequiredArgumentBuilder<ServerCommandSource, String> addArg =
-			argument("message", StringArgumentType.greedyString())
-				.executes(ctx -> {
-					String msg = StringArgumentType.getString(ctx, "message");
-					if (!allowDupe && list.contains(msg)) {
-						ctx.getSource().sendFeedback(() -> Text.literal(title + ": \"" + msg + "\" already exists."), false);
-						return 1;
-					}
-					list.add(msg);
-					CONFIG.save();
-					ctx.getSource().sendFeedback(() -> Text.literal(title + ": appended \"" + msg + "\"."), false);
-					return 1;
-				});
-
+		RequiredArgumentBuilder<ServerCommandSource, String> addArg = argument("message", StringArgumentType.greedyString())
+		.executes(ctx -> {
+			String msg = StringArgumentType.getString(ctx, "message");
+			if (!allowDupe && list.contains(msg)) {
+				ctx.getSource().sendFeedback(() -> Text.literal(title + ": \"" + msg + "\" already exists."), false);
+				return 1;
+			}
+			list.add(msg);
+			CONFIG.save();
+			ctx.getSource().sendFeedback(() -> Text.literal(title + ": appended \"" + msg + "\"."), false);
+			return 1;
+		});
 		if (allowAddIndex) {
 			addArg = addArg.then(
 				argument("index", IntegerArgumentType.integer(1))
@@ -167,7 +164,7 @@ public class AutoGreetingServerMod implements DedicatedServerModInitializer {
 	}
 
 	@Override
-	public void onInitialize() {
+	public void onInitializeServer() {
 		ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
 			if (!CONFIG.enabled) {
 				return;
