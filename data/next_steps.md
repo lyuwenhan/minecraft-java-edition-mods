@@ -1,9 +1,5 @@
 ## Planning
 
-#1 **Higher jump**
- - **Feature:**
-   - This mod adjust your jump height and step height.
-
 #3 **Multi search**
  - **Feature:**
    - Make the search bar support both your display language and English.
@@ -16,7 +12,9 @@
 
 # Currunt working on
 
-None
+#1 **Higher jump**
+ - **Feature:**
+   - This mod adjust your jump height and step height.
 
 ## Done
 
