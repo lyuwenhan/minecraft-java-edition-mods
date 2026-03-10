@@ -8,8 +8,7 @@
  - **Feature:**
    - `/autogreet server ...`
  - **Status:**
-   - Server-side: **Untested**
-   - Client-side: **Work**
+   - Done
 
 #3 **Multi search**
  - **Feature:**
