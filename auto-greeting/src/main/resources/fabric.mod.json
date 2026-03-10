@@ -7,14 +7,17 @@
 	"authors": [
 		"Wenhan"
 	],
-	"environment": "client",
+	"environment": "*",
 	"entrypoints": {
 		"client": [
-			"com.example.autogreeting.AutoGreetingMod"
+			"com.example.autogreeting.client.AutoGreetingClientMod"
+		],
+		"server": [
+			"com.example.autogreeting.server.AutoGreetingServerMod"
 		]
 	},
 	"mixins": [
-		"auto-greeting.mixins.json"
+		"auto-greeting.client.mixins.json"
 	],
 	"depends": {
 		"fabricloader": ">=0.18.0",

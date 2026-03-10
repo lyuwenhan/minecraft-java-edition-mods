@@ -1,4 +1,4 @@
-package com.example.autogreeting;
+package com.example.autogreeting.client;
 
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.minecraft.client.MinecraftClient;
@@ -10,7 +10,7 @@ import java.util.Map;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
-public class AutoGreetingDelay {
+public class AutoGreetingClientDelay {
 	private static PendingSelfGreeting selfPending = null;
 	private static final Map<String, PendingGreeting> pending = new HashMap<>();
 	private static boolean registered = false;
@@ -56,12 +56,12 @@ public class AutoGreetingDelay {
 					continue;
 				}
 
-				if (!AutoGreetingMod.CONFIG.otherEnabled) {
+				if (!AutoGreetingClientMod.CONFIG.otherEnabled) {
 					it.remove();
 					continue;
 				}
 
-				for (String msg : AutoGreetingMod.CONFIG.otherGreetings) {
+				for (String msg : AutoGreetingClientMod.CONFIG.otherGreetings) {
 					if (msg == null || msg.isBlank()) {
 						continue;
 					}
@@ -115,7 +115,7 @@ public class AutoGreetingDelay {
 	}
 
 	private static void sendSelfGreeting(MinecraftClient client) {
-		if (!AutoGreetingMod.CONFIG.selfEnabled) return;
+		if (!AutoGreetingClientMod.CONFIG.selfEnabled) return;
 		if (client.player == null) return;
 
 		String playerName = client.player.getName().getString();
@@ -128,7 +128,7 @@ public class AutoGreetingDelay {
 		String health = fmt(client.player.getHealth());
 		String level = Integer.toString(client.player.experienceLevel);
 
-		for (String msg : AutoGreetingMod.CONFIG.selfGreetings) {
+		for (String msg : AutoGreetingClientMod.CONFIG.selfGreetings) {
 			if (msg == null || msg.isBlank()) continue;
 
 			msg = msg.trim();

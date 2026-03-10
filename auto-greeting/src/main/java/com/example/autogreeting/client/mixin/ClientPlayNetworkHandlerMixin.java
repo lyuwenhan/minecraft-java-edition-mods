@@ -1,7 +1,7 @@
-package com.example.autogreeting.mixin;
+package com.example.autogreeting.client.mixin;
 
-import com.example.autogreeting.AutoGreetingDelay;
-import com.example.autogreeting.AutoGreetingMod;
+import com.example.autogreeting.client.AutoGreetingClientDelay;
+import com.example.autogreeting.client.AutoGreetingClientMod;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.network.packet.s2c.play.PlayerListS2CPacket;
@@ -16,9 +16,9 @@ public class ClientPlayNetworkHandlerMixin {
 
 	@Inject(method = "onPlayerList", at = @At("TAIL"))
 	private void onPlayerList(PlayerListS2CPacket packet, CallbackInfo ci) {
-		if (!AutoGreetingMod.CONFIG.otherEnabled) return;
+		if (!AutoGreetingClientMod.CONFIG.otherEnabled) return;
 
-		if (System.currentTimeMillis() - AutoGreetingMod.joinWorldAt < 1000) return;
+		if (System.currentTimeMillis() - AutoGreetingClientMod.joinWorldAt < 1000) return;
 
 		if (!packet.getActions().contains(PlayerListS2CPacket.Action.ADD_PLAYER)) return;
 		MinecraftClient client = MinecraftClient.getInstance();
@@ -28,11 +28,11 @@ public class ClientPlayNetworkHandlerMixin {
 			String name = entry.profile().name();
 			String uuid = entry.profile().id().toString();
 
-			if(AutoGreetingMod.CONFIG.otherBlacklist.match(name) && !AutoGreetingMod.CONFIG.otherBlacklistExcept.match(name)) {
+			if(AutoGreetingClientMod.CONFIG.otherBlacklist.match(name) && !AutoGreetingClientMod.CONFIG.otherBlacklistExcept.match(name)) {
 				return;
 			}
 			
-			if(!AutoGreetingMod.CONFIG.otherWhitelist.isEmpty() && (!AutoGreetingMod.CONFIG.otherWhitelist.match(name) || AutoGreetingMod.CONFIG.otherWhitelistExcept.match(name))) {
+			if(!AutoGreetingClientMod.CONFIG.otherWhitelist.isEmpty() && (!AutoGreetingClientMod.CONFIG.otherWhitelist.match(name) || AutoGreetingClientMod.CONFIG.otherWhitelistExcept.match(name))) {
 				return;
 			}
 
@@ -40,7 +40,7 @@ public class ClientPlayNetworkHandlerMixin {
 				return;
 			}
 
-			AutoGreetingDelay.greetAfter1Second(name, uuid);
+			AutoGreetingClientDelay.greetAfter1Second(name, uuid);
 		});
 	}
 }

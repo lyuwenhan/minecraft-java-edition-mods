@@ -1,4 +1,4 @@
-package com.example.autogreeting;
+package com.example.autogreeting.client;
 
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
@@ -13,10 +13,10 @@ import java.util.ArrayList;
 import java.util.List;
 import static net.fabricmc.fabric.api.client.command.v2.ClientCommandManager.*;
 
-public class AutoGreetingMod implements ClientModInitializer {
+public class AutoGreetingClientMod implements ClientModInitializer {
 
 	public static long joinWorldAt = 0L;
-	public static final AutoGreetingConfig CONFIG = AutoGreetingConfig.load();
+	public static final AutoGreetingClientConfig CONFIG = AutoGreetingClientConfig.load();
 
 	private static void sendList(
 		FabricClientCommandSource src,
@@ -151,10 +151,10 @@ public class AutoGreetingMod implements ClientModInitializer {
 	@Override
 	public void onInitializeClient() {
 		ClientPlayConnectionEvents.JOIN.register((handler, sender, client) -> {
-			AutoGreetingMod.joinWorldAt = System.currentTimeMillis();
+			AutoGreetingClientMod.joinWorldAt = System.currentTimeMillis();
 			if (!CONFIG.selfEnabled) return;
 
-			AutoGreetingDelay.greetSelfAfter1Second();
+			AutoGreetingClientDelay.greetSelfAfter1Second();
 		});
 
 		ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) -> {
