@@ -10,6 +10,9 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+
 public class AutoGreetingServerDelay {
 	private static final Map<String, PendingGreeting> pending = new HashMap<>();
 	private static boolean registered = false;
