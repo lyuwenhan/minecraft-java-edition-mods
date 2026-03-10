@@ -1,116 +1,198 @@
 # Auto Greeting
 
-Client-side Fabric mod that automatically sends greeting messages when you join a Minecraft server.
+A Fabric mod that automatically sends greeting messages in the following cases:
+
+## Client-side installation
+
+- When **you** join a server
+- When **other players** join the server
+
+## Server-side installation
+
+- When a player joins the server
+
+The mod supports both plain chat messages and commands.
 
 ## Features
 
-- Auto-send chat messages on server join
-- Auto-send chat messages while others join
+### Available on both client and server
+
 - Supports multiple messages
-- Supports commands and plain chat
-- Client-only, safe for multiplayer servers
+- Supports plain chat messages and commands
+- Supports blacklist / whitelist rules for player names
+- Supports placeholders
+
+### Client side
+
+- Automatically sends messages for **yourself** after joining a server
+- Automatically sends messages when **other players** join
+
+### Server side
+
+- Automatically sends messages when a player joins the server
+
+## Command Overview
+
+The root command is:
+
+```text
+/autogreet
+```
+
+Notes:
+
+- `[a|b]` means `a` or `b`
+
+For example:
+
+```text
+/autogreet [other|server] ...
+```
+
+means either:
+
+```text
+/autogreet other ...
+```
+
+or:
+
+```text
+/autogreet server ...
+```
+
+Depending on where the mod is installed, the following branches are available:
+
+- **Client side**
+  - `/autogreet self ...`
+  - `/autogreet other ...`
+- **Server side**
+  - `/autogreet server ...`
 
 ## Commands
 
-```
-/autogreet self status
-/autogreet self status enable
-/autogreet self status disable
-/autogreet self status toggle
+### Status
 
-/autogreet self message add <message>
-/autogreet self message add <message> [index]
-/autogreet self message remove
-/autogreet self message remove [index]
-/autogreet self message remove all
-/autogreet self message list
+Controls whether auto greeting is **enabled** or **disabled**.
 
-/autogreet other status
-/autogreet other status enable
-/autogreet other status disable
-/autogreet other status toggle
-
-/autogreet other message add <message>
-/autogreet other message add <message> [index]
-/autogreet other message remove
-/autogreet other message remove [index]
-/autogreet other message remove all
-/autogreet other message list
-
-/autogreet other blacklist ...
-/autogreet other whitelist ...
+```text
+/autogreet [self|other|server] status
+/autogreet [self|other|server] status enable
+/autogreet [self|other|server] status disable
+/autogreet [self|other|server] status toggle
 ```
 
-Fully command list are on the bottom
+### Message
 
-### Self Greeting Placeholders
+Controls what the mod sends.
 
-When sending messages for **yourself** (`/autogreet self ...`), the following placeholders are supported:
+You can use placeholders.
 
-|Placeholder|Description|
-|------------|------------|
-|`@player`|Your player name|
-|`@UUID`|Your UUID|
-|`@X`|Your X coordinate (up to 3 decimals)|
-|`@Y`|Your Y coordinate (up to 3 decimals)|
-|`@Z`|Your Z coordinate (up to 3 decimals)|
-|`@health`|Your current health|
-|`@level`|Your experience level|
+#### Placeholders for `self` / `server`
 
-#### Example
+| Placeholder | Description |
+|:-:|:-:|
+| `@player` | Player name |
+| `@UUID` | UUID |
+| `@X` | X coordinate (up to 3 decimals) |
+| `@Y` | Y coordinate (up to 3 decimals) |
+| `@Z` | Z coordinate (up to 3 decimals) |
+| `@health` | Current health |
+| `@level` | Current experience level |
+
+#### Placeholders for `other`
+
+| Placeholder | Description |
+|:-:|:-:|
+| `@player` | Player name |
+| `@UUID` | Player UUID |
+
+```text
+/autogreet [self|other|server] message add <message>
+/autogreet [self|other|server] message add <message> <index>
+/autogreet [self|other|server] message remove
+/autogreet [self|other|server] message remove <index>
+/autogreet [self|other|server] message remove all
+/autogreet [self|other|server] message list
+```
+
+### Blacklist / Whitelist
+
+```text
+/autogreet [other|server] [whitelist|blacklist] list
+/autogreet [other|server] [whitelist|blacklist] clear confirm
+
+/autogreet [other|server] [whitelist|blacklist] [match|except] list
+
+/autogreet [other|server] [whitelist|blacklist] [match|except] [equal|contain|startWith|endWith] add <message>
+/autogreet [other|server] [whitelist|blacklist] [match|except] [equal|contain|startWith|endWith] remove
+/autogreet [other|server] [whitelist|blacklist] [match|except] [equal|contain|startWith|endWith] remove <index>
+/autogreet [other|server] [whitelist|blacklist] [match|except] [equal|contain|startWith|endWith] remove all
+/autogreet [other|server] [whitelist|blacklist] [match|except] [equal|contain|startWith|endWith] list
+```
+
+## Examples
+
+### Client side
 
 ```text
 /autogreet self message add "Hello, I'm @player at (@X, @Y, @Z)"
-/autogreet self message add "HP: @health|Level: @level"
-```
+/autogreet self message add "HP: @health | Level: @level"
 
-### Other Player Greeting Placeholders
-
-When sending messages for **other players joining** (`/autogreet other ...`), the following placeholders are supported:
-
-|Placeholder|Description|
-|------------|------------|
-|`@player`|Joining player's name|
-|`@UUID`|Joining player's UUID|
-
-> Note: Position, health, and level placeholders are **not available** for other players.
-
-#### Example
-
-```text
 /autogreet other message add "Welcome @player!"
 /autogreet other message add "Hello @player (@UUID)"
 ```
 
-### Notes
+### Server side
 
-- index is optional and 1-based
-- add <message> [index]: insert as the index-th item (before existing), or append if omitted/out of range
-- remove [index]: remove specified item, or last if omitted
-- All numeric values are formatted with **up to 3 decimal places**, with trailing zeros removed.
-- Placeholders are replaced **client-side only**.
-- No data is sent to the server beyond normal chat messages.
-
-### Examples
-
-```
-/autogreet self status
-/autogreet self add Hello
-/autogreet self add I'm @player.
-/autogreet self list
-
-/autogreet other status
-/autogreet other add Hi @player, welcome!
-/autogreet other add Good luck, @player! 1
-/autogreet other list
-/autogreet other blacklist match startWith add bot_
+```text
+/autogreet server message add "Welcome @player!"
+/autogreet server message add "Player @player joined at (@X, @Y, @Z)"
+/autogreet server message add "HP=@health Level=@level"
 ```
 
-## Security
+## Message Behavior
 
-- No password storage
-- No encryption
-- No server interaction beyond normal chat
+If a message does **not** start with `/`, it is sent as a normal chat message.
+
+```text
+<name> <message>
+```
+
+If a message **does** start with `/`, it is executed as a command.
+
+## Filtering
+
+Both **other** and **server** greetings support:
+
+- blacklist
+- whitelist
+- `match` rules
+- `except` rules
+- `equal`
+- `contain`
+- `startWith`
+- `endWith`
+
+These rules are used to decide whether a joining player's name should trigger greeting logic.
+
+### Filtering behavior
+
+- If a player matches the **blacklist**, they are ignored
+- If a player matches the blacklist but also matches **blacklist except**, they are allowed again
+- If the **whitelist** is not empty, only players matching the whitelist are allowed
+- If a player matches the whitelist but also matches **whitelist except**, they are ignored
+
+## Notes
+
+- `index` is optional and 1-based
+- `add <message> <index>` inserts before the existing item at that position
+- If `index` is omitted or out of range, the message is appended
+- `remove <index>` removes the specified item
+- `remove` without an index removes the last item
+- `remove all` clears the message list
+- `clear confirm` clears the entire blacklist or whitelist rule set
+- Numeric values are formatted with up to 3 decimal places, with trailing zeros removed
 
 ## Supported Versions
 
@@ -122,125 +204,3 @@ When sending messages for **other players joining** (`/autogreet other ...`), th
 ## License
 
 MIT
-
-## Fully command list
-
-```
-/autogreet self status
-/autogreet self status enable
-/autogreet self status disable
-/autogreet self status toggle
-
-/autogreet self message add <message>
-/autogreet self message add <message> [index]
-/autogreet self message remove
-/autogreet self message remove [index]
-/autogreet self message remove all
-/autogreet self message list
-
-/autogreet other status
-/autogreet other status enable
-/autogreet other status disable
-/autogreet other status toggle
-
-/autogreet other message add <message>
-/autogreet other message add <message> [index]
-/autogreet other message remove
-/autogreet other message remove [index]
-/autogreet other message remove all
-/autogreet other message list
-
-/autogreet other blacklist match equal add <message>
-/autogreet other blacklist match equal remove
-/autogreet other blacklist match equal remove [index]
-/autogreet other blacklist match equal remove all
-/autogreet other blacklist match equal list
-/autogreet other blacklist match contain add <message>
-/autogreet other blacklist match contain remove
-/autogreet other blacklist match contain remove [index]
-/autogreet other blacklist match contain remove all
-/autogreet other blacklist match contain list
-/autogreet other blacklist match startWith add <message>
-/autogreet other blacklist match startWith remove
-/autogreet other blacklist match startWith remove [index]
-/autogreet other blacklist match startWith remove all
-/autogreet other blacklist match startWith list
-/autogreet other blacklist match endWith add <message>
-/autogreet other blacklist match endWith remove
-/autogreet other blacklist match endWith remove [index]
-/autogreet other blacklist match endWith remove all
-/autogreet other blacklist match endWith list
-/autogreet other blacklist match list
-
-/autogreet other blacklist except equal add <message>
-/autogreet other blacklist except equal remove
-/autogreet other blacklist except equal remove [index]
-/autogreet other blacklist except equal remove all
-/autogreet other blacklist except equal list
-/autogreet other blacklist except contain add <message>
-/autogreet other blacklist except contain remove
-/autogreet other blacklist except contain remove [index]
-/autogreet other blacklist except contain remove all
-/autogreet other blacklist except contain list
-/autogreet other blacklist except startWith add <message>
-/autogreet other blacklist except startWith remove
-/autogreet other blacklist except startWith remove [index]
-/autogreet other blacklist except startWith remove all
-/autogreet other blacklist except startWith list
-/autogreet other blacklist except endWith add <message>
-/autogreet other blacklist except endWith remove
-/autogreet other blacklist except endWith remove [index]
-/autogreet other blacklist except endWith remove all
-/autogreet other blacklist except endWith list
-/autogreet other blacklist except list
-
-/autogreet other blacklist list
-/autogreet other blacklist clear
-
-/autogreet other whitelist match equal add <message>
-/autogreet other whitelist match equal remove
-/autogreet other whitelist match equal remove [index]
-/autogreet other whitelist match equal remove all
-/autogreet other whitelist match equal list
-/autogreet other whitelist match contain add <message>
-/autogreet other whitelist match contain remove
-/autogreet other whitelist match contain remove [index]
-/autogreet other whitelist match contain remove all
-/autogreet other whitelist match contain list
-/autogreet other whitelist match startWith add <message>
-/autogreet other whitelist match startWith remove
-/autogreet other whitelist match startWith remove [index]
-/autogreet other whitelist match startWith remove all
-/autogreet other whitelist match startWith list
-/autogreet other whitelist match endWith add <message>
-/autogreet other whitelist match endWith remove
-/autogreet other whitelist match endWith remove [index]
-/autogreet other whitelist match endWith remove all
-/autogreet other whitelist match endWith list
-/autogreet other whitelist match list
-
-/autogreet other whitelist except equal add <message>
-/autogreet other whitelist except equal remove
-/autogreet other whitelist except equal remove [index]
-/autogreet other whitelist except equal remove all
-/autogreet other whitelist except equal list
-/autogreet other whitelist except contain add <message>
-/autogreet other whitelist except contain remove
-/autogreet other whitelist except contain remove [index]
-/autogreet other whitelist except contain remove all
-/autogreet other whitelist except contain list
-/autogreet other whitelist except startWith add <message>
-/autogreet other whitelist except startWith remove
-/autogreet other whitelist except startWith remove [index]
-/autogreet other whitelist except startWith remove all
-/autogreet other whitelist except startWith list
-/autogreet other whitelist except endWith add <message>
-/autogreet other whitelist except endWith remove
-/autogreet other whitelist except endWith remove [index]
-/autogreet other whitelist except endWith remove all
-/autogreet other whitelist except endWith list
-/autogreet other whitelist except list
-
-/autogreet other whitelist list
-/autogreet other whitelist clear
-```
