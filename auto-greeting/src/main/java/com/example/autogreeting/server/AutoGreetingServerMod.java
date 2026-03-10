@@ -57,26 +57,25 @@ public class AutoGreetingServerMod implements DedicatedServerModInitializer {
 			return 1;
 		});
 		if (allowAddIndex) {
-			addArg = addArg.then(
-				argument("index", IntegerArgumentType.integer(1))
-					.executes(ctx -> {
-						String msg = StringArgumentType.getString(ctx, "message");
-						int index = IntegerArgumentType.getInteger(ctx, "index");
-						if (!allowDupe && list.contains(msg)) {
-							ctx.getSource().sendFeedback(() -> Text.literal(title + ": \"" + msg + "\" already exists."), false);
-							return 1;
-						}
-						boolean isAppend = index > list.size();
-						int pos = Math.max(1, Math.min(index - 1, list.size()));
-						list.add(pos, msg);
-						CONFIG.save();
-						if (isAppend) {
-							ctx.getSource().sendFeedback(() -> Text.literal(title + ": appended \"" + msg + "\"."), false);
-						} else {
-							ctx.getSource().sendFeedback(() -> Text.literal(title + ": inserted \"" + msg + "\" at position " + index + "."), false);
-						}
+			addArg = addArg.then(argument("index", IntegerArgumentType.integer(1))
+				.executes(ctx -> {
+					String msg = StringArgumentType.getString(ctx, "message");
+					int index = IntegerArgumentType.getInteger(ctx, "index");
+					if (!allowDupe && list.contains(msg)) {
+						ctx.getSource().sendFeedback(() -> Text.literal(title + ": \"" + msg + "\" already exists."), false);
 						return 1;
-					})
+					}
+					boolean isAppend = index > list.size();
+					int pos = Math.max(1, Math.min(index - 1, list.size()));
+					list.add(pos, msg);
+					CONFIG.save();
+					if (isAppend) {
+						ctx.getSource().sendFeedback(() -> Text.literal(title + ": appended \"" + msg + "\"."), false);
+					} else {
+						ctx.getSource().sendFeedback(() -> Text.literal(title + ": inserted \"" + msg + "\" at position " + index + "."), false);
+					}
+					return 1;
+				})
 			);
 		}
 
@@ -152,11 +151,11 @@ public class AutoGreetingServerMod implements DedicatedServerModInitializer {
 	private static boolean shouldGreet(ServerPlayerEntity player) {
 		String name = player.getName().getString();
 
-		if (CONFIG.blacklist.match(name) && !CONFIG.blacklistExcept.match(name)) {
+		if (CONFIG.serverBlacklist.match(name) && !CONFIG.serverBlacklistExcept.match(name)) {
 			return false;
 		}
 
-		if (!CONFIG.whitelist.isEmpty() && (!CONFIG.whitelist.match(name) || CONFIG.whitelistExcept.match(name))) {
+		if (!CONFIG.serverWhitelist.isEmpty() && (!CONFIG.serverWhitelist.match(name) || CONFIG.serverWhitelistExcept.match(name))) {
 			return false;
 		}
 
@@ -166,7 +165,7 @@ public class AutoGreetingServerMod implements DedicatedServerModInitializer {
 	@Override
 	public void onInitializeServer() {
 		ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
-			if (!CONFIG.enabled) {
+			if (!CONFIG.serverEnabled) {
 				return;
 			}
 
@@ -190,72 +189,66 @@ public class AutoGreetingServerMod implements DedicatedServerModInitializer {
 				.then(literal("server")
 					.then(literal("status")
 						.executes(ctx -> {
-							ctx.getSource().sendFeedback(
-								() -> Text.literal("Auto greeting " + (CONFIG.enabled ? "enabled" : "disabled") + "."),
-								false
-							);
+							ctx.getSource().sendFeedback(() -> Text.literal("Auto greeting " + (CONFIG.serverEnabled ? "enabled" : "disabled") + "."), false);
 							return 1;
 						})
 
 						.then(literal("enable").executes(ctx -> {
-							CONFIG.enabled = true;
+							CONFIG.serverEnabled = true;
 							CONFIG.save();
 							ctx.getSource().sendFeedback(() -> Text.literal("Auto greeting enabled."), false);
 							return 1;
 						}))
 
 						.then(literal("disable").executes(ctx -> {
-							CONFIG.enabled = false;
+							CONFIG.serverEnabled = false;
 							CONFIG.save();
 							ctx.getSource().sendFeedback(() -> Text.literal("Auto greeting disabled."), false);
 							return 1;
 						}))
 
 						.then(literal("toggle").executes(ctx -> {
-							CONFIG.enabled = !CONFIG.enabled;
+							CONFIG.serverEnabled = !CONFIG.serverEnabled;
 							CONFIG.save();
-							ctx.getSource().sendFeedback(
-								() -> Text.literal("Auto greeting " + (CONFIG.enabled ? "enabled" : "disabled") + "."),
-								false
-							);
+							ctx.getSource().sendFeedback(() -> Text.literal("Auto greeting is " + (CONFIG.serverEnabled ? "enabled" : "disabled") + "."), false);
 							return 1;
 						}))
 					)
 
-					.then(buildStringListNode("message", "Auto greeting", CONFIG.greetings, true))
+					.then(buildStringListNode("message", "Auto greeting", CONFIG.serverGreetings, true))
 
 					.then(literal("blacklist")
 						.then(literal("match")
 							.then(buildStringListNode(
 								"equal",
 								"Blacklist (Name Equal)",
-								CONFIG.blacklist.equal
+								CONFIG.serverBlacklist.equal
 							))
 
 							.then(buildStringListNode(
 								"contain",
 								"Blacklist (Name Contain)",
-								CONFIG.blacklist.contain
+								CONFIG.serverBlacklist.contain
 							))
 
 							.then(buildStringListNode(
 								"startWith",
 								"Blacklist (Name Starts with)",
-								CONFIG.blacklist.startWith
+								CONFIG.serverBlacklist.startWith
 							))
 
 							.then(buildStringListNode(
 								"endWith",
 								"Blacklist (Name Ends with)",
-								CONFIG.blacklist.endWith
+								CONFIG.serverBlacklist.endWith
 							))
 
 							.then(literal("list")
 								.executes(ctx -> {
-									sendList(ctx.getSource(), "Match (Name Equal)", CONFIG.blacklist.equal);
-									sendList(ctx.getSource(), "Match (Name Contain)", CONFIG.blacklist.contain);
-									sendList(ctx.getSource(), "Match (Name Starts with)", CONFIG.blacklist.startWith);
-									sendList(ctx.getSource(), "Match (Name Ends with)", CONFIG.blacklist.endWith);
+									sendList(ctx.getSource(), "Match (Name Equal)", CONFIG.serverBlacklist.equal);
+									sendList(ctx.getSource(), "Match (Name Contain)", CONFIG.serverBlacklist.contain);
+									sendList(ctx.getSource(), "Match (Name Starts with)", CONFIG.serverBlacklist.startWith);
+									sendList(ctx.getSource(), "Match (Name Ends with)", CONFIG.serverBlacklist.endWith);
 									return 1;
 								})
 							)
@@ -265,33 +258,33 @@ public class AutoGreetingServerMod implements DedicatedServerModInitializer {
 							.then(buildStringListNode(
 								"equal",
 								"Except (Name Equal)",
-								CONFIG.blacklistExcept.equal
+								CONFIG.serverBlacklistExcept.equal
 							))
 
 							.then(buildStringListNode(
 								"contain",
 								"Except (Name Contain)",
-								CONFIG.blacklistExcept.contain
+								CONFIG.serverBlacklistExcept.contain
 							))
 
 							.then(buildStringListNode(
 								"startWith",
 								"Except (Name Starts with)",
-								CONFIG.blacklistExcept.startWith
+								CONFIG.serverBlacklistExcept.startWith
 							))
 
 							.then(buildStringListNode(
 								"endWith",
 								"Except (Name Ends with)",
-								CONFIG.blacklistExcept.endWith
+								CONFIG.serverBlacklistExcept.endWith
 							))
 
 							.then(literal("list")
 								.executes(ctx -> {
-									sendList(ctx.getSource(), "Except (Name Equal)", CONFIG.blacklistExcept.equal);
-									sendList(ctx.getSource(), "Except (Name Contain)", CONFIG.blacklistExcept.contain);
-									sendList(ctx.getSource(), "Except (Name Starts with)", CONFIG.blacklistExcept.startWith);
-									sendList(ctx.getSource(), "Except (Name Ends with)", CONFIG.blacklistExcept.endWith);
+									sendList(ctx.getSource(), "Except (Name Equal)", CONFIG.serverBlacklistExcept.equal);
+									sendList(ctx.getSource(), "Except (Name Contain)", CONFIG.serverBlacklistExcept.contain);
+									sendList(ctx.getSource(), "Except (Name Starts with)", CONFIG.serverBlacklistExcept.startWith);
+									sendList(ctx.getSource(), "Except (Name Ends with)", CONFIG.serverBlacklistExcept.endWith);
 									return 1;
 								})
 							)
@@ -299,15 +292,15 @@ public class AutoGreetingServerMod implements DedicatedServerModInitializer {
 
 						.then(literal("list")
 							.executes(ctx -> {
-								sendList(ctx.getSource(), "Match (Name Equal)", CONFIG.blacklist.equal);
-								sendList(ctx.getSource(), "Match (Name Contain)", CONFIG.blacklist.contain);
-								sendList(ctx.getSource(), "Match (Name Starts with)", CONFIG.blacklist.startWith);
-								sendList(ctx.getSource(), "Match (Name Ends with)", CONFIG.blacklist.endWith);
+								sendList(ctx.getSource(), "Match (Name Equal)", CONFIG.serverBlacklist.equal);
+								sendList(ctx.getSource(), "Match (Name Contain)", CONFIG.serverBlacklist.contain);
+								sendList(ctx.getSource(), "Match (Name Starts with)", CONFIG.serverBlacklist.startWith);
+								sendList(ctx.getSource(), "Match (Name Ends with)", CONFIG.serverBlacklist.endWith);
 
-								sendList(ctx.getSource(), "Except (Name Equal)", CONFIG.blacklistExcept.equal);
-								sendList(ctx.getSource(), "Except (Name Contain)", CONFIG.blacklistExcept.contain);
-								sendList(ctx.getSource(), "Except (Name Starts with)", CONFIG.blacklistExcept.startWith);
-								sendList(ctx.getSource(), "Except (Name Ends with)", CONFIG.blacklistExcept.endWith);
+								sendList(ctx.getSource(), "Except (Name Equal)", CONFIG.serverBlacklistExcept.equal);
+								sendList(ctx.getSource(), "Except (Name Contain)", CONFIG.serverBlacklistExcept.contain);
+								sendList(ctx.getSource(), "Except (Name Starts with)", CONFIG.serverBlacklistExcept.startWith);
+								sendList(ctx.getSource(), "Except (Name Ends with)", CONFIG.serverBlacklistExcept.endWith);
 								return 1;
 							})
 						)
@@ -315,8 +308,8 @@ public class AutoGreetingServerMod implements DedicatedServerModInitializer {
 						.then(literal("clear")
 							.then(literal("confirm")
 								.executes(ctx -> {
-									CONFIG.blacklist.clear();
-									CONFIG.blacklistExcept.clear();
+									CONFIG.serverBlacklist.clear();
+									CONFIG.serverBlacklistExcept.clear();
 									CONFIG.save();
 									ctx.getSource().sendFeedback(() -> Text.literal("Blacklist cleared."), false);
 									return 1;
@@ -330,33 +323,33 @@ public class AutoGreetingServerMod implements DedicatedServerModInitializer {
 							.then(buildStringListNode(
 								"equal",
 								"Whitelist (Name Equal)",
-								CONFIG.whitelist.equal
+								CONFIG.serverWhitelist.equal
 							))
 
 							.then(buildStringListNode(
 								"contain",
 								"Whitelist (Name Contain)",
-								CONFIG.whitelist.contain
+								CONFIG.serverWhitelist.contain
 							))
 
 							.then(buildStringListNode(
 								"startWith",
 								"Whitelist (Name Starts with)",
-								CONFIG.whitelist.startWith
+								CONFIG.serverWhitelist.startWith
 							))
 
 							.then(buildStringListNode(
 								"endWith",
 								"Whitelist (Name Ends with)",
-								CONFIG.whitelist.endWith
+								CONFIG.serverWhitelist.endWith
 							))
 
 							.then(literal("list")
 								.executes(ctx -> {
-									sendList(ctx.getSource(), "Whitelist (Name Equal)", CONFIG.whitelist.equal);
-									sendList(ctx.getSource(), "Whitelist (Name Contain)", CONFIG.whitelist.contain);
-									sendList(ctx.getSource(), "Whitelist (Name Starts with)", CONFIG.whitelist.startWith);
-									sendList(ctx.getSource(), "Whitelist (Name Ends with)", CONFIG.whitelist.endWith);
+									sendList(ctx.getSource(), "Whitelist (Name Equal)", CONFIG.serverWhitelist.equal);
+									sendList(ctx.getSource(), "Whitelist (Name Contain)", CONFIG.serverWhitelist.contain);
+									sendList(ctx.getSource(), "Whitelist (Name Starts with)", CONFIG.serverWhitelist.startWith);
+									sendList(ctx.getSource(), "Whitelist (Name Ends with)", CONFIG.serverWhitelist.endWith);
 									return 1;
 								})
 							)
@@ -366,33 +359,33 @@ public class AutoGreetingServerMod implements DedicatedServerModInitializer {
 							.then(buildStringListNode(
 								"equal",
 								"Except (Name Equal)",
-								CONFIG.whitelistExcept.equal
+								CONFIG.serverWhitelistExcept.equal
 							))
 
 							.then(buildStringListNode(
 								"contain",
 								"Except (Name Contain)",
-								CONFIG.whitelistExcept.contain
+								CONFIG.serverWhitelistExcept.contain
 							))
 
 							.then(buildStringListNode(
 								"startWith",
 								"Except (Name Starts with)",
-								CONFIG.whitelistExcept.startWith
+								CONFIG.serverWhitelistExcept.startWith
 							))
 
 							.then(buildStringListNode(
 								"endWith",
 								"Except (Name Ends with)",
-								CONFIG.whitelistExcept.endWith
+								CONFIG.serverWhitelistExcept.endWith
 							))
 
 							.then(literal("list")
 								.executes(ctx -> {
-									sendList(ctx.getSource(), "Except (Name Equal)", CONFIG.whitelistExcept.equal);
-									sendList(ctx.getSource(), "Except (Name Contain)", CONFIG.whitelistExcept.contain);
-									sendList(ctx.getSource(), "Except (Name Starts with)", CONFIG.whitelistExcept.startWith);
-									sendList(ctx.getSource(), "Except (Name Ends with)", CONFIG.whitelistExcept.endWith);
+									sendList(ctx.getSource(), "Except (Name Equal)", CONFIG.serverWhitelistExcept.equal);
+									sendList(ctx.getSource(), "Except (Name Contain)", CONFIG.serverWhitelistExcept.contain);
+									sendList(ctx.getSource(), "Except (Name Starts with)", CONFIG.serverWhitelistExcept.startWith);
+									sendList(ctx.getSource(), "Except (Name Ends with)", CONFIG.serverWhitelistExcept.endWith);
 									return 1;
 								})
 							)
@@ -400,15 +393,15 @@ public class AutoGreetingServerMod implements DedicatedServerModInitializer {
 
 						.then(literal("list")
 							.executes(ctx -> {
-								sendList(ctx.getSource(), "Whitelist (Name Equal)", CONFIG.whitelist.equal);
-								sendList(ctx.getSource(), "Whitelist (Name Contain)", CONFIG.whitelist.contain);
-								sendList(ctx.getSource(), "Whitelist (Name Starts with)", CONFIG.whitelist.startWith);
-								sendList(ctx.getSource(), "Whitelist (Name Ends with)", CONFIG.whitelist.endWith);
+								sendList(ctx.getSource(), "Whitelist (Name Equal)", CONFIG.serverWhitelist.equal);
+								sendList(ctx.getSource(), "Whitelist (Name Contain)", CONFIG.serverWhitelist.contain);
+								sendList(ctx.getSource(), "Whitelist (Name Starts with)", CONFIG.serverWhitelist.startWith);
+								sendList(ctx.getSource(), "Whitelist (Name Ends with)", CONFIG.serverWhitelist.endWith);
 
-								sendList(ctx.getSource(), "Except (Name Equal)", CONFIG.whitelistExcept.equal);
-								sendList(ctx.getSource(), "Except (Name Contain)", CONFIG.whitelistExcept.contain);
-								sendList(ctx.getSource(), "Except (Name Starts with)", CONFIG.whitelistExcept.startWith);
-								sendList(ctx.getSource(), "Except (Name Ends with)", CONFIG.whitelistExcept.endWith);
+								sendList(ctx.getSource(), "Except (Name Equal)", CONFIG.serverWhitelistExcept.equal);
+								sendList(ctx.getSource(), "Except (Name Contain)", CONFIG.serverWhitelistExcept.contain);
+								sendList(ctx.getSource(), "Except (Name Starts with)", CONFIG.serverWhitelistExcept.startWith);
+								sendList(ctx.getSource(), "Except (Name Ends with)", CONFIG.serverWhitelistExcept.endWith);
 								return 1;
 							})
 						)
@@ -416,8 +409,8 @@ public class AutoGreetingServerMod implements DedicatedServerModInitializer {
 						.then(literal("clear")
 							.then(literal("confirm")
 								.executes(ctx -> {
-									CONFIG.whitelist.clear();
-									CONFIG.whitelistExcept.clear();
+									CONFIG.serverWhitelist.clear();
+									CONFIG.serverWhitelistExcept.clear();
 									CONFIG.save();
 									ctx.getSource().sendFeedback(() -> Text.literal("Whitelist cleared."), false);
 									return 1;

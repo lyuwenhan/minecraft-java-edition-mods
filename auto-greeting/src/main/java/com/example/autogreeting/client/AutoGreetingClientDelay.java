@@ -68,9 +68,7 @@ public class AutoGreetingClientDelay {
 
 					msg = msg.trim();
 
-					String finalMsg = msg
-						.replace("@player", p.playerName)
-						.replace("@UUID", p.uuid);
+					String finalMsg = msg.replace("@player", p.playerName).replace("@UUID", p.uuid);
 
 					if (msg.startsWith("/")) {
 						client.player.networkHandler.sendChatCommand(finalMsg.substring(1));
@@ -108,15 +106,16 @@ public class AutoGreetingClientDelay {
 	}
 
 	private static String fmt(double v) {
-		return BigDecimal.valueOf(v)
-			.setScale(3, RoundingMode.HALF_UP)
-			.stripTrailingZeros()
-			.toPlainString();
+		return BigDecimal.valueOf(v).setScale(3, RoundingMode.HALF_UP).stripTrailingZeros().toPlainString();
 	}
 
 	private static void sendSelfGreeting(MinecraftClient client) {
-		if (!AutoGreetingClientMod.CONFIG.selfEnabled) return;
-		if (client.player == null) return;
+		if (!AutoGreetingClientMod.CONFIG.selfEnabled){
+			return;
+		}
+		if (client.player == null) {
+			return;
+		}
 
 		String playerName = client.player.getName().getString();
 		String playerUUID = client.player.getUuid().toString();
@@ -129,7 +128,9 @@ public class AutoGreetingClientDelay {
 		String level = Integer.toString(client.player.experienceLevel);
 
 		for (String msg : AutoGreetingClientMod.CONFIG.selfGreetings) {
-			if (msg == null || msg.isBlank()) continue;
+			if (msg == null || msg.isBlank()) {
+				continue;
+			}
 
 			msg = msg.trim();
 			String finalMsg = msg

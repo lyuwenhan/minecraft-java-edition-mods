@@ -55,7 +55,7 @@ public class AutoGreetingClientMod implements ClientModInitializer {
 			ctx.getSource().sendFeedback(Text.literal(title + ": appended \"" + msg + "\"."));
 			return 1;
 		});
-		if(allowAddIndex) {
+		if (allowAddIndex) {
 			addArg = addArg.then(argument("index", IntegerArgumentType.integer(1))
 				.executes(ctx -> {
 					String msg = StringArgumentType.getString(ctx, "message");
@@ -152,7 +152,9 @@ public class AutoGreetingClientMod implements ClientModInitializer {
 	public void onInitializeClient() {
 		ClientPlayConnectionEvents.JOIN.register((handler, sender, client) -> {
 			AutoGreetingClientMod.joinWorldAt = System.currentTimeMillis();
-			if (!CONFIG.selfEnabled) return;
+			if (!CONFIG.selfEnabled) {
+				return;
+			}
 
 			AutoGreetingClientDelay.greetSelfAfter1Second();
 		});
@@ -162,7 +164,7 @@ public class AutoGreetingClientMod implements ClientModInitializer {
 				.then(literal("self")
 					.then(literal("status")
 						.executes(ctx -> {
-							ctx.getSource().sendFeedback(Text.literal("Auto greeting is " + (CONFIG.selfEnabled ? "enabled" : "disabled")));
+							ctx.getSource().sendFeedback(Text.literal("Auto greeting " + (CONFIG.selfEnabled ? "enabled" : "disabled") + "."));
 							return 1;
 						})
 
@@ -183,7 +185,7 @@ public class AutoGreetingClientMod implements ClientModInitializer {
 						.then(literal("toggle").executes(ctx -> {
 							CONFIG.selfEnabled = !CONFIG.selfEnabled;
 							CONFIG.save();
-							ctx.getSource().sendFeedback(Text.literal("Auto greeting is now " + (CONFIG.selfEnabled ? "enabled" : "disabled")));
+							ctx.getSource().sendFeedback(Text.literal("Auto greeting is " + (CONFIG.selfEnabled ? "enabled" : "disabled") + "."));
 							return 1;
 						}))
 					)
@@ -311,17 +313,10 @@ public class AutoGreetingClientMod implements ClientModInitializer {
 						.then(literal("clear")
 							.then(literal("confirm")
 								.executes(ctx -> {
-									ctx.getSource().sendFeedback(Text.literal("Blacklist cleared."));
-									CONFIG.otherBlacklist.equal.clear();
-									CONFIG.otherBlacklist.contain.clear();
-									CONFIG.otherBlacklist.startWith.clear();
-									CONFIG.otherBlacklist.endWith.clear();
-
-									CONFIG.otherBlacklistExcept.equal.clear();
-									CONFIG.otherBlacklistExcept.contain.clear();
-									CONFIG.otherBlacklistExcept.startWith.clear();
-									CONFIG.otherBlacklistExcept.endWith.clear();
+									CONFIG.otherBlacklist.clear();
+									CONFIG.otherBlacklistExcept.clear();
 									CONFIG.save();
+									ctx.getSource().sendFeedback(Text.literal("Blacklist cleared."));
 									return 1;
 								})
 							)
@@ -419,17 +414,10 @@ public class AutoGreetingClientMod implements ClientModInitializer {
 						.then(literal("clear")
 							.then(literal("confirm")
 								.executes(ctx -> {
-									ctx.getSource().sendFeedback(Text.literal("Whitelist cleared."));
-									CONFIG.otherWhitelist.equal.clear();
-									CONFIG.otherWhitelist.contain.clear();
-									CONFIG.otherWhitelist.startWith.clear();
-									CONFIG.otherWhitelist.endWith.clear();
-
-									CONFIG.otherWhitelistExcept.equal.clear();
-									CONFIG.otherWhitelistExcept.contain.clear();
-									CONFIG.otherWhitelistExcept.startWith.clear();
-									CONFIG.otherWhitelistExcept.endWith.clear();
+									CONFIG.otherWhitelist.clear();
+									CONFIG.otherWhitelistExcept.clear();
 									CONFIG.save();
+									ctx.getSource().sendFeedback(Text.literal("Whitelist cleared."));
 									return 1;
 								})
 							)
