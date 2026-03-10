@@ -1,14 +1,8 @@
+## Planning
+
 #1 **Higher jump**
  - **Feature:**
    - This mod adjust your jump height and step height.
- - **Current problem:**
-   - Don't know how to make Interactive menu.
-
-#2 **Auto Greeting - Server side**
- - **Feature:**
-   - `/autogreet server ...`
- - **Status:**
-   - Done
 
 #3 **Multi search**
  - **Feature:**
@@ -19,3 +13,13 @@
 #4 **More loader**
  - **Feature:**
    - Support more mod loaders.
+
+# Currunt working on
+
+None
+
+## Done
+
+#2 **Auto Greeting - Server side**
+ - **Feature:**
+   - `/autogreet server ...`
