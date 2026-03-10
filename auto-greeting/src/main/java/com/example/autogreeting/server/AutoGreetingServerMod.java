@@ -16,8 +16,7 @@ import java.util.List;
 import static net.minecraft.server.command.CommandManager.argument;
 import static net.minecraft.server.command.CommandManager.literal;
 
-public class AutoGreetingServerMod implements ModInitializer {
-
+public class AutoGreetingServerMod implements DedicatedServerModInitializer {
 	public static final AutoGreetingServerConfig CONFIG = AutoGreetingServerConfig.load();
 
 	private static void sendList(
