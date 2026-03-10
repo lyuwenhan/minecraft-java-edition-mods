@@ -1,4 +1,4 @@
-package com.example.autogreeting;
+package com.example.autogreeting.client;
 
 import com.example.autogreeting.rules.StringMatchRules;
 import com.google.gson.Gson;
@@ -11,7 +11,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AutoGreetingConfig {
+public class AutoGreetingClientConfig {
 
 	private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 	private static final Path CONFIG_PATH =
@@ -28,9 +28,9 @@ public class AutoGreetingConfig {
 	public StringMatchRules otherWhitelist = new StringMatchRules();
 	public StringMatchRules otherWhitelistExcept = new StringMatchRules();
 
-	public static AutoGreetingConfig load() {
+	public static AutoGreetingClientConfig load() {
 		if (!Files.exists(CONFIG_PATH)) {
-			AutoGreetingConfig cfg = new AutoGreetingConfig();
+			AutoGreetingClientConfig cfg = new AutoGreetingClientConfig();
 			cfg.save();
 			return cfg;
 		}
@@ -38,7 +38,7 @@ public class AutoGreetingConfig {
 		try {
 			return GSON.fromJson(
 				Files.readString(CONFIG_PATH),
-				AutoGreetingConfig.class
+				AutoGreetingClientConfig.class
 			);
 		} catch (IOException e) {
 			throw new RuntimeException("Failed to load auto-greeting config", e);

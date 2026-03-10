@@ -7,10 +7,13 @@
 	"authors": [
 		"Wenhan"
 	],
-	"environment": "client",
+	"environment": "*",
 	"entrypoints": {
 		"client": [
-			"com.example.autogreeting.AutoGreetingMod"
+			"com.example.autogreeting.client.AutoGreetingClientMod"
+		],
+		"server": [
+			"com.example.autogreeting.server.AutoGreetingServerMod"
 		]
 	},
 	"mixins": [
