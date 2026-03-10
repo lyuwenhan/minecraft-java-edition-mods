@@ -33,7 +33,8 @@ public class AutoGreetingServerMod implements DedicatedServerModInitializer {
 
 		int i = 1;
 		for (String s : list) {
-			src.sendFeedback(() -> Text.literal(i++ + ". " + s), false);
+			final int index = i++;
+			src.sendFeedback(() -> Text.literal(index + ". " + s), false);
 		}
 	}
 
