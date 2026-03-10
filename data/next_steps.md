@@ -1,19 +1,22 @@
-1. **Higher jump**
-   - **Feature:**
+#1 **Higher jump**
+ - **Feature:**
    - This mod adjust your jump height and step height.
-   - **Current problem:**
+ - **Current problem:**
    - Don't know how to make Interactive menu.
 
-2. **Auto Greeting - Server side**
-   - **Feature:**
+#2 **Auto Greeting - Server side**
+ - **Feature:**
    - `/autogreet server ...`
+ - **Status:**
+   - Server-side: **Untested**
+   - Client-side: **Work**
 
-3. **Multi search**
-   - **Feature:**
+#3 **Multi search**
+ - **Feature:**
    - Make the search bar support both your display language and English.
-   - **Current problem:**
+ - **Current problem:**
    - Too hard.
 
-4. **More loader**
-   - **Feature:**
+#4 **More loader**
+ - **Feature:**
    - Support more mod loaders.
