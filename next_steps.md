@@ -12,7 +12,7 @@
 
 # Currunt working on
 
-#1 **Higher jump**
+#1 **Jump Tweaks**
  - **Feature:**
    - This mod adjust your jump height and step height.
 
