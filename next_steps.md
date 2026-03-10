@@ -7,6 +7,9 @@
 #2 **Auto Greeting - Server side**
  - **Feature:**
  - `/autogreet server ...`
+ - **Status:**
+   - Server-side: **Untested**
+   - Client-side: **Work**
 
 #3 **Multi search**
  - **Feature:**
