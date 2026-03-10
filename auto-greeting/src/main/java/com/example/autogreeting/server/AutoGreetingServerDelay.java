@@ -93,7 +93,7 @@ public class AutoGreetingServerDelay {
 				.replace("@level", level);
 
 			if (msg.startsWith("/")) {
-				ServerCommandSource source = server.getCommandSource().withLevel(0);
+				ServerCommandSource source = server.getCommandSource().withPermissions(LeveledPermissionPredicate.fromLevel(PermissionLevel.fromLevel(0)));
 				server.getCommandManager().parseAndExecute(source, finalMsg);
 			} else {
 				server.getPlayerManager().broadcast(Text.literal("[Server] " + finalMsg), false);
