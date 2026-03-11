@@ -1,4 +1,4 @@
-package com.example.autogreeting.server;
+package com.example.autogreetingserver;
 
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
@@ -180,7 +180,7 @@ public class AutoGreetingServerMod implements DedicatedServerModInitializer {
 		});
 
 		CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> {
-			dispatcher.register(literal("serverautogreet")
+			dispatcher.register(literal("servergreet")
 				.requires(CommandManager.requirePermissionLevel(CommandManager.ADMINS_CHECK))
 				.then(literal("status")
 					.executes(ctx -> {

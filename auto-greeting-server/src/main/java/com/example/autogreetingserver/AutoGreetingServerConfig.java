@@ -1,6 +1,6 @@
-package com.example.autogreeting.server;
+package com.example.autogreetingserver;
 
-import com.example.autogreeting.rules.StringMatchRules;
+import com.example.autogreetingserver.rules.StringMatchRules;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import net.fabricmc.loader.api.FabricLoader;

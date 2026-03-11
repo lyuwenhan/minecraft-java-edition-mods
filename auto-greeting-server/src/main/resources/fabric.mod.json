@@ -1,21 +1,18 @@
 {
 	"schemaVersion": 1,
-	"id": "auto-greeting",
+	"id": "auto-greeting-server",
 	"version": "${version}",
-	"name": "Auto Greeting",
+	"name": "Auto Greeting Server",
 	"description": "A Fabric mod that automatically sends greeting messages.",
 	"authors": [
 		"Wenhan"
 	],
-	"environment": "client",
+	"environment": "server",
 	"entrypoints": {
-		"client": [
-			"com.example.autogreetingclient.AutoGreetingClientMod"
+		"server": [
+			"com.example.autogreetingserver.AutoGreetingServerMod"
 		]
 	},
-	"mixins": [
-		"auto-greeting-client.mixins.json"
-	],
 	"depends": {
 		"fabricloader": ">=0.18.0",
 		"fabric-api": "*",

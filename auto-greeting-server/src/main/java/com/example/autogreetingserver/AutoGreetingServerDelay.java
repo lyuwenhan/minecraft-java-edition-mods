@@ -1,4 +1,4 @@
-package com.example.autogreeting.server;
+package com.example.autogreetingserver;
 
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.minecraft.server.MinecraftServer;
