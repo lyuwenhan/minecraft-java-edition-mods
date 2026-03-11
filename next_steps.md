@@ -16,6 +16,10 @@
  - **Feature:**
    - This mod adjust your jump height and step height.
 
+#5 **Separate server side**
+ - **Feature:**
+   - Separated server side mod for Auto greeting
+
 ## Done
 
 #2 **Auto Greeting - Server side**
