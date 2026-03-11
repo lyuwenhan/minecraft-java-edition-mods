@@ -8,4 +8,4 @@ pluginManagement {
     }
 }
 
-rootProject.name = "auto-greeting"
+rootProject.name = "auto-greeting-server"
