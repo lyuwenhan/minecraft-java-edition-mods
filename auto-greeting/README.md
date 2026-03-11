@@ -2,45 +2,22 @@
 
 A Fabric mod that automatically sends greeting messages in the following cases:
 
-## Client-side installation
-
 - When **you** join a server
 - When **other players** join the server
 
-## Server-side installation
-
-- When a player joins the server
-
-The mod supports both plain chat messages and commands.
-
 ## Features
-
-### Available on both client and server
 
 - Supports multiple messages
 - Supports plain chat messages and commands
 - Supports blacklist / whitelist rules for player names
 - Supports placeholders
-
-### Client side
-
 - Automatically sends messages for **yourself** after joining a server
 - Automatically sends messages when **other players** join
 
-### Server side
-
-- Automatically sends messages when a player joins the server
-
 ## Command Overview
 
-
-Depending on where the mod is installed, the following branches are available:
-
-- **Client side**
   - `/autogreet self ...`
   - `/autogreet other ...`
-- **Server side**
-  - `/serverautogreet ...`
 
 Notes:
 
@@ -49,22 +26,22 @@ Notes:
 For example:
 
 ```text
-/autogreet [other|self] ...
+/autogreet [other|self] status
 ```
 
 means either:
 
 ```text
-/autogreet other ...
+/autogreet other status
 ```
 
 or
 
 ```text
-/autogreet self ...
+/autogreet self status
 ```
 
-## Client Side Commands
+## Commands
 
 ### Status
 
@@ -126,64 +103,7 @@ You can use placeholders.
 /autogreet other [whitelist|blacklist] [match|except] [equal|contain|startWith|endWith] list
 ```
 
-## Server Side Commands
-
-### Status
-
-Controls whether auto greeting is **enabled** or **disabled**.
-
-```text
-/serverautogreet status
-/serverautogreet status enable
-/serverautogreet status disable
-/serverautogreet status toggle
-```
-
-### Message
-
-Controls what the mod sends.
-
-You can use placeholders.
-
-```text
-/serverautogreet message add <message>
-/serverautogreet message add <message> <index>
-/serverautogreet message remove
-/serverautogreet message remove <index>
-/serverautogreet message remove all
-/serverautogreet message list
-```
-
-#### Placeholders
-
-| Placeholder | Description |
-|:-:|:-:|
-| `@player` | Player name |
-| `@UUID` | UUID |
-| `@X` | X coordinate (up to 3 decimals) |
-| `@Y` | Y coordinate (up to 3 decimals) |
-| `@Z` | Z coordinate (up to 3 decimals) |
-| `@health` | Current health |
-| `@level` | Current experience level |
-
-### Blacklist / Whitelist
-
-```text
-/serverautogreet [whitelist|blacklist] list
-/serverautogreet [whitelist|blacklist] clear confirm
-
-/serverautogreet [whitelist|blacklist] [match|except] list
-
-/serverautogreet [whitelist|blacklist] [match|except] [equal|contain|startWith|endWith] add <message>
-/serverautogreet [whitelist|blacklist] [match|except] [equal|contain|startWith|endWith] remove
-/serverautogreet [whitelist|blacklist] [match|except] [equal|contain|startWith|endWith] remove <index>
-/serverautogreet [whitelist|blacklist] [match|except] [equal|contain|startWith|endWith] remove all
-/serverautogreet [whitelist|blacklist] [match|except] [equal|contain|startWith|endWith] list
-```
-
 ## Examples
-
-### Client side
 
 ```text
 /autogreet self message add Hello, I'm @player at (@X, @Y, @Z)
@@ -191,14 +111,6 @@ You can use placeholders.
 
 /autogreet other message add Welcome @player!
 /autogreet other message add Hello @player (@UUID)
-```
-
-### Server side
-
-```text
-/serverautogreet message add Welcome @player!
-/serverautogreet message add Player @player joined at (@X, @Y, @Z)
-/serverautogreet message add HP=@health Level=@level
 ```
 
 ## Message Behavior
@@ -209,7 +121,7 @@ If a message does **not** start with `/`, it is sent as a normal chat message.
 
 ## Filtering
 
-Both **other** and **server** greetings support:
+**other**  greetings support:
 
 - blacklist
 - whitelist
