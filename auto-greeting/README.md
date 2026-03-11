@@ -33,11 +33,14 @@ The mod supports both plain chat messages and commands.
 
 ## Command Overview
 
-The root command is:
 
-```text
-/autogreet
-```
+Depending on where the mod is installed, the following branches are available:
+
+- **Client side**
+  - `/autogreet self ...`
+  - `/autogreet other ...`
+- **Server side**
+  - `/serverautogreet ...`
 
 Notes:
 
@@ -46,7 +49,7 @@ Notes:
 For example:
 
 ```text
-/autogreet [other|server] ...
+/autogreet [other|self] ...
 ```
 
 means either:
@@ -55,31 +58,23 @@ means either:
 /autogreet other ...
 ```
 
-or:
+or
 
 ```text
-/autogreet server ...
+/autogreet self ...
 ```
 
-Depending on where the mod is installed, the following branches are available:
-
-- **Client side**
-  - `/autogreet self ...`
-  - `/autogreet other ...`
-- **Server side**
-  - `/autogreet server ...`
-
-## Commands
+## Client Side Commands
 
 ### Status
 
 Controls whether auto greeting is **enabled** or **disabled**.
 
 ```text
-/autogreet [self|other|server] status
-/autogreet [self|other|server] status enable
-/autogreet [self|other|server] status disable
-/autogreet [self|other|server] status toggle
+/autogreet [self|other] status
+/autogreet [self|other] status enable
+/autogreet [self|other] status disable
+/autogreet [self|other] status toggle
 ```
 
 ### Message
@@ -88,7 +83,16 @@ Controls what the mod sends.
 
 You can use placeholders.
 
-#### Placeholders for `self` / `server`
+```text
+/autogreet [self|other] message add <message>
+/autogreet [self|other] message add <message> <index>
+/autogreet [self|other] message remove
+/autogreet [self|other] message remove <index>
+/autogreet [self|other] message remove all
+/autogreet [self|other] message list
+```
+
+#### Placeholders for `self`
 
 | Placeholder | Description |
 |:-:|:-:|
@@ -107,28 +111,74 @@ You can use placeholders.
 | `@player` | Player name |
 | `@UUID` | Player UUID |
 
+### Blacklist / Whitelist
+
 ```text
-/autogreet [self|other|server] message add <message>
-/autogreet [self|other|server] message add <message> <index>
-/autogreet [self|other|server] message remove
-/autogreet [self|other|server] message remove <index>
-/autogreet [self|other|server] message remove all
-/autogreet [self|other|server] message list
+/autogreet other [whitelist|blacklist] list
+/autogreet other [whitelist|blacklist] clear confirm
+
+/autogreet other [whitelist|blacklist] [match|except] list
+
+/autogreet other [whitelist|blacklist] [match|except] [equal|contain|startWith|endWith] add <message>
+/autogreet other [whitelist|blacklist] [match|except] [equal|contain|startWith|endWith] remove
+/autogreet other [whitelist|blacklist] [match|except] [equal|contain|startWith|endWith] remove <index>
+/autogreet other [whitelist|blacklist] [match|except] [equal|contain|startWith|endWith] remove all
+/autogreet other [whitelist|blacklist] [match|except] [equal|contain|startWith|endWith] list
 ```
+
+## Server Side Commands
+
+### Status
+
+Controls whether auto greeting is **enabled** or **disabled**.
+
+```text
+/serverautogreet status
+/serverautogreet status enable
+/serverautogreet status disable
+/serverautogreet status toggle
+```
+
+### Message
+
+Controls what the mod sends.
+
+You can use placeholders.
+
+```text
+/serverautogreet message add <message>
+/serverautogreet message add <message> <index>
+/serverautogreet message remove
+/serverautogreet message remove <index>
+/serverautogreet message remove all
+/serverautogreet message list
+```
+
+#### Placeholders
+
+| Placeholder | Description |
+|:-:|:-:|
+| `@player` | Player name |
+| `@UUID` | UUID |
+| `@X` | X coordinate (up to 3 decimals) |
+| `@Y` | Y coordinate (up to 3 decimals) |
+| `@Z` | Z coordinate (up to 3 decimals) |
+| `@health` | Current health |
+| `@level` | Current experience level |
 
 ### Blacklist / Whitelist
 
 ```text
-/autogreet [other|server] [whitelist|blacklist] list
-/autogreet [other|server] [whitelist|blacklist] clear confirm
+/serverautogreet [whitelist|blacklist] list
+/serverautogreet [whitelist|blacklist] clear confirm
 
-/autogreet [other|server] [whitelist|blacklist] [match|except] list
+/serverautogreet [whitelist|blacklist] [match|except] list
 
-/autogreet [other|server] [whitelist|blacklist] [match|except] [equal|contain|startWith|endWith] add <message>
-/autogreet [other|server] [whitelist|blacklist] [match|except] [equal|contain|startWith|endWith] remove
-/autogreet [other|server] [whitelist|blacklist] [match|except] [equal|contain|startWith|endWith] remove <index>
-/autogreet [other|server] [whitelist|blacklist] [match|except] [equal|contain|startWith|endWith] remove all
-/autogreet [other|server] [whitelist|blacklist] [match|except] [equal|contain|startWith|endWith] list
+/serverautogreet [whitelist|blacklist] [match|except] [equal|contain|startWith|endWith] add <message>
+/serverautogreet [whitelist|blacklist] [match|except] [equal|contain|startWith|endWith] remove
+/serverautogreet [whitelist|blacklist] [match|except] [equal|contain|startWith|endWith] remove <index>
+/serverautogreet [whitelist|blacklist] [match|except] [equal|contain|startWith|endWith] remove all
+/serverautogreet [whitelist|blacklist] [match|except] [equal|contain|startWith|endWith] list
 ```
 
 ## Examples
@@ -146,20 +196,16 @@ You can use placeholders.
 ### Server side
 
 ```text
-/autogreet server message add "Welcome @player!"
-/autogreet server message add "Player @player joined at (@X, @Y, @Z)"
-/autogreet server message add "HP=@health Level=@level"
+/serverautogreet message add "Welcome @player!"
+/serverautogreet message add "Player @player joined at (@X, @Y, @Z)"
+/serverautogreet message add "HP=@health Level=@level"
 ```
 
 ## Message Behavior
 
-If a message does **not** start with `/`, it is sent as a normal chat message.
-
-```text
-<name> <message>
-```
-
 If a message **does** start with `/`, it is executed as a command.
+
+If a message does **not** start with `/`, it is sent as a normal chat message.
 
 ## Filtering
 
