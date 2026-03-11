@@ -1,0 +1,21 @@
+{
+	"schemaVersion": 1,
+	"id": "auto-greeting-server",
+	"version": "${version}",
+	"name": "Auto Greeting Server",
+	"description": "A Fabric mod that automatically sends greeting messages.",
+	"authors": [
+		"Wenhan"
+	],
+	"environment": "server",
+	"entrypoints": {
+		"server": [
+			"com.example.autogreetingserver.AutoGreetingServerMod"
+		]
+	},
+	"depends": {
+		"fabricloader": ">=0.18.0",
+		"fabric-api": "*",
+		"minecraft": "1.21.11"
+	}
+}

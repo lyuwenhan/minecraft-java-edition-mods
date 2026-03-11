@@ -1,0 +1,8 @@
+{
+	"command.autogreet.on": "Auto greeting enabled.",
+	"command.autogreet.off": "Auto greeting disabled.",
+	"command.autogreet.toggle": "Auto greeting toggled.",
+	"command.autogreet.add": "Greeting added.",
+	"command.autogreet.clear": "All greetings cleared.",
+	"command.autogreet.list": "Configured greetings."
+}
