@@ -1,7 +1,7 @@
-package com.example.autogreeting.client.mixin;
+package com.example.autogreetingclient.mixin;
 
-import com.example.autogreeting.client.AutoGreetingClientDelay;
-import com.example.autogreeting.client.AutoGreetingClientMod;
+import com.example.autogreetingclient.AutoGreetingClientDelay;
+import com.example.autogreetingclient.AutoGreetingClientMod;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.network.packet.s2c.play.PlayerListS2CPacket;

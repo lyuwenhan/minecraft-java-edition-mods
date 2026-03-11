@@ -1,4 +1,4 @@
-package com.example.autogreeting.rules;
+package com.example.autogreetingclient.rules;
 
 import java.util.ArrayList;
 import java.util.List;
