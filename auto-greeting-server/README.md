@@ -1,4 +1,4 @@
-# Auto Greeting
+# Auto Greeting - Server
 
 A Fabric mod that automatically sends greeting messages when a player joins the server
 
