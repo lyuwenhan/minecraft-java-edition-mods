@@ -7,6 +7,7 @@ import com.mojang.brigadier.builder.RequiredArgumentBuilder;
 import net.fabricmc.api.DedicatedServerModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
+import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
@@ -179,8 +180,8 @@ public class AutoGreetingServerMod implements DedicatedServerModInitializer {
 		});
 
 		CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> {
-			dispatcher.register(literal("autogreet")
-				.requires(source -> source.hasPermissionLevel(3))
+			dispatcher.register(literal("serverautogreet")
+				.requires(CommandManager.requirePermissionLevel(CommandManager.ADMINS_CHECK))
 				.then(literal("server")
 					.then(literal("status")
 						.executes(ctx -> {
