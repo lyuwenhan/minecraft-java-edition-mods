@@ -180,13 +180,7 @@ public class AutoGreetingServerMod implements DedicatedServerModInitializer {
 
 		CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> {
 			dispatcher.register(literal("autogreet")
-				.requires(src ->
-					(src.getEntity() == null && "Server".equals(src.getName())) ||
-					(src.getPlayer() != null
-						&& net.minecraft.server.command.CommandManager
-							.requirePermissionLevel(net.minecraft.server.command.CommandManager.MODERATORS_CHECK)
-							.test(src))
-				)
+				.requires(source -> source.hasPermissionLevel(3))
 				.then(literal("server")
 					.then(literal("status")
 						.executes(ctx -> {
