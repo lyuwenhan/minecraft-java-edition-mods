@@ -186,19 +186,19 @@ You can use placeholders.
 ### Client side
 
 ```text
-/autogreet self message add "Hello, I'm @player at (@X, @Y, @Z)"
-/autogreet self message add "HP: @health | Level: @level"
+/autogreet self message add Hello, I'm @player at (@X, @Y, @Z)
+/autogreet self message add HP: @health | Level: @level
 
-/autogreet other message add "Welcome @player!"
-/autogreet other message add "Hello @player (@UUID)"
+/autogreet other message add Welcome @player!
+/autogreet other message add Hello @player (@UUID)
 ```
 
 ### Server side
 
 ```text
-/serverautogreet message add "Welcome @player!"
-/serverautogreet message add "Player @player joined at (@X, @Y, @Z)"
-/serverautogreet message add "HP=@health Level=@level"
+/serverautogreet message add Welcome @player!
+/serverautogreet message add Player @player joined at (@X, @Y, @Z)
+/serverautogreet message add HP=@health Level=@level
 ```
 
 ## Message Behavior
