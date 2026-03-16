@@ -36,10 +36,11 @@ public class AutoGreetingClientConfig {
 		}
 
 		try {
-			return GSON.fromJson(
+			AutoGreetingClientConfig cfg = GSON.fromJson(
 				Files.readString(CONFIG_PATH),
 				AutoGreetingClientConfig.class
 			);
+			return cfg != null ? cfg : new AutoGreetingClientConfig();
 		} catch (IOException e) {
 			throw new RuntimeException("Failed to load auto-greeting config", e);
 		}
@@ -51,5 +52,18 @@ public class AutoGreetingClientConfig {
 		} catch (IOException e) {
 			throw new RuntimeException("Failed to save auto-greeting config", e);
 		}
+	}
+
+	public AutoGreetingClientConfig copy() {
+		AutoGreetingClientConfig c = new AutoGreetingClientConfig();
+		c.selfEnabled = this.selfEnabled;
+		c.selfGreetings = new ArrayList<>(this.selfGreetings);
+		c.otherEnabled = this.otherEnabled;
+		c.otherGreetings = new ArrayList<>(this.otherGreetings);
+		c.otherBlacklist = this.otherBlacklist.copy();
+		c.otherBlacklistExcept = this.otherBlacklistExcept.copy();
+		c.otherWhitelist = this.otherWhitelist.copy();
+		c.otherWhitelistExcept = this.otherWhitelistExcept.copy();
+		return c;
 	}
 }

@@ -11,6 +11,9 @@
 	"entrypoints": {
 		"client": [
 			"com.example.autogreetingclient.AutoGreetingClientMod"
+		],
+		"modmenu": [
+			"com.example.autogreetingclient.client.compat.ModMenuIntegration"
 		]
 	},
 	"mixins": [
@@ -20,5 +23,9 @@
 		"fabricloader": ">=0.18.0",
 		"fabric-api": "*",
 		"minecraft": "1.21.11"
+	},
+	"suggests": {
+		"cloth-config": "*",
+		"modmenu": "*"
 	}
 }

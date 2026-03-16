@@ -20,6 +20,15 @@ public class StringMatchRules {
 		endWith.clear();
 	}
 
+	public StringMatchRules copy() {
+		StringMatchRules rules = new StringMatchRules();
+		rules.equal.addAll(this.equal);
+		rules.contain.addAll(this.contain);
+		rules.startWith.addAll(this.startWith);
+		rules.endWith.addAll(this.endWith);
+		return rules;
+	}
+
 	public boolean match(String name) {
 		for (String v : equal) {
 			if (name.equals(v)) {
