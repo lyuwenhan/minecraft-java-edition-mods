@@ -155,6 +155,9 @@ These rules are used to decide whether a joining player's name should trigger gr
 - Fabric Loader 0.18+
 - Fabric API
 - Java 21
+- Cloth config 21.11.153 (Optional)
+- Modmenu 17.0.0-beta.2 (Optional)
+
 
 ## License
 
