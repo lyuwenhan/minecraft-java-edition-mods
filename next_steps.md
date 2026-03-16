@@ -22,4 +22,4 @@ None
 
 #2 **Auto Greeting - Server side**
  - **Feature:**
-   - `/autogreet server ...`
+   - `/servergreet ...`
