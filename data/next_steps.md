@@ -10,6 +10,15 @@
  - **Feature:**
    - Support more mod loaders.
 
+#6 **Disable client commands**
+ - **Feature:**
+   - Disable specific client-side commands.
+   - Four modes: `All`, `Whitelist`, `Blacklist`, `None`.
+   - **All**: disable all client-side commands.
+   - **Whitelist**: only allow commands in the whitelist.
+   - **Blacklist**: disable commands in the blacklist.
+   - **None**: do not disable any client-side commands.
+
 ## Currunt working on
 
 None
