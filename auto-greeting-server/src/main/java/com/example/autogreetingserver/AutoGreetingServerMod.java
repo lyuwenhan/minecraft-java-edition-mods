@@ -43,15 +43,13 @@ public class AutoGreetingServerMod implements DedicatedServerModInitializer {
 		String name,
 		String title,
 		List<String> list,
-		boolean allowDupe,
-		boolean allowAddIndex,
-		boolean isPattern
-	) {
-		String pattern = isPattern ? "pattern" : "message";
+		boolean isType1,
+	) {	
+		String pattern = isType1 ? "message" : "pattern";
 		RequiredArgumentBuilder<ServerCommandSource, String> addArg = argument(pattern, StringArgumentType.greedyString())
 		.executes(ctx -> {
 			String msg = StringArgumentType.getString(ctx, pattern);
-			if (!allowDupe && list.contains(msg)) {
+			if (!isType1 && list.contains(msg)) {
 				ctx.getSource().sendFeedback(() -> Text.literal(title + ": \"" + msg + "\" already exists."), false);
 				return 1;
 			}
@@ -60,12 +58,12 @@ public class AutoGreetingServerMod implements DedicatedServerModInitializer {
 			ctx.getSource().sendFeedback(() -> Text.literal(title + ": appended \"" + msg + "\"."), false);
 			return 1;
 		});
-		if (allowAddIndex) {
+		if (isType1) {
 			addArg = addArg.then(argument("index", IntegerArgumentType.integer(1))
 				.executes(ctx -> {
 					String msg = StringArgumentType.getString(ctx, pattern);
 					int index = IntegerArgumentType.getInteger(ctx, "index");
-					if (!allowDupe && list.contains(msg)) {
+					if (!isType1 && list.contains(msg)) {
 						ctx.getSource().sendFeedback(() -> Text.literal(title + ": \"" + msg + "\" already exists."), false);
 						return 1;
 					}
@@ -135,23 +133,6 @@ public class AutoGreetingServerMod implements DedicatedServerModInitializer {
 			);
 	}
 
-	private static LiteralArgumentBuilder<ServerCommandSource> buildStringListNode(
-		String name,
-		String title,
-		List<String> list
-	) {
-		return buildStringListNode(name, title, list, false, false);
-	}
-
-	private static LiteralArgumentBuilder<ServerCommandSource> buildStringListNode(
-		String name,
-		String title,
-		List<String> list,
-		boolean operation
-	) {
-		return buildStringListNode(name, title, list, operation, operation);
-	}
-
 	private static boolean shouldGreet(ServerPlayerEntity player) {
 		String name = player.getName().getString();
 
@@ -219,25 +200,29 @@ public class AutoGreetingServerMod implements DedicatedServerModInitializer {
 						.then(buildStringListNode(
 							"equal",
 							"Blacklist (Name Equal)",
-							CONFIG.serverBlacklist.equal
+							CONFIG.serverBlacklist.equal,
+							false
 						))
 
 						.then(buildStringListNode(
 							"contain",
 							"Blacklist (Name Contain)",
-							CONFIG.serverBlacklist.contain
+							CONFIG.serverBlacklist.contain,
+							false
 						))
 
 						.then(buildStringListNode(
 							"startWith",
 							"Blacklist (Name Starts with)",
-							CONFIG.serverBlacklist.startWith
+							CONFIG.serverBlacklist.startWith,
+							false
 						))
 
 						.then(buildStringListNode(
 							"endWith",
 							"Blacklist (Name Ends with)",
-							CONFIG.serverBlacklist.endWith
+							CONFIG.serverBlacklist.endWith,
+							false
 						))
 
 						.then(literal("list")
@@ -255,25 +240,29 @@ public class AutoGreetingServerMod implements DedicatedServerModInitializer {
 						.then(buildStringListNode(
 							"equal",
 							"Except (Name Equal)",
-							CONFIG.serverBlacklistExcept.equal
+							CONFIG.serverBlacklistExcept.equal,
+							false
 						))
 
 						.then(buildStringListNode(
 							"contain",
 							"Except (Name Contain)",
-							CONFIG.serverBlacklistExcept.contain
+							CONFIG.serverBlacklistExcept.contain,
+							false
 						))
 
 						.then(buildStringListNode(
 							"startWith",
 							"Except (Name Starts with)",
-							CONFIG.serverBlacklistExcept.startWith
+							CONFIG.serverBlacklistExcept.startWith,
+							false
 						))
 
 						.then(buildStringListNode(
 							"endWith",
 							"Except (Name Ends with)",
-							CONFIG.serverBlacklistExcept.endWith
+							CONFIG.serverBlacklistExcept.endWith,
+							false
 						))
 
 						.then(literal("list")
@@ -320,25 +309,29 @@ public class AutoGreetingServerMod implements DedicatedServerModInitializer {
 						.then(buildStringListNode(
 							"equal",
 							"Whitelist (Name Equal)",
-							CONFIG.serverWhitelist.equal
+							CONFIG.serverWhitelist.equal,
+							false
 						))
 
 						.then(buildStringListNode(
 							"contain",
 							"Whitelist (Name Contain)",
-							CONFIG.serverWhitelist.contain
+							CONFIG.serverWhitelist.contain,
+							false
 						))
 
 						.then(buildStringListNode(
 							"startWith",
 							"Whitelist (Name Starts with)",
-							CONFIG.serverWhitelist.startWith
+							CONFIG.serverWhitelist.startWith,
+							false
 						))
 
 						.then(buildStringListNode(
 							"endWith",
 							"Whitelist (Name Ends with)",
-							CONFIG.serverWhitelist.endWith
+							CONFIG.serverWhitelist.endWith,
+							false
 						))
 
 						.then(literal("list")
@@ -356,25 +349,29 @@ public class AutoGreetingServerMod implements DedicatedServerModInitializer {
 						.then(buildStringListNode(
 							"equal",
 							"Except (Name Equal)",
-							CONFIG.serverWhitelistExcept.equal
+							CONFIG.serverWhitelistExcept.equal,
+							false
 						))
 
 						.then(buildStringListNode(
 							"contain",
 							"Except (Name Contain)",
-							CONFIG.serverWhitelistExcept.contain
+							CONFIG.serverWhitelistExcept.contain,
+							false
 						))
 
 						.then(buildStringListNode(
 							"startWith",
 							"Except (Name Starts with)",
-							CONFIG.serverWhitelistExcept.startWith
+							CONFIG.serverWhitelistExcept.startWith,
+							false
 						))
 
 						.then(buildStringListNode(
 							"endWith",
 							"Except (Name Ends with)",
-							CONFIG.serverWhitelistExcept.endWith
+							CONFIG.serverWhitelistExcept.endWith,
+							false
 						))
 
 						.then(literal("list")
