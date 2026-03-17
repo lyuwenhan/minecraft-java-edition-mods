@@ -93,7 +93,7 @@ You can use placeholders.
 
 /autogreet other [whitelist|blacklist] [match|except] list
 
-/autogreet other [whitelist|blacklist] [match|except] [equal|contain|startWith|endWith] add <message>
+/autogreet other [whitelist|blacklist] [match|except] [equal|contain|startWith|endWith] add <pattern>
 /autogreet other [whitelist|blacklist] [match|except] [equal|contain|startWith|endWith] remove
 /autogreet other [whitelist|blacklist] [match|except] [equal|contain|startWith|endWith] remove <index>
 /autogreet other [whitelist|blacklist] [match|except] [equal|contain|startWith|endWith] remove all

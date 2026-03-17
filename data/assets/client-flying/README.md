@@ -6,7 +6,7 @@ A lightweight **client-side Fabric mod** that enables controlled flight behavior
 
 ## Overview
 
-Client Flying allows players to toggle flight in Survival and Adventure modes when not wearing Elytra.  
+Client Flying allows players to toggle flight in Survival and Adventure modes when not wearing Elytra.
 
 The mod also forces the client to continuously report grounded movement to the server and enables local invulnerability flags. All changes are handled entirely on the client side.
 

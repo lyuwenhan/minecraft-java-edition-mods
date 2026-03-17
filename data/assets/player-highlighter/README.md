@@ -6,7 +6,7 @@ A lightweight **client-side Fabric mod** that highlights players with a glowing 
 
 ## Overview
 
-Player Highlighter improves player visibility by showing a glowing outline around other players **while the hold key is pressed (default: TAB)** or **when the highlight toggle is enabled**.  
+Player Highlighter improves player visibility by showing a glowing outline around other players **while the hold key is pressed (default: TAB)** or **when the highlight toggle is enabled**.
 The effect is purely visual, handled entirely on the client, and can be either momentary or persistent based on user preference.
 
 When neither the hold key is pressed nor the toggle is enabled, all outlines disappear immediately.
@@ -16,7 +16,8 @@ When neither the hold key is pressed nor the toggle is enabled, all outlines dis
 ## Key Features
 
 - Glowing outline appears **while holding the configured key** or **when keep mode is enabled**
-- Optional toggle mode for persistent highlighting
+- HUD icons show on-screen indicators for other players in view when highlighting is active
+- Optional toggle mode for persistent highlighting (default key: **I**)
 - No screen clutter when inactive
 - Purely client-side and visual-only
 - Does not modify real player states or effects
@@ -31,8 +32,9 @@ When neither the hold key is pressed nor the toggle is enabled, all outlines dis
 - Other players are rendered with a glowing outline similar to the vanilla Glowing effect
 - The local player is never highlighted
 - Outline visibility is controlled by:
-  - Holding the highlight key (default: TAB), or
-  - Enabling keep mode via a toggle key
+  - Holding the highlight key (default: **TAB**), or
+  - Enabling keep mode via the toggle key (default: **I**)
+- When active, small HUD icons appear on screen to indicate player positions in view
 - Outline color follows vanilla rules (default or team-based, if applicable)
 - No impact on mobs or non-player entities
 

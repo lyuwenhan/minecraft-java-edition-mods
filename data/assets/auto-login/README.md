@@ -1,3 +1,7 @@
+# Languages
+
+[EN/English](README.md) | [ZH-CN/简体中文](README_ZH-CN.md)
+
 # Auto Login
 
 Client-side Fabric mod that automatically logs you into
@@ -44,7 +48,6 @@ any server behavior.
 ```
 /autologin on
 /autologin off
-/autologin toggle
 ```
 
 ### Clear saved password
