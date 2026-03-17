@@ -39,15 +39,13 @@ public class AutoGreetingClientMod implements ClientModInitializer {
 		String name,
 		String title,
 		List<String> list,
-		boolean allowDupe,
-		boolean allowAddIndex,
-		boolean isPattern
+		boolean isType1
 	) {
-		String pattern = isPattern ? "pattern" : "message";
+		String pattern = isType1 ? "message" : "pattern";
 		RequiredArgumentBuilder<FabricClientCommandSource, String> addArg = argument(pattern, StringArgumentType.greedyString());
 		addArg = addArg.executes(ctx -> {
 			String msg = StringArgumentType.getString(ctx, pattern);
-			if (!allowDupe && list.contains(msg)) {
+			if (!isType1 && list.contains(msg)) {
 				ctx.getSource().sendFeedback(Text.literal(title + ": \"" + msg + "\" already exists."));
 				return 1;
 			}
@@ -56,12 +54,12 @@ public class AutoGreetingClientMod implements ClientModInitializer {
 			ctx.getSource().sendFeedback(Text.literal(title + ": appended \"" + msg + "\"."));
 			return 1;
 		});
-		if (allowAddIndex) {
+		if (isType1) {
 			addArg = addArg.then(argument("index", IntegerArgumentType.integer(1))
 				.executes(ctx -> {
 					String msg = StringArgumentType.getString(ctx, pattern);
 					int index = IntegerArgumentType.getInteger(ctx, "index");
-					if (!allowDupe && list.contains(msg)) {
+					if (!isType1 && list.contains(msg)) {
 						ctx.getSource().sendFeedback(Text.literal(title + ": \"" + msg + "\" already exists."));
 						return 1;
 					}
@@ -130,32 +128,6 @@ public class AutoGreetingClientMod implements ClientModInitializer {
 				})
 			);
 	}
-
-	private static LiteralArgumentBuilder<FabricClientCommandSource> buildStringListNode(
-		String name,
-		String title,
-		List<String> list
-	) {
-		return buildStringListNode(name, title, list, false, false, false);
-	}
-
-	private static LiteralArgumentBuilder<FabricClientCommandSource> buildStringListNode(
-		String name,
-		String title,
-		List<String> list,
-		boolean operation
-	) {
-		return buildStringListNode(name, title, list, operation, operation, false);
-	}
-
-	private static LiteralArgumentBuilder<FabricClientCommandSource> buildStringListNodePattern(
-		String name,
-		String title,
-		List<String> list
-	) {
-		return buildStringListNode(name, title, list, false, false, true);
-	}
-
 
 	@Override
 	public void onInitializeClient() {
@@ -233,28 +205,32 @@ public class AutoGreetingClientMod implements ClientModInitializer {
 
 					.then(literal("blacklist")
 						.then(literal("match")
-							.then(buildStringListNodePattern(
+							.then(buildStringListNode(
 								"equal",
 								"Blacklist (Name Equal)",
-								CONFIG.otherBlacklist.equal
+								CONFIG.otherBlacklist.equal,
+								false
 							))
 
-							.then(buildStringListNodePattern(
+							.then(buildStringListNode(
 								"contain",
 								"Blacklist (Name Contain)",
-								CONFIG.otherBlacklist.contain
+								CONFIG.otherBlacklist.contain,
+								false
 							))
 
-							.then(buildStringListNodePattern(
+							.then(buildStringListNode(
 								"startWith",
 								"Blacklist (Name Starts with)",
-								CONFIG.otherBlacklist.startWith
+								CONFIG.otherBlacklist.startWith,
+								false
 							))
 
-							.then(buildStringListNodePattern(
+							.then(buildStringListNode(
 								"endWith",
 								"Blacklist (Name Ends with)",
-								CONFIG.otherBlacklist.endWith
+								CONFIG.otherBlacklist.endWith,
+								false
 							))
 
 							.then(literal("list")
@@ -269,28 +245,32 @@ public class AutoGreetingClientMod implements ClientModInitializer {
 						)
 
 						.then(literal("except")
-							.then(buildStringListNodePattern(
+							.then(buildStringListNode(
 								"equal",
 								"Except (Name Equal)",
-								CONFIG.otherBlacklistExcept.equal
+								CONFIG.otherBlacklistExcept.equal,
+								false
 							))
 
-							.then(buildStringListNodePattern(
+							.then(buildStringListNode(
 								"contain",
 								"Except (Name Contain)",
-								CONFIG.otherBlacklistExcept.contain
+								CONFIG.otherBlacklistExcept.contain,
+								false
 							))
 
-							.then(buildStringListNodePattern(
+							.then(buildStringListNode(
 								"startWith",
 								"Except (Name Starts with)",
-								CONFIG.otherBlacklistExcept.startWith
+								CONFIG.otherBlacklistExcept.startWith,
+								false
 							))
 
-							.then(buildStringListNodePattern(
+							.then(buildStringListNode(
 								"endWith",
 								"Except (Name Ends with)",
-								CONFIG.otherBlacklistExcept.endWith
+								CONFIG.otherBlacklistExcept.endWith,
+								false
 							))
 
 							.then(literal("list")
@@ -334,28 +314,32 @@ public class AutoGreetingClientMod implements ClientModInitializer {
 
 					.then(literal("whitelist")
 						.then(literal("match")
-							.then(buildStringListNodePattern(
+							.then(buildStringListNode(
 								"equal",
 								"Whitelist (Name Equal)",
-								CONFIG.otherWhitelist.equal
+								CONFIG.otherWhitelist.equal,
+								false
 							))
 
-							.then(buildStringListNodePattern(
+							.then(buildStringListNode(
 								"contain",
 								"Whitelist (Name Contain)",
-								CONFIG.otherWhitelist.contain
+								CONFIG.otherWhitelist.contain,
+								false
 							))
 
-							.then(buildStringListNodePattern(
+							.then(buildStringListNode(
 								"startWith",
 								"Whitelist (Name Starts with)",
-								CONFIG.otherWhitelist.startWith
+								CONFIG.otherWhitelist.startWith,
+								false
 							))
 
-							.then(buildStringListNodePattern(
+							.then(buildStringListNode(
 								"endWith",
 								"Whitelist (Name Ends with)",
-								CONFIG.otherWhitelist.endWith
+								CONFIG.otherWhitelist.endWith,
+								false
 							))
 
 							.then(literal("list")
@@ -370,28 +354,32 @@ public class AutoGreetingClientMod implements ClientModInitializer {
 						)
 
 						.then(literal("except")
-							.then(buildStringListNodePattern(
+							.then(buildStringListNode(
 								"equal",
 								"Except (Name Equal)",
-								CONFIG.otherWhitelistExcept.equal
+								CONFIG.otherWhitelistExcept.equal,
+								false
 							))
 
-							.then(buildStringListNodePattern(
+							.then(buildStringListNode(
 								"contain",
 								"Except (Name Contain)",
-								CONFIG.otherWhitelistExcept.contain
+								CONFIG.otherWhitelistExcept.contain,
+								false
 							))
 
-							.then(buildStringListNodePattern(
+							.then(buildStringListNode(
 								"startWith",
 								"Except (Name Starts with)",
-								CONFIG.otherWhitelistExcept.startWith
+								CONFIG.otherWhitelistExcept.startWith,
+								false
 							))
 
-							.then(buildStringListNodePattern(
+							.then(buildStringListNode(
 								"endWith",
 								"Except (Name Ends with)",
-								CONFIG.otherWhitelistExcept.endWith
+								CONFIG.otherWhitelistExcept.endWith,
+								false
 							))
 
 							.then(literal("list")

@@ -43,13 +43,13 @@ public class AutoGreetingServerMod implements DedicatedServerModInitializer {
 		String name,
 		String title,
 		List<String> list,
-		boolean isType1,
+		boolean isMessage
 	) {	
-		String pattern = isType1 ? "message" : "pattern";
+		String pattern = isMessage ? "message" : "pattern";
 		RequiredArgumentBuilder<ServerCommandSource, String> addArg = argument(pattern, StringArgumentType.greedyString())
 		.executes(ctx -> {
 			String msg = StringArgumentType.getString(ctx, pattern);
-			if (!isType1 && list.contains(msg)) {
+			if (!isMessage && list.contains(msg)) {
 				ctx.getSource().sendFeedback(() -> Text.literal(title + ": \"" + msg + "\" already exists."), false);
 				return 1;
 			}
@@ -58,12 +58,12 @@ public class AutoGreetingServerMod implements DedicatedServerModInitializer {
 			ctx.getSource().sendFeedback(() -> Text.literal(title + ": appended \"" + msg + "\"."), false);
 			return 1;
 		});
-		if (isType1) {
+		if (isMessage) {
 			addArg = addArg.then(argument("index", IntegerArgumentType.integer(1))
 				.executes(ctx -> {
 					String msg = StringArgumentType.getString(ctx, pattern);
 					int index = IntegerArgumentType.getInteger(ctx, "index");
-					if (!isType1 && list.contains(msg)) {
+					if (!isMessage && list.contains(msg)) {
 						ctx.getSource().sendFeedback(() -> Text.literal(title + ": \"" + msg + "\" already exists."), false);
 						return 1;
 					}
