@@ -9,7 +9,6 @@ import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallba
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.minecraft.text.Text;
-import java.util.ArrayList;
 import java.util.List;
 import static net.fabricmc.fabric.api.client.command.v2.ClientCommandManager.*;
 
@@ -41,11 +40,13 @@ public class AutoGreetingClientMod implements ClientModInitializer {
 		String title,
 		List<String> list,
 		boolean allowDupe,
-		boolean allowAddIndex
+		boolean allowAddIndex,
+		boolean isPattern
 	) {
-		RequiredArgumentBuilder<FabricClientCommandSource, String> addArg = argument("message", StringArgumentType.greedyString())
-		.executes(ctx -> {
-			String msg = StringArgumentType.getString(ctx, "message");
+		String pattern = isPattern ? "pattern" : "message";
+		RequiredArgumentBuilder<FabricClientCommandSource, String> addArg = argument(pattern, StringArgumentType.greedyString());
+		addArg = addArg.executes(ctx -> {
+			String msg = StringArgumentType.getString(ctx, pattern);
 			if (!allowDupe && list.contains(msg)) {
 				ctx.getSource().sendFeedback(Text.literal(title + ": \"" + msg + "\" already exists."));
 				return 1;
@@ -58,7 +59,7 @@ public class AutoGreetingClientMod implements ClientModInitializer {
 		if (allowAddIndex) {
 			addArg = addArg.then(argument("index", IntegerArgumentType.integer(1))
 				.executes(ctx -> {
-					String msg = StringArgumentType.getString(ctx, "message");
+					String msg = StringArgumentType.getString(ctx, pattern);
 					int index = IntegerArgumentType.getInteger(ctx, "index");
 					if (!allowDupe && list.contains(msg)) {
 						ctx.getSource().sendFeedback(Text.literal(title + ": \"" + msg + "\" already exists."));
@@ -135,7 +136,7 @@ public class AutoGreetingClientMod implements ClientModInitializer {
 		String title,
 		List<String> list
 	) {
-		return buildStringListNode(name, title, list, false, false);
+		return buildStringListNode(name, title, list, false, false, false);
 	}
 
 	private static LiteralArgumentBuilder<FabricClientCommandSource> buildStringListNode(
@@ -144,7 +145,15 @@ public class AutoGreetingClientMod implements ClientModInitializer {
 		List<String> list,
 		boolean operation
 	) {
-		return buildStringListNode(name, title, list, operation, operation);
+		return buildStringListNode(name, title, list, operation, operation, false);
+	}
+
+	private static LiteralArgumentBuilder<FabricClientCommandSource> buildStringListNodePattern(
+		String name,
+		String title,
+		List<String> list
+	) {
+		return buildStringListNode(name, title, list, false, false, true);
 	}
 
 
@@ -224,25 +233,25 @@ public class AutoGreetingClientMod implements ClientModInitializer {
 
 					.then(literal("blacklist")
 						.then(literal("match")
-							.then(buildStringListNode(
+							.then(buildStringListNodePattern(
 								"equal",
 								"Blacklist (Name Equal)",
 								CONFIG.otherBlacklist.equal
 							))
 
-							.then(buildStringListNode(
+							.then(buildStringListNodePattern(
 								"contain",
 								"Blacklist (Name Contain)",
 								CONFIG.otherBlacklist.contain
 							))
 
-							.then(buildStringListNode(
+							.then(buildStringListNodePattern(
 								"startWith",
 								"Blacklist (Name Starts with)",
 								CONFIG.otherBlacklist.startWith
 							))
 
-							.then(buildStringListNode(
+							.then(buildStringListNodePattern(
 								"endWith",
 								"Blacklist (Name Ends with)",
 								CONFIG.otherBlacklist.endWith
@@ -260,25 +269,25 @@ public class AutoGreetingClientMod implements ClientModInitializer {
 						)
 
 						.then(literal("except")
-							.then(buildStringListNode(
+							.then(buildStringListNodePattern(
 								"equal",
 								"Except (Name Equal)",
 								CONFIG.otherBlacklistExcept.equal
 							))
 
-							.then(buildStringListNode(
+							.then(buildStringListNodePattern(
 								"contain",
 								"Except (Name Contain)",
 								CONFIG.otherBlacklistExcept.contain
 							))
 
-							.then(buildStringListNode(
+							.then(buildStringListNodePattern(
 								"startWith",
 								"Except (Name Starts with)",
 								CONFIG.otherBlacklistExcept.startWith
 							))
 
-							.then(buildStringListNode(
+							.then(buildStringListNodePattern(
 								"endWith",
 								"Except (Name Ends with)",
 								CONFIG.otherBlacklistExcept.endWith
@@ -325,25 +334,25 @@ public class AutoGreetingClientMod implements ClientModInitializer {
 
 					.then(literal("whitelist")
 						.then(literal("match")
-							.then(buildStringListNode(
+							.then(buildStringListNodePattern(
 								"equal",
 								"Whitelist (Name Equal)",
 								CONFIG.otherWhitelist.equal
 							))
 
-							.then(buildStringListNode(
+							.then(buildStringListNodePattern(
 								"contain",
 								"Whitelist (Name Contain)",
 								CONFIG.otherWhitelist.contain
 							))
 
-							.then(buildStringListNode(
+							.then(buildStringListNodePattern(
 								"startWith",
 								"Whitelist (Name Starts with)",
 								CONFIG.otherWhitelist.startWith
 							))
 
-							.then(buildStringListNode(
+							.then(buildStringListNodePattern(
 								"endWith",
 								"Whitelist (Name Ends with)",
 								CONFIG.otherWhitelist.endWith
@@ -361,25 +370,25 @@ public class AutoGreetingClientMod implements ClientModInitializer {
 						)
 
 						.then(literal("except")
-							.then(buildStringListNode(
+							.then(buildStringListNodePattern(
 								"equal",
 								"Except (Name Equal)",
 								CONFIG.otherWhitelistExcept.equal
 							))
 
-							.then(buildStringListNode(
+							.then(buildStringListNodePattern(
 								"contain",
 								"Except (Name Contain)",
 								CONFIG.otherWhitelistExcept.contain
 							))
 
-							.then(buildStringListNode(
+							.then(buildStringListNodePattern(
 								"startWith",
 								"Except (Name Starts with)",
 								CONFIG.otherWhitelistExcept.startWith
 							))
 
-							.then(buildStringListNode(
+							.then(buildStringListNodePattern(
 								"endWith",
 								"Except (Name Ends with)",
 								CONFIG.otherWhitelistExcept.endWith

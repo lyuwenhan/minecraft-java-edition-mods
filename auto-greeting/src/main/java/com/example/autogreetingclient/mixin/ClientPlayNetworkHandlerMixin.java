@@ -16,23 +16,31 @@ public class ClientPlayNetworkHandlerMixin {
 
 	@Inject(method = "onPlayerList", at = @At("TAIL"))
 	private void onPlayerList(PlayerListS2CPacket packet, CallbackInfo ci) {
-		if (!AutoGreetingClientMod.CONFIG.otherEnabled) return;
+		if (!AutoGreetingClientMod.CONFIG.otherEnabled) {
+			return;
+		}
 
-		if (System.currentTimeMillis() - AutoGreetingClientMod.joinWorldAt < 1000) return;
+		if (System.currentTimeMillis() - AutoGreetingClientMod.joinWorldAt < 1000) {
+			return;
+		}
 
-		if (!packet.getActions().contains(PlayerListS2CPacket.Action.ADD_PLAYER)) return;
+		if (!packet.getActions().contains(PlayerListS2CPacket.Action.ADD_PLAYER)) {
+			return;
+		}
 		MinecraftClient client = MinecraftClient.getInstance();
-		if (client.player == null) return;
+		if (client.player == null) {
+			return;
+		}
 
 		packet.getEntries().forEach(entry -> {
 			String name = entry.profile().name();
 			String uuid = entry.profile().id().toString();
 
-			if(AutoGreetingClientMod.CONFIG.otherBlacklist.match(name) && !AutoGreetingClientMod.CONFIG.otherBlacklistExcept.match(name)) {
+			if (AutoGreetingClientMod.CONFIG.otherBlacklist.match(name) && !AutoGreetingClientMod.CONFIG.otherBlacklistExcept.match(name)) {
 				return;
 			}
-			
-			if(!AutoGreetingClientMod.CONFIG.otherWhitelist.isEmpty() && (!AutoGreetingClientMod.CONFIG.otherWhitelist.match(name) || AutoGreetingClientMod.CONFIG.otherWhitelistExcept.match(name))) {
+
+			if (!AutoGreetingClientMod.CONFIG.otherWhitelist.isEmpty() && (!AutoGreetingClientMod.CONFIG.otherWhitelist.match(name) || AutoGreetingClientMod.CONFIG.otherWhitelistExcept.match(name))) {
 				return;
 			}
 

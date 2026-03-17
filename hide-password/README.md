@@ -4,13 +4,27 @@ Client-side Fabric mod that hides sensitive command parameters
 (e.g. /login, /register) in the chat input.
 
 ## Features
+
 - Masks passwords with *
 - Does NOT modify actual command sent to server
 - Client-only
+- Toggle on/off via **F8** key
 
-## Supported versions
-- Minecraft 1.21.x
-- Fabric Loader
+## Supported Commands
+
+- `/login`, `/l`
+- `/register`, `/reg`
+- `/changepassword`
+- `/autologin set`
+- `/account unregister`
+- `/account changepassword`
+
+## Supported Versions
+
+- Minecraft 1.21.11
+- Fabric Loader 0.18+
+- Fabric API
+- Java 21
 
 ## License
 MIT

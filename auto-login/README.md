@@ -1,6 +1,6 @@
-# Language/语言
+# Languages
 
-[EN/English](README.md) | [CN-ZH/简体中文](README_CN_ZH.md)
+[EN/English](README.md) | [ZH-CN/简体中文](README_ZH-CN.md)
 
 # Auto Login
 
@@ -48,7 +48,6 @@ any server behavior.
 ```
 /autologin on
 /autologin off
-/autologin toggle
 ```
 
 ### Clear saved password

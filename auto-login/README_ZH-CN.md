@@ -1,8 +1,8 @@
 # Language/语言
 
-[EN/English](README.md) | [CN-ZH/中文](README_CN_ZH.md)
+[EN/English](README.md) | [ZH-CN/简体中文](README_ZH-CN.md)
 
-# 自动登录 
+# 自动登录
 
 一个客户端 Fabric 模组，可在加入需要认证的 Minecraft 服务器（如 EasyAuth、AuthMe）时自动登录，密码采用本地加密存储。
 
@@ -45,7 +45,6 @@
 ```
 /autologin on
 /autologin off
-/autologin toggle
 ```
 
 ### 清除已保存的密码

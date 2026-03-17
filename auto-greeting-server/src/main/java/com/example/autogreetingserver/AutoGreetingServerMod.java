@@ -44,11 +44,13 @@ public class AutoGreetingServerMod implements DedicatedServerModInitializer {
 		String title,
 		List<String> list,
 		boolean allowDupe,
-		boolean allowAddIndex
+		boolean allowAddIndex,
+		boolean isPattern
 	) {
-		RequiredArgumentBuilder<ServerCommandSource, String> addArg = argument("message", StringArgumentType.greedyString())
+		String pattern = isPattern ? "pattern" : "message";
+		RequiredArgumentBuilder<ServerCommandSource, String> addArg = argument(pattern, StringArgumentType.greedyString())
 		.executes(ctx -> {
-			String msg = StringArgumentType.getString(ctx, "message");
+			String msg = StringArgumentType.getString(ctx, pattern);
 			if (!allowDupe && list.contains(msg)) {
 				ctx.getSource().sendFeedback(() -> Text.literal(title + ": \"" + msg + "\" already exists."), false);
 				return 1;
@@ -61,7 +63,7 @@ public class AutoGreetingServerMod implements DedicatedServerModInitializer {
 		if (allowAddIndex) {
 			addArg = addArg.then(argument("index", IntegerArgumentType.integer(1))
 				.executes(ctx -> {
-					String msg = StringArgumentType.getString(ctx, "message");
+					String msg = StringArgumentType.getString(ctx, pattern);
 					int index = IntegerArgumentType.getInteger(ctx, "index");
 					if (!allowDupe && list.contains(msg)) {
 						ctx.getSource().sendFeedback(() -> Text.literal(title + ": \"" + msg + "\" already exists."), false);

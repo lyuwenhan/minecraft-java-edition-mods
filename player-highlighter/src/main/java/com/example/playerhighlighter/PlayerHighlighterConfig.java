@@ -30,7 +30,7 @@ public class PlayerHighlighterConfig {
 				PlayerHighlighterConfig.class
 			);
 		} catch (IOException e) {
-			throw new RuntimeException("Failed to load auto-greeting config", e);
+			throw new RuntimeException("Failed to load player-highlighter config", e);
 		}
 	}
 
@@ -38,7 +38,7 @@ public class PlayerHighlighterConfig {
 		try {
 			Files.writeString(CONFIG_PATH, GSON.toJson(this));
 		} catch (IOException e) {
-			throw new RuntimeException("Failed to save auto-greeting config", e);
+			throw new RuntimeException("Failed to save player-highlighter config", e);
 		}
 	}
 }

@@ -86,7 +86,7 @@ You can use placeholders.
 
 /servergreet [whitelist|blacklist] [match|except] list
 
-/servergreet [whitelist|blacklist] [match|except] [equal|contain|startWith|endWith] add <message>
+/servergreet [whitelist|blacklist] [match|except] [equal|contain|startWith|endWith] add <pattern>
 /servergreet [whitelist|blacklist] [match|except] [equal|contain|startWith|endWith] remove
 /servergreet [whitelist|blacklist] [match|except] [equal|contain|startWith|endWith] remove <index>
 /servergreet [whitelist|blacklist] [match|except] [equal|contain|startWith|endWith] remove all
@@ -108,8 +108,6 @@ If a message **does** start with `/`, it is executed as a command.
 If a message does **not** start with `/`, it is sent as a normal chat message.
 
 ## Filtering
-
-Both **other** and **server** greetings support:
 
 - blacklist
 - whitelist

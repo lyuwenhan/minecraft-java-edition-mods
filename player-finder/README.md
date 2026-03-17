@@ -19,10 +19,10 @@ Player867 ↑ 11m ❤ 20.0 (123, 64, -456)
 
 Field description:
 
-- `Player867` — Target player name  
-- `↑` — Direction relative to your current facing  
-- `11m` — Distance on the XZ plane  
-- `❤ 20.0` — Current health  
+- `Player867` — Target player name
+- `↑` — Direction relative to your current facing
+- `11m` — Distance on the XZ plane
+- `❤ 20.0` — Current health
 - `(123, 64, -456)` — World coordinates (X, Y, Z)
 
 ## Behavior
