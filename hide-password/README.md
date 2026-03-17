@@ -27,4 +27,5 @@ Client-side Fabric mod that hides sensitive command parameters
 - Java 21
 
 ## License
+
 MIT
