@@ -16,7 +16,7 @@ any server behavior.
 ## Features
 
 - Automatically sends `/login <password>` after joining a server
-- Password is stored **locally and encrypted** (AES + PBKDF2)
+- Password is stored **locally and encrypted** (AES-GCM with random device key)
 - No server-side plugin or mod required
 - Client-only, safe for multiplayer servers
 - Manual trigger via command for testing or fallback
@@ -78,8 +78,9 @@ server authentication logic.
 
 - Passwords are stored **only on your local machine**
 - Encryption uses:
-  - PBKDF2 (key derivation)
+  - **Random 256-bit device key** (generated per installation, not derivable from public info)
   - AES-GCM (authenticated encryption)
+- The encryption key is stored in a separate file from the config
 - No plaintext password is written to disk
 - Do **not** reuse important real-world passwords
 
