@@ -2,6 +2,7 @@ package com.example.autologin;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import net.fabricmc.loader.api.FabricLoader;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -24,7 +25,7 @@ public class AutoLoginConfig {
 			new GsonBuilder().setPrettyPrinting().create();
 
 	private static Path path() {
-		return Path.of("config", "auto-login.json");
+		return FabricLoader.getInstance().getConfigDir().resolve("auto-login.json");
 	}
 
 	public static AutoLoginConfig load() {

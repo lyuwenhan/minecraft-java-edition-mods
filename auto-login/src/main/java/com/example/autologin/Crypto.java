@@ -17,35 +17,47 @@ public class Crypto {
 		public String iv;
 	}
 
-	public static Result encrypt(String plain, char[] master) throws Exception {
-		byte[] salt = random(16);
+	/**
+	 * Encrypt using a 256-bit key directly (device key).
+	 * Salt is kept empty for this mode.
+	 */
+	public static Result encrypt(String plain, byte[] key) throws Exception {
 		byte[] iv = random(12);
-
-		byte[] key = kdf(master, salt);
-
 		Cipher c = Cipher.getInstance("AES/GCM/NoPadding");
 		c.init(Cipher.ENCRYPT_MODE, new SecretKeySpec(key, "AES"), new GCMParameterSpec(128, iv));
-
 		byte[] enc = c.doFinal(plain.getBytes(StandardCharsets.UTF_8));
-
 		Result r = new Result();
 		r.enc = b64(enc);
-		r.salt = b64(salt);
+		r.salt = "";
 		r.iv = b64(iv);
 		return r;
 	}
 
-	public static String decrypt(AutoLoginConfig.Credential cred, char[] master) throws Exception {
+	/**
+	 * Decrypt using a 256-bit key directly (device key).
+	 */
+	public static String decrypt(AutoLoginConfig.Credential cred, byte[] key) throws Exception {
+		byte[] iv = b64(cred.iv);
+		byte[] enc = b64(cred.enc);
+		Cipher c = Cipher.getInstance("AES/GCM/NoPadding");
+		c.init(Cipher.DECRYPT_MODE, new SecretKeySpec(key, "AES"), new GCMParameterSpec(128, iv));
+		byte[] dec = c.doFinal(enc);
+		return new String(dec, StandardCharsets.UTF_8);
+	}
+
+	/**
+	 * Decrypt using legacy master key (user.name+os.name) for migration.
+	 */
+	public static String decryptLegacy(AutoLoginConfig.Credential cred, char[] master) throws Exception {
+		if (cred.salt == null || cred.salt.isEmpty()) {
+			throw new IllegalArgumentException("Legacy format requires salt");
+		}
 		byte[] salt = b64(cred.salt);
 		byte[] iv = b64(cred.iv);
 		byte[] enc = b64(cred.enc);
-
 		byte[] key = kdf(master, salt);
-
 		Cipher c = Cipher.getInstance("AES/GCM/NoPadding");
-		c.init(Cipher.DECRYPT_MODE, new SecretKeySpec(key, "AES"),
-			   new GCMParameterSpec(128, iv));
-
+		c.init(Cipher.DECRYPT_MODE, new SecretKeySpec(key, "AES"), new GCMParameterSpec(128, iv));
 		byte[] dec = c.doFinal(enc);
 		return new String(dec, StandardCharsets.UTF_8);
 	}

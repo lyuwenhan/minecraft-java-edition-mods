@@ -53,10 +53,15 @@ public class AutoLoginMod implements ClientModInitializer {
 								AutoLoginConfig.Credential cred = new AutoLoginConfig.Credential();
 
 								try {
+									byte[] deviceKey = DeviceKey.get();
+									if (deviceKey == null) {
+										ctx.getSource().sendFeedback(Text.literal("Failed to initialize secure storage."));
+										return 0;
+									}
 									Crypto.Result r =
 										Crypto.encrypt(
 											StringArgumentType.getString(ctx, "password"),
-											masterKey()
+											deviceKey
 										);
 									cred.enc = r.enc;
 									cred.salt = r.salt;
@@ -126,7 +131,26 @@ public class AutoLoginMod implements ClientModInitializer {
 		}
 
 		try {
-			String pwd = Crypto.decrypt(cred, masterKey());
+			byte[] deviceKey = DeviceKey.get();
+			if (deviceKey == null) return;
+			String pwd;
+			try {
+				pwd = Crypto.decrypt(cred, deviceKey);
+			} catch (Exception e) {
+				// Migrate from legacy format (user.name+os.name)
+				if (cred.salt != null && !cred.salt.isEmpty()) {
+					char[] legacy = (System.getProperty("user.name", "") + System.getProperty("os.name", "")).toCharArray();
+					pwd = Crypto.decryptLegacy(cred, legacy);
+					// Re-encrypt with device key
+					Crypto.Result r = Crypto.encrypt(pwd, deviceKey);
+					cred.enc = r.enc;
+					cred.salt = r.salt;
+					cred.iv = r.iv;
+					cfg.save();
+				} else {
+					throw e;
+				}
+			}
 			client.player.networkHandler.sendChatCommand("login " + pwd);
 		} catch (Exception ignored) {}
 	}
@@ -146,10 +170,5 @@ public class AutoLoginMod implements ClientModInitializer {
 
 		cred.enabled = enabled;
 		cfg.save();
-	}
-
-	private static char[] masterKey() {
-		String s = System.getProperty("user.name") + System.getProperty("os.name");
-		return s.toCharArray();
 	}
 }
