@@ -70,10 +70,14 @@ public abstract class TextFieldWidgetMixin {
     ) {
         if (hidepassword$active) {
             setText(hidepassword$real);
+            hidepassword$real = null;  // Clear sensitive data immediately
         }
     }
 
     /* ===== 逻辑 ===== */
+    /* 使用固定长度掩码，避免泄露密码长度和结构（符合 CWE-549 / 肩窥防护最佳实践） */
+
+    private static final String FIXED_MASK = "••••••••";
 
     private static String maskIfNeeded(String input) {
         if (input == null || input.isEmpty()) return null;
@@ -84,18 +88,12 @@ public abstract class TextFieldWidgetMixin {
             if (lower.startsWith(cmd + " ")) {
                 int prefixLen = cmd.length();
                 String visiblePrefix = input.substring(0, prefixLen + 1);
-                String rest = input.substring(prefixLen + 1);
-                return visiblePrefix + maskPreserveSpaces(rest);
+                if(visiblePrefix.isEmpty()) {
+                    return "";
+                }
+                return visiblePrefix + FIXED_MASK;
             }
         }
         return null;
-    }
-
-    private static String maskPreserveSpaces(String s) {
-        StringBuilder sb = new StringBuilder(s.length());
-        for (char c : s.toCharArray()) {
-            sb.append(c == ' ' ? ' ' : '*');
-        }
-        return sb.toString();
     }
 }

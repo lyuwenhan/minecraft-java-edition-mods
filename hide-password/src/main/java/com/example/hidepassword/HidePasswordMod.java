@@ -10,6 +10,8 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
 import org.lwjgl.glfw.GLFW;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -18,6 +20,7 @@ import java.nio.file.Path;
 public class HidePasswordMod implements ModInitializer {
 
     public static final String MOD_ID = "hide-password";
+    public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 
     public static HidePasswordConfig CONFIG;
 
@@ -35,7 +38,7 @@ public class HidePasswordMod implements ModInitializer {
 
         loadConfig();
 
-        System.out.println("HidePassword loaded, enabled=" + CONFIG.enabled);
+        LOGGER.info("HidePassword loaded, enabled={}", CONFIG.enabled);
 
         toggleKey = KeyBindingHelper.registerKeyBinding(
             new KeyBinding(
@@ -51,11 +54,11 @@ public class HidePasswordMod implements ModInitializer {
             while (toggleKey.wasPressed()) {
                 CONFIG.enabled = !CONFIG.enabled;
                 saveConfig();
-                System.out.println("HidePassword enabled = " + CONFIG.enabled);
+                LOGGER.info("HidePassword enabled={}", CONFIG.enabled);
                 if (client.player != null) {
                     client.player.sendMessage(
                         net.minecraft.text.Text.literal(
-                                "HidePassword " + (CONFIG.enabled ? "ON" : "OFF")
+                            "HidePassword " + (CONFIG.enabled ? "Enabled" : "Disabled")
                         ),
                         true
                     );
@@ -74,7 +77,7 @@ public class HidePasswordMod implements ModInitializer {
             }
         } catch (Exception e) {
             CONFIG = new HidePasswordConfig();
-            e.printStackTrace();
+            LOGGER.error("Failed to load config", e);
         }
     }
 
@@ -82,7 +85,7 @@ public class HidePasswordMod implements ModInitializer {
         try {
             Files.writeString(configPath, GSON.toJson(CONFIG));
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.error("Failed to save config", e);
         }
     }
 }
