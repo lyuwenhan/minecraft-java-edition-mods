@@ -5,7 +5,7 @@ Client-side Fabric mod that hides sensitive command parameters
 
 ## Features
 
-- Masks passwords with *
+- Masks passwords with fixed-length dots (••••••••) — no length/structure disclosure
 - Does NOT modify actual command sent to server
 - Client-only
 - Toggle on/off via **F8** key
