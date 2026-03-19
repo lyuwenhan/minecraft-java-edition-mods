@@ -1,3 +1,7 @@
+# Languages
+
+[EN/English](https://lyuwenhan.github.io/extensions/minecraft-java/data/assets/player-highlighter/README) | [ZH-CN/简体中文](https://lyuwenhan.github.io/extensions/minecraft-java/data/assets/player-highlighter/README_ZH-CN)
+
 # Player Highlighter
 
 A lightweight **client-side Fabric mod** that highlights players with a glowing outline while a designated key is held or a toggle is enabled, without relying on any server-side mechanics.

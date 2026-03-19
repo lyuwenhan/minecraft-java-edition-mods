@@ -1,3 +1,7 @@
+# Languages
+
+[EN/English](https://lyuwenhan.github.io/extensions/minecraft-java/data/assets/auto-greeting/README) | [ZH-CN/简体中文](https://lyuwenhan.github.io/extensions/minecraft-java/data/assets/auto-greeting/README_ZH-CN)
+
 # Auto Greeting
 
 A Fabric mod that automatically sends greeting messages when **you** or **other players** join a server

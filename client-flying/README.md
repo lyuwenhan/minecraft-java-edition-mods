@@ -1,3 +1,7 @@
+# Languages
+
+[EN/English](https://lyuwenhan.github.io/extensions/minecraft-java/data/assets/client-flying/README) | [ZH-CN/简体中文](https://lyuwenhan.github.io/extensions/minecraft-java/data/assets/client-flying/README_ZH-CN)
+
 # Client Flying
 
 A lightweight **client-side Fabric mod** that enables controlled flight behavior in Survival and Adventure modes while preventing Elytra conflicts, operating entirely on the client.

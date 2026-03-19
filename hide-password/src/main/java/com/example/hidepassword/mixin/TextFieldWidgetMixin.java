@@ -77,7 +77,7 @@ public abstract class TextFieldWidgetMixin {
     /* ===== 逻辑 ===== */
     /* 使用固定长度掩码，避免泄露密码长度和结构（符合 CWE-549 / 肩窥防护最佳实践） */
 
-    private static final String FIXED_MASK = "••••••••";
+    private static final String FIXED_MASK = "********";
 
     private static String maskIfNeeded(String input) {
         if (input == null || input.isEmpty()) return null;
