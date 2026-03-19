@@ -64,13 +64,22 @@ for (const dir of dirs) {
 			} else {
 				console.warn(`Icon not found for ${dir}`)
 			}
-			const readmePath = path.join(extPath, "README.md");
-			if (fs.existsSync(readmePath)) {
-				const targetPath = path.join(extensionsDir, "README.md");
-				fs.copyFileSync(readmePath, targetPath);
-				console.log(`README copied: ${readmePath} -> ${targetPath}`)
+			const files = fs.readdirSync(extPath);
+			const readmeFiles = files.filter(name => /^README.*\.md$/.test(name));
+			if (readmeFiles.length > 0) {
+				const readmeDir = path.join(extensionsDir, "README");
+				fs.rmSync(readmeDir, { recursive: true, force: true });
+				fs.mkdirSync(readmeDir, {
+					recursive: true
+				});
+				for (const file of readmeFiles) {
+					const sourcePath = path.join(extPath, file);
+					const targetPath = path.join(extensionsDir, file);
+					fs.copyFileSync(sourcePath, targetPath);
+					console.log(`README copied: ${sourcePath} -> ${targetPath}`);
+				}
 			} else {
-				console.warn(`README not found for ${dir}`)
+				console.warn(`README*.md not found for ${dir}`);
 			}
 			execSync(`../gradlew build`, {
 				cwd: extPath,
