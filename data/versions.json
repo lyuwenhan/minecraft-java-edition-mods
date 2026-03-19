@@ -1,1 +1,106 @@
-{"auto-greeting":{"versions":["1.0.0","1.0.1","1.0.2","1.0.3","1.0.4","1.0.5","1.0.6","1.0.7"],"hasIcon":true,"displayName":"Auto Greeting","description":"A Fabric mod that automatically sends greeting messages.","link":{"modrinth":"https://modrinth.com/mod/auto-greeting","curseforge":"https://www.curseforge.com/minecraft/mc-mods/auto-greeting"}},"auto-login":{"versions":["1.0.0","1.0.1","1.0.2","1.0.3"],"hasIcon":true,"displayName":"Auto Login","description":"Automatically logs in to auth servers using a locally encrypted password","link":{"modrinth":"https://modrinth.com/mod/autologinmod","curseforge":"https://www.curseforge.com/minecraft/mc-mods/auto-login"}},"hide-password":{"versions":["1.0.0","1.0.1","1.0.2","1.0.3","1.0.4"],"hasIcon":true,"displayName":"Hide Password","description":"Hide password arguments in chat commands","link":{"modrinth":"https://modrinth.com/mod/hide-password","curseforge":"https://www.curseforge.com/minecraft/mc-mods/hide-password"}},"player-finder":{"versions":["1.0.0","1.0.1","1.0.2"],"hasIcon":true,"displayName":"Player Finder","description":"Client-side Fabric HUD mod that displays nearby player information directly on your screen in Minecraft.","link":{"curseforge":"https://www.curseforge.com/minecraft/mc-mods/playerfinder"}},"player-highlighter":{"versions":["1.0.0","1.0.1","1.0.2","1.0.3","1.0.4","1.0.5","1.0.6","1.0.7"],"hasIcon":true,"displayName":"Player highlighter","description":"A lightweight client-side Fabric mod that highlights players with a glowing outline while the player list is visible.","link":{"modrinth":"https://modrinth.com/mod/player-highlighter-mod","curseforge":"https://www.curseforge.com/minecraft/mc-mods/auto-greeting"}},"client-flying":{"versions":["1.0.0","1.0.1"],"hasIcon":false,"displayName":"Client Flying","description":"A client-side Fabric mod that enables flight in Survival and Adventure modes while automatically handling Elytra conflicts and continuously syncing movement behavior.","link":{}},"auto-greeting-server":{"versions":["1.0.0","1.0.1"],"hasIcon":true,"displayName":"Auto Greeting Server","description":"A Fabric mod that automatically sends greeting messages.","link":{"curseforge":"https://www.curseforge.com/minecraft/mc-mods/auto-greeting-server"}}}
+{
+	"auto-greeting": {
+		"versions": [
+			"1.0.0",
+			"1.0.1",
+			"1.0.2",
+			"1.0.3",
+			"1.0.4",
+			"1.0.5",
+			"1.0.6",
+			"1.0.7"
+		],
+		"hasIcon": true,
+		"displayName": "Auto Greeting",
+		"description": "A Fabric mod that automatically sends greeting messages.",
+		"link": {
+			"modrinth": "https://modrinth.com/mod/auto-greeting",
+			"curseforge": "https://www.curseforge.com/minecraft/mc-mods/auto-greeting"
+		}
+	},
+	"auto-login": {
+		"versions": [
+			"1.0.0",
+			"1.0.1",
+			"1.0.2",
+			"1.0.3"
+		],
+		"hasIcon": true,
+		"displayName": "Auto Login",
+		"description": "Automatically logs in to auth servers using a locally encrypted password",
+		"link": {
+			"modrinth": "https://modrinth.com/mod/autologinmod",
+			"curseforge": "https://www.curseforge.com/minecraft/mc-mods/auto-login"
+		}
+	},
+	"hide-password": {
+		"versions": [
+			"1.0.0",
+			"1.0.1",
+			"1.0.2",
+			"1.0.3",
+			"1.0.4"
+		],
+		"hasIcon": true,
+		"displayName": "Hide Password",
+		"description": "Hide password arguments in chat commands",
+		"link": {
+			"modrinth": "https://modrinth.com/mod/hide-password",
+			"curseforge": "https://www.curseforge.com/minecraft/mc-mods/hide-password"
+		}
+	},
+	"player-finder": {
+		"versions": [
+			"1.0.0",
+			"1.0.1",
+			"1.0.2"
+		],
+		"hasIcon": true,
+		"displayName": "Player Finder",
+		"description": "Client-side Fabric HUD mod that displays nearby player information directly on your screen in Minecraft.",
+		"link": {
+			"curseforge": "https://www.curseforge.com/minecraft/mc-mods/playerfinder"
+		}
+	},
+	"player-highlighter": {
+		"versions": [
+			"1.0.0",
+			"1.0.1",
+			"1.0.2",
+			"1.0.3",
+			"1.0.4",
+			"1.0.5",
+			"1.0.6",
+			"1.0.7"
+		],
+		"hasIcon": true,
+		"displayName": "Player highlighter",
+		"description": "A lightweight client-side Fabric mod that highlights players with a glowing outline while the player list is visible.",
+		"link": {
+			"modrinth": "https://modrinth.com/mod/player-highlighter-mod",
+			"curseforge": "https://www.curseforge.com/minecraft/mc-mods/auto-greeting"
+		}
+	},
+	"client-flying": {
+		"versions": [
+			"1.0.0",
+			"1.0.1"
+		],
+		"hasIcon": false,
+		"displayName": "Client Flying",
+		"description": "A client-side Fabric mod that enables flight in Survival and Adventure modes while automatically handling Elytra conflicts and continuously syncing movement behavior.",
+		"link": {}
+	},
+	"auto-greeting-server": {
+		"versions": [
+			"1.0.0",
+			"1.0.1"
+		],
+		"hasIcon": true,
+		"displayName": "Auto Greeting Server",
+		"description": "A Fabric mod that automatically sends greeting messages.",
+		"link": {
+			"curseforge": "https://www.curseforge.com/minecraft/mc-mods/auto-greeting-server"
+		}
+	}
+}

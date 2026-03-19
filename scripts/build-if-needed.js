@@ -90,15 +90,14 @@ for (const dir of dirs) {
 			const manifest = JSON.parse(fs.readFileSync(manifestPath, "utf8"));
 			const displayName = manifest.name;
 			const description = manifest.description || "";
-			const isNew = !versions[dir];
-			if (isNew) {
+			if (!versions[dir]) {
 				console.log(`New mod detected: ${dir}`);
 				versions[dir] = {
 					versions: [version],
 					hasIcon,
 					displayName,
 					description,
-					link: ""
+					link: {}
 				}
 			} else {
 				const v = versions[dir].versions ?? [];
@@ -107,7 +106,7 @@ for (const dir of dirs) {
 					hasIcon: hasIcon ?? versions[dir].hasIcon,
 					displayName: displayName ?? versions[dir].displayName,
 					description: description ?? versions[dir].description,
-					link: versions[dir].link ?? ""
+					link: versions[dir].link ?? {}
 				}
 			}
 			console.log(`${dir} built successfully.`)
@@ -121,7 +120,7 @@ for (const dir of dirs) {
 		console.error(err.stack)
 	}
 }
-fs.writeFileSync(versionsPath, JSON.stringify(versions) + "\n", "utf8");
+fs.writeFileSync(versionsPath, JSON.stringify(versions, null, "\t") + "\n", "utf8");
 if (hasError) {
 	process.exit(1)
 }
