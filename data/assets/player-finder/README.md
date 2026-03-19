@@ -1,3 +1,7 @@
+# Languages
+
+[EN/English](https://lyuwenhan.github.io/extensions/minecraft-java/data/assets/player-finder/README) | [ZH-CN/简体中文](https://lyuwenhan.github.io/extensions/minecraft-java/data/assets/player-finder/README_ZH-CN)
+
 # Player Finder
 
 Client-side Fabric HUD mod that displays nearby player information directly on your screen in Minecraft.

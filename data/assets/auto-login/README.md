@@ -1,6 +1,6 @@
 # Languages
 
-[EN/English](README.md) | [ZH-CN/简体中文](README_ZH-CN.md)
+[EN/English](https://lyuwenhan.github.io/extensions/minecraft-java/data/assets/auto-login/README) | [ZH-CN/简体中文](https://lyuwenhan.github.io/extensions/minecraft-java/data/assets/auto-login/README_ZH-CN)
 
 # Auto Login
 
@@ -27,7 +27,7 @@ any server behavior.
 
 ### Set password (required once)
 
-```
+```text
 /autologin set <password>
 ```
 
@@ -36,7 +36,7 @@ any server behavior.
 
 ### Trigger auto-login immediately
 
-```
+```text
 /autologin login
 ```
 
@@ -45,14 +45,14 @@ any server behavior.
 
 ### Enable / disable
 
-```
+```text
 /autologin on
 /autologin off
 ```
 
 ### Clear saved password
 
-```
+```text
 /autologin clear
 ```
 
