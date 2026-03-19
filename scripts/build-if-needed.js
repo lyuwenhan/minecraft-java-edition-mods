@@ -74,7 +74,7 @@ for (const dir of dirs) {
 				});
 				for (const file of readmeFiles) {
 					const sourcePath = path.join(extPath, file);
-					const targetPath = path.join(extensionsDir, file);
+					const targetPath = path.join(readmeDir, file);
 					fs.copyFileSync(sourcePath, targetPath);
 					console.log(`README copied: ${sourcePath} -> ${targetPath}`);
 				}
