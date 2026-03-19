@@ -1,6 +1,6 @@
 # Languages
 
-[EN/English](https://lyuwenhan.github.io/extensions/minecraft-java/data/assets/auto-greeting/README) | [ZH-CN/简体中文](https://lyuwenhan.github.io/extensions/minecraft-java/data/assets/auto-greeting/README_ZH-CN)
+[EN/English](https://lyuwenhan.github.io/extensions/minecraft-java/data/assets/auto-greeting/README/README.html) | [ZH-CN/简体中文](https://lyuwenhan.github.io/extensions/minecraft-java/data/assets/auto-greeting/README/README_ZH-CN.html)
 
 # Auto Greeting
 
