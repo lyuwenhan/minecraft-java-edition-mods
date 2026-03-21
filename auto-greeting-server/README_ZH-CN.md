@@ -1,6 +1,6 @@
 # Languages (语言)
 
-[EN/English](https://lyuwenhan.github.io/extensions/minecraft-java/data/assets/auto-login/README) | [ZH-CN/简体中文](https://lyuwenhan.github.io/extensions/minecraft-java/data/assets/auto-login/README_ZH-CN)
+[EN/English](https://lyuwenhan.github.io/extensions/minecraft-java/data/assets/auto-login/README/README.html) | [ZH-CN/简体中文](https://lyuwenhan.github.io/extensions/minecraft-java/data/assets/auto-login/README/README_ZH-CN.html)
 
 # Auto Greeting - Server (服务端自动问候)
 
