@@ -1,6 +1,6 @@
 # Languages
 
-[EN/English](https://lyuwenhan.github.io/extensions/minecraft-java/data/assets/player-finder/README) | [ZH-CN/简体中文](https://lyuwenhan.github.io/extensions/minecraft-java/data/assets/player-finder/README_ZH-CN)
+[EN/English](https://lyuwenhan.github.io/extensions/minecraft-java/data/assets/player-finder/README/README.html) | [ZH-CN/简体中文](https://lyuwenhan.github.io/extensions/minecraft-java/data/assets/player-finder/README/README_ZH-CN.html)
 
 # Player Finder
 
