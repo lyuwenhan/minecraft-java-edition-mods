@@ -14,8 +14,8 @@
 		"displayName": "Auto Greeting",
 		"description": "A Fabric mod that automatically sends greeting messages.",
 		"link": {
-			"modrinth": "https://modrinth.com/mod/auto-greeting",
-			"curseforge": "https://www.curseforge.com/minecraft/mc-mods/auto-greeting"
+			"Modrinth": "https://modrinth.com/mod/auto-greeting",
+			"Curseforge": "https://www.curseforge.com/minecraft/mc-mods/auto-greeting"
 		}
 	},
 	"auto-login": {
@@ -29,8 +29,8 @@
 		"displayName": "Auto Login",
 		"description": "Automatically logs in to auth servers using a locally encrypted password",
 		"link": {
-			"modrinth": "https://modrinth.com/mod/autologinmod",
-			"curseforge": "https://www.curseforge.com/minecraft/mc-mods/auto-login"
+			"Modrinth": "https://modrinth.com/mod/autologinmod",
+			"Curseforge": "https://www.curseforge.com/minecraft/mc-mods/auto-login"
 		}
 	},
 	"hide-password": {
@@ -46,8 +46,8 @@
 		"displayName": "Hide Password",
 		"description": "Hide password arguments in chat commands",
 		"link": {
-			"modrinth": "https://modrinth.com/mod/hide-password",
-			"curseforge": "https://www.curseforge.com/minecraft/mc-mods/hide-password"
+			"Modrinth": "https://modrinth.com/mod/hide-password",
+			"Curseforge": "https://www.curseforge.com/minecraft/mc-mods/hide-password"
 		}
 	},
 	"player-finder": {
@@ -60,7 +60,7 @@
 		"displayName": "Player Finder",
 		"description": "Client-side Fabric HUD mod that displays nearby player information directly on your screen in Minecraft.",
 		"link": {
-			"curseforge": "https://www.curseforge.com/minecraft/mc-mods/playerfinder"
+			"Curseforge": "https://www.curseforge.com/minecraft/mc-mods/playerfinder"
 		}
 	},
 	"player-highlighter": {
@@ -78,8 +78,8 @@
 		"displayName": "Player highlighter",
 		"description": "A lightweight client-side Fabric mod that highlights players with a glowing outline while the player list is visible.",
 		"link": {
-			"modrinth": "https://modrinth.com/mod/player-highlighter-mod",
-			"curseforge": "https://www.curseforge.com/minecraft/mc-mods/auto-greeting"
+			"Modrinth": "https://modrinth.com/mod/player-highlighter-mod",
+			"Curseforge": "https://www.curseforge.com/minecraft/mc-mods/auto-greeting"
 		}
 	},
 	"client-flying": {
@@ -101,7 +101,7 @@
 		"displayName": "Auto Greeting Server",
 		"description": "A Fabric mod that automatically sends greeting messages.",
 		"link": {
-			"curseforge": "https://www.curseforge.com/minecraft/mc-mods/auto-greeting-server"
+			"Curseforge": "https://www.curseforge.com/minecraft/mc-mods/auto-greeting-server"
 		}
 	}
 }
