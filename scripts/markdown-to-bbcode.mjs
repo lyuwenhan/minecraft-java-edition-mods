@@ -52,7 +52,7 @@ function renderNode(node) {
 			return renderListItem(node)
 		}
 		case "code": {
-			return `[code]\n${node.value}\n[/code]\n\n`
+			return `[code]${node.value}[/code]\n`
 		}
 		case "table": {
 			return renderTable(node)
