@@ -19,6 +19,6 @@
 	},
 	"homepage": "https://github.com/lyuwenhan/minecraft-java-edition-mods#readme",
 	"dependencies": {
-		"markdown-to-bbcode-pmc": "^0.1.1"
+		"markdown-to-bbcode-converter": "^1.0.0"
 	}
 }
