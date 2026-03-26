@@ -4,8 +4,11 @@ import {
 import remarkParse from "remark-parse";
 import remarkGfm from "remark-gfm";
 export function markdownToBBCode(markdown) {
-	const tree = unified().use(remarkParse).use(remarkGfm).parse(markdown);
-	return renderNodes(tree.children).trim() + "\n";
+	if (typeof markdown !== "string") {
+		throw new TypeError(`markdownToBBCode expected a string, got ${typeof markdown}`)
+	}
+	const tree = unified().use(remarkParse).use(remarkGfm).parse(markdown.replace(/\r\n/g, "\n"));
+	return renderNodes(tree.children).trim() + "\n"
 }
 
 function renderNodes(nodes) {
@@ -14,10 +17,6 @@ function renderNodes(nodes) {
 
 function renderInline(nodes) {
 	return nodes.map(renderNode).join("")
-}
-
-function escapeBBCodeText(text) {
-	return text.replace(/\r\n/g, "\n")
 }
 
 function renderNode(node) {
@@ -30,13 +29,13 @@ function renderNode(node) {
 			return `${renderInline(node.children).trim()}\n`
 		}
 		case "text": {
-			return escapeBBCodeText(node.value)
+			return node.value
 		}
 		case "strong": {
 			return `[b]${renderInline(node.children)}[/b]`
 		}
 		case "inlineCode": {
-			return `[b]${escapeBBCodeText(node.value)}[/b]`
+			return `[b]${node.value}[/b]`
 		}
 		case "link": {
 			const text = renderInline(node.children);
