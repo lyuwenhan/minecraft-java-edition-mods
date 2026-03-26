@@ -1,0 +1,70 @@
+[h1]Languages[/h1]
+
+[url=https://lyuwenhan.github.io/extensions/minecraft-java/data/assets/client-flying/README/README.html]EN/English[/url] | [url=https://lyuwenhan.github.io/extensions/minecraft-java/data/assets/client-flying/README/README_ZH-CN.html]ZH-CN/简体中文[/url]
+
+[h1]Client Flying[/h1]
+
+A lightweight [b]client-side Fabric mod[/b] that enables controlled flight behavior in Survival and Adventure modes while preventing Elytra conflicts, operating entirely on the client.
+
+[hr]
+
+[h2]Overview[/h2]
+
+Client Flying allows players to toggle flight in Survival and Adventure modes when not wearing Elytra.
+
+The mod also forces the client to continuously report grounded movement to the server and enables local invulnerability flags. All changes are handled entirely on the client side.
+
+When Elytra is equipped, flight permission is automatically disabled to avoid interference with vanilla glide mechanics.
+
+[hr]
+
+[h2]Key Features[/h2]
+
+[list]
+[*]Enables flight in Survival and Adventure modes[/*]
+[*]Automatically disables flight when wearing Elytra[/*]
+[*]Continuously synchronizes client abilities[/*]
+[*]Forces grounded movement packets[/*]
+[*]No commands or configuration required[/*]
+[*]Lightweight with minimal performance impact[/*]
+[/list]
+
+[hr]
+
+[h2]Visual Behavior[/h2]
+
+[list]
+[*]Flight becomes available in Survival and Adventure modes[/*]
+[*]Elytra usage automatically disables custom flight[/*]
+[*]Movement packets are sent every tick with grounded state[/*]
+[*]No visual UI changes or overlays[/*]
+[/list]
+
+[hr]
+
+[h2]Multiplayer Safety[/h2]
+
+[list]
+[*]Client-side only[/*]
+[*]No server modifications required[/*]
+[*]Movement packets are manually sent each tick[/*]
+[*]Server authority still applies[/*]
+[*]May cause desynchronization on strict anti-cheat servers[/*]
+[/list]
+
+[hr]
+
+[h2]Supported Versions[/h2]
+
+[list]
+[*]Minecraft 1.21.11[/*]
+[*]Fabric Loader 0.18+[/*]
+[*]Fabric API[/*]
+[*]Java 21[/*]
+[/list]
+
+[hr]
+
+[h2]License[/h2]
+
+MIT
