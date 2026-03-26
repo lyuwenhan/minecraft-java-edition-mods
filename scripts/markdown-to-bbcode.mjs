@@ -5,9 +5,7 @@ import remarkParse from "remark-parse";
 import remarkGfm from "remark-gfm";
 export function markdownToBBCode(markdown) {
 	const tree = unified().use(remarkParse).use(remarkGfm).parse(markdown);
-	let result = renderNodes(tree.children).trim() + "\n";
-	result = result.replace(/\n\n\n+/g, "\n\n").replace(/(\[\/h[1-6]\])\n\n/g, "$1\n");
-	return result;
+	return renderNodes(tree.children).trim() + "\n";
 }
 
 function renderNodes(nodes) {
@@ -26,7 +24,7 @@ function renderNode(node) {
 	switch (node.type) {
 		case "heading": {
 			const text = renderInline(node.children).trim();
-			return `[h${node.depth}]${text}[/h${node.depth}]\n\n`
+			return `[h${node.depth}]${text}[/h${node.depth}]\n`
 		}
 		case "paragraph": {
 			return `${renderInline(node.children).trim()}\n\n`
@@ -46,7 +44,7 @@ function renderNode(node) {
 		}
 		case "list": {
 			const items = node.children.map(item => renderListItem(item)).join("");
-			return `[list]\n${items}[/list]\n\n`
+			return `[list]\n${items}[/list]\n`
 		}
 		case "listItem": {
 			return renderListItem(node)
