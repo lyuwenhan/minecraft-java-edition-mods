@@ -26,7 +26,8 @@ if (fs.existsSync(versionsPath)) {
 	}
 }
 const defaultStatus = {
-	needsUpdate: false
+	needsUpdate: false,
+	withPack: false
 };
 const excluded = [".git", ".github", "data", "node_modules", "scripts", "gradle"];
 const dirs = fs.readdirSync(root).filter(d => !excluded.includes(d) && fs.existsSync(path.join(root, d, "src", "main", "resources", "fabric.mod.json")) && fs.existsSync(path.join(root, d, "build.gradle")));
@@ -68,7 +69,10 @@ for (const dir of dirs) {
 			const readmeFiles = files.filter(name => /^README.*\.md$/.test(name));
 			if (readmeFiles.length > 0) {
 				const readmeDir = path.join(extensionsDir, "README");
-				fs.rmSync(readmeDir, { recursive: true, force: true });
+				fs.rmSync(readmeDir, {
+					recursive: true,
+					force: true
+				});
 				fs.mkdirSync(readmeDir, {
 					recursive: true
 				});
@@ -76,24 +80,26 @@ for (const dir of dirs) {
 					const sourcePath = path.join(extPath, file);
 					const targetPath = path.join(readmeDir, file);
 					fs.copyFileSync(sourcePath, targetPath);
-					console.log(`README copied: ${sourcePath} -> ${targetPath}`);
+					console.log(`README copied: ${sourcePath} -> ${targetPath}`)
 				}
 			} else {
-				console.warn(`README*.md not found for ${dir}`);
+				console.warn(`README*.md not found for ${dir}`)
 			}
-			execSync(`../gradlew build`, {
-				cwd: extPath,
-				stdio: "inherit"
-			});
-			const exportPath = path.join(extPath, "build", "libs", `${dir}-${version}.jar`);
-			if (fs.existsSync(exportPath)) {
-				const targetPath = path.join(distDir, `${dir}-${version}.jar`);
-				fs.copyFileSync(exportPath, targetPath);
-				console.log(`Exported jar copied: ${exportPath} -> ${targetPath}`)
-			} else {
-				hasError = true;
-				console.warn(`Exported jar not found`);
-				continue
+			if (status.withPack) {
+				execSync(`../gradlew build`, {
+					cwd: extPath,
+					stdio: "inherit"
+				});
+				const exportPath = path.join(extPath, "build", "libs", `${dir}-${version}.jar`);
+				if (fs.existsSync(exportPath)) {
+					const targetPath = path.join(distDir, `${dir}-${version}.jar`);
+					fs.copyFileSync(exportPath, targetPath);
+					console.log(`Exported jar copied: ${exportPath} -> ${targetPath}`)
+				} else {
+					hasError = true;
+					console.warn(`Exported jar not found`);
+					continue
+				}
 			}
 			const manifestPath = path.join(extPath, "src", "main", "resources", "fabric.mod.json");
 			const manifest = JSON.parse(fs.readFileSync(manifestPath, "utf8"));
@@ -111,7 +117,7 @@ for (const dir of dirs) {
 			} else {
 				const v = versions[dir].versions ?? [];
 				versions[dir] = {
-					versions: v.at(-1) === version ? v : [...v, version],
+					versions: status.withPack ? v.at(-1) === version ? v : [...v, version] : v,
 					hasIcon: hasIcon ?? versions[dir].hasIcon,
 					displayName: displayName ?? versions[dir].displayName,
 					description: description ?? versions[dir].description,
