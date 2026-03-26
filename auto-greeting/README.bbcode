@@ -28,47 +28,32 @@ Notes:
 
 For example:
 
-[code]
-/autogreet [other|self] status
-[/code]
-
+[code]/autogreet [other|self] status[/code]
 means either:
 
-[code]
-/autogreet other status
-[/code]
-
+[code]/autogreet other status[/code]
 or
 
-[code]
-/autogreet self status
-[/code]
-
+[code]/autogreet self status[/code]
 [h2]Commands[/h2]
 [h3]Status[/h3]
 Controls whether auto greeting is [b]enabled[/b] or [b]disabled[/b].
 
-[code]
-/autogreet [self|other] status
+[code]/autogreet [self|other] status
 /autogreet [self|other] status enable
 /autogreet [self|other] status disable
-/autogreet [self|other] status toggle
-[/code]
-
+/autogreet [self|other] status toggle[/code]
 [h3]Message[/h3]
 Controls what the mod sends.
 
 You can use placeholders.
 
-[code]
-/autogreet [self|other] message add <message>
+[code]/autogreet [self|other] message add <message>
 /autogreet [self|other] message add <message> <index>
 /autogreet [self|other] message remove
 /autogreet [self|other] message remove <index>
 /autogreet [self|other] message remove all
-/autogreet [self|other] message list
-[/code]
-
+/autogreet [self|other] message list[/code]
 [h4]Placeholders for [b]self[/b][/h4]
 [table]
 [tbody]
@@ -126,8 +111,7 @@ You can use placeholders.
 [/table]
 
 [h3]Blacklist / Whitelist[/h3]
-[code]
-/autogreet other [whitelist|blacklist] list
+[code]/autogreet other [whitelist|blacklist] list
 /autogreet other [whitelist|blacklist] clear confirm
 
 /autogreet other [whitelist|blacklist] [match|except] list
@@ -136,18 +120,13 @@ You can use placeholders.
 /autogreet other [whitelist|blacklist] [match|except] [equal|contain|startWith|endWith] remove
 /autogreet other [whitelist|blacklist] [match|except] [equal|contain|startWith|endWith] remove <index>
 /autogreet other [whitelist|blacklist] [match|except] [equal|contain|startWith|endWith] remove all
-/autogreet other [whitelist|blacklist] [match|except] [equal|contain|startWith|endWith] list
-[/code]
-
+/autogreet other [whitelist|blacklist] [match|except] [equal|contain|startWith|endWith] list[/code]
 [h2]Examples[/h2]
-[code]
-/autogreet self message add Hello, I'm @player at (@X, @Y, @Z)
+[code]/autogreet self message add Hello, I'm @player at (@X, @Y, @Z)
 /autogreet self message add HP: @health | Level: @level
 
 /autogreet other message add Welcome @player!
-/autogreet other message add Hello @player (@UUID)
-[/code]
-
+/autogreet other message add Hello @player (@UUID)[/code]
 [h2]Message Behavior[/h2]
 If a message [b]does[/b] start with [b]/[/b], it is executed as a command.
 
