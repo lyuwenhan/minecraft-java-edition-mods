@@ -1,9 +1,6 @@
 [h1]Languages[/h1][url=https://lyuwenhan.github.io/extensions/minecraft-java/data/assets/auto-greeting-server/README/README.html]EN/English[/url] | [url=https://lyuwenhan.github.io/extensions/minecraft-java/data/assets/auto-greeting-server/README/README_ZH-CN.html]ZH-CN/简体中文[/url]
-
 [h1]Auto Greeting - Server[/h1]A Fabric mod that automatically sends greeting messages when a player joins the server
-
 The mod supports both plain chat messages and commands.
-
 [h2]Features[/h2][list]
 [*]Supports multiple messages[/*]
 [*]Supports plain chat messages and commands[/*]
@@ -13,28 +10,21 @@ The mod supports both plain chat messages and commands.
 [/list][h2]Command Overview[/h2][list]
 [*][b]/servergreet ...[/b][/*]
 [/list]Notes:
-
 [list]
 [*][b][a|b][/b] means [b]a[/b] or [b]b[/b][/*]
 [/list]For example:
-
 [code]/servergreet [whitelist|blacklist] list[/code]
 means either:
-
 [code]/servergreet whitelist list[/code]
 or
-
 [code]/servergreet blacklist list[/code]
 [h2]Server Side Commands[/h2][h3]Status[/h3]Controls whether auto greeting is [b]enabled[/b] or [b]disabled[/b].
-
 [code]/servergreet status
 /servergreet status enable
 /servergreet status disable
 /servergreet status toggle[/code]
 [h3]Message[/h3]Controls what the mod sends.
-
 You can use placeholders.
-
 [code]/servergreet message add <message>
 /servergreet message add <message> <index>
 /servergreet message remove
@@ -77,7 +67,6 @@ You can use placeholders.
 [/tr]
 [/tbody]
 [/table]
-
 [h3]Blacklist / Whitelist[/h3][code]/servergreet [whitelist|blacklist] list
 /servergreet [whitelist|blacklist] clear confirm
 
@@ -92,9 +81,7 @@ You can use placeholders.
 /servergreet message add Player @player joined at (@X, @Y, @Z)
 /servergreet message add HP=@health Level=@level[/code]
 [h2]Message Behavior[/h2]If a message [b]does[/b] start with [b]/[/b], it is executed as a command.
-
 If a message does [b]not[/b] start with [b]/[/b], it is sent as a normal chat message.
-
 [h2]Filtering[/h2][list]
 [*]blacklist[/*]
 [*]whitelist[/*]
@@ -105,7 +92,6 @@ If a message does [b]not[/b] start with [b]/[/b], it is sent as a normal chat me
 [*][b]startWith[/b][/*]
 [*][b]endWith[/b][/*]
 [/list]These rules are used to decide whether a joining player's name should trigger greeting logic.
-
 [h3]Filtering behavior[/h3][list]
 [*]If a player matches the [b]blacklist[/b], they are ignored[/*]
 [*]If a player matches the blacklist but also matches [b]blacklist except[/b], they are allowed again[/*]
