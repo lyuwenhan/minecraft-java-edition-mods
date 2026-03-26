@@ -34,7 +34,7 @@ const dirs = fs.readdirSync(root).filter(d => !excluded.includes(d) && fs.exists
 (async () => {
 	const {
 		markdownToBBCode
-	} = await import("./markdown-to-bbcode.mjs");
+	} = await import("markdown-to-bbcode-pmc");
 	let hasError = false;
 	for (const dir of dirs) {
 		try {
