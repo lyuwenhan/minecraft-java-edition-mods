@@ -63,8 +63,9 @@ const dirs = fs.readdirSync(root).filter(d => !excluded.includes(d) && fs.exists
 				if (fs.existsSync(readmePath)) {
 					const readme = fs.readFileSync(readmePath, "utf8");
 					const bbcode = markdownToBBCode(readme);
-					fs.writeFileSync(path.join(extensionsDir, "README.bbcode"), bbcode, "utf8");
-					console.log(`README converted to BBCode: ${readmePath} -> ${path.join(extensionsDir,"README.bbcode")}`)
+					const outPath = path.join(extPath, "README.bbcode");
+					fs.writeFileSync(outPath, bbcode, "utf8");
+					console.log(`README converted to BBCode: ${readmePath} -> ${outPath}`)
 				} else {
 					console.warn(`README not found for ${dir}`)
 				}
