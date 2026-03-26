@@ -27,7 +27,7 @@ function renderNode(node) {
 			return `[h${node.depth}]${text}[/h${node.depth}]`
 		}
 		case "paragraph": {
-			return `${renderInline(node.children).trim()}\n\n`
+			return `${renderInline(node.children).trim()}\n`
 		}
 		case "text": {
 			return escapeBBCodeText(node.value)
@@ -57,10 +57,10 @@ function renderNode(node) {
 		}
 		case "blockquote": {
 			const content = renderNodes(node.children).trim();
-			return `[quote]\n${content}\n[/quote]\n\n`
+			return `[quote]\n${content}\n[/quote]\n`
 		}
 		case "thematicBreak": {
-			return `[hr]\n\n`
+			return `[hr]\n`
 		}
 		case "break": {
 			return "\n"
@@ -110,6 +110,6 @@ function renderTable(tableNode) {
 		}
 		result += "[/tr]\n"
 	});
-	result += "[/tbody]\n[/table]\n\n";
+	result += "[/tbody]\n[/table]\n";
 	return result
 }
