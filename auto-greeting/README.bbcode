@@ -13,19 +13,16 @@ A Fabric mod that automatically sends greeting messages when [b]you[/b] or [b]ot
 [*]Automatically sends messages for [b]yourself[/b] after joining a server[/*]
 [*]Automatically sends messages when [b]other players[/b] join[/*]
 [/list]
-
 [h2]Command Overview[/h2]
 [list]
 [*][b]/autogreet self ...[/b][/*]
 [*][b]/autogreet other ...[/b][/*]
 [/list]
-
 Notes:
 
 [list]
 [*][b][a|b][/b] means [b]a[/b] or [b]b[/b][/*]
 [/list]
-
 For example:
 
 [code]/autogreet [other|self] status[/code]
@@ -145,7 +142,6 @@ If a message does [b]not[/b] start with [b]/[/b], it is sent as a normal chat me
 [*][b]startWith[/b][/*]
 [*][b]endWith[/b][/*]
 [/list]
-
 These rules are used to decide whether a joining player's name should trigger greeting logic.
 
 [h3]Filtering behavior[/h3]
@@ -155,7 +151,6 @@ These rules are used to decide whether a joining player's name should trigger gr
 [*]If the [b]whitelist[/b] is not empty, only players matching the whitelist are allowed[/*]
 [*]If a player matches the whitelist but also matches [b]whitelist except[/b], they are ignored[/*]
 [/list]
-
 [h2]Notes[/h2]
 [list]
 [*][b]index[/b] is optional and 1-based[/*]
@@ -167,7 +162,6 @@ These rules are used to decide whether a joining player's name should trigger gr
 [*][b]clear confirm[/b] clears the entire blacklist or whitelist rule set[/*]
 [*]Numeric values are formatted with up to 3 decimal places, with trailing zeros removed[/*]
 [/list]
-
 [h2]Supported Versions[/h2]
 [list]
 [*]Minecraft 1.21.11[/*]
@@ -177,6 +171,5 @@ These rules are used to decide whether a joining player's name should trigger gr
 [*]Cloth config 21.11.153 (Optional)[/*]
 [*]Modmenu 17.0.0-beta.2 (Optional)[/*]
 [/list]
-
 [h2]License[/h2]
 MIT

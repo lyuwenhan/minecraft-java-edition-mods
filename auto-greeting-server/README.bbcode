@@ -14,18 +14,15 @@ The mod supports both plain chat messages and commands.
 [*]Supports placeholders[/*]
 [*]Automatically sends messages when a player joins the server[/*]
 [/list]
-
 [h2]Command Overview[/h2]
 [list]
 [*][b]/servergreet ...[/b][/*]
 [/list]
-
 Notes:
 
 [list]
 [*][b][a|b][/b] means [b]a[/b] or [b]b[/b][/*]
 [/list]
-
 For example:
 
 [code]/servergreet [whitelist|blacklist] list[/code]
@@ -123,7 +120,6 @@ If a message does [b]not[/b] start with [b]/[/b], it is sent as a normal chat me
 [*][b]startWith[/b][/*]
 [*][b]endWith[/b][/*]
 [/list]
-
 These rules are used to decide whether a joining player's name should trigger greeting logic.
 
 [h3]Filtering behavior[/h3]
@@ -133,7 +129,6 @@ These rules are used to decide whether a joining player's name should trigger gr
 [*]If the [b]whitelist[/b] is not empty, only players matching the whitelist are allowed[/*]
 [*]If a player matches the whitelist but also matches [b]whitelist except[/b], they are ignored[/*]
 [/list]
-
 [h2]Notes[/h2]
 [list]
 [*][b]index[/b] is optional and 1-based[/*]
@@ -145,7 +140,6 @@ These rules are used to decide whether a joining player's name should trigger gr
 [*][b]clear confirm[/b] clears the entire blacklist or whitelist rule set[/*]
 [*]Numeric values are formatted with up to 3 decimal places, with trailing zeros removed[/*]
 [/list]
-
 [h2]Supported Versions[/h2]
 [list]
 [*]Minecraft 1.21.11[/*]
@@ -153,6 +147,5 @@ These rules are used to decide whether a joining player's name should trigger gr
 [*]Fabric API[/*]
 [*]Java 21[/*]
 [/list]
-
 [h2]License[/h2]
 MIT
