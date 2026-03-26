@@ -5,7 +5,9 @@ import remarkParse from "remark-parse";
 import remarkGfm from "remark-gfm";
 export function markdownToBBCode(markdown) {
 	const tree = unified().use(remarkParse).use(remarkGfm).parse(markdown);
-	return renderNodes(tree.children).trim()
+	let result = renderNodes(tree.children).trim() + "\n";
+	result = result.replace(/\n\n\n+/g, "\n\n").replace(/(\[\/h[1-6]\])\n\n/g, "$1\n");
+	return result;
 }
 
 function renderNodes(nodes) {
