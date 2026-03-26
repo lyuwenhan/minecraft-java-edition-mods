@@ -104,6 +104,7 @@
 		"displayName": "Auto Greeting Server",
 		"description": "A Fabric mod that automatically sends greeting messages.",
 		"link": {
+			"Modrinth": "https://modrinth.com/mod/auto-greeting-server",
 			"Curseforge": "https://www.curseforge.com/minecraft/mc-mods/auto-greeting-server"
 		}
 	}
