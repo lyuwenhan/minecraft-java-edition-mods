@@ -1,0 +1,26 @@
+{
+  "name": "minecraft-java-edition-mods",
+  "version": "1.0.0",
+  "description": "A collection of Fabric mods for Minecraft: Java Edition.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lyuwenhan/minecraft-java-edition-mods.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/lyuwenhan/minecraft-java-edition-mods/issues"
+  },
+  "homepage": "https://github.com/lyuwenhan/minecraft-java-edition-mods#readme",
+  "dependencies": {
+    "remark-gfm": "^4.0.1",
+    "remark-parse": "^11.0.0",
+    "unified": "^11.0.5"
+  }
+}

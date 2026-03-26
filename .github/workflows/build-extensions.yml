@@ -25,6 +25,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
+      - run: npm install
 
       - uses: actions/setup-java@v4
         with:
@@ -36,10 +37,10 @@ jobs:
 
       - name: Run build script
         id: build
-        continue-on-error: true
         run: node scripts/build-if-needed.js
 
       - name: Commit and push status updates
+        if: always()
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
@@ -51,9 +52,3 @@ jobs:
           else
             echo "No changes detected, skipping commit."
           fi
-
-      - name: Fail workflow if build failed
-        if: steps.build.outcome == 'failure'
-        run: |
-          echo "Build failed."
-          exit 1
