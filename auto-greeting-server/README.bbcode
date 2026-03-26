@@ -1,15 +1,12 @@
 [h1]Languages[/h1]
-
 [url=https://lyuwenhan.github.io/extensions/minecraft-java/data/assets/auto-greeting-server/README/README.html]EN/English[/url] | [url=https://lyuwenhan.github.io/extensions/minecraft-java/data/assets/auto-greeting-server/README/README_ZH-CN.html]ZH-CN/简体中文[/url]
 
 [h1]Auto Greeting - Server[/h1]
-
 A Fabric mod that automatically sends greeting messages when a player joins the server
 
 The mod supports both plain chat messages and commands.
 
 [h2]Features[/h2]
-
 [list]
 [*]Supports multiple messages[/*]
 [*]Supports plain chat messages and commands[/*]
@@ -19,7 +16,6 @@ The mod supports both plain chat messages and commands.
 [/list]
 
 [h2]Command Overview[/h2]
-
 [list]
 [*][b]/servergreet ...[/b][/*]
 [/list]
@@ -49,9 +45,7 @@ or
 [/code]
 
 [h2]Server Side Commands[/h2]
-
 [h3]Status[/h3]
-
 Controls whether auto greeting is [b]enabled[/b] or [b]disabled[/b].
 
 [code]
@@ -62,7 +56,6 @@ Controls whether auto greeting is [b]enabled[/b] or [b]disabled[/b].
 [/code]
 
 [h3]Message[/h3]
-
 Controls what the mod sends.
 
 You can use placeholders.
@@ -77,7 +70,6 @@ You can use placeholders.
 [/code]
 
 [h4]Placeholders[/h4]
-
 [table]
 [tbody]
 [tr]
@@ -116,7 +108,6 @@ You can use placeholders.
 [/table]
 
 [h3]Blacklist / Whitelist[/h3]
-
 [code]
 /servergreet [whitelist|blacklist] list
 /servergreet [whitelist|blacklist] clear confirm
@@ -131,7 +122,6 @@ You can use placeholders.
 [/code]
 
 [h2]Examples[/h2]
-
 [code]
 /servergreet message add Welcome @player!
 /servergreet message add Player @player joined at (@X, @Y, @Z)
@@ -139,13 +129,11 @@ You can use placeholders.
 [/code]
 
 [h2]Message Behavior[/h2]
-
 If a message [b]does[/b] start with [b]/[/b], it is executed as a command.
 
 If a message does [b]not[/b] start with [b]/[/b], it is sent as a normal chat message.
 
 [h2]Filtering[/h2]
-
 [list]
 [*]blacklist[/*]
 [*]whitelist[/*]
@@ -160,7 +148,6 @@ If a message does [b]not[/b] start with [b]/[/b], it is sent as a normal chat me
 These rules are used to decide whether a joining player's name should trigger greeting logic.
 
 [h3]Filtering behavior[/h3]
-
 [list]
 [*]If a player matches the [b]blacklist[/b], they are ignored[/*]
 [*]If a player matches the blacklist but also matches [b]blacklist except[/b], they are allowed again[/*]
@@ -169,7 +156,6 @@ These rules are used to decide whether a joining player's name should trigger gr
 [/list]
 
 [h2]Notes[/h2]
-
 [list]
 [*][b]index[/b] is optional and 1-based[/*]
 [*][b]add <message> <index>[/b] inserts before the existing item at that position[/*]
@@ -182,7 +168,6 @@ These rules are used to decide whether a joining player's name should trigger gr
 [/list]
 
 [h2]Supported Versions[/h2]
-
 [list]
 [*]Minecraft 1.21.11[/*]
 [*]Fabric Loader 0.18+[/*]
@@ -191,5 +176,4 @@ These rules are used to decide whether a joining player's name should trigger gr
 [/list]
 
 [h2]License[/h2]
-
 MIT
