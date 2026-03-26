@@ -24,7 +24,7 @@ function renderNode(node) {
 	switch (node.type) {
 		case "heading": {
 			const text = renderInline(node.children).trim();
-			return `[h${node.depth}]${text}[/h${node.depth}]\n`
+			return `[h${node.depth}]${text}[/h${node.depth}]`
 		}
 		case "paragraph": {
 			return `${renderInline(node.children).trim()}\n\n`
@@ -44,7 +44,7 @@ function renderNode(node) {
 		}
 		case "list": {
 			const items = node.children.map(item => renderListItem(item)).join("");
-			return `[list]\n${items}[/list]\n`
+			return `[list]\n${items}[/list]`
 		}
 		case "listItem": {
 			return renderListItem(node)
