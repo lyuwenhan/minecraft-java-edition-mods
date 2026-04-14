@@ -66,7 +66,8 @@
 		"displayName": "Player Finder",
 		"description": "Client-side Fabric HUD mod that displays nearby player information directly on your screen in Minecraft.",
 		"link": {
-			"Curseforge": "https://www.curseforge.com/minecraft/mc-mods/playerfinder"
+			"Curseforge": "https://www.curseforge.com/minecraft/mc-mods/playerfinder",
+			"Planet Minecraft": "https://www.planetminecraft.com/mod/player-finder-6906694/"
 		}
 	},
 	"player-highlighter": {
