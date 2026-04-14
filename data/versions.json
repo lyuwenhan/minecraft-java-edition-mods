@@ -34,7 +34,8 @@
 		"description": "Automatically logs in to auth servers using a locally encrypted password",
 		"link": {
 			"Modrinth": "https://modrinth.com/mod/autologinmod",
-			"Curseforge": "https://www.curseforge.com/minecraft/mc-mods/auto-login"
+			"Curseforge": "https://www.curseforge.com/minecraft/mc-mods/auto-login",
+			"Planet Minecraft": "https://www.planetminecraft.com/mod/auto-login/"
 		}
 	},
 	"hide-password": {
@@ -51,7 +52,8 @@
 		"description": "Hide password arguments in chat commands",
 		"link": {
 			"Modrinth": "https://modrinth.com/mod/hide-password",
-			"Curseforge": "https://www.curseforge.com/minecraft/mc-mods/hide-password"
+			"Curseforge": "https://www.curseforge.com/minecraft/mc-mods/hide-password",
+			"Planet Minecraft": "https://www.planetminecraft.com/mod/hide-password/"
 		}
 	},
 	"player-finder": {
@@ -106,7 +108,8 @@
 		"description": "A Fabric mod that automatically sends greeting messages.",
 		"link": {
 			"Modrinth": "https://modrinth.com/mod/auto-greeting-server",
-			"Curseforge": "https://www.curseforge.com/minecraft/mc-mods/auto-greeting-server"
+			"Curseforge": "https://www.curseforge.com/minecraft/mc-mods/auto-greeting-server",
+			"Planet Minecraft": "https://www.planetminecraft.com/mod/auto-greeting-server/"
 		}
 	}
 }
