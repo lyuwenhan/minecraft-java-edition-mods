@@ -1,11 +1,5 @@
 ## Planning
 
-#3 **Multi search**
- - **Feature:**
-   - Make the search bar support both your display language and English.
- - **Current problem:**
-   - Too hard.
-
 #4 **More loader**
  - **Feature:**
    - Support more mod loaders.
