@@ -1,0 +1,12 @@
+{
+  "replace": false,
+  "values": [
+    "elytra-chestplate:leather_chestplate_with_elytra",
+    "elytra-chestplate:copper_chestplate_with_elytra",
+    "elytra-chestplate:chainmail_chestplate_with_elytra",
+    "elytra-chestplate:iron_chestplate_with_elytra",
+    "elytra-chestplate:golden_chestplate_with_elytra",
+    "elytra-chestplate:diamond_chestplate_with_elytra",
+    "elytra-chestplate:netherite_chestplate_with_elytra"
+  ]
+}
