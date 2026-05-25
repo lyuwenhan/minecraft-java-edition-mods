@@ -1,26 +1,26 @@
 {
-  "schemaVersion": 1,
-  "id": "elytra-chestplate",
-  "version": "${version}",
-  "name": "Elytra Chestplate",
-  "description": "Allows chestplates and elytra to be combined in an anvil without XP cost or prior-work penalty.",
-  "authors": [
-    "Wenhan"
-  ],
-  "license": "MIT",
-  "environment": "*",
-  "entrypoints": {
-    "main": [
-      "com.example.elytrachestplate.ElytraChestplateMod"
-    ]
-  },
-  "mixins": [
-    "elytra-chestplate.mixins.json"
-  ],
-  "depends": {
-    "fabricloader": ">=0.18.0",
-    "fabric-api": "*",
-    "minecraft": "1.21.11",
-    "java": ">=21"
-  }
+	"schemaVersion": 1,
+	"id": "elytra-chestplate",
+	"version": "${version}",
+	"name": "Elytra Chestplate",
+	"description": "Allows chestplates and elytra to be combined in an anvil without XP cost or prior-work penalty.",
+	"authors": [
+		"Wenhan"
+	],
+	"license": "MIT",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"com.example.elytrachestplate.ElytraChestplateMod"
+		]
+	},
+	"mixins": [
+		"elytra-chestplate.mixins.json"
+	],
+	"depends": {
+		"fabricloader": ">=0.18.0",
+		"fabric-api": "*",
+		"minecraft": "1.21.11",
+		"java": ">=21"
+	}
 }

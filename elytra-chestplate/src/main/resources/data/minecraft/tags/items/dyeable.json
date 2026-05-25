@@ -1,6 +1,6 @@
 {
-  "replace": false,
-  "values": [
-    "elytra-chestplate:leather_chestplate_with_elytra"
-  ]
+	"replace": false,
+	"values": [
+		"elytra-chestplate:leather_chestplate_with_elytra"
+	]
 }
