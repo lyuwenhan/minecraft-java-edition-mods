@@ -117,7 +117,7 @@
 		"versions": [
 			"1.0.0"
 		],
-		"hasIcon": false,
+		"hasIcon": true,
 		"displayName": "Elytra Chestplate",
 		"description": "Allows chestplates and elytra to be combined in an anvil without XP cost or prior-work penalty.",
 		"link": {}
