@@ -51,7 +51,7 @@ public abstract class AnvilScreenHandlerMixin extends ForgingScreenHandler {
 
         this.output.setStack(0, GlideplateServerUtil.createGlideplateServer(left));
         this.repairItemUsage = 1;
-        this.levelCost.set(1);
+        this.levelCost.set(0);
         this.sendContentUpdates();
         callbackInfo.cancel();
     }
