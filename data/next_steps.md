@@ -1,10 +1,5 @@
 ## Planning
 
-#4 **More loader**
- - **Feature:**
-   - Support more mod loaders.
-     - Forge
-
 #6 **Disable client commands**
  - **Feature:**
    - Disable specific client-side commands.
