@@ -122,5 +122,14 @@
 		"displayName": "Glideplate",
 		"description": "Allows chestplates and elytra to be combined in an anvil without XP cost or prior-work penalty.",
 		"link": {}
+	},
+	"infinity-fireworks": {
+		"versions": [
+			"1.0.0"
+		],
+		"hasIcon": false,
+		"displayName": "Infinity Fireworks",
+		"description": "Fabric mod that allows you to use firework rockets without consuming them.",
+		"link": {}
 	}
 }
