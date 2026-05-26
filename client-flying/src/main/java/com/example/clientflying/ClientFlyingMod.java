@@ -5,9 +5,8 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.minecraft.world.GameMode;
 import net.minecraft.entity.EquipmentSlot;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.network.packet.c2s.play.PlayerMoveC2SPacket;
 import net.minecraft.network.packet.c2s.play.ClientCommandC2SPacket;
@@ -21,7 +20,7 @@ public class ClientFlyingMod implements ClientModInitializer {
 				GameMode gameMode = client.interactionManager.getCurrentGameMode();
 				boolean isOkMode = gameMode == GameMode.SURVIVAL || gameMode == GameMode.ADVENTURE;
 				ItemStack chestStack = client.player.getEquippedStack(EquipmentSlot.CHEST);
-				boolean isElytra = chestStack.isOf(Items.ELYTRA);
+				boolean isElytra = LivingEntity.canGlideWith(chestStack, EquipmentSlot.CHEST);
 				boolean isInAir = !client.player.isOnGround();
 				boolean needEly = false;
 				if (isOkMode) {
