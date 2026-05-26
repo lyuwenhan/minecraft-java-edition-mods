@@ -1,0 +1,24 @@
+{
+	"schemaVersion": 1,
+	"id": "infinity-fireworks",
+	"version": "${version}",
+	"name": "Infinity Fireworks",
+	"description": "Fabric mod that allows you to use firework rockets without consuming them.",
+	"authors": [
+		"Wenhan"
+	],
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"com.example.infinityfireworks.InfinityFireworksMod"
+		]
+	},
+	"mixins": [
+		"infinity-fireworks.mixins.json"
+	],
+	"depends": {
+		"fabricloader": ">=0.18.0",
+		"fabric-api": "*",
+		"minecraft": "1.21.11"
+	}
+}
