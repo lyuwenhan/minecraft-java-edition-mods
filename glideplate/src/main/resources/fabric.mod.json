@@ -8,10 +8,13 @@
 		"Wenhan"
 	],
 	"license": "MIT",
-	"environment": "client",
+	"environment": "*",
 	"entrypoints": {
 		"client": [
 			"com.example.glideplate.GlideplateMod"
+		],
+		"main": [
+			"com.example.glideplateserver.GlideplateServerMod"
 		]
 	},
 	"depends": {
@@ -21,6 +24,7 @@
 		"java": ">=21"
 	},
 	"mixins": [
-		"glideplate.mixins.json"
+		"glideplate.mixins.json",
+		"glideplate-common.mixins.json"
 	]
 }

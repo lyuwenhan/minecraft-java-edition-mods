@@ -30,6 +30,10 @@ public abstract class AnvilScreenHandlerMixin extends ForgingScreenHandler {
 
     @Inject(method = "updateResult", at = @At("HEAD"), cancellable = true)
     private void glideplateServer$updateResult(CallbackInfo callbackInfo) {
+        if (!this.glideplateServer$isLogicalServer()) {
+            return;
+        }
+
         ItemStack left = this.input.getStack(0);
         ItemStack right = this.input.getStack(1);
 
@@ -54,6 +58,10 @@ public abstract class AnvilScreenHandlerMixin extends ForgingScreenHandler {
 
     @Inject(method = "canTakeOutput", at = @At("HEAD"), cancellable = true)
     private void glideplateServer$canTakeOutput(PlayerEntity player, boolean present, CallbackInfoReturnable<Boolean> callbackInfoReturnable) {
+        if (!this.glideplateServer$isLogicalServer()) {
+            return;
+        }
+
         if (!present) {
             return;
         }
@@ -65,6 +73,10 @@ public abstract class AnvilScreenHandlerMixin extends ForgingScreenHandler {
 
     @Inject(method = "onTakeOutput", at = @At("HEAD"), cancellable = true)
     private void glideplateServer$onTakeOutput(PlayerEntity player, ItemStack stack, CallbackInfo callbackInfo) {
+        if (!this.glideplateServer$isLogicalServer()) {
+            return;
+        }
+
         ItemStack left = this.input.getStack(0);
         ItemStack right = this.input.getStack(1);
 
@@ -84,4 +96,12 @@ public abstract class AnvilScreenHandlerMixin extends ForgingScreenHandler {
         this.sendContentUpdates();
         callbackInfo.cancel();
     }
+
+    private boolean glideplateServer$isLogicalServer() {
+        boolean[] server = {false};
+        this.context.run((world, pos) -> server[0] = !world.isClient());
+        return server[0];
+    }
 }
+
+
