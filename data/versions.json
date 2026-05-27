@@ -134,7 +134,8 @@
 	},
 	"better-elytra-takeoff": {
 		"versions": [
-			"1.0.0"
+			"1.0.0",
+			"1.0.1"
 		],
 		"hasIcon": true,
 		"displayName": "Better Elytra Takeoff",
