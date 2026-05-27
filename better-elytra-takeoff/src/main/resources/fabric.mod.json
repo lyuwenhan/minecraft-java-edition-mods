@@ -1,0 +1,21 @@
+{
+	"schemaVersion": 1,
+	"id": "better-elytra-takeoff",
+	"version": "${version}",
+	"name": "Better Elytra Takeoff",
+	"description": "Start gliding and immediately use a held firework when looking horizontally or upward.",
+	"authors": [
+		"Codex"
+	],
+	"contact": {},
+	"license": "MIT",
+	"environment": "*",
+	"mixins": [
+		"better-elytra-takeoff.mixins.json"
+	],
+	"depends": {
+		"fabricloader": ">=0.18.4",
+		"minecraft": "1.21.11",
+		"java": ">=21"
+	}
+}
