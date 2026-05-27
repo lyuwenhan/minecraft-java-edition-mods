@@ -131,5 +131,14 @@
 		"displayName": "Infinity Fireworks",
 		"description": "Fabric mod that allows you to use firework rockets without consuming them.",
 		"link": {}
+	},
+	"better-elytra-takeoff": {
+		"versions": [
+			"1.0.0"
+		],
+		"hasIcon": true,
+		"displayName": "Better Elytra Takeoff",
+		"description": "Start gliding and immediately use a held firework when looking horizontally or upward.",
+		"link": {}
 	}
 }
