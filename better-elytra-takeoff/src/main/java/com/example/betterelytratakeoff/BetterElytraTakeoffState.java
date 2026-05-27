@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.projectile.FireworkRocketEntity;
@@ -19,6 +20,7 @@ import net.minecraft.util.math.Vec3d;
 public final class BetterElytraTakeoffState {
 	private static final int FIRST_ROCKET_TICK = 1;
 	private static final int LAST_GLIDING_TICK = -8;
+	private static final String INFINITY_FIREWORKS_MOD_ID = "infinity-fireworks";
 	private static final Map<UUID, PendingTakeoff> PENDING_TAKEOFFS = new HashMap<>();
 
 	private BetterElytraTakeoffState() {
@@ -30,7 +32,7 @@ public final class BetterElytraTakeoffState {
 
 		player.startGliding();
 
-		if (!player.isCreative()) {
+		if (!player.isCreative() && !FabricLoader.getInstance().isModLoaded(INFINITY_FIREWORKS_MOD_ID)) {
 			stack.decrement(1);
 		}
 		player.incrementStat(Stats.USED.getOrCreateStat(Items.FIREWORK_ROCKET));
