@@ -60,7 +60,8 @@
 		"versions": [
 			"1.0.0",
 			"1.0.1",
-			"1.0.2"
+			"1.0.2",
+			"1.0.3"
 		],
 		"hasIcon": true,
 		"displayName": "Player Finder",
@@ -93,7 +94,8 @@
 		"versions": [
 			"1.0.0",
 			"1.0.1",
-			"1.0.2"
+			"1.0.2",
+			"1.0.3"
 		],
 		"hasIcon": false,
 		"displayName": "Client Flying",
@@ -116,7 +118,8 @@
 	},
 	"glideplate": {
 		"versions": [
-			"1.0.0"
+			"1.0.0",
+			"1.0.1"
 		],
 		"hasIcon": true,
 		"displayName": "Glideplate",
@@ -125,7 +128,8 @@
 	},
 	"infinity-fireworks": {
 		"versions": [
-			"1.0.0"
+			"1.0.0",
+			"1.0.1"
 		],
 		"hasIcon": true,
 		"displayName": "Infinity Fireworks",
