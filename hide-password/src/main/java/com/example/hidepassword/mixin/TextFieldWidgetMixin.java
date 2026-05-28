@@ -25,26 +25,18 @@ public abstract class TextFieldWidgetMixin {
     private boolean hidepassword$active;
 
     private static final List<String> COMMAND_PREFIXES = List.of(
-            "/login",
-            "/l",
-            "/register",
-            "/reg",
-            "/changepassword",
-            "/autologin set",
-            "/account unregister",
-            "/account changepassword"
+        "/login",
+        "/l",
+        "/register",
+        "/reg",
+        "/changepassword",
+        "/autologin set",
+        "/account unregister",
+        "/account changepassword"
     );
 
-    /* ===== 渲染前：替换为 ***** ===== */
-
     @Inject(method = "renderWidget", at = @At("HEAD"))
-    private void hidepassword$beforeRender(
-            DrawContext context,
-            int mouseX,
-            int mouseY,
-            float delta,
-            CallbackInfo ci
-    ) {
+    private void hidepassword$beforeRender( DrawContext context, int mouseX, int mouseY, float delta, CallbackInfo ci) {
         if(!HidePasswordMod.CONFIG.enabled) {
             return;
         }
@@ -58,24 +50,13 @@ public abstract class TextFieldWidgetMixin {
         }
     }
 
-    /* ===== 渲染后：恢复真实文本 ===== */
-
     @Inject(method = "renderWidget", at = @At("TAIL"))
-    private void hidepassword$afterRender(
-            DrawContext context,
-            int mouseX,
-            int mouseY,
-            float delta,
-            CallbackInfo ci
-    ) {
+    private void hidepassword$afterRender( DrawContext context, int mouseX, int mouseY, float delta, CallbackInfo ci) {
         if (hidepassword$active) {
             setText(hidepassword$real);
-            hidepassword$real = null;  // Clear sensitive data immediately
+            hidepassword$real = null;
         }
     }
-
-    /* ===== 逻辑 ===== */
-    /* 使用固定长度掩码，避免泄露密码长度和结构（符合 CWE-549 / 肩窥防护最佳实践） */
 
     private static final String FIXED_MASK = "********";
 

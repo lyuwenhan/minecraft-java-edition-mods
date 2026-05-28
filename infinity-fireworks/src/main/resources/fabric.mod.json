@@ -8,11 +8,6 @@
 		"Wenhan"
 	],
 	"environment": "*",
-	"entrypoints": {
-		"main": [
-			"com.example.infinityfireworks.InfinityFireworksMod"
-		]
-	},
 	"mixins": [
 		"infinity-fireworks.mixins.json"
 	],

@@ -32,21 +32,14 @@ public class HidePasswordMod implements ModInitializer {
     @Override
     public void onInitialize() {
 
-        configPath = FabricLoader.getInstance()
-                .getConfigDir()
-                .resolve("hide-password.json");
+        configPath = FabricLoader.getInstance().getConfigDir().resolve("hide-password.json");
 
         loadConfig();
 
         LOGGER.info("HidePassword loaded, enabled={}", CONFIG.enabled);
 
         toggleKey = KeyBindingHelper.registerKeyBinding(
-            new KeyBinding(
-                "key.hidepassword.toggle",
-                InputUtil.Type.KEYSYM,
-                GLFW.GLFW_KEY_F8,
-                KeyBinding.Category.MISC
-            )
+            new KeyBinding( "key.hidepassword.toggle", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_F8, KeyBinding.Category.MISC)
         );
 
 
@@ -57,9 +50,7 @@ public class HidePasswordMod implements ModInitializer {
                 LOGGER.info("HidePassword enabled={}", CONFIG.enabled);
                 if (client.player != null) {
                     client.player.sendMessage(
-                        net.minecraft.text.Text.literal(
-                            "HidePassword " + (CONFIG.enabled ? "Enabled" : "Disabled")
-                        ),
+                        net.minecraft.text.Text.literal("HidePassword " + (CONFIG.enabled ? "Enabled" : "Disabled")),
                         true
                     );
                 }

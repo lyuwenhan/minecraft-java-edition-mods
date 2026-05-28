@@ -8,11 +8,6 @@
 		"Wenhan"
 	],
 	"environment": "client",
-	"entrypoints": {
-		"client": [
-			"com.example.playerfinder.PlayerFinderMod"
-		]
-	},
 	"mixins": [
 		"player-finder.mixins.json"
 	],

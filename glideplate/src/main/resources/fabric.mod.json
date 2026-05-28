@@ -9,14 +9,6 @@
 	],
 	"license": "MIT",
 	"environment": "*",
-	"entrypoints": {
-		"client": [
-			"com.example.glideplate.GlideplateMod"
-		],
-		"main": [
-			"com.example.glideplateserver.GlideplateServerMod"
-		]
-	},
 	"depends": {
 		"fabricloader": ">=0.18.0",
 		"fabric-api": "*",

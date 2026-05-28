@@ -19,16 +19,13 @@ import java.util.Optional;
 
 public final class GlideplateServerUtil {
     public static final float CUSTOM_MODEL_DATA_NUMBER = 121211.0F;
-    public static final String CUSTOM_MODEL_STRING = GlideplateServerMod.CLIENT_MOD_ID + ":with_elytra";
-    public static final String LEGACY_CUSTOM_MODEL_STRING = GlideplateServerMod.LEGACY_NAMESPACE + ":with_elytra";
-
-    private static final String GLIDING_KEY = "gliding";
-    private static final String MARKER_KEY = "gliding_chestplate_has_elytra";
-    private static final String MATERIAL_KEY = "gliding_chestplate_material";
     private static final Text LORE_LINE = Text.translatableWithFallback(
             "tooltip.glideplate.with_elytra",
             "With Elytra"
-    ).formatted(Formatting.GRAY);
+    ).styled(style -> style
+        .withColor(Formatting.GRAY)
+        .withItalic(false)
+    );
     private static final Map<Item, ChestplateLevel> CHESTPLATES = Map.of(
             Items.LEATHER_CHESTPLATE, new ChestplateLevel(Items.LEATHER_CHESTPLATE, "leather", "Leather"),
             Items.CHAINMAIL_CHESTPLATE, new ChestplateLevel(Items.CHAINMAIL_CHESTPLATE, "chainmail", "Chainmail"),
@@ -71,14 +68,14 @@ public final class GlideplateServerUtil {
         }
 
         NbtCompound customData = stack.getOrDefault(DataComponentTypes.CUSTOM_DATA, NbtComponent.DEFAULT).copyNbt();
-        if (customData.getBoolean(GLIDING_KEY, false) || customData.getBoolean(MARKER_KEY, false)) {
+        if (customData.getBoolean("gliding", false) || customData.getBoolean("glideplate_has_elytra", false)) {
             return true;
         }
 
         CustomModelDataComponent customModelData = stack.get(DataComponentTypes.CUSTOM_MODEL_DATA);
         return customModelData != null
-                && (customModelData.strings().contains(CUSTOM_MODEL_STRING)
-                || customModelData.strings().contains(LEGACY_CUSTOM_MODEL_STRING));
+                && (customModelData.strings().contains("glideplate:with_elytra")
+                || customModelData.strings().contains("glideplate:with_elytra"));
     }
 
     public static boolean isUsableForGliding(ItemStack stack) {
@@ -91,9 +88,9 @@ public final class GlideplateServerUtil {
         result.setCount(1);
 
         NbtComponent.set(DataComponentTypes.CUSTOM_DATA, result, nbt -> {
-            nbt.putBoolean(GLIDING_KEY, true);
-            nbt.putBoolean(MARKER_KEY, true);
-            nbt.putString(MATERIAL_KEY, level.id());
+            nbt.putBoolean("gliding", true);
+            nbt.putBoolean("glideplate_has_elytra", true);
+            nbt.putString("gliding_chestplate_has_elytra", level.id());
         });
         result.set(DataComponentTypes.ITEM_NAME, Text.translatableWithFallback(
                 "item.glideplate." + level.id() + "_chestplate_with_elytra",
@@ -116,8 +113,8 @@ public final class GlideplateServerUtil {
         if (!floats.contains(CUSTOM_MODEL_DATA_NUMBER)) {
             floats.add(CUSTOM_MODEL_DATA_NUMBER);
         }
-        addStringTag(strings, CUSTOM_MODEL_STRING);
-        addStringTag(strings, GlideplateServerMod.CLIENT_MOD_ID + ":" + level.id());
+        addStringTag(strings, "glideplate:with_elytra");
+        addStringTag(strings, "glideplate:" + level.id());
 
         return new CustomModelDataComponent(List.copyOf(floats), List.copyOf(flags), List.copyOf(strings), List.copyOf(colors));
     }
