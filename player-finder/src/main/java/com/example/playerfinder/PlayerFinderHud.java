@@ -113,6 +113,10 @@ public class PlayerFinderHud {
 
 			WaypointDisplay display = getWaypointDisplay(client, world, camera, waypoint);
 
+			if (display == null) {
+				return;
+			}
+
 			drawLine(
 				context,
 				client,
@@ -142,26 +146,28 @@ public class PlayerFinderHud {
 	) {
 		int x = baseX;
 
-		context.drawText(client.textRenderer, name, x, y, 0xFFF0F0F0, false);
-		x += client.textRenderer.getWidth(name + " ");
+		x = drawOptionalText(context, client, name, x, y, 0xFFF0F0F0);
+		x = drawOptionalText(context, client, arrow, x, y, 0xFF55FFFF);
+		x = drawOptionalText(context, client, distText, x, y, 0xFFB0B0B0);
+		x = drawOptionalText(context, client, healthText, x, y, 0xFF55FFFF);
+		drawOptionalText(context, client, posText, x, y, 0xFF909090);
+	}
 
-		context.drawText(client.textRenderer, arrow, x, y, 0xFF55FFFF, false);
-		x += client.textRenderer.getWidth(arrow + " ");
+	private static int drawOptionalText(
+		DrawContext context,
+		MinecraftClient client,
+		String text,
+		int x,
+		int y,
+		int color
+	) {
+		if (text == null || text.isBlank()) {
+			return x;
+		}
 
-		context.drawText(client.textRenderer, distText, x, y, 0xFFB0B0B0, false);
-		x += client.textRenderer.getWidth(distText + " ");
+		context.drawText(client.textRenderer, text, x, y, color, false);
 
-		context.drawText(client.textRenderer, healthText, x, y, 0xFF55FFFF, false);
-		x += client.textRenderer.getWidth(healthText + " ");
-
-		context.drawText(
-			client.textRenderer,
-			posText,
-			x,
-			y,
-			0xFF909090,
-			false
-		);
+		return x + client.textRenderer.getWidth(text + " ");
 	}
 
 	private static WaypointDisplay getWaypointDisplay(
@@ -173,11 +179,16 @@ public class PlayerFinderHud {
 		Entity sourceEntity = findSourceEntity(world, waypoint);
 		TargetPosition targetPosition = getWaypointTargetPosition(world, camera, waypoint, sourceEntity);
 
+		String healthText = getWaypointHealthText(sourceEntity);
+		String posText = targetPosition.posText;
+
+		if (healthText == null && posText == null) {
+			return null;
+		}
+
 		String name = getWaypointName(client, world, waypoint, sourceEntity);
 		String arrow = getWaypointArrow(world, camera, waypoint, targetPosition);
 		String distanceText = getWaypointDistanceText(camera, waypoint, targetPosition);
-		String healthText = getWaypointHealthText(sourceEntity);
-		String posText = targetPosition.posText;
 
 		return new WaypointDisplay(name, arrow, distanceText, healthText, posText);
 	}
@@ -467,7 +478,7 @@ public class PlayerFinderHud {
 			return new TargetPosition(targetPos, posText);
 		}
 
-		return new TargetPosition(null, "(?, ?, ?)");
+		return new TargetPosition(null, null);
 	}
 
 	private static String getWaypointArrow(
@@ -535,7 +546,7 @@ public class PlayerFinderHud {
 			return "❤ " + String.format("%.1f", livingEntity.getHealth());
 		}
 
-		return "❤ ?";
+		return null;
 	}
 
 	private static String getArrow(Entity self, Vec3d targetPos) {
