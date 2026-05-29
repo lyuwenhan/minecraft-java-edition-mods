@@ -72,9 +72,17 @@ public abstract class TextFieldWidgetMixin {
                 if(visiblePrefix.isEmpty()) {
                     return "";
                 }
-                return visiblePrefix + FIXED_MASK;
+                String password = input.substring(prefixLen + 1);
+                return visiblePrefix + maskPassword(password);
             }
         }
         return null;
+    }
+
+    private static String maskPassword(String password) {
+        if (HidePasswordMod.CONFIG.hideLength) {
+            return FIXED_MASK;
+        }
+        return password.replaceAll("\\S", "*");
     }
 }
