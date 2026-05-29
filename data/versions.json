@@ -90,7 +90,8 @@
 		"description": "A lightweight client-side Fabric mod that highlights players with a glowing outline while the player list is visible.",
 		"link": {
 			"Modrinth": "https://modrinth.com/mod/player-highlighter-mod",
-			"Curseforge": "https://www.curseforge.com/minecraft/mc-mods/auto-greeting"
+			"Curseforge": "https://www.curseforge.com/minecraft/mc-mods/playerhighlighter",
+			"Planet Minecraft": "https://www.planetminecraft.com/mod/player-highlighter/"
 		}
 	},
 	"client-flying": {
@@ -127,7 +128,11 @@
 		"hasIcon": true,
 		"displayName": "Glideplate",
 		"description": "Allows chestplates and elytra to be combined in an anvil without XP cost or prior-work penalty.",
-		"link": {}
+		"link": {
+			"Modrinth": "https://modrinth.com/mod/glideplate",
+			"Curseforge": "https://www.curseforge.com/minecraft/mc-mods/glideplate",
+			"Planet Minecraft": "https://www.planetminecraft.com/mod/glideplate/"
+		}
 	},
 	"infinity-fireworks": {
 		"versions": [
@@ -137,7 +142,10 @@
 		"hasIcon": true,
 		"displayName": "Infinity Fireworks",
 		"description": "Fabric mod that allows you to use firework rockets without consuming them.",
-		"link": {}
+		"link": {
+			"Curseforge": "https://www.curseforge.com/minecraft/mc-mods/infinity-fireworks",
+			"Planet Minecraft": "https://www.planetminecraft.com/mod/infinity-fireworks/"
+		}
 	},
 	"better-elytra-takeoff": {
 		"versions": [
@@ -147,6 +155,9 @@
 		"hasIcon": true,
 		"displayName": "Better Elytra Takeoff",
 		"description": "Start gliding and immediately use a held firework when looking horizontally or upward.",
-		"link": {}
+		"link": {
+			"Curseforge": "https://www.curseforge.com/minecraft/mc-mods/better-elytra-takeoff",
+			"Planet Minecraft": "https://www.planetminecraft.com/mod/better-elytra-takeoff/"
+		}
 	}
 }
