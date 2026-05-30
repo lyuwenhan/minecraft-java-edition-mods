@@ -83,10 +83,11 @@
 			"1.0.4",
 			"1.0.5",
 			"1.0.6",
-			"1.0.7"
+			"1.0.7",
+			"1.0.8"
 		],
 		"hasIcon": true,
-		"displayName": "Player highlighter",
+		"displayName": "Player Highlighter",
 		"description": "A lightweight client-side Fabric mod that highlights players with a glowing outline while the player list is visible.",
 		"link": {
 			"Modrinth": "https://modrinth.com/mod/player-highlighter-mod",
