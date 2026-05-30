@@ -2,7 +2,7 @@
 	"schemaVersion": 1,
 	"id": "player-highlighter",
 	"version": "${version}",
-	"name": "Player highlighter",
+	"name": "Player Highlighter",
 	"description": "A lightweight client-side Fabric mod that highlights players with a glowing outline while the player list is visible.",
 	"authors": [
 		"Wenhan"
