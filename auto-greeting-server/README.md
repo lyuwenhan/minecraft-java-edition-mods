@@ -144,10 +144,10 @@ These rules are used to decide whether a joining player's name should trigger gr
 
 ## Supported Versions
 
-- Minecraft 1.21.11
-- Fabric Loader 0.18+
-- Fabric API
-- Java 21
+- Minecraft 26.1.2
+- Fabric Loader 0.19.2+
+- Fabric API 0.150.0+
+- Java 25
 
 ## License
 
