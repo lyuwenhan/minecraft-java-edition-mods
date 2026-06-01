@@ -11,11 +11,12 @@
 			"1.0.4",
 			"1.0.5",
 			"1.0.6",
-			"1.0.7"
+			"1.0.7",
+			"1.1.0"
 		],
 		"hasIcon": true,
 		"displayName": "Auto Greeting",
-		"description": "A Fabric mod that automatically sends greeting messages.",
+		"description": "A Fabric client-side mod that automatically sends greeting messages.",
 		"link": {
 			"Modrinth": "https://modrinth.com/mod/auto-greeting",
 			"Curseforge": "https://www.curseforge.com/minecraft/mc-mods/auto-greeting",
@@ -27,7 +28,8 @@
 			"1.0.0",
 			"1.0.1",
 			"1.0.2",
-			"1.0.3"
+			"1.0.3",
+			"1.1.0"
 		],
 		"hasIcon": true,
 		"displayName": "Auto Login",
@@ -46,7 +48,8 @@
 			"1.0.3",
 			"1.0.4",
 			"1.0.5",
-			"1.0.6"
+			"1.0.6",
+			"1.1.0"
 		],
 		"hasIcon": true,
 		"displayName": "Hide Password",
@@ -84,11 +87,12 @@
 			"1.0.5",
 			"1.0.6",
 			"1.0.7",
-			"1.0.8"
+			"1.0.8",
+			"1.1.0"
 		],
 		"hasIcon": true,
 		"displayName": "Player Highlighter",
-		"description": "A lightweight client-side Fabric mod that highlights players with a glowing outline while the player list is visible.",
+		"description": "A lightweight client-side Fabric mod that highlights players with a glowing outline and HUD target icon.",
 		"link": {
 			"Modrinth": "https://modrinth.com/mod/player-highlighter-mod",
 			"Curseforge": "https://www.curseforge.com/minecraft/mc-mods/playerhighlighter",
@@ -100,7 +104,8 @@
 			"1.0.0",
 			"1.0.1",
 			"1.0.2",
-			"1.0.3"
+			"1.0.3",
+			"1.1.0"
 		],
 		"hasIcon": false,
 		"displayName": "Client Flying",
@@ -110,7 +115,8 @@
 	"auto-greeting-server": {
 		"versions": [
 			"1.0.0",
-			"1.0.1"
+			"1.0.1",
+			"1.1.0"
 		],
 		"hasIcon": true,
 		"displayName": "Auto Greeting Server",
@@ -124,7 +130,8 @@
 	"glideplate": {
 		"versions": [
 			"1.0.0",
-			"1.0.1"
+			"1.0.1",
+			"1.1.0"
 		],
 		"hasIcon": true,
 		"displayName": "Glideplate",
@@ -138,7 +145,8 @@
 	"infinity-fireworks": {
 		"versions": [
 			"1.0.0",
-			"1.0.1"
+			"1.0.1",
+			"1.1.0"
 		],
 		"hasIcon": true,
 		"displayName": "Infinity Fireworks",
@@ -151,7 +159,8 @@
 	"better-elytra-takeoff": {
 		"versions": [
 			"1.0.0",
-			"1.0.1"
+			"1.0.1",
+			"1.1.0"
 		],
 		"hasIcon": true,
 		"displayName": "Better Elytra Takeoff",
