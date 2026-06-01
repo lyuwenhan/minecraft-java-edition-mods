@@ -23,6 +23,21 @@
 			"Planet Minecraft": "https://www.planetminecraft.com/mod/auto-greeting"
 		}
 	},
+	"auto-greeting-server": {
+		"versions": [
+			"1.0.0",
+			"1.0.1",
+			"1.1.0"
+		],
+		"hasIcon": true,
+		"displayName": "Auto Greeting Server",
+		"description": "A Fabric mod that automatically sends greeting messages.",
+		"link": {
+			"Modrinth": "https://modrinth.com/mod/auto-greeting-server",
+			"Curseforge": "https://www.curseforge.com/minecraft/mc-mods/auto-greeting-server",
+			"Planet Minecraft": "https://www.planetminecraft.com/mod/auto-greeting-server/"
+		}
+	},
 	"auto-login": {
 		"versions": [
 			"1.0.0",
@@ -60,23 +75,6 @@
 			"Planet Minecraft": "https://www.planetminecraft.com/mod/hide-password/"
 		}
 	},
-	"player-finder": {
-		"versions": [
-			"1.0.0",
-			"1.0.1",
-			"1.0.2",
-			"1.0.3",
-			"1.0.4",
-			"1.0.5"
-		],
-		"hasIcon": true,
-		"displayName": "Player Finder",
-		"description": "Client-side Fabric HUD mod that displays nearby player information directly on your screen in Minecraft.",
-		"link": {
-			"Curseforge": "https://www.curseforge.com/minecraft/mc-mods/playerfinder",
-			"Planet Minecraft": "https://www.planetminecraft.com/mod/player-finder-6906694/"
-		}
-	},
 	"player-highlighter": {
 		"versions": [
 			"1.0.0",
@@ -111,21 +109,6 @@
 		"displayName": "Client Flying",
 		"description": "A client-side Fabric mod that enables flight in Survival and Adventure modes while automatically handling Elytra conflicts and continuously syncing movement behavior.",
 		"link": {}
-	},
-	"auto-greeting-server": {
-		"versions": [
-			"1.0.0",
-			"1.0.1",
-			"1.1.0"
-		],
-		"hasIcon": true,
-		"displayName": "Auto Greeting Server",
-		"description": "A Fabric mod that automatically sends greeting messages.",
-		"link": {
-			"Modrinth": "https://modrinth.com/mod/auto-greeting-server",
-			"Curseforge": "https://www.curseforge.com/minecraft/mc-mods/auto-greeting-server",
-			"Planet Minecraft": "https://www.planetminecraft.com/mod/auto-greeting-server/"
-		}
 	},
 	"glideplate": {
 		"versions": [
