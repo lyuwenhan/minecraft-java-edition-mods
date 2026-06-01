@@ -7,11 +7,8 @@ import net.fabricmc.loader.api.FabricLoader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.List;
 
 public class PlayerHighlighterConfig {
-
 	private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 	private static final Path CONFIG_PATH = FabricLoader.getInstance().getConfigDir().resolve("player-highlighter.json");
 
@@ -25,10 +22,16 @@ public class PlayerHighlighterConfig {
 		}
 
 		try {
-			return GSON.fromJson(
+			PlayerHighlighterConfig cfg = GSON.fromJson(
 				Files.readString(CONFIG_PATH),
 				PlayerHighlighterConfig.class
 			);
+
+			if (cfg == null) {
+				return new PlayerHighlighterConfig();
+			}
+
+			return cfg;
 		} catch (IOException e) {
 			throw new RuntimeException("Failed to load player-highlighter config", e);
 		}
@@ -36,6 +39,7 @@ public class PlayerHighlighterConfig {
 
 	public void save() {
 		try {
+			Files.createDirectories(CONFIG_PATH.getParent());
 			Files.writeString(CONFIG_PATH, GSON.toJson(this));
 		} catch (IOException e) {
 			throw new RuntimeException("Failed to save player-highlighter config", e);

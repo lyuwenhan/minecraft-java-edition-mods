@@ -2,5 +2,13 @@
 	"command.autologin.set": "Password saved (encrypted) locally.",
 	"command.autologin.clear": "Saved password cleared.",
 	"command.autologin.toggle.on": "Auto-login enabled.",
-	"command.autologin.toggle.off": "Auto-login disabled."
+	"command.autologin.toggle.off": "Auto-login disabled.",
+	"command.autologin.login.sent": "Auto-login command sent.",
+	"command.autologin.login.failed.no_player": "Auto-login failed: player is not ready.",
+	"command.autologin.login.failed.no_server": "Auto-login failed: not connected to a server.",
+	"command.autologin.login.failed.no_password": "Auto-login failed: no password saved for this server.",
+	"command.autologin.login.failed.disabled": "Auto-login failed: auto-login is disabled for this server.",
+	"command.autologin.login.failed.key": "Auto-login failed: secure storage is unavailable.",
+	"command.autologin.login.failed.decrypt": "Auto-login failed: could not decrypt the saved password.",
+	"command.autologin.login.failed.no_connection": "Auto-login failed: connection is not ready."
 }

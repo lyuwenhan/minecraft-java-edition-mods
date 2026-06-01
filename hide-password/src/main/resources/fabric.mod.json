@@ -7,10 +7,9 @@
 	"authors": [
 		"Wenhan"
 	],
-	"icon": "assets/hide-password/icon.png",
 	"environment": "client",
 	"entrypoints": {
-		"main": [
+		"client": [
 			"com.example.hidepassword.HidePasswordMod"
 		]
 	},
@@ -18,7 +17,10 @@
 		"hide-password.mixins.json"
 	],
 	"depends": {
-		"fabricloader": ">=0.18.0",
-		"minecraft": "1.21.11"
-	}
+		"fabricloader": ">=0.19.2",
+		"fabric-api": "*",
+		"minecraft": "26.1.2",
+		"java": ">=25"
+	},
+	"icon": "assets/hide-password/icon.png"
 }

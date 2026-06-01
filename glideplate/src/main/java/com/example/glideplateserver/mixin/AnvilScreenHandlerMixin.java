@@ -1,16 +1,16 @@
 package com.example.glideplateserver.mixin;
 
 import com.example.glideplateserver.GlideplateServerUtil;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.screen.ForgingScreenHandler;
-import net.minecraft.screen.ScreenHandlerContext;
-import net.minecraft.screen.ScreenHandlerType;
-import net.minecraft.screen.slot.ForgingSlotsManager;
-import net.minecraft.screen.Property;
-import net.minecraft.screen.AnvilScreenHandler;
-import net.minecraft.world.WorldEvents;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AnvilMenu;
+import net.minecraft.world.inventory.ContainerLevelAccess;
+import net.minecraft.world.inventory.DataSlot;
+import net.minecraft.world.inventory.ItemCombinerMenu;
+import net.minecraft.world.inventory.ItemCombinerMenuSlotDefinition;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.LevelEvent;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -19,89 +19,92 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-@Mixin(AnvilScreenHandler.class)
-public abstract class AnvilScreenHandlerMixin extends ForgingScreenHandler {
-    @Shadow @Final private Property levelCost;
-    @Shadow private int repairItemUsage;
+@Mixin(AnvilMenu.class)
+public abstract class AnvilScreenHandlerMixin extends ItemCombinerMenu {
+	@Shadow @Final private DataSlot cost;
+	@Shadow private int repairItemCountCost;
 
-    private AnvilScreenHandlerMixin(ScreenHandlerType<?> type, int syncId, PlayerInventory playerInventory, ScreenHandlerContext context, ForgingSlotsManager forgingSlotsManager) {
-        super(type, syncId, playerInventory, context, forgingSlotsManager);
-    }
+	private AnvilScreenHandlerMixin(
+		MenuType<?> type,
+		int syncId,
+		Inventory playerInventory,
+		ContainerLevelAccess context,
+		ItemCombinerMenuSlotDefinition slotDefinition
+	) {
+		super(type, syncId, playerInventory, context, slotDefinition);
+	}
 
-    @Inject(method = "updateResult", at = @At("HEAD"), cancellable = true)
-    private void glideplateServer$updateResult(CallbackInfo callbackInfo) {
-        if (!this.glideplateServer$isLogicalServer()) {
-            return;
-        }
+	@Inject(method = "createResult", at = @At("HEAD"), cancellable = true)
+	private void glideplateServer$createResult(CallbackInfo callbackInfo) {
+		if (!this.glideplateServer$isLogicalServer()) {
+			return;
+		}
 
-        ItemStack left = this.input.getStack(0);
-        ItemStack right = this.input.getStack(1);
+		ItemStack left = this.inputSlots.getItem(0);
+		ItemStack right = this.inputSlots.getItem(1);
 
-        if (GlideplateServerUtil.isBlockedDoubleCombine(left, right)) {
-            this.output.setStack(0, ItemStack.EMPTY);
-            this.levelCost.set(0);
-            this.sendContentUpdates();
-            callbackInfo.cancel();
-            return;
-        }
+		if (GlideplateServerUtil.isBlockedDoubleCombine(left, right)) {
+			this.resultSlots.setItem(0, ItemStack.EMPTY);
+			this.cost.set(0);
+			this.broadcastChanges();
+			callbackInfo.cancel();
+			return;
+		}
 
-        if (!GlideplateServerUtil.canCombine(left, right)) {
-            return;
-        }
+		if (!GlideplateServerUtil.canCombine(left, right)) {
+			return;
+		}
 
-        this.output.setStack(0, GlideplateServerUtil.createGlideplateServer(left));
-        this.repairItemUsage = 1;
-        this.levelCost.set(0);
-        this.sendContentUpdates();
-        callbackInfo.cancel();
-    }
+		this.resultSlots.setItem(0, GlideplateServerUtil.createGlideplateServer(left));
+		this.repairItemCountCost = 1;
+		this.cost.set(0);
+		this.broadcastChanges();
+		callbackInfo.cancel();
+	}
 
-    @Inject(method = "canTakeOutput", at = @At("HEAD"), cancellable = true)
-    private void glideplateServer$canTakeOutput(PlayerEntity player, boolean present, CallbackInfoReturnable<Boolean> callbackInfoReturnable) {
-        if (!this.glideplateServer$isLogicalServer()) {
-            return;
-        }
+	@Inject(method = "mayPickup", at = @At("HEAD"), cancellable = true)
+	private void glideplateServer$mayPickup(Player player, boolean present, CallbackInfoReturnable<Boolean> callbackInfoReturnable) {
+		if (!this.glideplateServer$isLogicalServer()) {
+			return;
+		}
 
-        if (!present) {
-            return;
-        }
+		if (!present) {
+			return;
+		}
 
-        if (GlideplateServerUtil.canCombine(this.input.getStack(0), this.input.getStack(1))) {
-            callbackInfoReturnable.setReturnValue(true);
-        }
-    }
+		if (GlideplateServerUtil.canCombine(this.inputSlots.getItem(0), this.inputSlots.getItem(1))) {
+			callbackInfoReturnable.setReturnValue(true);
+		}
+	}
 
-    @Inject(method = "onTakeOutput", at = @At("HEAD"), cancellable = true)
-    private void glideplateServer$onTakeOutput(PlayerEntity player, ItemStack stack, CallbackInfo callbackInfo) {
-        if (!this.glideplateServer$isLogicalServer()) {
-            return;
-        }
+	@Inject(method = "onTake", at = @At("HEAD"), cancellable = true)
+	private void glideplateServer$onTake(Player player, ItemStack stack, CallbackInfo callbackInfo) {
+		if (!this.glideplateServer$isLogicalServer()) {
+			return;
+		}
 
-        ItemStack left = this.input.getStack(0);
-        ItemStack right = this.input.getStack(1);
+		ItemStack left = this.inputSlots.getItem(0);
+		ItemStack right = this.inputSlots.getItem(1);
 
-        if (!GlideplateServerUtil.canCombine(left, right) || !GlideplateServerUtil.hasElytra(stack)) {
-            return;
-        }
+		if (!GlideplateServerUtil.canCombine(left, right) || !GlideplateServerUtil.hasElytra(stack)) {
+			return;
+		}
 
-        this.input.setStack(0, ItemStack.EMPTY);
-        right.decrement(1);
-        if (right.isEmpty()) {
-            this.input.setStack(1, ItemStack.EMPTY);
-        }
+		this.inputSlots.setItem(0, ItemStack.EMPTY);
+		right.shrink(1);
 
-        this.repairItemUsage = 0;
-        this.levelCost.set(0);
-        this.context.run((world, pos) -> world.syncWorldEvent(WorldEvents.ANVIL_USED, pos, 0));
-        this.sendContentUpdates();
-        callbackInfo.cancel();
-    }
+		if (right.isEmpty()) {
+			this.inputSlots.setItem(1, ItemStack.EMPTY);
+		}
 
-    private boolean glideplateServer$isLogicalServer() {
-        boolean[] server = {false};
-        this.context.run((world, pos) -> server[0] = !world.isClient());
-        return server[0];
-    }
+		this.repairItemCountCost = 0;
+		this.cost.set(0);
+		this.access.execute((level, pos) -> level.levelEvent(LevelEvent.SOUND_ANVIL_USED, pos, 0));
+		this.broadcastChanges();
+		callbackInfo.cancel();
+	}
+
+	private boolean glideplateServer$isLogicalServer() {
+		return this.access.evaluate((level, pos) -> !level.isClientSide(), false);
+	}
 }
-
-

@@ -1,12 +1,10 @@
 package com.example.autogreetingserver;
 
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.command.permission.LeveledPermissionPredicate;
-import net.minecraft.command.permission.PermissionLevel;
-import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.Text;
+import net.minecraft.server.level.ServerPlayer;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -19,9 +17,9 @@ public class AutoGreetingServerDelay {
 	private static final Map<String, PendingGreeting> pending = new HashMap<>();
 	private static boolean registered = false;
 
-	public static void greetAfter1Second(ServerPlayerEntity player) {
+	public static void greetAfter1Second(ServerPlayer player) {
 		String name = player.getName().getString();
-		String uuid = player.getUuidAsString();
+		String uuid = player.getUUID().toString();
 		String x = fmt(player.getX());
 		String y = fmt(player.getY());
 		String z = fmt(player.getZ());
@@ -95,10 +93,10 @@ public class AutoGreetingServerDelay {
 				.replace("@level", level);
 
 			if (msg.startsWith("/")) {
-				ServerCommandSource source = server.getCommandSource().withPermissions(LeveledPermissionPredicate.fromLevel(PermissionLevel.fromLevel(0)));
-				server.getCommandManager().parseAndExecute(source, finalMsg);
+				CommandSourceStack source = server.createCommandSourceStack();
+				server.getCommands().performPrefixedCommand(source, finalMsg);
 			} else {
-				server.getPlayerManager().broadcast(Text.literal("[Server] " + finalMsg), false);
+				server.getPlayerList().broadcastSystemMessage(Component.literal("[Server] " + finalMsg), false);
 			}
 		}
 	}

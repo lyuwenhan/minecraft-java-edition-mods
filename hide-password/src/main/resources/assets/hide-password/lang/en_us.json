@@ -1,4 +1,5 @@
 {
 	"key.hidepassword.toggle": "Toggle Hide Password",
+	"key.category.hide-password.general": "Hide Password",
 	"category.hidepassword": "Hide Password"
 }

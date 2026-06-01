@@ -1,6 +1,6 @@
 package com.example.autogreetingclient.client.compat;
 
-import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.screens.Screen;
 
 import java.lang.reflect.Method;
 

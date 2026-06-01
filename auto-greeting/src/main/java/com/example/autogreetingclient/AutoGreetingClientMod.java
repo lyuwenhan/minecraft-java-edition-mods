@@ -8,14 +8,14 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
-import net.minecraft.text.Text;
+import net.minecraft.network.chat.Component;
 import java.util.List;
-import static net.fabricmc.fabric.api.client.command.v2.ClientCommandManager.*;
+import static net.fabricmc.fabric.api.client.command.v2.ClientCommands.*;
 
 public class AutoGreetingClientMod implements ClientModInitializer {
 
 	public static long joinWorldAt = 0L;
-	public static final AutoGreetingClientConfig CONFIG = AutoGreetingClientConfig.load();
+	public static AutoGreetingClientConfig CONFIG = AutoGreetingClientConfigHolder.get();
 
 	private static void sendList(
 		FabricClientCommandSource src,
@@ -23,15 +23,15 @@ public class AutoGreetingClientMod implements ClientModInitializer {
 		List<String> list
 	) {
 		if (list.isEmpty()) {
-			src.sendFeedback(Text.literal(title + ": <empty>"));
+			src.sendFeedback(Component.literal(title + ": <empty>"));
 			return;
 		}
 
-		src.sendFeedback(Text.literal(title + ":"));
+		src.sendFeedback(Component.literal(title + ":"));
 
 		int i = 1;
 		for (String s : list) {
-			src.sendFeedback(Text.literal(i++ + ". " + s));
+			src.sendFeedback(Component.literal(i++ + ". " + s));
 		}
 	}
 
@@ -46,12 +46,12 @@ public class AutoGreetingClientMod implements ClientModInitializer {
 		addArg = addArg.executes(ctx -> {
 			String msg = StringArgumentType.getString(ctx, pattern);
 			if (!isType1 && list.contains(msg)) {
-				ctx.getSource().sendFeedback(Text.literal(title + ": \"" + msg + "\" already exists."));
+				ctx.getSource().sendFeedback(Component.literal(title + ": \"" + msg + "\" already exists."));
 				return 1;
 			}
 			list.add(msg);
 			CONFIG.save();
-			ctx.getSource().sendFeedback(Text.literal(title + ": appended \"" + msg + "\"."));
+			ctx.getSource().sendFeedback(Component.literal(title + ": appended \"" + msg + "\"."));
 			return 1;
 		});
 		if (isType1) {
@@ -60,17 +60,17 @@ public class AutoGreetingClientMod implements ClientModInitializer {
 					String msg = StringArgumentType.getString(ctx, pattern);
 					int index = IntegerArgumentType.getInteger(ctx, "index");
 					if (!isType1 && list.contains(msg)) {
-						ctx.getSource().sendFeedback(Text.literal(title + ": \"" + msg + "\" already exists."));
+						ctx.getSource().sendFeedback(Component.literal(title + ": \"" + msg + "\" already exists."));
 						return 1;
 					}
 					boolean isAppend = index > list.size();
-					int pos = Math.max(1, Math.min(index - 1, list.size()));
+					int pos = Math.max(0, Math.min(index - 1, list.size()));
 					list.add(pos, msg);
 					CONFIG.save();
 					if (isAppend) {
-						ctx.getSource().sendFeedback(Text.literal(title + ": appended \"" + msg + "\"."));
+						ctx.getSource().sendFeedback(Component.literal(title + ": appended \"" + msg + "\"."));
 					} else {
-						ctx.getSource().sendFeedback(Text.literal(title + ": inserted \"" + msg + "\" at position " + index + "."));
+						ctx.getSource().sendFeedback(Component.literal(title + ": inserted \"" + msg + "\" at position " + index + "."));
 					}
 					return 1;
 				})
@@ -83,12 +83,12 @@ public class AutoGreetingClientMod implements ClientModInitializer {
 			.then(literal("remove")
 				.executes(ctx -> {
 					if (list.isEmpty()) {
-						ctx.getSource().sendFeedback(Text.literal(title + " is empty."));
+						ctx.getSource().sendFeedback(Component.literal(title + " is empty."));
 						return 1;
 					}
 					list.remove(list.size() - 1);
 					CONFIG.save();
-					ctx.getSource().sendFeedback(Text.literal(title + ": removed last item."));
+					ctx.getSource().sendFeedback(Component.literal(title + ": removed last item."));
 					return 1;
 				})
 
@@ -96,13 +96,13 @@ public class AutoGreetingClientMod implements ClientModInitializer {
 					.executes(ctx -> {
 						int index = IntegerArgumentType.getInteger(ctx, "index");
 						if (index < 1 || index > list.size()) {
-							ctx.getSource().sendFeedback(Text.literal(title + ": index out of range."));
+							ctx.getSource().sendFeedback(Component.literal(title + ": index out of range."));
 							return 1;
 						}
 
 						list.remove(index - 1);
 						CONFIG.save();
-						ctx.getSource().sendFeedback(Text.literal(title + ": removed #" + index + "."));
+						ctx.getSource().sendFeedback(Component.literal(title + ": removed #" + index + "."));
 						return 1;
 					})
 				)
@@ -110,12 +110,12 @@ public class AutoGreetingClientMod implements ClientModInitializer {
 				.then(literal("all")
 					.executes(ctx -> {
 						if (list.isEmpty()) {
-							ctx.getSource().sendFeedback(Text.literal(title + " is already empty."));
+							ctx.getSource().sendFeedback(Component.literal(title + " is already empty."));
 							return 1;
 						}
 						list.clear();
 						CONFIG.save();
-						ctx.getSource().sendFeedback(Text.literal(title + ": all entries cleared."));
+						ctx.getSource().sendFeedback(Component.literal(title + ": all entries cleared."));
 						return 1;
 					})
 				)
@@ -131,8 +131,11 @@ public class AutoGreetingClientMod implements ClientModInitializer {
 
 	@Override
 	public void onInitializeClient() {
+		AutoGreetingClientDelay.init();
+
 		ClientPlayConnectionEvents.JOIN.register((handler, sender, client) -> {
 			AutoGreetingClientMod.joinWorldAt = System.currentTimeMillis();
+			AutoGreetingClientDelay.resetPlayerTracking();
 			if (!CONFIG.selfEnabled) {
 				return;
 			}
@@ -145,28 +148,28 @@ public class AutoGreetingClientMod implements ClientModInitializer {
 				.then(literal("self")
 					.then(literal("status")
 						.executes(ctx -> {
-							ctx.getSource().sendFeedback(Text.literal("Auto greeting " + (CONFIG.selfEnabled ? "enabled" : "disabled") + "."));
+							ctx.getSource().sendFeedback(Component.literal("Auto greeting " + (CONFIG.selfEnabled ? "enabled" : "disabled") + "."));
 							return 1;
 						})
 
 						.then(literal("enable").executes(ctx -> {
 							CONFIG.selfEnabled = true;
 							CONFIG.save();
-							ctx.getSource().sendFeedback(Text.literal("Auto greeting enabled."));
+							ctx.getSource().sendFeedback(Component.literal("Auto greeting enabled."));
 							return 1;
 						}))
 
 						.then(literal("disable").executes(ctx -> {
 							CONFIG.selfEnabled = false;
 							CONFIG.save();
-							ctx.getSource().sendFeedback(Text.literal("Auto greeting disabled."));
+							ctx.getSource().sendFeedback(Component.literal("Auto greeting disabled."));
 							return 1;
 						}))
 
 						.then(literal("toggle").executes(ctx -> {
 							CONFIG.selfEnabled = !CONFIG.selfEnabled;
 							CONFIG.save();
-							ctx.getSource().sendFeedback(Text.literal("Auto greeting is " + (CONFIG.selfEnabled ? "enabled" : "disabled") + "."));
+							ctx.getSource().sendFeedback(Component.literal("Auto greeting is " + (CONFIG.selfEnabled ? "enabled" : "disabled") + "."));
 							return 1;
 						}))
 					)
@@ -176,28 +179,28 @@ public class AutoGreetingClientMod implements ClientModInitializer {
 				.then(literal("other")
 					.then(literal("status")
 						.executes(ctx -> {
-							ctx.getSource().sendFeedback(Text.literal("Auto greeting " + (CONFIG.otherEnabled ? "enabled" : "disabled")));
+							ctx.getSource().sendFeedback(Component.literal("Auto greeting " + (CONFIG.otherEnabled ? "enabled" : "disabled")));
 							return 1;
 						})
 
 						.then(literal("enable").executes(ctx -> {
 							CONFIG.otherEnabled = true;
 							CONFIG.save();
-							ctx.getSource().sendFeedback(Text.literal("Auto greeting enabled."));
+							ctx.getSource().sendFeedback(Component.literal("Auto greeting enabled."));
 							return 1;
 						}))
 
 						.then(literal("disable").executes(ctx -> {
 							CONFIG.otherEnabled = false;
 							CONFIG.save();
-							ctx.getSource().sendFeedback(Text.literal("Auto greeting disabled."));
+							ctx.getSource().sendFeedback(Component.literal("Auto greeting disabled."));
 							return 1;
 						}))
 
 						.then(literal("toggle").executes(ctx -> {
 							CONFIG.otherEnabled = !CONFIG.otherEnabled;
 							CONFIG.save();
-							ctx.getSource().sendFeedback(Text.literal("Auto greeting " + (CONFIG.otherEnabled ? "enabled" : "disabled") + "."));
+							ctx.getSource().sendFeedback(Component.literal("Auto greeting " + (CONFIG.otherEnabled ? "enabled" : "disabled") + "."));
 							return 1;
 						}))
 					)
@@ -305,7 +308,7 @@ public class AutoGreetingClientMod implements ClientModInitializer {
 									CONFIG.otherBlacklist.clear();
 									CONFIG.otherBlacklistExcept.clear();
 									CONFIG.save();
-									ctx.getSource().sendFeedback(Text.literal("Blacklist cleared."));
+									ctx.getSource().sendFeedback(Component.literal("Blacklist cleared."));
 									return 1;
 								})
 							)
@@ -414,7 +417,7 @@ public class AutoGreetingClientMod implements ClientModInitializer {
 									CONFIG.otherWhitelist.clear();
 									CONFIG.otherWhitelistExcept.clear();
 									CONFIG.save();
-									ctx.getSource().sendFeedback(Text.literal("Whitelist cleared."));
+									ctx.getSource().sendFeedback(Component.literal("Whitelist cleared."));
 									return 1;
 								})
 							)

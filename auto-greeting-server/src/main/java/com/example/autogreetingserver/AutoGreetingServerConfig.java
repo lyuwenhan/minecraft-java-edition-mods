@@ -33,10 +33,16 @@ public class AutoGreetingServerConfig {
 		}
 
 		try {
-			return GSON.fromJson(
+			AutoGreetingServerConfig cfg = GSON.fromJson(
 				Files.readString(CONFIG_PATH),
 				AutoGreetingServerConfig.class
 			);
+
+			if (cfg == null) {
+				return new AutoGreetingServerConfig();
+			}
+
+			return cfg;
 		} catch (IOException e) {
 			throw new RuntimeException("Failed to load auto-greeting server config", e);
 		}

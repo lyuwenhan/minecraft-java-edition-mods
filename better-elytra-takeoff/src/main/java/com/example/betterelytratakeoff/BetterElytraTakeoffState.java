@@ -5,17 +5,14 @@ import java.util.Map;
 import java.util.UUID;
 
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.component.DataComponentTypes;
-import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.entity.projectile.FireworkRocketEntity;
-import net.minecraft.entity.projectile.ProjectileEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.stat.Stats;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.stats.Stats;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.projectile.FireworkRocketEntity;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 
 public final class BetterElytraTakeoffState {
 	private static final int FIRST_ROCKET_TICK = 1;
@@ -26,59 +23,62 @@ public final class BetterElytraTakeoffState {
 	private BetterElytraTakeoffState() {
 	}
 
-	public static void schedule(ServerPlayerEntity player, Hand hand, ItemStack stack) {
+	public static void schedule(ServerPlayer player, ItemStack stack) {
 		ItemStack rocket = stack.copyWithCount(1);
-		PENDING_TAKEOFFS.put(player.getUuid(), new PendingTakeoff(FIRST_ROCKET_TICK, hand, rocket));
+		PENDING_TAKEOFFS.put(player.getUUID(), new PendingTakeoff(FIRST_ROCKET_TICK, rocket));
 
-		player.startGliding();
+		player.startFallFlying();
 
 		if (!player.isCreative() && !FabricLoader.getInstance().isModLoaded(INFINITY_FIREWORKS_MOD_ID)) {
-			stack.decrement(1);
+			stack.shrink(1);
 		}
-		player.incrementStat(Stats.USED.getOrCreateStat(Items.FIREWORK_ROCKET));
+
+		player.awardStat(Stats.ITEM_USED.get(Items.FIREWORK_ROCKET));
 	}
 
-	public static void tick(ServerPlayerEntity player) {
-		PendingTakeoff pending = PENDING_TAKEOFFS.get(player.getUuid());
+	public static void tick(ServerPlayer player) {
+		PendingTakeoff pending = PENDING_TAKEOFFS.get(player.getUUID());
+
 		if (pending == null) {
 			return;
 		}
 
 		if (pending.ticksLeft < LAST_GLIDING_TICK) {
-			PENDING_TAKEOFFS.remove(player.getUuid());
+			PENDING_TAKEOFFS.remove(player.getUUID());
 			return;
 		}
 
 		if (!canUseTakeoff(player)) {
-			PENDING_TAKEOFFS.remove(player.getUuid());
+			PENDING_TAKEOFFS.remove(player.getUUID());
 			return;
 		}
 
-		player.startGliding();
+		player.startFallFlying();
 
-		if (pending.ticksLeft == FIRST_ROCKET_TICK && player.getEntityWorld() instanceof ServerWorld serverWorld) {
-			ProjectileEntity.spawn(new FireworkRocketEntity(serverWorld, pending.rocket, player), serverWorld, pending.rocket);
-			PENDING_TAKEOFFS.put(player.getUuid(), pending.next());
+		if (pending.ticksLeft == FIRST_ROCKET_TICK && player.level() instanceof ServerLevel serverLevel) {
+			FireworkRocketEntity firework = new FireworkRocketEntity(serverLevel, pending.rocket, player);
+			serverLevel.addFreshEntity(firework);
+			PENDING_TAKEOFFS.put(player.getUUID(), pending.next());
 			return;
 		}
 
-		PENDING_TAKEOFFS.put(player.getUuid(), pending.next());
+		PENDING_TAKEOFFS.put(player.getUUID(), pending.next());
 	}
 
-	public static boolean canUseTakeoff(ServerPlayerEntity player) {
+	public static boolean canUseTakeoff(ServerPlayer player) {
 		return !player.isSpectator()
-				&& !player.hasVehicle()
-				&& !player.getAbilities().flying
-				&& isWearingGlider(player);
+			&& !player.isPassenger()
+			&& !player.getAbilities().flying
+			&& isWearingGlider(player);
 	}
 
-	private static boolean isWearingGlider(ServerPlayerEntity player) {
-		for (EquipmentSlot slot : EquipmentSlot.VALUES) {
+	private static boolean isWearingGlider(ServerPlayer player) {
+		for (EquipmentSlot slot : EquipmentSlot.values()) {
 			if (slot == EquipmentSlot.OFFHAND) {
 				continue;
 			}
 
-			if (player.getEquippedStack(slot).contains(DataComponentTypes.GLIDER)) {
+			if (player.getItemBySlot(slot).has(DataComponents.GLIDER)) {
 				return true;
 			}
 		}
@@ -86,9 +86,9 @@ public final class BetterElytraTakeoffState {
 		return false;
 	}
 
-	private record PendingTakeoff(int ticksLeft, Hand hand, ItemStack rocket) {
+	private record PendingTakeoff(int ticksLeft, ItemStack rocket) {
 		private PendingTakeoff next() {
-			return new PendingTakeoff(this.ticksLeft - 1, this.hand, this.rocket);
+			return new PendingTakeoff(this.ticksLeft - 1, this.rocket);
 		}
 	}
 }

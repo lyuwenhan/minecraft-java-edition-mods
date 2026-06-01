@@ -1,8 +1,8 @@
 package com.example.hidepassword.mixin;
-import com.example.hidepassword.HidePasswordMod;
 
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.widget.TextFieldWidget;
+import com.example.hidepassword.HidePasswordMod;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.components.EditBox;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -12,77 +12,88 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import java.util.List;
 import java.util.Locale;
 
-@Mixin(TextFieldWidget.class)
+@Mixin(EditBox.class)
 public abstract class TextFieldWidgetMixin {
+	@Shadow
+	public abstract String getValue();
 
-    @Shadow
-    private String text;
+	@Shadow
+	public abstract void setValue(String value);
 
-    @Shadow
-    protected abstract void setText(String text);
+	private String hidepassword$real;
+	private boolean hidepassword$active;
 
-    private String hidepassword$real;
-    private boolean hidepassword$active;
+	private static final List<String> COMMAND_PREFIXES = List.of(
+		"/login",
+		"/l",
+		"/register",
+		"/reg",
+		"/changepassword",
+		"/autologin set",
+		"/account unregister",
+		"/account changepassword"
+	);
 
-    private static final List<String> COMMAND_PREFIXES = List.of(
-        "/login",
-        "/l",
-        "/register",
-        "/reg",
-        "/changepassword",
-        "/autologin set",
-        "/account unregister",
-        "/account changepassword"
-    );
+	private static final String FIXED_MASK = "********";
 
-    @Inject(method = "renderWidget", at = @At("HEAD"))
-    private void hidepassword$beforeRender( DrawContext context, int mouseX, int mouseY, float delta, CallbackInfo ci) {
-        if(!HidePasswordMod.CONFIG.enabled) {
-            return;
-        }
-        hidepassword$real = this.text;
+	@Inject(method = "extractWidgetRenderState", at = @At("HEAD"))
+	private void hidepassword$beforeRender(GuiGraphicsExtractor context, int mouseX, int mouseY, float delta, CallbackInfo ci) {
+		if (HidePasswordMod.CONFIG == null) {
+			return;
+		}
 
-        String masked = maskIfNeeded(hidepassword$real);
-        hidepassword$active = masked != null;
+		if (!HidePasswordMod.CONFIG.enabled) {
+			return;
+		}
 
-        if (hidepassword$active) {
-            setText(masked);
-        }
-    }
+		hidepassword$real = this.getValue();
 
-    @Inject(method = "renderWidget", at = @At("TAIL"))
-    private void hidepassword$afterRender( DrawContext context, int mouseX, int mouseY, float delta, CallbackInfo ci) {
-        if (hidepassword$active) {
-            setText(hidepassword$real);
-            hidepassword$real = null;
-        }
-    }
+		String masked = maskIfNeeded(hidepassword$real);
+		hidepassword$active = masked != null;
 
-    private static final String FIXED_MASK = "********";
+		if (hidepassword$active) {
+			this.setValue(masked);
+		}
+	}
 
-    private static String maskIfNeeded(String input) {
-        if (input == null || input.isEmpty()) return null;
+	@Inject(method = "extractWidgetRenderState", at = @At("TAIL"))
+	private void hidepassword$afterRender(GuiGraphicsExtractor context, int mouseX, int mouseY, float delta, CallbackInfo ci) {
+		if (hidepassword$active) {
+			this.setValue(hidepassword$real);
+			hidepassword$real = null;
+			hidepassword$active = false;
+		}
+	}
 
-        String lower = input.toLowerCase(Locale.ROOT);
+	private static String maskIfNeeded(String input) {
+		if (input == null || input.isEmpty()) {
+			return null;
+		}
 
-        for (String cmd : COMMAND_PREFIXES) {
-            if (lower.startsWith(cmd + " ")) {
-                int prefixLen = cmd.length();
-                String visiblePrefix = input.substring(0, prefixLen + 1);
-                if(visiblePrefix.isEmpty()) {
-                    return "";
-                }
-                String password = input.substring(prefixLen + 1);
-                return visiblePrefix + maskPassword(password);
-            }
-        }
-        return null;
-    }
+		String lower = input.toLowerCase(Locale.ROOT);
 
-    private static String maskPassword(String password) {
-        if (HidePasswordMod.CONFIG.hideLength) {
-            return FIXED_MASK;
-        }
-        return password.replaceAll("\\S", "*");
-    }
+		for (String cmd : COMMAND_PREFIXES) {
+			if (lower.startsWith(cmd + " ")) {
+				int prefixLen = cmd.length();
+				String visiblePrefix = input.substring(0, prefixLen + 1);
+
+				if (visiblePrefix.isEmpty()) {
+					return "";
+				}
+
+				String password = input.substring(prefixLen + 1);
+				return visiblePrefix + maskPassword(password);
+			}
+		}
+
+		return null;
+	}
+
+	private static String maskPassword(String password) {
+		if (HidePasswordMod.CONFIG.hideLength) {
+			return FIXED_MASK;
+		}
+
+		return password.replaceAll("\\S", "*");
+	}
 }

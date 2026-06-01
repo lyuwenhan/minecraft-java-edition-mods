@@ -1,23 +1,25 @@
 package com.example.playerhighlighter;
 
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.render.GameRenderer;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.Entity;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.phys.Vec3;
 
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
 public final class GetDirections {
+	private GetDirections() {
+	}
 
-	public record ScreenResult(float x, float y) {}
+	public record ScreenResult(float x, float y) {
+	}
 
-	public static List<ScreenResult> projectAllPlayersHud() {
+	public static List<ScreenResult> projectAllPlayersHud(int screenWidth, int screenHeight) {
 		List<ScreenResult> result = new ArrayList<>();
 
-		MinecraftClient client = MinecraftClient.getInstance();
-		if (client.player == null || client.world == null) {
+		Minecraft client = Minecraft.getInstance();
+		if (client.player == null || client.level == null) {
 			return result;
 		}
 
@@ -27,57 +29,46 @@ public final class GetDirections {
 		}
 
 		GameRenderer renderer = client.gameRenderer;
+		Vec3 camPos = camera.position();
+		Vec3 camForward = camera.getViewVector(1.0F);
 
-		int screenW = client.getWindow().getScaledWidth();
-		int screenH = client.getWindow().getScaledHeight();
+		float screenHalfWidth = screenWidth * 0.5F;
+		float screenHalfHeight = screenHeight * 0.5F;
 
-		float screenHalfW = screenW * 0.5f;
-		float screenHalfH = screenH * 0.5f;
-
-		Vec3d camPos = new Vec3d(
-			camera.getX(),
-			camera.getY(),
-			camera.getZ()
-		);
-
-		Vec3d camForward = camera.getRotationVec(1.0f);
-
-		for (PlayerEntity player : client.world.getPlayers()) {
-			if (player == camera) {
+		for (var player : client.level.players()) {
+			if (player == client.player) {
 				continue;
 			}
+
 			double px = player.getX();
-			double py = player.getY() + player.getStandingEyeHeight();
+			double py = player.getEyeY();
 			double pz = player.getZ();
 
 			double dx = px - camPos.x;
 			double dy = py - camPos.y;
 			double dz = pz - camPos.z;
 
-			if (camForward.x * dx + camForward.y * dy + camForward.z * dz <= 0.0) {
+			if (camForward.x * dx + camForward.y * dy + camForward.z * dz <= 0.0D) {
 				continue;
 			}
 
-			Vec3d worldPos = new Vec3d(
-				px,
-				py,
-				pz
-			);
-
-			Vec3d projected = renderer.project(worldPos);
-
-			if (projected != null) {
-				float ndscreenHalfW = (float) projected.x;
-				float ndscreenHalfH = (float) projected.y;
-
-				float x = (ndscreenHalfW + 1f) * screenHalfW;
-				float y = (1f - ndscreenHalfH) * screenHalfH;
-
-				if (x >= 0 && x <= screenW && y >= 0 && y <= screenH) {
-					result.add(new ScreenResult(x, y));
-				}
+			Vec3 projected = renderer.projectPointToScreen(new Vec3(px, py, pz));
+			if (projected == null) {
 				continue;
 			}
+
+			if (!Double.isFinite(projected.x) || !Double.isFinite(projected.y)) {
+				continue;
+			}
+
+			float x = (float) ((projected.x + 1.0D) * screenHalfWidth);
+			float y = (float) ((1.0D - projected.y) * screenHalfHeight);
+
+			if (x < 0.0F || x > screenWidth || y < 0.0F || y > screenHeight) {
+				continue;
+			}
+
+			result.add(new ScreenResult(x, y));
 		}
 
 		return result;

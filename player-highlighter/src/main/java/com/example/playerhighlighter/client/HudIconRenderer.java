@@ -1,51 +1,69 @@
 package com.example.playerhighlighter.client;
 
-import com.example.playerhighlighter.PlayerHighlighterMod;
 import com.example.playerhighlighter.GetDirections;
-import com.example.playerhighlighter.GetDirections.ScreenResult;
-
-import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
-
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gl.RenderPipelines;
-import net.minecraft.client.render.RenderTickCounter;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.Identifier;
+import com.example.playerhighlighter.PlayerHighlighterMod;
+import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry;
+import net.fabricmc.fabric.api.client.rendering.v1.hud.VanillaHudElements;
+import net.minecraft.client.DeltaTracker;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.renderer.RenderPipelines;
+import net.minecraft.resources.Identifier;
 
 import java.util.List;
 
 public final class HudIconRenderer {
+	private static final Identifier ICON = Identifier.fromNamespaceAndPath(
+		PlayerHighlighterMod.MOD_ID,
+		"textures/gui/target.png"
+	);
 
-	private static final Identifier ICON = Identifier.of("player-highlighter", "textures/gui/target.png");
+	private static final Identifier HUD_ELEMENT_ID = Identifier.fromNamespaceAndPath(
+		PlayerHighlighterMod.MOD_ID,
+		"target_icons"
+	);
 
-	public static void register() {
-		HudRenderCallback.EVENT.register(HudIconRenderer::render);
+	private HudIconRenderer() {
 	}
 
-	private static void render(DrawContext ctx, RenderTickCounter tickCounter) {
-		MinecraftClient client = MinecraftClient.getInstance();
-		if (client.player == null) return;
+	public static void register() {
+		HudElementRegistry.attachElementBefore(
+			VanillaHudElements.CHAT,
+			HUD_ELEMENT_ID,
+			HudIconRenderer::render
+		);
+	}
 
-		if (!(PlayerHighlighterMod.HOLD_KEY.isPressed() || PlayerHighlighterMod.config.keep)) {
+	private static void render(GuiGraphicsExtractor graphics, DeltaTracker tickCounter) {
+		Minecraft client = Minecraft.getInstance();
+		if (client.player == null) {
 			return;
 		}
 
-		List<ScreenResult> results = GetDirections.projectAllPlayersHud();
+		if (!PlayerHighlighterMod.isHighlightActive()) {
+			return;
+		}
+
+		int screenWidth = graphics.guiWidth();
+		int screenHeight = graphics.guiHeight();
+		List<GetDirections.ScreenResult> results = GetDirections.projectAllPlayersHud(screenWidth, screenHeight);
 
 		int size = 9;
+		for (GetDirections.ScreenResult screenResult : results) {
+			int x = Math.round(screenResult.x() - size / 2.0F);
+			int y = Math.round(screenResult.y() - size / 2.0F);
 
-		for (GetDirections.ScreenResult r : results) {
-			int x = Math.round(r.x() - size / 2f);
-			int y = Math.round(r.y() - size / 2f);
-
-			ctx.drawTexture(
+			graphics.blit(
 				RenderPipelines.GUI_TEXTURED,
 				ICON,
-				x, y,
-				0, 0,
-				size, size,
-				size, size
+				x,
+				y,
+				0.0F,
+				0.0F,
+				size,
+				size,
+				size,
+				size
 			);
 		}
 	}

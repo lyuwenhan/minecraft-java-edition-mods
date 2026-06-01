@@ -11,7 +11,12 @@ public final class AutoGreetingClientConfigHolder {
 	}
 
 	public static void set(AutoGreetingClientConfig newConfig) {
+		if (newConfig == null) {
+			return;
+		}
+
 		config = newConfig;
+		AutoGreetingClientMod.CONFIG = newConfig;
 	}
 
 	public static void save() {
@@ -19,6 +24,6 @@ public final class AutoGreetingClientConfigHolder {
 	}
 
 	public static void reload() {
-		config = AutoGreetingClientConfig.load();
+		set(AutoGreetingClientConfig.load());
 	}
 }

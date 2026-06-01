@@ -7,55 +7,55 @@ import com.mojang.brigadier.builder.RequiredArgumentBuilder;
 import net.fabricmc.api.DedicatedServerModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
-import net.minecraft.server.command.CommandManager;
-import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.Text;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.commands.Commands;
+import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerPlayer;
 
 import java.util.List;
 
-import static net.minecraft.server.command.CommandManager.argument;
-import static net.minecraft.server.command.CommandManager.literal;
+import static net.minecraft.commands.Commands.argument;
+import static net.minecraft.commands.Commands.literal;
 
 public class AutoGreetingServerMod implements DedicatedServerModInitializer {
 	public static final AutoGreetingServerConfig CONFIG = AutoGreetingServerConfig.load();
 
 	private static void sendList(
-		ServerCommandSource src,
+		CommandSourceStack src,
 		String title,
 		List<String> list
 	) {
 		if (list.isEmpty()) {
-			src.sendFeedback(() -> Text.literal(title + ": <empty>"), false);
+			src.sendSuccess(() -> Component.literal(title + ": <empty>"), false);
 			return;
 		}
 
-		src.sendFeedback(() -> Text.literal(title + ":"), false);
+		src.sendSuccess(() -> Component.literal(title + ":"), false);
 
 		int i = 1;
 		for (String s : list) {
 			final int index = i++;
-			src.sendFeedback(() -> Text.literal(index + ". " + s), false);
+			src.sendSuccess(() -> Component.literal(index + ". " + s), false);
 		}
 	}
 
-	private static LiteralArgumentBuilder<ServerCommandSource> buildStringListNode(
+	private static LiteralArgumentBuilder<CommandSourceStack> buildStringListNode(
 		String name,
 		String title,
 		List<String> list,
 		boolean isMessage
 	) {	
 		String pattern = isMessage ? "message" : "pattern";
-		RequiredArgumentBuilder<ServerCommandSource, String> addArg = argument(pattern, StringArgumentType.greedyString())
+		RequiredArgumentBuilder<CommandSourceStack, String> addArg = argument(pattern, StringArgumentType.greedyString())
 		.executes(ctx -> {
 			String msg = StringArgumentType.getString(ctx, pattern);
 			if (!isMessage && list.contains(msg)) {
-				ctx.getSource().sendFeedback(() -> Text.literal(title + ": \"" + msg + "\" already exists."), false);
+				ctx.getSource().sendSuccess(() -> Component.literal(title + ": \"" + msg + "\" already exists."), false);
 				return 1;
 			}
 			list.add(msg);
 			CONFIG.save();
-			ctx.getSource().sendFeedback(() -> Text.literal(title + ": appended \"" + msg + "\"."), false);
+			ctx.getSource().sendSuccess(() -> Component.literal(title + ": appended \"" + msg + "\"."), false);
 			return 1;
 		});
 		if (isMessage) {
@@ -64,7 +64,7 @@ public class AutoGreetingServerMod implements DedicatedServerModInitializer {
 					String msg = StringArgumentType.getString(ctx, pattern);
 					int index = IntegerArgumentType.getInteger(ctx, "index");
 					if (!isMessage && list.contains(msg)) {
-						ctx.getSource().sendFeedback(() -> Text.literal(title + ": \"" + msg + "\" already exists."), false);
+						ctx.getSource().sendSuccess(() -> Component.literal(title + ": \"" + msg + "\" already exists."), false);
 						return 1;
 					}
 					boolean isAppend = index > list.size();
@@ -72,9 +72,9 @@ public class AutoGreetingServerMod implements DedicatedServerModInitializer {
 					list.add(pos, msg);
 					CONFIG.save();
 					if (isAppend) {
-						ctx.getSource().sendFeedback(() -> Text.literal(title + ": appended \"" + msg + "\"."), false);
+						ctx.getSource().sendSuccess(() -> Component.literal(title + ": appended \"" + msg + "\"."), false);
 					} else {
-						ctx.getSource().sendFeedback(() -> Text.literal(title + ": inserted \"" + msg + "\" at position " + index + "."), false);
+						ctx.getSource().sendSuccess(() -> Component.literal(title + ": inserted \"" + msg + "\" at position " + index + "."), false);
 					}
 					return 1;
 				})
@@ -87,12 +87,12 @@ public class AutoGreetingServerMod implements DedicatedServerModInitializer {
 			.then(literal("remove")
 				.executes(ctx -> {
 					if (list.isEmpty()) {
-						ctx.getSource().sendFeedback(() -> Text.literal(title + " is empty."), false);
+						ctx.getSource().sendSuccess(() -> Component.literal(title + " is empty."), false);
 						return 1;
 					}
 					list.remove(list.size() - 1);
 					CONFIG.save();
-					ctx.getSource().sendFeedback(() -> Text.literal(title + ": removed last item."), false);
+					ctx.getSource().sendSuccess(() -> Component.literal(title + ": removed last item."), false);
 					return 1;
 				})
 
@@ -100,13 +100,13 @@ public class AutoGreetingServerMod implements DedicatedServerModInitializer {
 					.executes(ctx -> {
 						int index = IntegerArgumentType.getInteger(ctx, "index");
 						if (index < 1 || index > list.size()) {
-							ctx.getSource().sendFeedback(() -> Text.literal(title + ": index out of range."), false);
+							ctx.getSource().sendSuccess(() -> Component.literal(title + ": index out of range."), false);
 							return 1;
 						}
 
 						list.remove(index - 1);
 						CONFIG.save();
-						ctx.getSource().sendFeedback(() -> Text.literal(title + ": removed #" + index + "."), false);
+						ctx.getSource().sendSuccess(() -> Component.literal(title + ": removed #" + index + "."), false);
 						return 1;
 					})
 				)
@@ -114,12 +114,12 @@ public class AutoGreetingServerMod implements DedicatedServerModInitializer {
 				.then(literal("all")
 					.executes(ctx -> {
 						if (list.isEmpty()) {
-							ctx.getSource().sendFeedback(() -> Text.literal(title + " is already empty."), false);
+							ctx.getSource().sendSuccess(() -> Component.literal(title + " is already empty."), false);
 							return 1;
 						}
 						list.clear();
 						CONFIG.save();
-						ctx.getSource().sendFeedback(() -> Text.literal(title + ": all entries cleared."), false);
+						ctx.getSource().sendSuccess(() -> Component.literal(title + ": all entries cleared."), false);
 						return 1;
 					})
 				)
@@ -133,7 +133,7 @@ public class AutoGreetingServerMod implements DedicatedServerModInitializer {
 			);
 	}
 
-	private static boolean shouldGreet(ServerPlayerEntity player) {
+	private static boolean shouldGreet(ServerPlayer player) {
 		String name = player.getName().getString();
 
 		if (CONFIG.serverBlacklist.match(name) && !CONFIG.serverBlacklistExcept.match(name)) {
@@ -154,7 +154,7 @@ public class AutoGreetingServerMod implements DedicatedServerModInitializer {
 				return;
 			}
 
-			ServerPlayerEntity player = handler.player;
+			ServerPlayer player = handler.player;
 			if (!shouldGreet(player)) {
 				return;
 			}
@@ -164,31 +164,31 @@ public class AutoGreetingServerMod implements DedicatedServerModInitializer {
 
 		CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> {
 			dispatcher.register(literal("servergreet")
-				.requires(CommandManager.requirePermissionLevel(CommandManager.ADMINS_CHECK))
+				.requires(Commands.hasPermission(Commands.LEVEL_ADMINS))
 				.then(literal("status")
 					.executes(ctx -> {
-						ctx.getSource().sendFeedback(() -> Text.literal("Auto greeting " + (CONFIG.serverEnabled ? "enabled" : "disabled") + "."), false);
+						ctx.getSource().sendSuccess(() -> Component.literal("Auto greeting " + (CONFIG.serverEnabled ? "enabled" : "disabled") + "."), false);
 						return 1;
 					})
 
 					.then(literal("enable").executes(ctx -> {
 						CONFIG.serverEnabled = true;
 						CONFIG.save();
-						ctx.getSource().sendFeedback(() -> Text.literal("Auto greeting enabled."), false);
+						ctx.getSource().sendSuccess(() -> Component.literal("Auto greeting enabled."), false);
 						return 1;
 					}))
 
 					.then(literal("disable").executes(ctx -> {
 						CONFIG.serverEnabled = false;
 						CONFIG.save();
-						ctx.getSource().sendFeedback(() -> Text.literal("Auto greeting disabled."), false);
+						ctx.getSource().sendSuccess(() -> Component.literal("Auto greeting disabled."), false);
 						return 1;
 					}))
 
 					.then(literal("toggle").executes(ctx -> {
 						CONFIG.serverEnabled = !CONFIG.serverEnabled;
 						CONFIG.save();
-						ctx.getSource().sendFeedback(() -> Text.literal("Auto greeting is " + (CONFIG.serverEnabled ? "enabled" : "disabled") + "."), false);
+						ctx.getSource().sendSuccess(() -> Component.literal("Auto greeting is " + (CONFIG.serverEnabled ? "enabled" : "disabled") + "."), false);
 						return 1;
 					}))
 				)
@@ -297,7 +297,7 @@ public class AutoGreetingServerMod implements DedicatedServerModInitializer {
 								CONFIG.serverBlacklist.clear();
 								CONFIG.serverBlacklistExcept.clear();
 								CONFIG.save();
-								ctx.getSource().sendFeedback(() -> Text.literal("Blacklist cleared."), false);
+								ctx.getSource().sendSuccess(() -> Component.literal("Blacklist cleared."), false);
 								return 1;
 							})
 						)
@@ -406,7 +406,7 @@ public class AutoGreetingServerMod implements DedicatedServerModInitializer {
 								CONFIG.serverWhitelist.clear();
 								CONFIG.serverWhitelistExcept.clear();
 								CONFIG.save();
-								ctx.getSource().sendFeedback(() -> Text.literal("Whitelist cleared."), false);
+								ctx.getSource().sendSuccess(() -> Component.literal("Whitelist cleared."), false);
 								return 1;
 							})
 						)

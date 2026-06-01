@@ -3,11 +3,10 @@
 	"id": "player-highlighter",
 	"version": "${version}",
 	"name": "Player Highlighter",
-	"description": "A lightweight client-side Fabric mod that highlights players with a glowing outline while the player list is visible.",
+	"description": "A lightweight client-side Fabric mod that highlights players with a glowing outline and HUD target icon.",
 	"authors": [
 		"Wenhan"
 	],
-	"icon": "assets/player-highlighter/icon.png",
 	"environment": "client",
 	"entrypoints": {
 		"client": [
@@ -18,7 +17,9 @@
 		"playerhighlighter.mixins.json"
 	],
 	"depends": {
-		"fabricloader": ">=0.18.0",
-		"minecraft": "1.21.11"
+		"fabricloader": ">=0.19.2",
+		"fabric-api": "*",
+		"minecraft": "26.1.2",
+		"java": ">=25"
 	}
 }

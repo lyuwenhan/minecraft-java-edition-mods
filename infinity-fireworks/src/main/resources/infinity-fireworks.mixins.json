@@ -1,11 +1,11 @@
 {
-  "required": true,
-  "package": "com.example.infinityfireworks.mixin",
-  "compatibilityLevel": "JAVA_21",
-  "mixins": [
-    "FireworkRocketItemMixin"
-  ],
-  "injectors": {
-    "defaultRequire": 1
-  }
+	"required": true,
+	"package": "com.example.infinityfireworks.mixin",
+	"compatibilityLevel": "JAVA_25",
+	"mixins": [
+		"FireworkRocketItemMixin"
+	],
+	"injectors": {
+		"defaultRequire": 1
+	}
 }

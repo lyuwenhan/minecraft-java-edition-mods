@@ -8,12 +8,14 @@
 		"Wenhan"
 	],
 	"environment": "*",
+	"icon": "assets/infinity-fireworks/icon.png",
 	"mixins": [
 		"infinity-fireworks.mixins.json"
 	],
 	"depends": {
-		"fabricloader": ">=0.18.0",
+		"fabricloader": ">=0.19.2",
 		"fabric-api": "*",
-		"minecraft": "1.21.11"
+		"minecraft": "26.1.2",
+		"java": ">=25"
 	}
 }

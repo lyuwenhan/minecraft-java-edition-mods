@@ -1,19 +1,20 @@
 package com.example.hidepassword;
 
 import com.example.hidepassword.config.HidePasswordConfig;
-import com.mojang.brigadier.Command;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import net.fabricmc.api.ModInitializer;
-import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
+import com.mojang.blaze3d.platform.InputConstants;
+import com.mojang.brigadier.Command;
+import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
+import net.fabricmc.fabric.api.client.command.v2.ClientCommands;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
+import net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.client.option.KeyBinding;
-import net.minecraft.client.util.InputUtil;
-import net.minecraft.text.Text;
+import net.minecraft.client.KeyMapping;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
 import org.lwjgl.glfw.GLFW;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,119 +23,139 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-public class HidePasswordMod implements ModInitializer {
+public class HidePasswordMod implements ClientModInitializer {
+	public static final String MOD_ID = "hide-password";
+	public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 
-    public static final String MOD_ID = "hide-password";
-    public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
+	private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
+	private static final KeyMapping.Category CATEGORY = KeyMapping.Category.register(
+		Identifier.fromNamespaceAndPath(MOD_ID, "general")
+	);
 
-    public static HidePasswordConfig CONFIG;
+	public static HidePasswordConfig CONFIG;
 
-    private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
-    private static Path configPath;
+	private static Path configPath;
+	private static KeyMapping toggleKey;
 
-    private static KeyBinding toggleKey;
+	@Override
+	public void onInitializeClient() {
+		configPath = FabricLoader.getInstance().getConfigDir().resolve("hide-password.json");
 
-    @Override
-    public void onInitialize() {
+		loadConfig();
 
-        configPath = FabricLoader.getInstance().getConfigDir().resolve("hide-password.json");
+		LOGGER.info("HidePassword loaded, enabled={}", CONFIG.enabled);
 
-        loadConfig();
+		registerCommands();
+		registerKeyMapping();
+	}
 
-        LOGGER.info("HidePassword loaded, enabled={}", CONFIG.enabled);
+	private static void registerKeyMapping() {
+		toggleKey = KeyMappingHelper.registerKeyMapping(
+			new KeyMapping(
+				"key.hidepassword.toggle",
+				InputConstants.Type.KEYSYM,
+				GLFW.GLFW_KEY_F8,
+				CATEGORY
+			)
+		);
 
-        registerCommands();
+		ClientTickEvents.END_CLIENT_TICK.register(client -> {
+			while (toggleKey.consumeClick()) {
+				CONFIG.enabled = !CONFIG.enabled;
+				saveConfig();
 
-        toggleKey = KeyBindingHelper.registerKeyBinding(
-            new KeyBinding( "key.hidepassword.toggle", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_F8, KeyBinding.Category.MISC)
-        );
+				LOGGER.info("HidePassword enabled={}", CONFIG.enabled);
 
+				if (client.player != null) {
+					client.player.sendSystemMessage(
+						Component.literal("HidePassword " + (CONFIG.enabled ? "Enabled" : "Disabled"))
+					);
+				}
+			}
+		});
+	}
 
-        ClientTickEvents.END_CLIENT_TICK.register(client -> {
-            while (toggleKey.wasPressed()) {
-                CONFIG.enabled = !CONFIG.enabled;
-                saveConfig();
-                LOGGER.info("HidePassword enabled={}", CONFIG.enabled);
-                if (client.player != null) {
-                    client.player.sendMessage(
-                        net.minecraft.text.Text.literal("HidePassword " + (CONFIG.enabled ? "Enabled" : "Disabled")),
-                        true
-                    );
-                }
-            }
-        });
-    }
+	private static void loadConfig() {
+		try {
+			if (Files.exists(configPath)) {
+				CONFIG = GSON.fromJson(Files.readString(configPath), HidePasswordConfig.class);
 
-    private static void loadConfig() {
-        try {
-            if (Files.exists(configPath)) {
-                CONFIG = GSON.fromJson(Files.readString(configPath), HidePasswordConfig.class);
-            } else {
-                CONFIG = new HidePasswordConfig();
-                saveConfig();
-            }
-        } catch (Exception e) {
-            CONFIG = new HidePasswordConfig();
-            LOGGER.error("Failed to load config", e);
-        }
-    }
+				if (CONFIG == null) {
+					CONFIG = new HidePasswordConfig();
+				}
 
-    public static void saveConfig() {
-        try {
-            Files.writeString(configPath, GSON.toJson(CONFIG));
-        } catch (IOException e) {
-            LOGGER.error("Failed to save config", e);
-        }
-    }
+				return;
+			}
 
-    private static void registerCommands() {
-        ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) -> dispatcher.register(
-            ClientCommandManager.literal("hidepassword")
-                .executes(context -> sendStatus(context.getSource()))
-                .then(ClientCommandManager.literal("status")
-                    .executes(context -> sendStatus(context.getSource())))
-                .then(ClientCommandManager.literal("toggle")
-                    .executes(context -> setEnabled(context.getSource(), !CONFIG.enabled)))
-                .then(ClientCommandManager.literal("on")
-                    .executes(context -> setEnabled(context.getSource(), true)))
-                .then(ClientCommandManager.literal("off")
-                    .executes(context -> setEnabled(context.getSource(), false)))
-                .then(ClientCommandManager.literal("hide-length")
-                    .executes(context -> sendHideLengthStatus(context.getSource()))
-                    .then(ClientCommandManager.literal("status")
-                        .executes(context -> sendHideLengthStatus(context.getSource())))
-                    .then(ClientCommandManager.literal("toggle")
-                        .executes(context -> setHideLength(context.getSource(), !CONFIG.hideLength)))
-                    .then(ClientCommandManager.literal("on")
-                        .executes(context -> setHideLength(context.getSource(), true)))
-                    .then(ClientCommandManager.literal("off")
-                        .executes(context -> setHideLength(context.getSource(), false))))
-        ));
-    }
+			CONFIG = new HidePasswordConfig();
+			saveConfig();
+		} catch (Exception e) {
+			CONFIG = new HidePasswordConfig();
+			LOGGER.error("Failed to load config", e);
+		}
+	}
 
-    private static int setEnabled(FabricClientCommandSource source, boolean enabled) {
-        CONFIG.enabled = enabled;
-        saveConfig();
-        source.sendFeedback(Text.literal("HidePassword " + (CONFIG.enabled ? "Enabled" : "Disabled")));
-        LOGGER.info("HidePassword enabled={}", CONFIG.enabled);
-        return Command.SINGLE_SUCCESS;
-    }
+	public static void saveConfig() {
+		try {
+			Files.createDirectories(configPath.getParent());
+			Files.writeString(configPath, GSON.toJson(CONFIG));
+		} catch (IOException e) {
+			LOGGER.error("Failed to save config", e);
+		}
+	}
 
-    private static int sendStatus(FabricClientCommandSource source) {
-        source.sendFeedback(Text.literal("HidePassword is " + (CONFIG.enabled ? "Enabled" : "Disabled")));
-        return Command.SINGLE_SUCCESS;
-    }
+	private static void registerCommands() {
+		ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) -> dispatcher.register(
+			ClientCommands.literal("hidepassword")
+				.executes(context -> sendStatus(context.getSource()))
+				.then(ClientCommands.literal("status")
+					.executes(context -> sendStatus(context.getSource())))
+				.then(ClientCommands.literal("toggle")
+					.executes(context -> setEnabled(context.getSource(), !CONFIG.enabled)))
+				.then(ClientCommands.literal("on")
+					.executes(context -> setEnabled(context.getSource(), true)))
+				.then(ClientCommands.literal("off")
+					.executes(context -> setEnabled(context.getSource(), false)))
+				.then(ClientCommands.literal("hide-length")
+					.executes(context -> sendHideLengthStatus(context.getSource()))
+					.then(ClientCommands.literal("status")
+						.executes(context -> sendHideLengthStatus(context.getSource())))
+					.then(ClientCommands.literal("toggle")
+						.executes(context -> setHideLength(context.getSource(), !CONFIG.hideLength)))
+					.then(ClientCommands.literal("on")
+						.executes(context -> setHideLength(context.getSource(), true)))
+					.then(ClientCommands.literal("off")
+						.executes(context -> setHideLength(context.getSource(), false))))
+		));
+	}
 
-    private static int setHideLength(FabricClientCommandSource source, boolean hideLength) {
-        CONFIG.hideLength = hideLength;
-        saveConfig();
-        source.sendFeedback(Text.literal("HidePassword hide length " + (CONFIG.hideLength ? "Enabled" : "Disabled")));
-        LOGGER.info("HidePassword hideLength={}", CONFIG.hideLength);
-        return Command.SINGLE_SUCCESS;
-    }
+	private static int setEnabled(FabricClientCommandSource source, boolean enabled) {
+		CONFIG.enabled = enabled;
+		saveConfig();
 
-    private static int sendHideLengthStatus(FabricClientCommandSource source) {
-        source.sendFeedback(Text.literal("HidePassword hide length is " + (CONFIG.hideLength ? "Enabled" : "Disabled")));
-        return Command.SINGLE_SUCCESS;
-    }
+		source.sendFeedback(Component.literal("HidePassword " + (CONFIG.enabled ? "Enabled" : "Disabled")));
+		LOGGER.info("HidePassword enabled={}", CONFIG.enabled);
+
+		return Command.SINGLE_SUCCESS;
+	}
+
+	private static int sendStatus(FabricClientCommandSource source) {
+		source.sendFeedback(Component.literal("HidePassword is " + (CONFIG.enabled ? "Enabled" : "Disabled")));
+		return Command.SINGLE_SUCCESS;
+	}
+
+	private static int setHideLength(FabricClientCommandSource source, boolean hideLength) {
+		CONFIG.hideLength = hideLength;
+		saveConfig();
+
+		source.sendFeedback(Component.literal("HidePassword hide length " + (CONFIG.hideLength ? "Enabled" : "Disabled")));
+		LOGGER.info("HidePassword hideLength={}", CONFIG.hideLength);
+
+		return Command.SINGLE_SUCCESS;
+	}
+
+	private static int sendHideLengthStatus(FabricClientCommandSource source) {
+		source.sendFeedback(Component.literal("HidePassword hide length is " + (CONFIG.hideLength ? "Enabled" : "Disabled")));
+		return Command.SINGLE_SUCCESS;
+	}
 }

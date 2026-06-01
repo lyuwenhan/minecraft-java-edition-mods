@@ -1,16 +1,14 @@
 package com.example.autologin;
 
 import com.mojang.brigadier.arguments.StringArgumentType;
-
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
+import net.fabricmc.fabric.api.client.command.v2.ClientCommands;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.network.ServerInfo;
-import net.minecraft.text.Text;
-
-import static net.fabricmc.fabric.api.client.command.v2.ClientCommandManager.*;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.ServerData;
+import net.minecraft.network.chat.Component;
 
 public class AutoLoginMod implements ClientModInitializer {
 
@@ -19,7 +17,6 @@ public class AutoLoginMod implements ClientModInitializer {
 
 	@Override
 	public void onInitializeClient() {
-
 		ClientPlayConnectionEvents.JOIN.register((handler, sender, client) -> {
 			attempted = false;
 			pendingLogin = true;
@@ -36,16 +33,17 @@ public class AutoLoginMod implements ClientModInitializer {
 			tryAutoLogin(client);
 		});
 
-		ClientCommandRegistrationCallback.EVENT.register((dispatcher, registry) -> {
+		ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) -> {
 			dispatcher.register(
-				literal("autologin")
-					.then(literal("set")
-						.then(argument("password", StringArgumentType.greedyString())
+				ClientCommands.literal("autologin")
+					.then(ClientCommands.literal("set")
+						.then(ClientCommands.argument("password", StringArgumentType.greedyString())
 							.executes(ctx -> {
-								MinecraftClient mc = MinecraftClient.getInstance();
-								ServerInfo server = mc.getCurrentServerEntry();
-								if (server == null) {
-									ctx.getSource().sendFeedback(Text.literal("Not connected to a server."));
+								Minecraft client = Minecraft.getInstance();
+								String serverKey = getCurrentServerKey(client);
+
+								if (serverKey == null) {
+									ctx.getSource().sendError(Component.translatable("command.autologin.login.failed.no_server"));
 									return 0;
 								}
 
@@ -54,121 +52,255 @@ public class AutoLoginMod implements ClientModInitializer {
 
 								try {
 									byte[] deviceKey = DeviceKey.get();
+
 									if (deviceKey == null) {
-										ctx.getSource().sendFeedback(Text.literal("Failed to initialize secure storage."));
+										ctx.getSource().sendError(Component.translatable("command.autologin.login.failed.key"));
 										return 0;
 									}
-									Crypto.Result r =
-										Crypto.encrypt(
-											StringArgumentType.getString(ctx, "password"),
-											deviceKey
-										);
-									cred.enc = r.enc;
-									cred.salt = r.salt;
-									cred.iv = r.iv;
+
+									Crypto.Result result = Crypto.encrypt(
+										StringArgumentType.getString(ctx, "password"),
+										deviceKey
+									);
+
+									cred.enc = result.enc;
+									cred.salt = result.salt;
+									cred.iv = result.iv;
 									cred.enabled = true;
 
-									cfg.servers.put(server.address, cred);
+									cfg.servers.put(serverKey, cred);
 									cfg.save();
 
-									ctx.getSource().sendFeedback(Text.translatable("command.autologin.set"));
+									ctx.getSource().sendFeedback(Component.translatable("command.autologin.set"));
 								} catch (Exception e) {
-									ctx.getSource().sendFeedback(Text.literal("Failed to save password."));
+									ctx.getSource().sendError(Component.literal("Failed to save password."));
 								}
+
 								return 1;
 							})
 						)
 					)
 
-					.then(literal("login").executes(ctx -> {
-						MinecraftClient mc = MinecraftClient.getInstance();
-						mc.execute(() -> tryAutoLogin(mc));
-						ctx.getSource().sendFeedback(Text.literal("Auto-login executed."));
-						return 1;
-					}))
+					.then(ClientCommands.literal("login")
+						.executes(ctx -> {
+							Minecraft client = Minecraft.getInstance();
+							LoginAttemptResult result = tryAutoLogin(client);
 
-					.then(literal("clear").executes(ctx -> {
-						MinecraftClient mc = MinecraftClient.getInstance();
-						ServerInfo server = mc.getCurrentServerEntry();
-						if (server == null) {
+							if (result.sent()) {
+								ctx.getSource().sendFeedback(Component.translatable(result.translationKey()));
+								return 1;
+							}
+
+							ctx.getSource().sendError(Component.translatable(result.translationKey()));
 							return 0;
-						}
+						})
+					)
 
-						AutoLoginConfig cfg = AutoLoginConfig.load();
-						cfg.servers.remove(server.address);
-						cfg.save();
+					.then(ClientCommands.literal("clear")
+						.executes(ctx -> {
+							Minecraft client = Minecraft.getInstance();
+							String serverKey = getCurrentServerKey(client);
 
-						ctx.getSource().sendFeedback(Text.translatable("command.autologin.clear"));
-						return 1;
-					}))
+							if (serverKey == null) {
+								ctx.getSource().sendError(Component.translatable("command.autologin.login.failed.no_server"));
+								return 0;
+							}
 
-					.then(literal("on").executes(ctx -> {
-						toggleForCurrentServer(true);
-						ctx.getSource().sendFeedback(Text.translatable("command.autologin.toggle.on"));
-						return 1;
-					}))
+							AutoLoginConfig cfg = AutoLoginConfig.load();
+							cfg.servers.remove(serverKey);
+							cfg.save();
 
-					.then(literal("off").executes(ctx -> {
-						toggleForCurrentServer(false);
-						ctx.getSource().sendFeedback(Text.translatable("command.autologin.toggle.off"));
-						return 1;
-					}))
+							ctx.getSource().sendFeedback(Component.translatable("command.autologin.clear"));
+							return 1;
+						})
+					)
+
+					.then(ClientCommands.literal("on")
+						.executes(ctx -> {
+							if (!toggleForCurrentServer(true)) {
+								ctx.getSource().sendError(Component.translatable("command.autologin.login.failed.no_password"));
+								return 0;
+							}
+
+							ctx.getSource().sendFeedback(Component.translatable("command.autologin.toggle.on"));
+							return 1;
+						})
+					)
+
+					.then(ClientCommands.literal("off")
+						.executes(ctx -> {
+							if (!toggleForCurrentServer(false)) {
+								ctx.getSource().sendError(Component.translatable("command.autologin.login.failed.no_password"));
+								return 0;
+							}
+
+							ctx.getSource().sendFeedback(Component.translatable("command.autologin.toggle.off"));
+							return 1;
+						})
+					)
+
+					.then(ClientCommands.literal("toggle")
+						.executes(ctx -> {
+							AutoLoginConfig.Credential cred = getCurrentServerCredential();
+
+							if (cred == null) {
+								ctx.getSource().sendError(Component.translatable("command.autologin.login.failed.no_password"));
+								return 0;
+							}
+
+							boolean enabled = !cred.enabled;
+
+							if (!toggleForCurrentServer(enabled)) {
+								ctx.getSource().sendError(Component.translatable("command.autologin.login.failed.no_password"));
+								return 0;
+							}
+
+							if (enabled) {
+								ctx.getSource().sendFeedback(Component.translatable("command.autologin.toggle.on"));
+								return 1;
+							}
+
+							ctx.getSource().sendFeedback(Component.translatable("command.autologin.toggle.off"));
+							return 1;
+						})
+					)
 			);
 		});
 	}
 
-	private static void tryAutoLogin(MinecraftClient client) {
-		ServerInfo server = client.getCurrentServerEntry();
-		if (server == null) {
-			return;
+	private static LoginAttemptResult tryAutoLogin(Minecraft client) {
+		if (client.player == null) {
+			return failed("command.autologin.login.failed.no_player");
+		}
+
+		String serverKey = getCurrentServerKey(client);
+
+		if (serverKey == null) {
+			return failed("command.autologin.login.failed.no_server");
 		}
 
 		AutoLoginConfig cfg = AutoLoginConfig.load();
-		AutoLoginConfig.Credential cred = cfg.servers.get(server.address);
+		AutoLoginConfig.Credential cred = cfg.servers.get(serverKey);
 
-		if (cred == null || !cred.enabled) {
-			return;
+		if (cred == null) {
+			return failed("command.autologin.login.failed.no_password");
+		}
+
+		if (!cred.enabled) {
+			return failed("command.autologin.login.failed.disabled");
+		}
+
+		byte[] deviceKey = DeviceKey.get();
+
+		if (deviceKey == null) {
+			return failed("command.autologin.login.failed.key");
+		}
+
+		String password;
+
+		try {
+			password = decryptPasswordAndMigrateIfNeeded(cfg, serverKey, cred, deviceKey);
+		} catch (Exception e) {
+			return failed("command.autologin.login.failed.decrypt");
+		}
+
+		var connection = client.getConnection();
+
+		if (connection == null) {
+			return failed("command.autologin.login.failed.no_connection");
 		}
 
 		try {
-			byte[] deviceKey = DeviceKey.get();
-			if (deviceKey == null) return;
-			String pwd;
-			try {
-				pwd = Crypto.decrypt(cred, deviceKey);
-			} catch (Exception e) {
-				// Migrate from legacy format (user.name+os.name)
-				if (cred.salt != null && !cred.salt.isEmpty()) {
-					char[] legacy = (System.getProperty("user.name", "") + System.getProperty("os.name", "")).toCharArray();
-					pwd = Crypto.decryptLegacy(cred, legacy);
-					// Re-encrypt with device key
-					Crypto.Result r = Crypto.encrypt(pwd, deviceKey);
-					cred.enc = r.enc;
-					cred.salt = r.salt;
-					cred.iv = r.iv;
-					cfg.save();
-				} else {
-					throw e;
-				}
-			}
-			client.player.networkHandler.sendChatCommand("login " + pwd);
-		} catch (Exception ignored) {}
+			connection.sendCommand("login " + password);
+			return sent();
+		} catch (RuntimeException e) {
+			return failed("command.autologin.login.failed.no_connection");
+		}
 	}
 
-	private static void toggleForCurrentServer(boolean enabled) {
-		MinecraftClient mc = MinecraftClient.getInstance();
-		ServerInfo server = mc.getCurrentServerEntry();
+	private static String decryptPasswordAndMigrateIfNeeded(
+		AutoLoginConfig cfg,
+		String serverKey,
+		AutoLoginConfig.Credential cred,
+		byte[] deviceKey
+	) throws Exception {
+		try {
+			return Crypto.decrypt(cred, deviceKey);
+		} catch (Exception e) {
+			if (cred.salt == null || cred.salt.isEmpty()) {
+				throw e;
+			}
+
+			char[] legacy = (System.getProperty("user.name", "") + System.getProperty("os.name", "")).toCharArray();
+
+			String password = Crypto.decryptLegacy(cred, legacy);
+
+			Crypto.Result result = Crypto.encrypt(password, deviceKey);
+			cred.enc = result.enc;
+			cred.salt = result.salt;
+			cred.iv = result.iv;
+
+			cfg.servers.put(serverKey, cred);
+			cfg.save();
+
+			return password;
+		}
+	}
+
+	private static LoginAttemptResult sent() {
+		return new LoginAttemptResult(true, "command.autologin.login.sent");
+	}
+
+	private static LoginAttemptResult failed(String translationKey) {
+		return new LoginAttemptResult(false, translationKey);
+	}
+
+	private static String getCurrentServerKey(Minecraft client) {
+		ServerData server = client.getCurrentServer();
+
 		if (server == null) {
-			return;
+			return null;
+		}
+
+		if (server.ip == null || server.ip.isBlank()) {
+			return null;
+		}
+
+		return server.ip;
+	}
+
+	private static AutoLoginConfig.Credential getCurrentServerCredential() {
+		Minecraft client = Minecraft.getInstance();
+		String serverKey = getCurrentServerKey(client);
+
+		if (serverKey == null) {
+			return null;
 		}
 
 		AutoLoginConfig cfg = AutoLoginConfig.load();
-		AutoLoginConfig.Credential cred = cfg.servers.get(server.address);
+		return cfg.servers.get(serverKey);
+	}
+
+	private static boolean toggleForCurrentServer(boolean enabled) {
+		Minecraft client = Minecraft.getInstance();
+		String serverKey = getCurrentServerKey(client);
+
+		if (serverKey == null) {
+			return false;
+		}
+
+		AutoLoginConfig cfg = AutoLoginConfig.load();
+		AutoLoginConfig.Credential cred = cfg.servers.get(serverKey);
+
 		if (cred == null) {
-			return;
+			return false;
 		}
 
 		cred.enabled = enabled;
 		cfg.save();
+		return true;
+	}
+
+	private record LoginAttemptResult(boolean sent, String translationKey) {
 	}
 }

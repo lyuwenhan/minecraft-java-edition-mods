@@ -2,5 +2,13 @@
 	"command.autologin.set": "密码（加密后）已成功保存至本地。",
 	"command.autologin.clear": "本地存储的密码已删除。",
 	"command.autologin.toggle.on": "自动登录功能已启用。",
-	"command.autologin.toggle.off": "自动登录功能已禁用。"
+	"command.autologin.toggle.off": "自动登录功能已禁用。",
+	"command.autologin.login.sent": "自动登录命令已发送。",
+	"command.autologin.login.failed.no_player": "自动登录失败：玩家尚未就绪。",
+	"command.autologin.login.failed.no_server": "自动登录失败：当前未连接到服务器。",
+	"command.autologin.login.failed.no_password": "自动登录失败：当前服务器没有保存密码。",
+	"command.autologin.login.failed.disabled": "自动登录失败：当前服务器已禁用自动登录。",
+	"command.autologin.login.failed.key": "自动登录失败：安全存储不可用。",
+	"command.autologin.login.failed.decrypt": "自动登录失败：无法解密已保存的密码。",
+	"command.autologin.login.failed.no_connection": "自动登录失败：连接尚未就绪。"
 }

@@ -3,7 +3,7 @@
 	"id": "auto-greeting",
 	"version": "${version}",
 	"name": "Auto Greeting",
-	"description": "A Fabric mod that automatically sends greeting messages.",
+	"description": "A Fabric client-side mod that automatically sends greeting messages.",
 	"authors": [
 		"Wenhan"
 	],
@@ -16,16 +16,15 @@
 			"com.example.autogreetingclient.client.compat.ModMenuIntegration"
 		]
 	},
-	"mixins": [
-		"auto-greeting-client.mixins.json"
-	],
 	"depends": {
-		"fabricloader": ">=0.18.0",
+		"fabricloader": ">=0.19.2",
 		"fabric-api": "*",
-		"minecraft": "1.21.11"
+		"minecraft": "26.1.2",
+		"java": ">=25"
 	},
 	"suggests": {
 		"cloth-config": "*",
 		"modmenu": "*"
-	}
+	},
+	"icon": "assets/auto-greeting/icon.png"
 }

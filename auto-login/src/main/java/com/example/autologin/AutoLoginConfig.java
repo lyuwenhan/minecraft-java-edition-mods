@@ -22,7 +22,7 @@ public class AutoLoginConfig {
 	}
 
 	private static final Gson GSON =
-			new GsonBuilder().setPrettyPrinting().create();
+		new GsonBuilder().setPrettyPrinting().create();
 
 	private static Path path() {
 		return FabricLoader.getInstance().getConfigDir().resolve("auto-login.json");
@@ -30,11 +30,23 @@ public class AutoLoginConfig {
 
 	public static AutoLoginConfig load() {
 		Path p = path();
+
 		if (!Files.exists(p)) {
 			return new AutoLoginConfig();
 		}
+
 		try {
-			return GSON.fromJson(Files.readString(p), AutoLoginConfig.class);
+			AutoLoginConfig cfg = GSON.fromJson(Files.readString(p), AutoLoginConfig.class);
+
+			if (cfg == null) {
+				return new AutoLoginConfig();
+			}
+
+			if (cfg.servers == null) {
+				cfg.servers = new HashMap<>();
+			}
+
+			return cfg;
 		} catch (IOException e) {
 			return new AutoLoginConfig();
 		}
@@ -44,6 +56,7 @@ public class AutoLoginConfig {
 		try {
 			Files.createDirectories(path().getParent());
 			Files.writeString(path(), GSON.toJson(this));
-		} catch (IOException ignored) {}
+		} catch (IOException ignored) {
+		}
 	}
 }
