@@ -105,7 +105,6 @@ public class ClientFlyingMod implements ClientModInitializer {
 			ClientPacketListener connection = client.getConnection();
 			if (connection != null) {
 				if (startFallFlyingResendTicks > 0) {
-		System.out.println("[ClientFlying] 1");
 					client.player.getAbilities().flying = false;
 					if (client.player.isFallFlying() || !wearingGlider || !inAir) {
 						startFallFlyingResendTicks = 0;
@@ -118,7 +117,6 @@ public class ClientFlyingMod implements ClientModInitializer {
 						}
 					}
 				}else if (inAir && wearingGlider && (shouldStartGliding || (client.player.isFallFlying() && !client.player.getAbilities().flying))) {
-		System.out.println("[ClientFlying] 2");
 					client.player.getAbilities().flying = false;
 					if (shouldStartGliding) {
 						notFlyingTicks = 0;
@@ -126,9 +124,9 @@ public class ClientFlyingMod implements ClientModInitializer {
 						sendInternalStartFallFlyingPacket(client, connection);
 					}
 				} else {
-		System.out.println("[ClientFlying] 3" + ((notFlyingTicks == 0) || !inAir));
 					if (!lastFlying && client.player.getAbilities().flying && lastFallFlying) {
 						notFlyingTicks = 10;
+						client.player.stopFallFlying();
 					}
 					connection.send(new ServerboundMovePlayerPacket.PosRot(
 						client.player.getX(),
