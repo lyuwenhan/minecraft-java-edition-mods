@@ -15,6 +15,9 @@ import net.minecraft.world.level.GameType;
 public class ClientFlyingMod implements ClientModInitializer {
 	private boolean first = true;
 	private boolean lastElytra = false;
+	private boolean lastFlying = false;
+	private boolean lastFallFlying = false;
+	private static int notFlyingTicks = 0;
 
 	private static int startFallFlyingResendTicks = 0;
 	private static boolean sendingInternalStartFallFlyingPacket = false;
@@ -22,6 +25,9 @@ public class ClientFlyingMod implements ClientModInitializer {
 	private void resetState() {
 		first = true;
 		lastElytra = false;
+		lastFlying = false;
+		lastFallFlying = false;
+		notFlyingTicks = 0;
 		startFallFlyingResendTicks = 0;
 		sendingInternalStartFallFlyingPacket = false;
 	}
@@ -36,6 +42,7 @@ public class ClientFlyingMod implements ClientModInitializer {
 		}
 
 		startFallFlyingResendTicks = 10;
+		notFlyingTicks = 0;
 	}
 
 	private static void sendInternalStartFallFlyingPacket(Minecraft client, ClientPacketListener connection) {
@@ -98,6 +105,8 @@ public class ClientFlyingMod implements ClientModInitializer {
 			ClientPacketListener connection = client.getConnection();
 			if (connection != null) {
 				if (startFallFlyingResendTicks > 0) {
+		System.out.println("[ClientFlying] 1");
+					client.player.getAbilities().flying = false;
 					if (client.player.isFallFlying() || !wearingGlider || !inAir) {
 						startFallFlyingResendTicks = 0;
 					} else {
@@ -109,25 +118,34 @@ public class ClientFlyingMod implements ClientModInitializer {
 						}
 					}
 				}else if (inAir && wearingGlider && (shouldStartGliding || (client.player.isFallFlying() && !client.player.getAbilities().flying))) {
+		System.out.println("[ClientFlying] 2");
 					client.player.getAbilities().flying = false;
 					if (shouldStartGliding) {
+						notFlyingTicks = 0;
 						startFallFlyingResendTicks = 10;
 						sendInternalStartFallFlyingPacket(client, connection);
 					}
 				} else {
+		System.out.println("[ClientFlying] 3" + ((notFlyingTicks == 0) || !inAir));
+					if (!lastFlying && client.player.getAbilities().flying && lastFallFlying) {
+						notFlyingTicks = 10;
+					}
 					connection.send(new ServerboundMovePlayerPacket.PosRot(
 						client.player.getX(),
 						client.player.getY(),
 						client.player.getZ(),
 						client.player.getYRot(),
 						client.player.getXRot(),
-						true,
+						(notFlyingTicks == 0) || !inAir,
 						client.player.horizontalCollision
 					));
+					notFlyingTicks = Math.max(0, notFlyingTicks - 1);
 				}
 			}
 
 			lastElytra = wearingGlider;
+			lastFlying = client.player.getAbilities().flying;
+			lastFallFlying = client.player.isFallFlying();
 			first = false;
 		});
 	}
