@@ -7,7 +7,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.protocol.game.ServerboundMovePlayerPacket;
-import net.minecraft.network.protocol.game.ServerboundPlayerAbilitiesPacket;
 import net.minecraft.network.protocol.game.ServerboundPlayerCommandPacket;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ItemStack;
@@ -16,51 +15,104 @@ import net.minecraft.world.level.GameType;
 public class ClientFlyingMod implements ClientModInitializer {
 	private boolean first = true;
 	private boolean lastElytra = false;
+
+	private static int startFallFlyingResendTicks = 0;
+	private static boolean sendingInternalStartFallFlyingPacket = false;
+
 	private void resetState() {
 		first = true;
 		lastElytra = false;
+		startFallFlyingResendTicks = 0;
+		sendingInternalStartFallFlyingPacket = false;
 	}
+
+	public static boolean isSendingInternalStartFallFlyingPacket() {
+		return sendingInternalStartFallFlyingPacket;
+	}
+
+	public static void onClientStartFallFlyingPacket() {
+		if (sendingInternalStartFallFlyingPacket) {
+			return;
+		}
+
+		startFallFlyingResendTicks = 10;
+	}
+
+	private static void sendInternalStartFallFlyingPacket(Minecraft client, ClientPacketListener connection) {
+		if (client.player == null) {
+			return;
+		}
+
+		sendingInternalStartFallFlyingPacket = true;
+
+		try {
+			connection.send(new ServerboundPlayerCommandPacket(
+				client.player,
+				ServerboundPlayerCommandPacket.Action.START_FALL_FLYING
+			));
+		} finally {
+			sendingInternalStartFallFlyingPacket = false;
+		}
+	}
+
 	@Override
 	public void onInitializeClient() {
 		System.out.println("[ClientFlying] Client initialized");
+
 		ClientPlayConnectionEvents.JOIN.register((handler, sender, client) -> {
 			resetState();
 			System.out.println("[ClientFlying] State reset on join");
 		});
+
 		ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> {
 			resetState();
 			System.out.println("[ClientFlying] State reset on disconnect");
 		});
+
 		ClientTickEvents.END_CLIENT_TICK.register(client -> {
 			if (client.player == null) {
 				return;
 			}
+
 			if (client.gameMode == null) {
 				return;
 			}
+
 			GameType gameMode = client.gameMode.getPlayerMode();
 			boolean validGameMode = gameMode == GameType.SURVIVAL || gameMode == GameType.ADVENTURE;
+
 			ItemStack chestStack = client.player.getItemBySlot(EquipmentSlot.CHEST);
 			boolean wearingGlider = chestStack.get(DataComponents.GLIDER) != null;
 			boolean inAir = !client.player.onGround();
 			boolean shouldStartGliding = false;
+
 			if (validGameMode) {
-				if (inAir && (wearingGlider != lastElytra || (first && inAir))) {
+				client.player.getAbilities().mayfly = true;
+
+				if (inAir && (first || wearingGlider != lastElytra)) {
 					client.player.getAbilities().flying = !wearingGlider;
 					shouldStartGliding = wearingGlider;
 				}
-
-				client.player.getAbilities().mayfly = true;
-				syncAbilities(client);
 			}
+
 			ClientPacketListener connection = client.getConnection();
 			if (connection != null) {
-				if (wearingGlider && !client.player.getAbilities().flying) {
+				if (startFallFlyingResendTicks > 0) {
+					if (client.player.isFallFlying() || !wearingGlider || !inAir) {
+						startFallFlyingResendTicks = 0;
+					} else {
+						if (wearingGlider && inAir && !client.player.getAbilities().flying) {
+							sendInternalStartFallFlyingPacket(client, connection);
+							startFallFlyingResendTicks = startFallFlyingResendTicks - 1;
+						} else {
+							startFallFlyingResendTicks = 0;
+						}
+					}
+				}else if (inAir && wearingGlider && (shouldStartGliding || (client.player.isFallFlying() && !client.player.getAbilities().flying))) {
+					client.player.getAbilities().flying = false;
 					if (shouldStartGliding) {
-						connection.send(new ServerboundPlayerCommandPacket(
-							client.player,
-							ServerboundPlayerCommandPacket.Action.START_FALL_FLYING
-						));
+						startFallFlyingResendTicks = 10;
+						sendInternalStartFallFlyingPacket(client, connection);
 					}
 				} else {
 					connection.send(new ServerboundMovePlayerPacket.PosRot(
@@ -74,18 +126,9 @@ public class ClientFlyingMod implements ClientModInitializer {
 					));
 				}
 			}
+
 			lastElytra = wearingGlider;
 			first = false;
 		});
-	}
-	private static void syncAbilities(Minecraft client) {
-		if (client.player == null) {
-			return;
-		}
-		ClientPacketListener connection = client.getConnection();
-		if (connection == null) {
-			return;
-		}
-		connection.send(new ServerboundPlayerAbilitiesPacket(client.player.getAbilities()));
 	}
 }

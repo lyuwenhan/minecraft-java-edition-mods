@@ -14,6 +14,9 @@
 			"com.example.clientflying.ClientFlyingMod"
 		]
 	},
+	"mixins": [
+		"clientflying.mixins.json"
+	],
 	"depends": {
 		"fabricloader": ">=0.19.2",
 		"fabric-api": "*",
