@@ -103,7 +103,8 @@
 			"1.0.1",
 			"1.0.2",
 			"1.0.3",
-			"1.1.0"
+			"1.1.0",
+			"1.1.1"
 		],
 		"hasIcon": false,
 		"displayName": "Client Flying",
@@ -114,7 +115,8 @@
 		"versions": [
 			"1.0.0",
 			"1.0.1",
-			"1.1.0"
+			"1.1.0",
+			"1.1.1"
 		],
 		"hasIcon": true,
 		"displayName": "Glideplate",
@@ -129,7 +131,8 @@
 		"versions": [
 			"1.0.0",
 			"1.0.1",
-			"1.1.0"
+			"1.1.0",
+			"1.1.1"
 		],
 		"hasIcon": true,
 		"displayName": "Infinity Fireworks",
@@ -144,7 +147,8 @@
 		"versions": [
 			"1.0.0",
 			"1.0.1",
-			"1.1.0"
+			"1.1.0",
+			"1.1.1"
 		],
 		"hasIcon": true,
 		"displayName": "Better Elytra Takeoff",
