@@ -168,6 +168,8 @@
 		"hasIcon": true,
 		"displayName": "Creeper No Break",
 		"description": "Prevents creeper explosions from destroying blocks.",
-		"link": {}
+		"link": {
+			"Planet Minecraft": "https://www.planetminecraft.com/mod/creeper-no-break/"
+		}
 	}
 }
