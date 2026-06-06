@@ -1,0 +1,11 @@
+{
+	"required": true,
+	"package": "com.example.nohungry.mixin",
+	"compatibilityLevel": "JAVA_25",
+	"mixins": [
+		"FoodDataMixin"
+	],
+	"injectors": {
+		"defaultRequire": 1
+	}
+}
