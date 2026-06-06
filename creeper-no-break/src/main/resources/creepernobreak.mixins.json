@@ -1,0 +1,10 @@
+{
+    "required": true,
+    "package": "com.example.creepernobreak.mixin",
+    "mixins": [
+        "ServerExplosionMixin"
+    ],
+    "injectors": {
+        "defaultRequire": 1
+    }
+}
