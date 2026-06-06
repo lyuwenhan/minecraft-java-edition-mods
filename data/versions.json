@@ -181,6 +181,10 @@
 		"hasIcon": true,
 		"displayName": "No Hungry",
 		"description": "Keeps player hunger and saturation full and blocks exhaustion-based hunger consumption.",
-		"link": {}
+		"link": {
+			"Modrinth": "https://modrinth.com/mod/no-hungry",
+			"Curseforge": "https://www.curseforge.com/minecraft/mc-mods/no-hungry",
+			"Planet Minecraft": "https://www.planetminecraft.com/mod/no-hungry/"
+		}
 	}
 }
