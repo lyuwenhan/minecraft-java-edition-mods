@@ -173,5 +173,14 @@
 			"Curseforge": "https://www.curseforge.com/minecraft/mc-mods/creeper-no-break",
 			"Planet Minecraft": "https://www.planetminecraft.com/mod/creeper-no-break/"
 		}
+	},
+	"no-hungry": {
+		"versions": [
+			"1.1.0"
+		],
+		"hasIcon": true,
+		"displayName": "No Hungry",
+		"description": "",
+		"link": {}
 	}
 }
