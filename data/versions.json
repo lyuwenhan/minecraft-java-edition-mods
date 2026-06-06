@@ -165,7 +165,7 @@
 		"versions": [
 			"1.1.0"
 		],
-		"hasIcon": false,
+		"hasIcon": true,
 		"displayName": "Creeper No Break",
 		"description": "Prevents creeper explosions from destroying blocks.",
 		"link": {}
