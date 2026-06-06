@@ -180,7 +180,7 @@
 		],
 		"hasIcon": true,
 		"displayName": "No Hungry",
-		"description": "",
+		"description": "Keeps player hunger and saturation full and blocks exhaustion-based hunger consumption.",
 		"link": {}
 	}
 }
