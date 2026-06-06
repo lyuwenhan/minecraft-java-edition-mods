@@ -169,6 +169,8 @@
 		"displayName": "Creeper No Break",
 		"description": "Prevents creeper explosions from destroying blocks.",
 		"link": {
+			"Modrinth": "https://modrinth.com/mod/creeper-no-break",
+			"Curseforge": "https://www.curseforge.com/minecraft/mc-mods/creeper-no-break",
 			"Planet Minecraft": "https://www.planetminecraft.com/mod/creeper-no-break/"
 		}
 	}
