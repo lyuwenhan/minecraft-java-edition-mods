@@ -3,7 +3,7 @@
 	"id": "no-hungry",
 	"version": "${version}",
 	"name": "No Hungry",
-	"description": "",
+	"description": "Keeps player hunger and saturation full and blocks exhaustion-based hunger consumption.",
 	"authors": [
 		"Wenhan"
 	],
