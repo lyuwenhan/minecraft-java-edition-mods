@@ -160,5 +160,14 @@
 			"Curseforge": "https://www.curseforge.com/minecraft/mc-mods/better-elytra-takeoff",
 			"Planet Minecraft": "https://www.planetminecraft.com/mod/better-elytra-takeoff/"
 		}
+	},
+	"creeper-no-break": {
+		"versions": [
+			"1.1.0"
+		],
+		"hasIcon": false,
+		"displayName": "Creeper No Break",
+		"description": "Prevents creeper explosions from destroying blocks.",
+		"link": {}
 	}
 }
