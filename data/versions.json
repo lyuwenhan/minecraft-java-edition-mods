@@ -194,6 +194,10 @@
 		"hasIcon": true,
 		"displayName": "Shared Player Data",
 		"description": "Server-only shared vanilla player profile data for bound UUID groups.",
-		"link": {}
+		"link": {
+			"Modrinth": "https://modrinth.com/mod/shared-player-data",
+			"Curseforge": "https://www.curseforge.com/minecraft/mc-mods/shared-player-data",
+			"Planet Minecraft": "https://www.planetminecraft.com/mod/shared-player-data/"
+		}
 	}
 }
