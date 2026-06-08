@@ -1,0 +1,22 @@
+{
+    "schemaVersion": 1,
+    "id": "best-armor",
+    "version": "${version}",
+    "name": "Best Armor",
+    "description": "Adds three generated shulker boxes to the operator creative tab.",
+    "authors": [
+        "Wenhan"
+    ],
+    "environment": "client",
+    "entrypoints": {
+        "client": [
+            "com.example.bestarmor.BestArmorMod"
+        ]
+    },
+    "depends": {
+        "fabricloader": ">=0.19.2",
+        "fabric-api": "*",
+        "minecraft": "26.1.2",
+        "java": ">=25"
+    }
+}
