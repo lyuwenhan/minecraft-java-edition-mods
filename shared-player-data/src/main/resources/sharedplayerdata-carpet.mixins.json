@@ -1,0 +1,12 @@
+{
+    "required": false,
+    "package": "com.example.sharedplayerdata.mixin.carpet",
+    "compatibilityLevel": "JAVA_22",
+    "mixins": [
+        "CarpetPlayerCommandMixin",
+        "CarpetFakePlayerCreationMixin"
+    ],
+    "injectors": {
+        "defaultRequire": 0
+    }
+}

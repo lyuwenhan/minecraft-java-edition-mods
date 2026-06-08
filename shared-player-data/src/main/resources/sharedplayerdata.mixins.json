@@ -1,0 +1,12 @@
+{
+    "required": true,
+    "package": "com.example.sharedplayerdata.mixin",
+    "compatibilityLevel": "JAVA_22",
+    "mixins": [
+        "PlayerListMixin",
+        "ServerLoginPacketListenerImplMixin"
+    ],
+    "injectors": {
+        "defaultRequire": 1
+    }
+}
