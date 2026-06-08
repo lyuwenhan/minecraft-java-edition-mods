@@ -7,7 +7,6 @@
 	"authors": [
 		"Wenhan"
 	],
-	"icon": "assets/client-flying/icon.png",
 	"environment": "client",
 	"entrypoints": {
 		"client": [

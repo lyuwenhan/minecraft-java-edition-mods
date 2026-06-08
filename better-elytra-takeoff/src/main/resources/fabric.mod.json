@@ -13,7 +13,6 @@
 			"com.example.betterelytratakeoff.BetterElytraTakeoffMod"
 		]
 	},
-	"icon": "assets/better-elytra-takeoff/icon.png",
 	"depends": {
 		"fabricloader": ">=0.19.2",
 		"fabric-api": "*",

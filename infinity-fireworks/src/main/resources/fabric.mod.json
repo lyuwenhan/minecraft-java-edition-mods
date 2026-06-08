@@ -8,7 +8,6 @@
 		"Wenhan"
 	],
 	"environment": "*",
-	"icon": "assets/infinity-fireworks/icon.png",
 	"mixins": [
 		"infinity-fireworks.mixins.json"
 	],
