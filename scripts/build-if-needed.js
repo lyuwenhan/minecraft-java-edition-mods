@@ -49,9 +49,6 @@ const dirs = fs.readdirSync(root).filter(d => !excluded.includes(d) && fs.exists
 				console.warn(`${dir}: invalid or missing status.json, using default.`)
 			}
 			if (status.needsUpdate) {
-				fs.mkdirSync(extensionsDir, {
-					recursive: true
-				});
 				const settingPath = path.join(extPath, "build.gradle");
 				const version = fs.readFileSync(settingPath, "utf8")?.match(/version = "(.+)"/)?.[1];
 				if (!version) {
@@ -59,6 +56,22 @@ const dirs = fs.readdirSync(root).filter(d => !excluded.includes(d) && fs.exists
 					console.warn(`${dir}: Version not found.`);
 					continue
 				}
+				let exportPath = null;
+				if (status.withPack) {
+					execSync(`../gradlew build`, {
+						cwd: extPath,
+						stdio: "inherit"
+					});
+					exportPath = path.join(extPath, "build", "libs", `${dir}-${version}.jar`);
+					if (!fs.existsSync(exportPath)) {
+						hasError = true;
+						console.warn(`Exported jar not found`);
+						continue
+					}
+				}
+				fs.mkdirSync(extensionsDir, {
+					recursive: true
+				});
 				const readmePath = path.join(extPath, "README.md");
 				if (fs.existsSync(readmePath)) {
 					const readme = fs.readFileSync(readmePath, "utf8");
@@ -100,20 +113,9 @@ const dirs = fs.readdirSync(root).filter(d => !excluded.includes(d) && fs.exists
 					console.warn(`README*.md not found for ${dir}`)
 				}
 				if (status.withPack) {
-					execSync(`../gradlew build`, {
-						cwd: extPath,
-						stdio: "inherit"
-					});
-					const exportPath = path.join(extPath, "build", "libs", `${dir}-${version}.jar`);
-					if (fs.existsSync(exportPath)) {
-						const targetPath = path.join(distDir, `${dir}-${version}.jar`);
-						fs.copyFileSync(exportPath, targetPath);
-						console.log(`Exported jar copied: ${exportPath} -> ${targetPath}`)
-					} else {
-						hasError = true;
-						console.warn(`Exported jar not found`);
-						continue
-					}
+					const targetPath = path.join(distDir, `${dir}-${version}.jar`);
+					fs.copyFileSync(exportPath, targetPath);
+					console.log(`Exported jar copied: ${exportPath} -> ${targetPath}`)
 				}
 				const manifestPath = path.join(extPath, "src", "main", "resources", "fabric.mod.json");
 				const manifest = JSON.parse(fs.readFileSync(manifestPath, "utf8"));
