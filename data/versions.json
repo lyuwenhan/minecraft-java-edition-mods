@@ -186,5 +186,14 @@
 			"Curseforge": "https://www.curseforge.com/minecraft/mc-mods/no-hungry",
 			"Planet Minecraft": "https://www.planetminecraft.com/mod/no-hungry/"
 		}
+	},
+	"shared-player-data": {
+		"versions": [
+			"1.1.0"
+		],
+		"hasIcon": true,
+		"displayName": "Shared Player Data",
+		"description": "Server-only shared vanilla player profile data for bound UUID groups.",
+		"link": {}
 	}
 }
