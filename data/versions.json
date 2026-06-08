@@ -199,5 +199,14 @@
 			"Curseforge": "https://www.curseforge.com/minecraft/mc-mods/shared-player-data",
 			"Planet Minecraft": "https://www.planetminecraft.com/mod/shared-player-data/"
 		}
+	},
+	"best-armor": {
+		"versions": [
+			"1.1.0"
+		],
+		"hasIcon": true,
+		"displayName": "Best Armor",
+		"description": "Adds three generated shulker boxes to the operator creative tab.",
+		"link": {}
 	}
 }
