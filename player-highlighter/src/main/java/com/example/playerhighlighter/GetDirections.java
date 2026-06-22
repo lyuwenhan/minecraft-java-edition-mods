@@ -36,7 +36,7 @@ public final class GetDirections {
 		float screenHalfHeight = screenHeight * 0.5F;
 
 		for (var player : client.level.players()) {
-			if (player == client.player) {
+			if (player == camera) {
 				continue;
 			}
 

@@ -15,20 +15,7 @@ public abstract class EntityGlowingMixin {
 	private void playerhighlighter$glowOnlyWhenTabPressed(CallbackInfoReturnable<Boolean> cir) {
 		Entity self = (Entity) (Object) this;
 
-		if (!(self instanceof Player)) {
-			return;
-		}
-
-		Minecraft client = Minecraft.getInstance();
-		if (client.player == null) {
-			return;
-		}
-
-		if (self == client.player) {
-			return;
-		}
-
-		if (PlayerHighlighterMod.isHighlightActive()) {
+		if (self instanceof Player && PlayerHighlighterMod.isHighlightActive()) {
 			cir.setReturnValue(true);
 		}
 	}
