@@ -27,7 +27,7 @@ if (fs.existsSync(versionsPath)) {
 }
 const defaultStatus = {
 	needsUpdate: false,
-	withPack: false
+	withoutPack: false
 };
 const excluded = [".git", ".github", "data", "node_modules", "scripts", "gradle"];
 const dirs = fs.readdirSync(root).filter(d => !excluded.includes(d) && fs.existsSync(path.join(root, d, "src", "main", "resources", "fabric.mod.json")) && fs.existsSync(path.join(root, d, "build.gradle")));
@@ -57,7 +57,7 @@ const dirs = fs.readdirSync(root).filter(d => !excluded.includes(d) && fs.exists
 					continue
 				}
 				let exportPath = null;
-				if (status.withPack) {
+				if (!status.withoutPack) {
 					execSync(`../gradlew build`, {
 						cwd: extPath,
 						stdio: "inherit"
@@ -112,7 +112,7 @@ const dirs = fs.readdirSync(root).filter(d => !excluded.includes(d) && fs.exists
 				} else {
 					console.warn(`README*.md not found for ${dir}`)
 				}
-				if (status.withPack) {
+				if (!status.withoutPack) {
 					const targetPath = path.join(distDir, `${dir}-${version}.jar`);
 					fs.copyFileSync(exportPath, targetPath);
 					console.log(`Exported jar copied: ${exportPath} -> ${targetPath}`)
@@ -133,7 +133,7 @@ const dirs = fs.readdirSync(root).filter(d => !excluded.includes(d) && fs.exists
 				} else {
 					const v = versions[dir].versions ?? [];
 					versions[dir] = {
-						versions: status.withPack ? v.at(-1) === version ? v : [...v, version] : v,
+						versions: !status.withoutPack ? v.at(-1) === version ? v : [...v, version] : v,
 						hasIcon: hasIcon ?? versions[dir].hasIcon,
 						displayName: displayName ?? versions[dir].displayName,
 						description: description ?? versions[dir].description,
