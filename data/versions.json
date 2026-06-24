@@ -215,5 +215,14 @@
 		"displayName": "Best Armor",
 		"description": "Adds three generated shulker boxes to the operator creative tab.",
 		"link": {}
+	},
+	"fly-speed-modifier": {
+		"versions": [
+			"1.1.0"
+		],
+		"hasIcon": false,
+		"displayName": "Fly Speed Modifier",
+		"description": "Temporarily adjusts Freecam and direct player flight speed while a key is held and the mouse wheel is scrolled.",
+		"link": {}
 	}
 }
