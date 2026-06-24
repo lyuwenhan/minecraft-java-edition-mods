@@ -1,0 +1,12 @@
+{
+  "key.category.fly-speed-modifier.general": "飞行速度修改",
+  "key.fly-speed-modifier.adjust_speed": "调整飞行速度倍数",
+  "title.fly-speed-modifier.config": "飞行速度修改器配置",
+  "category.fly-speed-modifier.general": "通用",
+  "option.fly-speed-modifier.max_speed": "速度倍数最大值",
+  "option.fly-speed-modifier.max_speed.tooltip": "临时飞行速度倍数上限。这个滑块是非线性的：低倍数区域更精细，高倍数区域变化更快。允许范围：1.00x 到 20.00x。",
+  "option.fly-speed-modifier.min_speed": "速度倍数最小值",
+  "option.fly-speed-modifier.min_speed.tooltip": "临时飞行速度倍数下限。允许范围：0.00x 到 1.00x。",
+  "option.fly-speed-modifier.scroll_step": "滚轮倍数步进",
+  "option.fly-speed-modifier.scroll_step.tooltip": "控制每一个鼠标滚轮单位执行多少次非线性倍数调整操作。数值最多保留一位小数。允许范围：0.1 到 2.0。"
+}

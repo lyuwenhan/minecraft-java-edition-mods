@@ -1,0 +1,37 @@
+{
+	"schemaVersion": 1,
+	"id": "fly-speed-modifier",
+	"version": "${version}",
+	"name": "Fly Speed Modifier",
+	"description": "Temporarily adjusts Freecam and direct player flight speed while a key is held and the mouse wheel is scrolled.",
+	"authors": [
+		"Wenhan"
+	],
+	"environment": "client",
+	"entrypoints": {
+		"client": [
+			"com.example.flyspeedmodifier.FlySpeedModifierMod"
+		],
+		"modmenu": [
+			"com.example.flyspeedmodifier.FlySpeedModifierModMenuIntegration"
+		]
+	},
+	"mixins": [
+		{
+			"config": "fly-speed-modifier.mixins.json",
+			"environment": "client"
+		}
+	],
+	"depends": {
+		"fabricloader": ">=0.19.2",
+		"fabric-api": "*",
+		"fabric-key-mapping-api-v1": "*",
+		"minecraft": "26.1.2",
+		"java": ">=25"
+	},
+	"suggests": {
+		"freecam": "*",
+		"modmenu": "*",
+		"cloth-config": "*"
+	}
+}
