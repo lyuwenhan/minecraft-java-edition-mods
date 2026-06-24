@@ -1,18 +1,34 @@
 package com.example.clientflying;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
+import net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
+import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ServerboundMovePlayerPacket;
 import net.minecraft.network.protocol.game.ServerboundPlayerCommandPacket;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.GameType;
+import org.lwjgl.glfw.GLFW;
 
 public class ClientFlyingMod implements ClientModInitializer {
+	private static final String MOD_ID = "client-flying";
+	private static final String KEY_TOGGLE = "key.client-flying.toggle";
+
+	private final KeyMapping.Category category = KeyMapping.Category.register(
+		Identifier.fromNamespaceAndPath(MOD_ID, "client_flying")
+	);
+
+	private KeyMapping toggleKey;
+	private ClientFlyingConfig config = new ClientFlyingConfig();
+
 	private boolean first = true;
 	private boolean lastElytra = false;
 	private boolean lastFlying = false;
@@ -30,6 +46,44 @@ public class ClientFlyingMod implements ClientModInitializer {
 		notFlyingTicks = 0;
 		startFallFlyingResendTicks = 0;
 		sendingInternalStartFallFlyingPacket = false;
+	}
+
+	private void disableClientFlight(Minecraft client) {
+		if (client.player == null || client.gameMode == null) {
+			resetState();
+			return;
+		}
+
+		GameType gameMode = client.gameMode.getPlayerMode();
+
+		if (gameMode == GameType.SURVIVAL || gameMode == GameType.ADVENTURE) {
+			client.player.getAbilities().flying = false;
+			client.player.getAbilities().mayfly = false;
+		}
+
+		resetState();
+	}
+
+	private void handleToggleKey(Minecraft client) {
+		if (toggleKey == null || client.player == null) {
+			return;
+		}
+
+		while (toggleKey.consumeClick()) {
+			config.enabled = !config.enabled;
+
+			if (config.enabled) {
+				resetState();
+			} else {
+				disableClientFlight(client);
+			}
+
+			config.save();
+
+			client.player.sendOverlayMessage(
+				Component.literal("Client Flying: " + (config.enabled ? "ON" : "OFF"))
+			);
+		}
 	}
 
 	public static boolean isSendingInternalStartFallFlyingPacket() {
@@ -66,6 +120,15 @@ public class ClientFlyingMod implements ClientModInitializer {
 	public void onInitializeClient() {
 		System.out.println("[ClientFlying] Client initialized");
 
+		config = ClientFlyingConfig.load();
+
+		toggleKey = KeyMappingHelper.registerKeyMapping(new KeyMapping(
+			KEY_TOGGLE,
+			InputConstants.Type.KEYSYM,
+			GLFW.GLFW_KEY_V,
+			category
+		));
+
 		ClientPlayConnectionEvents.JOIN.register((handler, sender, client) -> {
 			resetState();
 			System.out.println("[ClientFlying] State reset on join");
@@ -78,6 +141,12 @@ public class ClientFlyingMod implements ClientModInitializer {
 
 		ClientTickEvents.END_CLIENT_TICK.register(client -> {
 			if (client.player == null || client.gameMode == null) {
+				return;
+			}
+
+			handleToggleKey(client);
+
+			if (!config.enabled) {
 				return;
 			}
 
@@ -106,7 +175,7 @@ public class ClientFlyingMod implements ClientModInitializer {
 							sendInternalStartFallFlyingPacket(client, connection);
 							startFallFlyingResendTicks = startFallFlyingResendTicks - 1;
 						}
-					}else if (inAir && wearingGlider && (shouldStartGliding || (client.player.isFallFlying() && !client.player.getAbilities().flying))) {
+					} else if (inAir && wearingGlider && (shouldStartGliding || (client.player.isFallFlying() && !client.player.getAbilities().flying))) {
 						client.player.getAbilities().flying = false;
 						if (shouldStartGliding) {
 							notFlyingTicks = 0;
