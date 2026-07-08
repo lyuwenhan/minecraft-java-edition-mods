@@ -1,12 +1,12 @@
 {
-  "key.category.fly-speed-modifier.general": "Fly Speed Modifier",
-  "key.fly-speed-modifier.adjust_speed": "Adjust Flight Speed Multiplier",
-  "title.fly-speed-modifier.config": "Fly Speed Modifier Config",
-  "category.fly-speed-modifier.general": "General",
-  "option.fly-speed-modifier.max_speed": "Maximum Speed Multiplier",
-  "option.fly-speed-modifier.max_speed.tooltip": "Upper bound for the temporary flight speed multiplier. The slider is non-linear: low values have finer control, high values move faster. Allowed range: 1.00x to 20.00x.",
-  "option.fly-speed-modifier.min_speed": "Minimum Speed Multiplier",
-  "option.fly-speed-modifier.min_speed.tooltip": "Lower bound for the temporary flight speed multiplier. Allowed range: 0.00x to 1.00x.",
-  "option.fly-speed-modifier.scroll_step": "Scroll Multiplier Step",
-  "option.fly-speed-modifier.scroll_step.tooltip": "Controls how many non-linear multiplier adjustment operations are applied per mouse-wheel unit. Values are limited to one decimal place. Allowed range: 0.1 to 2.0."
+	"key.category.fly-speed-modifier.general": "Fly Speed Modifier",
+	"key.fly-speed-modifier.adjust_speed": "Adjust Flight Speed Multiplier",
+	"title.fly-speed-modifier.config": "Fly Speed Modifier Config",
+	"category.fly-speed-modifier.general": "General",
+	"option.fly-speed-modifier.max_speed": "Maximum Speed Multiplier",
+	"option.fly-speed-modifier.max_speed.tooltip": "Upper bound for the temporary flight speed multiplier. The slider is non-linear: low values have finer control, high values move faster. Allowed range: 1.00x to 20.00x.",
+	"option.fly-speed-modifier.min_speed": "Minimum Speed Multiplier",
+	"option.fly-speed-modifier.min_speed.tooltip": "Lower bound for the temporary flight speed multiplier. Allowed range: 0.00x to 1.00x.",
+	"option.fly-speed-modifier.scroll_step": "Scroll Multiplier Step",
+	"option.fly-speed-modifier.scroll_step.tooltip": "Controls how many non-linear multiplier adjustment operations are applied per mouse-wheel unit. Values are limited to one decimal place. Allowed range: 0.1 to 2.0."
 }

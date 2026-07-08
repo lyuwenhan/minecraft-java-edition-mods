@@ -1,9 +1,7 @@
 {
-	"required": false,
-	"minVersion": "0.8",
+	"required": true,
 	"package": "com.example.flyspeedmodifier.mixin",
-	"plugin": "com.example.flyspeedmodifier.mixin.FlySpeedModifierMixinPlugin",
-	"client": [
+	"mixins": [
 		"FreeCameraSpeedMixin",
 		"MouseHandlerMixin"
 	],
