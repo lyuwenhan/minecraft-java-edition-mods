@@ -226,5 +226,14 @@
 		"displayName": "Fly Speed Modifier",
 		"description": "Temporarily adjusts Freecam and direct player flight speed while a key is held and the mouse wheel is scrolled.",
 		"link": {}
+	},
+	"better-step": {
+		"versions": [
+			"1.1.0"
+		],
+		"hasIcon": true,
+		"displayName": "Better Step",
+		"description": "Improves player stepping by removing the vanilla ground gate for step-up and adding controlled step-down.",
+		"link": {}
 	}
 }
