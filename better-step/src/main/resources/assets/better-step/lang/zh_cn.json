@@ -1,0 +1,3 @@
+{
+	"modmenu.descriptionTranslation.better-step": "改进玩家行走台阶逻辑：移除原版 step-up 的贴地限制，并加入受控 step-down。"
+}

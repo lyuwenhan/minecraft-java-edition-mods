@@ -1,0 +1,25 @@
+{
+	"schemaVersion": 1,
+	"id": "better-step",
+	"version": "${version}",
+	"name": "Better Step",
+	"description": "Improves player stepping by removing the vanilla ground gate for step-up and adding controlled step-down.",
+	"authors": [
+		"Wenhan"
+	],
+	"environment": "client",
+	"entrypoints": {
+		"client": [
+			"com.example.betterstep.BetterStepMod"
+		]
+	},
+	"mixins": [
+		"better-step.mixins.json"
+	],
+	"depends": {
+		"fabricloader": ">=0.19.2",
+		"fabric-api": "*",
+		"minecraft": "26.1.2",
+		"java": ">=25"
+	}
+}
