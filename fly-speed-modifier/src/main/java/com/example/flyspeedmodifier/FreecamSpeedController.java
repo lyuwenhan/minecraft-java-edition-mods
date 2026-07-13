@@ -5,7 +5,6 @@ import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 
-import java.lang.reflect.Method;
 import java.util.Locale;
 
 public final class FreecamSpeedController {
@@ -67,7 +66,7 @@ public final class FreecamSpeedController {
 		}
 
 		if (!hasTemporaryMultiplier) {
-			temporaryMultiplier = clampMultiplier(1.0D);
+			temporaryMultiplier = clampMultiplier(FlySpeedModifierConfig.initialSpeed());
 			hasTemporaryMultiplier = true;
 		}
 
@@ -162,29 +161,35 @@ public final class FreecamSpeedController {
 	private static void updateAdjustKeyState() {
 		boolean isDown = isAdjustKeyDown();
 		if (isDown && !wasAdjustSpeedKeyDown) {
-			resetTemporaryMultiplierOnKeyPress();
+			showCurrentMultiplierOnKeyPress();
 		}
 
 		wasAdjustSpeedKeyDown = isDown;
 	}
 
-	private static void resetTemporaryMultiplierOnKeyPress() {
-		temporaryMultiplier = clampMultiplier(1.0D);
-		hasTemporaryMultiplier = true;
+	private static void showCurrentMultiplierOnKeyPress() {
+		if (FlySpeedModifierConfig.resetOnAdjust() || !hasTemporaryMultiplier) {
+			temporaryMultiplier = clampMultiplier(FlySpeedModifierConfig.initialSpeed());
+			hasTemporaryMultiplier = true;
+		} else {
+			temporaryMultiplier = clampMultiplier(temporaryMultiplier);
+		}
 
 		Minecraft client = Minecraft.getInstance();
 		SpeedTarget activeTarget = resolveActiveTarget(client);
-		if (activeTarget != SpeedTarget.NONE) {
-			if (activeTarget == SpeedTarget.DIRECT_FLIGHT) {
-				applyDirectFlyingSpeed(client);
-			}
-
-			showMultiplierOverlay(activeTarget, temporaryMultiplier);
+		if (activeTarget == SpeedTarget.NONE) {
+			return;
 		}
+
+		if (activeTarget == SpeedTarget.DIRECT_FLIGHT) {
+			applyDirectFlyingSpeed(client);
+		}
+
+		showMultiplierOverlay(activeTarget, temporaryMultiplier);
 	}
 
 	private static void resetTemporaryMultiplierSilently() {
-		temporaryMultiplier = clampMultiplier(1.0D);
+		temporaryMultiplier = clampMultiplier(FlySpeedModifierConfig.initialSpeed());
 		hasTemporaryMultiplier = true;
 
 		Minecraft client = Minecraft.getInstance();

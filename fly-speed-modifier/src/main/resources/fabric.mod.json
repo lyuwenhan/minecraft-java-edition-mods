@@ -17,10 +17,7 @@
 		]
 	},
 	"mixins": [
-		{
-			"config": "fly-speed-modifier.mixins.json",
-			"environment": "client"
-		}
+		"fly-speed-modifier.mixins.json"
 	],
 	"depends": {
 		"fabricloader": ">=0.19.2",
@@ -31,7 +28,6 @@
 	},
 	"suggests": {
 		"freecam": "*",
-		"modmenu": "*",
-		"cloth-config": "*"
+		"modmenu": "*"
 	}
 }

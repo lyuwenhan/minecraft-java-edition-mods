@@ -1,12 +1,18 @@
 {
 	"key.category.fly-speed-modifier.general": "Fly Speed Modifier",
-	"key.fly-speed-modifier.adjust_speed": "Adjust Flight Speed Multiplier",
+	"key.fly-speed-modifier.adjust_speed": "Adjust Flight Speed",
 	"title.fly-speed-modifier.config": "Fly Speed Modifier Config",
 	"category.fly-speed-modifier.general": "General",
-	"option.fly-speed-modifier.max_speed": "Maximum Speed Multiplier",
-	"option.fly-speed-modifier.max_speed.tooltip": "Upper bound for the temporary flight speed multiplier. The slider is non-linear: low values have finer control, high values move faster. Allowed range: 1.00x to 20.00x.",
-	"option.fly-speed-modifier.min_speed": "Minimum Speed Multiplier",
-	"option.fly-speed-modifier.min_speed.tooltip": "Lower bound for the temporary flight speed multiplier. Allowed range: 0.00x to 1.00x.",
-	"option.fly-speed-modifier.scroll_step": "Scroll Multiplier Step",
-	"option.fly-speed-modifier.scroll_step.tooltip": "Controls how many non-linear multiplier adjustment operations are applied per mouse-wheel unit. Values are limited to one decimal place. Allowed range: 0.1 to 2.0."
+	"option.fly-speed-modifier.full_range": "Full Range",
+	"option.fly-speed-modifier.full_range.tooltip": "When disabled, the effective maximum multiplier is limited to 20.00x. When enabled, the effective maximum is 100.00x.",
+	"option.fly-speed-modifier.max_speed": "Maximum Speed",
+	"option.fly-speed-modifier.max_speed.tooltip": "Saved upper bound for the temporary flight speed multiplier.",
+	"option.fly-speed-modifier.min_speed": "Minimum Speed",
+	"option.fly-speed-modifier.min_speed.tooltip": "Lower bound for the temporary flight speed multiplier.",
+	"option.fly-speed-modifier.initial_speed": "Default Speed",
+	"option.fly-speed-modifier.initial_speed.tooltip": "Saved multiplier used for the first adjustment and for reset-on-adjust.",
+	"option.fly-speed-modifier.reset_on_adjust": "Reset Before Adjustment",
+	"option.fly-speed-modifier.reset_on_adjust.tooltip": "When enabled, pressing the adjustment key resets the multiplier to the configured default value. When disabled, the previous multiplier is preserved.",
+	"option.fly-speed-modifier.scroll_step": "Multiplier Step",
+	"option.fly-speed-modifier.scroll_step.tooltip": "Controls how many non-linear multiplier adjustment operations are applied per mouse-wheel unit."
 }

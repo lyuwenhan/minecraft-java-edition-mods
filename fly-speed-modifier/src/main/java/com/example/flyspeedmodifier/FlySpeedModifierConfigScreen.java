@@ -1,63 +1,109 @@
 package com.example.flyspeedmodifier;
 
-import me.shedaniel.clothconfig2.api.ConfigBuilder;
-import me.shedaniel.clothconfig2.api.ConfigCategory;
-import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
+import com.example.flyspeedmodifier.mixin.AbstractSliderButtonAccessor;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.OptionInstance;
+import net.minecraft.client.gui.components.AbstractSliderButton;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.screens.options.OptionsSubScreen;
 import net.minecraft.network.chat.Component;
 
-public final class FlySpeedModifierConfigScreen {
-	private FlySpeedModifierConfigScreen() {
+public final class FlySpeedModifierConfigScreen extends OptionsSubScreen {
+	private final FlySpeedModifierConfig.Values draft;
+	private boolean saved;
+
+	public FlySpeedModifierConfigScreen(Screen parent) {
+		super(
+				parent,
+				Minecraft.getInstance().options,
+				Component.translatable("title.fly-speed-modifier.config")
+		);
+		this.draft = FlySpeedModifierConfig.get();
 	}
 
 	public static Screen create(Screen parent) {
-		FlySpeedModifierConfig.Values draft = FlySpeedModifierConfig.get();
+		return new FlySpeedModifierConfigScreen(parent);
+	}
 
-		ConfigBuilder builder = ConfigBuilder.create()
-				.setParentScreen(parent)
-				.setTitle(Component.translatable("title.fly-speed-modifier.config"));
+	FlySpeedModifierConfig.Values draft() {
+		return this.draft;
+	}
 
-		builder.setSavingRunnable(() -> FlySpeedModifierConfig.set(draft));
+	@Override
+	protected void addOptions() {
+		this.list.addSmall(FlySpeedModifierOptions.all());
+		this.resetWidgets();
+	}
 
-		ConfigEntryBuilder entryBuilder = builder.entryBuilder();
-		ConfigCategory general = builder.getOrCreateCategory(Component.translatable("category.fly-speed-modifier.general"));
+	public void rescaleDynamicSliders() {
+		this.resetSliderWidget(FlySpeedModifierOptions.maxSpeed(), normalizedMaxSpeed());
+		this.resetSliderWidget(FlySpeedModifierOptions.initialSpeed(), normalizedInitialSpeed());
+	}
 
-		general.addEntry(entryBuilder.startIntSlider(
-						Component.translatable("option.fly-speed-modifier.max_speed"),
-						FlySpeedModifierConfig.maxSpeedToSlider(draft.maxSpeed),
-						FlySpeedModifierConfig.MAX_SPEED_SLIDER_MIN,
-						FlySpeedModifierConfig.MAX_SPEED_SLIDER_MAX
-				)
-				.setDefaultValue(FlySpeedModifierConfig.maxSpeedToSlider(FlySpeedModifierConfig.DEFAULT_MAX_SPEED))
-				.setTextGetter(value -> Component.literal(FlySpeedModifierConfig.formatSpeed(FlySpeedModifierConfig.sliderToMaxSpeed(value))))
-				.setTooltip(Component.translatable("option.fly-speed-modifier.max_speed.tooltip"))
-				.setSaveConsumer(value -> draft.maxSpeed = FlySpeedModifierConfig.sliderToMaxSpeed(value))
-				.build());
+	private void resetWidgets() {
+		this.rescaleDynamicSliders();
+	}
 
-		general.addEntry(entryBuilder.startIntSlider(
-						Component.translatable("option.fly-speed-modifier.min_speed"),
-						FlySpeedModifierConfig.minSpeedToSlider(draft.minSpeed),
-						FlySpeedModifierConfig.MIN_SPEED_SLIDER_MIN,
-						FlySpeedModifierConfig.MIN_SPEED_SLIDER_MAX
-				)
-				.setDefaultValue(FlySpeedModifierConfig.minSpeedToSlider(FlySpeedModifierConfig.DEFAULT_MIN_SPEED))
-				.setTextGetter(value -> Component.literal(FlySpeedModifierConfig.formatSpeed(FlySpeedModifierConfig.sliderToMinSpeed(value))))
-				.setTooltip(Component.translatable("option.fly-speed-modifier.min_speed.tooltip"))
-				.setSaveConsumer(value -> draft.minSpeed = FlySpeedModifierConfig.sliderToMinSpeed(value))
-				.build());
+	private void resetSliderWidget(OptionInstance<Double> option, double normalizedValue) {
+		var widget = this.list.findOption(option);
+		if (widget instanceof AbstractSliderButton slider) {
+			((AbstractSliderButtonAccessor) slider).flySpeedModifier$invokeSetValue(normalizedValue);
+		}
+	}
 
-		general.addEntry(entryBuilder.startIntSlider(
-						Component.translatable("option.fly-speed-modifier.scroll_step"),
-						FlySpeedModifierConfig.scrollStepToSlider(draft.scrollStep),
-						FlySpeedModifierConfig.SCROLL_STEP_SLIDER_MIN,
-						FlySpeedModifierConfig.SCROLL_STEP_SLIDER_MAX
-				)
-				.setDefaultValue(FlySpeedModifierConfig.scrollStepToSlider(FlySpeedModifierConfig.DEFAULT_SCROLL_STEP))
-				.setTextGetter(value -> Component.literal(FlySpeedModifierConfig.formatScrollStep(FlySpeedModifierConfig.sliderToScrollStep(value))))
-				.setTooltip(Component.translatable("option.fly-speed-modifier.scroll_step.tooltip"))
-				.setSaveConsumer(value -> draft.scrollStep = FlySpeedModifierConfig.sliderToScrollStep(value))
-				.build());
+	private double normalizedMaxSpeed() {
+		double upperBound = this.draft.fullRange
+				? FlySpeedModifierConfig.FULL_RANGE_MAX_SPEED
+				: FlySpeedModifierConfig.STANDARD_MAX_SPEED;
+		double clamped = Math.max(
+				FlySpeedModifierConfig.MIN_ALLOWED_MAX_SPEED,
+				Math.min(this.draft.maxSpeed, upperBound)
+		);
+		return (clamped - FlySpeedModifierConfig.MIN_ALLOWED_MAX_SPEED)
+				/ (upperBound - FlySpeedModifierConfig.MIN_ALLOWED_MAX_SPEED);
+	}
 
-		return builder.build();
+	private double normalizedInitialSpeed() {
+		double lowerBound = this.draft.minSpeed;
+		double upperBound = effectiveMaximumSpeed();
+		if (upperBound <= lowerBound) {
+			return 0.0D;
+		}
+
+		double clamped = Math.max(
+				lowerBound,
+				Math.min(this.draft.initialSpeed, upperBound)
+		);
+		return (clamped - lowerBound) / (upperBound - lowerBound);
+	}
+
+	private double effectiveMaximumSpeed() {
+		double fullRangeUpperBound = this.draft.fullRange
+				? FlySpeedModifierConfig.FULL_RANGE_MAX_SPEED
+				: FlySpeedModifierConfig.STANDARD_MAX_SPEED;
+		return Math.max(
+				this.draft.minSpeed,
+				Math.min(this.draft.maxSpeed, fullRangeUpperBound)
+		);
+	}
+
+	@Override
+	public void onClose() {
+		this.saveOnce();
+		super.onClose();
+	}
+
+	@Override
+	public void removed() {
+		this.saveOnce();
+		super.removed();
+	}
+
+	private void saveOnce() {
+		if (this.saved) {
+			return;
+		}
+		this.saved = true;
+		FlySpeedModifierConfig.set(this.draft);
 	}
 }
