@@ -221,7 +221,8 @@
 	"fly-speed-modifier": {
 		"versions": [
 			"1.1.0",
-			"1.1.1"
+			"1.1.1",
+			"1.1.2"
 		],
 		"hasIcon": false,
 		"displayName": "Fly Speed Modifier",
