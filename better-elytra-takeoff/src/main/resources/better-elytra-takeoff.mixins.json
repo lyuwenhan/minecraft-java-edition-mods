@@ -1,9 +1,0 @@
-{
-	"required": false,
-	"package": "com.example.betterelytratakeoff.mixin",
-	"compatibilityLevel": "JAVA_25",
-	"mixins": [],
-	"injectors": {
-		"defaultRequire": 0
-	}
-}
