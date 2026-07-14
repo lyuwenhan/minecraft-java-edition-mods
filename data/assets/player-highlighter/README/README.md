@@ -4,53 +4,129 @@
 
 # Player Highlighter
 
-A lightweight **client-side Fabric mod** that highlights players with a glowing outline while a designated key is held or a toggle is enabled, without relying on any server-side mechanics.
+A lightweight **client-side Fabric mod** that improves player awareness by combining glowing outlines, on-screen target icons, and a nearby-player information HUD.
 
 ---
 
 ## Overview
 
-Player Highlighter improves player visibility by showing a glowing outline around other players **while the hold key is pressed (default: TAB)** or **when the highlight toggle is enabled**.
-The effect is purely visual, handled entirely on the client, and can be either momentary or persistent based on user preference.
+Player Highlighter makes other players easier to locate and track without requiring any server-side installation.
 
-When neither the hold key is pressed nor the toggle is enabled, all outlines disappear immediately.
+The mod provides three visual features:
+
+- A glowing outline around other players
+- Small target icons displayed over visible players
+- A HUD list showing nearby player information
+
+Glowing outlines and target icons appear while the configured hold key is pressed or while keep mode is enabled. The player information HUD remains available independently.
+
+All features are handled entirely on the client.
 
 ---
 
 ## Key Features
 
-- Glowing outline appears **while holding the configured key** or **when keep mode is enabled**
-- HUD icons show on-screen indicators for other players in view when highlighting is active
-- Optional toggle mode for persistent highlighting (default key: **I**)
-- No screen clutter when inactive
-- Purely client-side and visual-only
-- Does not modify real player states or effects
-- No commands, no packets, no gameplay changes
-- Safe for multiplayer servers
-- Lightweight with negligible performance impact
+- Highlights other players with a glowing outline
+- Displays target icons over players currently visible on screen
+- Shows nearby player information in a HUD
+- Shows player name, relative direction, distance, health, and coordinates
+- Supports a hold key for temporary highlighting
+- Supports toggleable keep mode for persistent highlighting
+- Supports a client command for showing or hiding the player information HUD
 
 ---
 
-## Visual Behavior
+## Highlight Controls
 
-- Other players are rendered with a glowing outline similar to the vanilla Glowing effect
-- The local player is never highlighted
-- Outline visibility is controlled by:
-  - Holding the highlight key (default: **TAB**), or
-  - Enabling keep mode via the toggle key (default: **I**)
-- When active, small HUD icons appear on screen to indicate player positions in view
-- Outline color follows vanilla rules (default or team-based, if applicable)
-- No impact on mobs or non-player entities
+Highlighting is active when either of the following conditions is met:
+
+- The highlight hold key is pressed  
+  Default key: **TAB**
+- Keep mode is enabled  
+  Default toggle key: **I**
+
+When highlighting is active:
+
+- Other players receive a glowing outline
+- Visible players receive a small target icon at their projected screen position
+
+When neither condition is active, the glowing outlines and target icons disappear immediately.
 
 ---
 
-## Multiplayer Safety
+## Player Information HUD
 
-- Client-side only
-- No server interaction
-- No packets intercepted or sent
-- No risk of desynchronization
-- Compatible with vanilla and modded servers
+The HUD displays nearby players in the bottom-left corner of the screen.
+
+Example:
+
+```text
+Player867 ↑ 11m ❤ 20.0 (123, 64, -456)
+```
+
+Field description:
+
+- `Player867` — Player name
+- `↑` — Direction relative to the current camera facing
+- `11m` — Horizontal distance on the XZ plane
+- `❤ 20.0` — Current health
+- `(123, 64, -456)` — World coordinates
+
+Multiple players are listed vertically.
+
+The direction indicator can use the following arrows:
+
+```text
+↑ ↗ → ↘ ↓ ↙ ← ↖
+```
+
+The HUD is hidden when Minecraft's GUI is hidden.
+
+HUD visibility can also be controlled with the client command:
+
+```text
+/playerhighlighter hud on
+/playerhighlighter hud off
+/playerhighlighter hud toggle
+/playerhighlighter hud status
+```
+
+Command behavior:
+
+- `/playerhighlighter hud on` shows the Player Information HUD
+- `/playerhighlighter hud off` hides the Player Information HUD
+- `/playerhighlighter hud toggle` switches the HUD between shown and hidden
+- `/playerhighlighter hud status` shows the current HUD state
+
+---
+
+## Target Icons
+
+While highlighting is active, a small target icon is rendered over each visible player.
+
+Icons are only displayed when the player:
+
+- Is in front of the camera
+- Can be projected onto the current screen
+- Is within the visible screen boundaries
+- Is not the current camera entity
+
+Players behind the camera or outside the screen are not assigned an icon.
+
+---
+
+## Glowing Outline
+
+Other players are rendered using an outline similar to Minecraft's vanilla Glowing effect.
+
+Behavior:
+
+- Only player entities are affected
+- The local player is excluded
+- Mobs and other entities are not affected
+- The outline follows vanilla outline rendering rules
+- Team-based outline colors may still apply where supported
+- No real status effect is added to the player
 
 ---
 
