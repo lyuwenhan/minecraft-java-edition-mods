@@ -185,11 +185,12 @@
 	},
 	"no-hungry": {
 		"versions": [
-			"1.1.0"
+			"1.1.0",
+			"1.1.1"
 		],
 		"hasIcon": true,
 		"displayName": "No Hungry",
-		"description": "Keeps player hunger and saturation full and blocks exhaustion-based hunger consumption.",
+		"description": "Keeps player hunger and saturation from falling below configurable minimum levels.",
 		"link": {
 			"Modrinth": "https://modrinth.com/mod/no-hungry",
 			"Curseforge": "https://www.curseforge.com/minecraft/mc-mods/no-hungry",

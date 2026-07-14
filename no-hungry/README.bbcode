@@ -1,50 +1,51 @@
 [h1]Languages[/h1][url=https://lyuwenhan.github.io/extensions/minecraft-java/data/assets/no-hungry/README/README.html]EN/English[/url] | [url=https://lyuwenhan.github.io/extensions/minecraft-java/data/assets/no-hungry/README/README_ZH-CN.html]ZH-CN/简体中文[/url]
-[h1]No Hungry[/h1]A lightweight [b]server-side Fabric mod[/b] that keeps player hunger and saturation permanently full, while blocking exhaustion-based hunger consumption, including Spear Lunge exhaustion cost.
+[h1]No Hungry[/h1]A lightweight [b]server-side Fabric mod[/b] that prevents player hunger and saturation from dropping below configurable minimum values.
 [hr]
-[h2]Overview[/h2]No Hungry prevents players from losing hunger or saturation on a Fabric server.
-The mod continuously keeps every player's food level and saturation at maximum values and blocks exhaustion from being accumulated. This means normal hunger-draining actions such as sprinting, jumping, attacking, swimming, mining, and other exhaustion-based mechanics no longer reduce hunger.
-Spear Lunge exhaustion consumption is also blocked when it attempts to consume hunger through the player's exhaustion system.
-The mod works automatically on the server. Players do not need to install it on the client.
+[h2]Overview[/h2]No Hungry adds configurable lower limits for player hunger and saturation.
+Unlike the original behavior, the mod no longer keeps hunger and saturation permanently full and no longer blocks exhaustion. Normal survival mechanics such as sprinting, jumping, attacking, swimming, mining, and Spear Lunge can still consume saturation and hunger.
+When hunger or saturation drops below the configured minimum, the mod restores it to that minimum value.
+The mod works entirely on the server. Players do not need to install it on the client.
 [hr]
 [h2]Key Features[/h2][list]
-[*]Keeps player hunger level permanently full[/*]
-[*]Keeps player saturation permanently full[/*]
-[*]Prevents exhaustion from accumulating[/*]
-[*]Blocks hunger loss from sprinting, jumping, attacking, swimming, and similar actions[/*]
-[*]Blocks Spear Lunge exhaustion-based hunger consumption[/*]
-[*]Works automatically for all players on the server[/*]
-[*]No client-side installation required[/*]
-[*]No keybinds[/*]
-[*]No commands[/*]
-[*]No configuration required[/*]
-[*]Lightweight server-side implementation[/*]
+[*]Configurable minimum hunger level[/*]
+[*]Configurable minimum saturation level[/*]
+[*]Normal exhaustion mechanics remain active[/*]
+[*]Hunger and saturation can decrease normally above the configured minimum[/*]
+[*]Supports enabling and disabling the mod at runtime[/*]
 [/list][hr]
-[h2]Gameplay Behavior[/h2][list]
-[*]Player hunger is forced to the maximum value[/*]
-[*]Player saturation is forced to the maximum value[/*]
-[*]Player exhaustion is reset and prevented from increasing[/*]
-[*]Hunger does not decrease from normal survival actions[/*]
-[*]Saturation does not decrease from exhaustion[/*]
-[*]Players can still eat food normally, but eating is no longer required to maintain hunger[/*]
-[*]The mod does not change health, damage, movement speed, inventory, or item behavior[/*]
-[*]The mod does not give invulnerability[/*]
-[*]The effect applies to all players on the server[/*]
+[h2]Gameplay Behavior[/h2]No Hungry only controls the lower boundary of hunger and saturation.
+For example, with the minimum hunger level set to [b]18[/b]:
+[list]
+[*]Hunger can remain at [b]20[/b], [b]19[/b], or [b]18[/b][/*]
+[*]Hunger cannot remain below [b]18[/b][/*]
+[*]Saturation behaves normally unless a minimum saturation value is configured[/*]
+[*]Exhaustion continues to accumulate normally[/*]
+[*]Sprinting, jumping, attacking, swimming, mining, and similar actions still consume saturation and hunger[/*]
+[*]Players can still eat food normally[/*]
+[*]The mod does not affect health, damage, movement speed, inventory, or item behavior[/*]
 [/list][hr]
-[h2]Spear Lunge Behavior[/h2]No Hungry blocks exhaustion-based hunger consumption.
-When Spear Lunge attempts to consume hunger through the player exhaustion system, that exhaustion is cancelled before it can reduce saturation or hunger.
-This prevents Spear Lunge from draining hunger while keeping the rest of the mechanic unchanged.
+[h2]Commands[/h2][h3]Set Minimum Hunger[/h3][code]/nohungry set minHunger <0-20>[/code]
+Example:
+[code]/nohungry set minHunger 18[/code]
+This sets the minimum hunger level to [b]18[/b] and the minimum saturation level to [b]0[/b].
+[h3]Set Minimum Saturation[/h3][code]/nohungry set minSaturation <0-20>[/code]
+Example:
+[code]/nohungry set minSaturation 8[/code]
+This sets the minimum hunger level to [b]20[/b] and the minimum saturation level to [b]8[/b].
+[h3]Enable[/h3][code]/nohungry on[/code]
+Enables minimum hunger and saturation enforcement.
+[h3]Disable[/h3][code]/nohungry off[/code]
+Disables the mod without deleting the configured value.
+[h3]Toggle[/h3][code]/nohungry toggle[/code]
+Switches the mod between enabled and disabled.
+[h3]Status[/h3][code]/nohungry status[/code]
+When enabled, the command displays:
+[code]No Hungry enabled.
+minimum hunger: 18
+minimum saturation: 0[/code]
+When disabled, the command displays:
+[code]No Hungry disabled.[/code]
 [hr]
-[h2]Multiplayer Safety[/h2][list]
-[*]Server-side only[/*]
-[*]Clients do not need to install the mod[/*]
-[*]No custom packets required[/*]
-[*]No client keybinds[/*]
-[*]No client HUD changes[/*]
-[*]No player-side configuration[/*]
-[*]Compatible with vanilla clients[/*]
-[*]Compatible with dedicated Fabric servers[/*]
-[*]Safe for multiplayer servers where hunger loss should be disabled globally[/*]
-[/list][hr]
 [h2]Supported Versions[/h2][list]
 [*]Minecraft 26.1.2[/*]
 [*]Fabric Loader 0.19.2+[/*]
