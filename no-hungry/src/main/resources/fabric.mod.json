@@ -3,14 +3,20 @@
 	"id": "no-hungry",
 	"version": "${version}",
 	"name": "No Hungry",
-	"description": "Keeps player hunger and saturation full and blocks exhaustion-based hunger consumption.",
+	"description": "Keeps player hunger and saturation from falling below configurable minimum levels.",
 	"authors": [
 		"Wenhan"
 	],
 	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"com.example.nohungry.NoHungryMod"
+		]
+	},
 	"mixins": [
 		"nohungry.mixins.json"
 	],
+	"icon": "assets/no-hungry/icon.png",
 	"depends": {
 		"fabricloader": ">=0.19.2",
 		"fabric-api": "*",
