@@ -13,6 +13,7 @@ public class PlayerHighlighterConfig {
 	private static final Path CONFIG_PATH = FabricLoader.getInstance().getConfigDir().resolve("player-highlighter.json");
 
 	public boolean keep = false;
+	public Boolean informationHud = true;
 
 	public static PlayerHighlighterConfig load() {
 		if (!Files.exists(CONFIG_PATH)) {

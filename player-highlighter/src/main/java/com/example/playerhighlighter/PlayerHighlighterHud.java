@@ -21,6 +21,10 @@ import net.minecraft.world.phys.Vec3;
 
 public class PlayerHighlighterHud {
 	public static void render(GuiGraphicsExtractor graphics) {
+		if (!PlayerHighlighterMod.isInformationHudVisible()) {
+			return;
+		}
+
 		Minecraft client = Minecraft.getInstance();
 		ClientLevel world = client.level;
 		Entity camera = client.getCameraEntity();

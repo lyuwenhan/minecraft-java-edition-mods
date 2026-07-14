@@ -3,6 +3,8 @@ package com.example.playerhighlighter;
 import com.example.playerhighlighter.client.HudIconRenderer;
 import com.mojang.blaze3d.platform.InputConstants;
 import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
+import net.fabricmc.fabric.api.client.command.v2.ClientCommands;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry;
@@ -58,6 +60,8 @@ public class PlayerHighlighterMod implements ClientModInitializer {
 			}
 		});
 
+		registerCommands();
+
 		HudElementRegistry.attachElementBefore(
 			VanillaHudElements.CHAT,
 			Identifier.fromNamespaceAndPath(MOD_ID, "hud"),
@@ -66,6 +70,46 @@ public class PlayerHighlighterMod implements ClientModInitializer {
 
 		HudIconRenderer.register();
 		System.out.println("[PlayerHighlighter] Client initialized");
+	}
+
+	private static void registerCommands() {
+		ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) -> dispatcher.register(
+			ClientCommands.literal("playerhighlighter")
+				.then(ClientCommands.literal("hud")
+					.then(ClientCommands.literal("on")
+						.executes(context -> setInformationHudVisible(context.getSource(), true)))
+					.then(ClientCommands.literal("off")
+						.executes(context -> setInformationHudVisible(context.getSource(), false)))
+					.then(ClientCommands.literal("toggle")
+						.executes(context -> toggleInformationHud(context.getSource())))
+					.then(ClientCommands.literal("status")
+						.executes(context -> showInformationHudStatus(context.getSource()))))
+		));
+	}
+
+	private static int setInformationHudVisible(
+		net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource source,
+		boolean visible
+	) {
+		config.informationHud = visible;
+		config.save();
+		source.sendFeedback(Component.literal("Player Information HUD: " + (visible ? "ON" : "OFF")));
+		return 1;
+	}
+
+	private static int showInformationHudStatus(
+		net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource source
+	) {
+		source.sendFeedback(
+			Component.literal("Player Highlighter hud " + (isInformationHudVisible() ? "enabled." : "disabled."))
+		);
+		return 1;
+	}
+
+	private static int toggleInformationHud(
+		net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource source
+	) {
+		return setInformationHudVisible(source, !isInformationHudVisible());
 	}
 
 	public static boolean isHighlightActive() {
@@ -78,5 +122,17 @@ public class PlayerHighlighterMod implements ClientModInitializer {
 		}
 
 		return HOLD_KEY != null && HOLD_KEY.isDown();
+	}
+
+	public static boolean isInformationHudVisible() {
+		if (config == null) {
+			return true;
+		}
+
+		if (config.informationHud == null) {
+			return true;
+		}
+
+		return config.informationHud;
 	}
 }
