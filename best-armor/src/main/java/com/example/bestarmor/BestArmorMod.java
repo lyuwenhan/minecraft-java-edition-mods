@@ -11,6 +11,7 @@ import net.minecraft.core.HolderGetter;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.core.HolderSet;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
@@ -33,7 +34,10 @@ import net.minecraft.world.item.component.ItemLore;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.item.enchantment.ItemEnchantments;
+import net.minecraft.world.item.component.BlocksAttacks;
+import net.minecraft.world.damagesource.DamageType;
 
+import java.util.Optional;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -281,7 +285,7 @@ public final class BestArmorMod implements ClientModInitializer {
         containerItems.set(24, slot22Stack);
 
         ItemStack slot23Stack = createItemStack(Items.SHIELD, registries,
-                    enchantment(Enchantments.UNBREAKING, 255),
+                    enchantment(Enchantments.UNBREAKING, 3),
                     enchantment(Enchantments.MENDING, 1)
         );
         containerItems.set(25, slot23Stack);
@@ -453,6 +457,7 @@ public final class BestArmorMod implements ClientModInitializer {
                     enchantment(Enchantments.PIERCING, 10),
                     enchantment(Enchantments.QUICK_CHARGE, 5),
                     enchantment(Enchantments.UNBREAKING, 255),
+                    enchantment(Enchantments.INFINITY, 1),
                     enchantment(Enchantments.MENDING, 1)
         );
         setUnbreakable(slot14Stack);
@@ -488,6 +493,34 @@ public final class BestArmorMod implements ClientModInitializer {
                     enchantment(Enchantments.MENDING, 1)
         );
         setUnbreakable(slot17Stack);
+
+        HolderLookup.RegistryLookup<DamageType> damageTypes = registries.lookupOrThrow(Registries.DAMAGE_TYPE);
+
+        HolderSet<DamageType> blockedDamageTypes = HolderSet.direct(
+                damageTypes.listElements().toList()
+        );
+
+        slot17Stack.set(DataComponents.BLOCKS_ATTACKS, new BlocksAttacks(
+                0.0F,
+                0.0F,
+                List.of(
+                        new BlocksAttacks.DamageReduction(
+                                360.0F,
+                                Optional.of(blockedDamageTypes),
+                                1000.0F,
+                                1000.0F
+                        )
+                ),
+                new BlocksAttacks.ItemDamageFunction(
+                        0.0F,
+                        0.0F,
+                        0.0F
+                ),
+                Optional.empty(),
+                Optional.empty(),
+                Optional.empty()
+        ));
+
         containerItems.set(17, slot17Stack);
 
         ItemStack slot18Stack = createItemStack(Items.NETHERITE_HELMET, registries,
@@ -779,6 +812,7 @@ public final class BestArmorMod implements ClientModInitializer {
                     enchantment(Enchantments.PIERCING, 10),
                     enchantment(Enchantments.QUICK_CHARGE, 5),
                     enchantment(Enchantments.UNBREAKING, 255),
+                    enchantment(Enchantments.INFINITY, 1),
                     enchantment(Enchantments.MENDING, 1)
         );
         setUnbreakable(slot14Stack);
@@ -822,6 +856,34 @@ public final class BestArmorMod implements ClientModInitializer {
                     enchantment(Enchantments.MENDING, 1)
         );
         setUnbreakable(slot17Stack);
+
+        HolderLookup.RegistryLookup<DamageType> damageTypes = registries.lookupOrThrow(Registries.DAMAGE_TYPE);
+
+        HolderSet<DamageType> blockedDamageTypes = HolderSet.direct(
+                damageTypes.listElements().toList()
+        );
+
+        slot17Stack.set(DataComponents.BLOCKS_ATTACKS, new BlocksAttacks(
+                0.0F,
+                0.0F,
+                List.of(
+                        new BlocksAttacks.DamageReduction(
+                                360.0F,
+                                Optional.of(blockedDamageTypes),
+                                1000.0F,
+                                1000.0F
+                        )
+                ),
+                new BlocksAttacks.ItemDamageFunction(
+                        0.0F,
+                        0.0F,
+                        0.0F
+                ),
+                Optional.empty(),
+                Optional.empty(),
+                Optional.empty()
+        ));
+
         containerItems.set(17, slot17Stack);
 
         ItemStack slot18Stack = createItemStack(Items.NETHERITE_HELMET, registries,
