@@ -3,7 +3,7 @@
 	"id": "hide-password",
 	"version": "${version}",
 	"name": "Hide Password",
-	"description": "Hide password arguments in chat commands",
+	"description": "Hide password arguments in chat commands.",
 	"authors": [
 		"Wenhan"
 	],
