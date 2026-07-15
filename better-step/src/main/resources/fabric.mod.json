@@ -8,11 +8,6 @@
 		"Wenhan"
 	],
 	"environment": "client",
-	"entrypoints": {
-		"client": [
-			"com.example.betterstep.BetterStepMod"
-		]
-	},
 	"mixins": [
 		"better-step.mixins.json"
 	],
