@@ -46,11 +46,12 @@
 			"1.0.1",
 			"1.0.2",
 			"1.0.3",
-			"1.1.0"
+			"1.1.0",
+			"1.1.1"
 		],
 		"hasIcon": true,
 		"displayName": "Auto Login",
-		"description": "Automatically logs in to auth servers using a locally encrypted password",
+		"description": "Automatically logs in to auth servers using a locally encrypted password.",
 		"link": {
 			"Modrinth": "https://modrinth.com/mod/autologinmod",
 			"Curseforge": "https://www.curseforge.com/minecraft/mc-mods/auto-login",
