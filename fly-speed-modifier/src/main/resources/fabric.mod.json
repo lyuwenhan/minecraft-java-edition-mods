@@ -22,12 +22,10 @@
 	"depends": {
 		"fabricloader": ">=0.19.2",
 		"fabric-api": "*",
-		"fabric-key-mapping-api-v1": "*",
 		"minecraft": "26.1.2",
 		"java": ">=25"
 	},
 	"suggests": {
-		"freecam": "*",
 		"modmenu": "*"
 	}
 }

@@ -1,29 +1,29 @@
 {
-    "schemaVersion": 1,
-    "id": "shared-player-data",
-    "version": "${version}",
-    "name": "Shared Player Data",
-    "description": "Server-only shared vanilla player profile data for bound UUID groups.",
-    "authors": [
-        "Wenhan"
-    ],
-    "environment": "server",
-    "entrypoints": {
-        "server": [
-            "com.example.sharedplayerdata.SharedPlayerDataMod"
-        ]
-    },
-    "mixins": [
-        "sharedplayerdata.mixins.json",
-        "sharedplayerdata-carpet.mixins.json"
-    ],
-    "depends": {
-        "fabricloader": ">=0.19.2",
-        "fabric-api": "*",
-        "minecraft": "26.1.2",
-        "java": ">=25"
-    },
-    "suggests": {
-        "carpet": "*"
-    }
+	"schemaVersion": 1,
+	"id": "shared-player-data",
+	"version": "${version}",
+	"name": "Shared Player Data",
+	"description": "Server-only shared vanilla player profile data for bound UUID groups.",
+	"authors": [
+		"Wenhan"
+	],
+	"environment": "server",
+	"entrypoints": {
+		"server": [
+			"com.example.sharedplayerdata.SharedPlayerDataMod"
+		]
+	},
+	"mixins": [
+		"sharedplayerdata.mixins.json",
+		"sharedplayerdata-carpet.mixins.json"
+	],
+	"depends": {
+		"fabricloader": ">=0.19.2",
+		"fabric-api": "*",
+		"minecraft": "26.1.2",
+		"java": ">=25"
+	},
+	"suggests": {
+		"carpet": "*"
+	}
 }

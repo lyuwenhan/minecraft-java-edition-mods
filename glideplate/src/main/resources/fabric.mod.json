@@ -7,7 +7,6 @@
 	"authors": [
 		"Wenhan"
 	],
-	"license": "MIT",
 	"environment": "*",
 	"mixins": [
 		"glideplate.mixins.json",

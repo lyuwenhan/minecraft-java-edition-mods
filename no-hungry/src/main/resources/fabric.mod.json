@@ -16,7 +16,6 @@
 	"mixins": [
 		"nohungry.mixins.json"
 	],
-	"icon": "assets/no-hungry/icon.png",
 	"depends": {
 		"fabricloader": ">=0.19.2",
 		"fabric-api": "*",
