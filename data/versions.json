@@ -67,11 +67,12 @@
 			"1.0.5",
 			"1.0.6",
 			"1.1.0",
-			"1.1.1"
+			"1.1.1",
+			"1.1.2"
 		],
 		"hasIcon": true,
 		"displayName": "Hide Password",
-		"description": "Hide password arguments in chat commands",
+		"description": "Hide password arguments in chat commands.",
 		"link": {
 			"Modrinth": "https://modrinth.com/mod/hide-password",
 			"Curseforge": "https://www.curseforge.com/minecraft/mc-mods/hide-password",
