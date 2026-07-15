@@ -3,7 +3,7 @@
 	"id": "auto-login",
 	"version": "${version}",
 	"name": "Auto Login",
-	"description": "Automatically logs in to auth servers using a locally encrypted password",
+	"description": "Automatically logs in to auth servers using a locally encrypted password.",
 	"authors": [
 		"Wenhan"
 	],
