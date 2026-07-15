@@ -3,6 +3,7 @@ package com.example.nohungry;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonParseException;
+
 import net.fabricmc.loader.api.FabricLoader;
 
 import java.io.IOException;
@@ -13,7 +14,8 @@ import java.nio.file.Path;
 
 public final class NoHungryConfig {
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
-    private static final Path CONFIG_PATH = FabricLoader.getInstance().getConfigDir().resolve("no-hungry.json");
+    private static final Path CONFIG_PATH =
+            FabricLoader.getInstance().getConfigDir().resolve("no-hungry.json");
 
     private boolean enabled = true;
     private int foodLevel = 18;
@@ -35,7 +37,8 @@ public final class NoHungryConfig {
             config.save();
             return config;
         } catch (IOException | JsonParseException exception) {
-            NoHungryMod.LOGGER.error("Failed to load config from {}. Using defaults.", CONFIG_PATH, exception);
+            NoHungryMod.LOGGER.error(
+                    "Failed to load config from {}. Using defaults.", CONFIG_PATH, exception);
             NoHungryConfig config = new NoHungryConfig();
             config.save();
             return config;

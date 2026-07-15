@@ -5,19 +5,18 @@ import net.minecraft.client.gui.screens.Screen;
 import java.lang.reflect.Method;
 
 public final class OptionalClothConfigBridge {
-	private static final String PROVIDER_CLASS =
-		"com.example.autogreetingclient.client.compat.ClothConfigScreenProvider";
+    private static final String PROVIDER_CLASS =
+            "com.example.autogreetingclient.client.compat.ClothConfigScreenProvider";
 
-	private OptionalClothConfigBridge() {
-	}
+    private OptionalClothConfigBridge() {}
 
-	public static Screen create(Screen parent) {
-		try {
-			Class<?> clazz = Class.forName(PROVIDER_CLASS);
-			Method method = clazz.getMethod("create", Screen.class);
-			return (Screen) method.invoke(null, parent);
-		} catch (ReflectiveOperationException e) {
-			throw new RuntimeException("Failed to open Cloth Config screen", e);
-		}
-	}
+    public static Screen create(Screen parent) {
+        try {
+            Class<?> clazz = Class.forName(PROVIDER_CLASS);
+            Method method = clazz.getMethod("create", Screen.class);
+            return (Screen) method.invoke(null, parent);
+        } catch (ReflectiveOperationException e) {
+            throw new RuntimeException("Failed to open Cloth Config screen", e);
+        }
+    }
 }

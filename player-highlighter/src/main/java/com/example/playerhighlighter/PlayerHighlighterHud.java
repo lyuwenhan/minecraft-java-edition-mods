@@ -1,13 +1,5 @@
 package com.example.playerhighlighter;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
-import java.util.UUID;
-import java.util.function.Consumer;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -19,973 +11,937 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.phys.Vec3;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.util.HashSet;
+import java.util.Optional;
+import java.util.Set;
+import java.util.UUID;
+import java.util.function.Consumer;
+
 public class PlayerHighlighterHud {
-	public static void render(GuiGraphicsExtractor graphics) {
-		if (!PlayerHighlighterMod.isInformationHudVisible()) {
-			return;
-		}
+    public static void render(GuiGraphicsExtractor graphics) {
+        if (!PlayerHighlighterMod.isInformationHudVisible()) {
+            return;
+        }
 
-		Minecraft client = Minecraft.getInstance();
-		ClientLevel world = client.level;
-		Entity camera = client.getCameraEntity();
+        Minecraft client = Minecraft.getInstance();
+        ClientLevel world = client.level;
+        Entity camera = client.getCameraEntity();
 
-		if (camera == null || world == null) {
-			return;
-		}
-
-		if (client.options.hideGui) {
-			return;
-		}
-
-		int baseX = 8;
-		int lineHeight = client.font.lineHeight + 2;
-		int screenHeight = graphics.guiHeight();
-		int y = screenHeight - 22 - 8;
-
-		Set<UUID> renderedPlayerUuids = new HashSet<>();
-
-		Vec3 cameraPos = new Vec3(camera.getX(), camera.getY(), camera.getZ());
-
-		for (var player : world.players()) {
-			if (player == camera) {
-				continue;
-			}
-
-			Vec3 targetPos = new Vec3(
-				player.getX(),
-				player.getY(),
-				player.getZ()
-			);
-
-			double dx = targetPos.x - cameraPos.x;
-			double dz = targetPos.z - cameraPos.z;
-
-			int distance = (int) Math.sqrt(dx * dx + dz * dz);
-			String arrow = getArrow(camera, targetPos);
-			float health = player.getHealth();
-
-			String name = player.getName().getString();
-			String distText = distance + "m";
-			String healthText = "❤ " + String.format("%.1f", health);
-			String posText = String.format(
-					"(%d, %d, %d)",
-					(int) targetPos.x,
-					(int) targetPos.y,
-					(int) targetPos.z
-			);
-
-			drawLine(graphics, client, baseX, y, name, arrow, distText, healthText, posText);
-
-			renderedPlayerUuids.add(player.getUUID());
-
-			y -= lineHeight;
-
-			if (y < 8) {
-				break;
-			}
-		}
-
-		Object networkHandler = client.getConnection();
-
-		if (networkHandler == null) {
-			return;
-		}
-
-		if (y < 8) {
-			return;
-		}
-
-		Object waypointManager = findWaypointManager(networkHandler);
-
-		if (waypointManager == null) {
-			return;
-		}
-
-		if (!hasWaypoints(waypointManager)) {
-			return;
-		}
-
-		int[] yRef = new int[] { y };
-
-		forEachWaypoint(waypointManager, camera, waypoint -> {
-			if (yRef[0] < 8) {
-				return;
-			}
-
-			if (isAlreadyRenderedWaypoint(camera, waypoint, renderedPlayerUuids)) {
-				return;
-			}
-
-			WaypointDisplay display = getWaypointDisplay(client, world, camera, waypoint);
-
-			if (display == null) {
-				return;
-			}
-
-			drawLine(
-				graphics,
-				client,
-				baseX,
-				yRef[0],
-				display.name,
-				display.arrow,
-				display.distanceText,
-				display.healthText,
-				display.posText
-			);
-
-			yRef[0] -= lineHeight;
-		});
-	}
-
-	private static void drawLine(
-		GuiGraphicsExtractor graphics,
-		Minecraft client,
-		int baseX,
-		int y,
-		String name,
-		String arrow,
-		String distText,
-		String healthText,
-		String posText
-	) {
-		int x = baseX;
-
-		x = drawOptionalText(graphics, client, name, x, y, 0xFFF0F0F0);
-		x = drawOptionalText(graphics, client, arrow, x, y, 0xFF55FFFF);
-		x = drawOptionalText(graphics, client, distText, x, y, 0xFFB0B0B0);
-		x = drawOptionalText(graphics, client, healthText, x, y, 0xFF55FFFF);
-		drawOptionalText(graphics, client, posText, x, y, 0xFF909090);
-	}
-
-	private static int drawOptionalText(
-			GuiGraphicsExtractor graphics,
-			Minecraft client,
-			String text,
-			int x,
-			int y,
-			int color
-	) {
-		if (text == null || text.isBlank()) {
-			return x;
-		}
-
-		graphics.text(client.font, text, x, y, color, false);
-
-		return x + client.font.width(text + " ");
-	}
-
-	private static WaypointDisplay getWaypointDisplay(
-			Minecraft client,
-			ClientLevel world,
-			Entity camera,
-			Object waypoint
-	) {
-		Entity sourceEntity = findSourceEntity(world, waypoint);
-		TargetPosition targetPosition = getWaypointTargetPosition(camera, waypoint, sourceEntity);
-
-		String healthText = getWaypointHealthText(sourceEntity);
-		String posText = targetPosition.posText;
-
-		if (healthText == null && posText == null) {
-			return null;
-		}
-
-		String name = getWaypointName(client, world, waypoint, sourceEntity);
-		String arrow = getWaypointArrow(camera, targetPosition);
-		String distanceText = getWaypointDistanceText(camera, waypoint, targetPosition);
-
-		return new WaypointDisplay(name, arrow, distanceText, healthText, posText);
-	}
-
-	private static boolean isAlreadyRenderedWaypoint(
-			Entity camera,
-			Object waypoint,
-			Set<UUID> renderedPlayerUuids
-	) {
-		UUID sourceUuid = getWaypointSourceUuid(waypoint);
-
-		if (sourceUuid == null) {
-			return false;
-		}
-
-		if (sourceUuid.equals(camera.getUUID())) {
-			return true;
-		}
-
-		return renderedPlayerUuids.contains(sourceUuid);
-	}
-
-	private static String getWaypointName(
-			Minecraft client,
-			ClientLevel world,
-			Object waypoint,
-			Entity sourceEntity
-	) {
-		if (sourceEntity != null) {
-			return sourceEntity.getName().getString();
-		}
-
-		UUID uuid = getWaypointSourceUuid(waypoint);
-
-		if (uuid != null) {
-			return resolveUuidName(client, world, uuid);
-		}
-
-		String id = getWaypointSourceString(waypoint);
-
-		if (id != null) {
-			return resolveStringIdName(client, world, id);
-		}
-
-		return "Waypoint";
-	}
-
-	private static String resolveUuidName(Minecraft client, ClientLevel world, UUID uuid) {
-		Entity entity = findEntityByUuid(world, uuid);
-
-		if (entity != null) {
-			return entity.getName().getString();
-		}
-
-		Object networkHandler = client.getConnection();
-
-		if (networkHandler != null) {
-			Object entry = invokeMethod(networkHandler, "getPlayerInfo", uuid);
-
-			if (entry == null) {
-				entry = invokeMethod(networkHandler, "getPlayerListEntry", uuid);
-			}
-
-			Object profile = null;
-
-			if (entry != null) {
-				profile = invokeNoArg(entry, "getProfile", "profile");
-			}
-
-			String profileName = getGameProfileName(profile);
-
-			if (profileName != null && !profileName.isBlank()) {
-				return profileName;
-			}
-		}
-
-		return uuid.toString();
-	}
-
-	private static String getGameProfileName(Object profile) {
-		if (profile == null) {
-			return null;
-		}
-
-		String name = invokeStringMethod(profile, "name");
-
-		if (name != null && !name.isBlank()) {
-			return name;
-		}
-
-		name = invokeStringMethod(profile, "getName");
-
-		if (name != null && !name.isBlank()) {
-			return name;
-		}
-
-		return null;
-	}
-
-	private static String invokeStringMethod(Object object, String methodName) {
-		Object value = invokeNoArg(object, methodName);
-
-		if (value instanceof String stringValue) {
-			return stringValue;
-		}
-
-		return null;
-	}
-
-	private static String resolveStringIdName(Minecraft client, ClientLevel world, String id) {
-		UUID uuid = parseUuid(id);
-
-		if (uuid != null) {
-			String uuidName = resolveUuidName(client, world, uuid);
-
-			if (!uuidName.equals(uuid.toString())) {
-				return uuidName;
-			}
-		}
-
-		String translated = tryTranslateIdentifier(id);
-
-		if (translated != null) {
-			return translated;
-		}
-
-		return prettifyIdentifier(id);
-	}
-
-	private static String tryTranslateIdentifier(String id) {
-		if (id == null || id.isBlank()) {
-			return "Waypoint";
-		}
-
-		String direct = Component.translatable(id).getString();
-
-		if (!direct.equals(id)) {
-			return direct;
-		}
-
-		int colonIndex = id.indexOf(':');
-
-		if (colonIndex > 0 && colonIndex + 1 < id.length()) {
-			String namespace = id.substring(0, colonIndex);
-			String path = id.substring(colonIndex + 1).replace('/', '.');
-			String entityKey = "entity." + namespace + "." + path;
-			String entityName = Component.translatable(entityKey).getString();
-
-			if (!entityName.equals(entityKey)) {
-				return entityName;
-			}
-		}
-
-		return null;
-	}
+        if (camera == null || world == null) {
+            return;
+        }
 
-	private static String prettifyIdentifier(String id) {
-		if (id == null || id.isBlank()) {
-			return "Waypoint";
-		}
+        if (client.options.hideGui) {
+            return;
+        }
 
-		String value = id;
+        int baseX = 8;
+        int lineHeight = client.font.lineHeight + 2;
+        int screenHeight = graphics.guiHeight();
+        int y = screenHeight - 22 - 8;
+
+        Set<UUID> renderedPlayerUuids = new HashSet<>();
+
+        Vec3 cameraPos = new Vec3(camera.getX(), camera.getY(), camera.getZ());
+
+        for (var player : world.players()) {
+            if (player == camera) {
+                continue;
+            }
+
+            Vec3 targetPos = new Vec3(player.getX(), player.getY(), player.getZ());
+
+            double dx = targetPos.x - cameraPos.x;
+            double dz = targetPos.z - cameraPos.z;
+
+            int distance = (int) Math.sqrt(dx * dx + dz * dz);
+            String arrow = getArrow(camera, targetPos);
+            float health = player.getHealth();
+
+            String name = player.getName().getString();
+            String distText = distance + "m";
+            String healthText = "❤ " + String.format("%.1f", health);
+            String posText =
+                    String.format(
+                            "(%d, %d, %d)",
+                            (int) targetPos.x, (int) targetPos.y, (int) targetPos.z);
+
+            drawLine(graphics, client, baseX, y, name, arrow, distText, healthText, posText);
+
+            renderedPlayerUuids.add(player.getUUID());
+
+            y -= lineHeight;
+
+            if (y < 8) {
+                break;
+            }
+        }
+
+        Object networkHandler = client.getConnection();
+
+        if (networkHandler == null) {
+            return;
+        }
+
+        if (y < 8) {
+            return;
+        }
+
+        Object waypointManager = findWaypointManager(networkHandler);
+
+        if (waypointManager == null) {
+            return;
+        }
+
+        if (!hasWaypoints(waypointManager)) {
+            return;
+        }
+
+        int[] yRef = new int[] {y};
+
+        forEachWaypoint(
+                waypointManager,
+                camera,
+                waypoint -> {
+                    if (yRef[0] < 8) {
+                        return;
+                    }
+
+                    if (isAlreadyRenderedWaypoint(camera, waypoint, renderedPlayerUuids)) {
+                        return;
+                    }
+
+                    WaypointDisplay display = getWaypointDisplay(client, world, camera, waypoint);
+
+                    if (display == null) {
+                        return;
+                    }
+
+                    drawLine(
+                            graphics,
+                            client,
+                            baseX,
+                            yRef[0],
+                            display.name,
+                            display.arrow,
+                            display.distanceText,
+                            display.healthText,
+                            display.posText);
+
+                    yRef[0] -= lineHeight;
+                });
+    }
+
+    private static void drawLine(
+            GuiGraphicsExtractor graphics,
+            Minecraft client,
+            int baseX,
+            int y,
+            String name,
+            String arrow,
+            String distText,
+            String healthText,
+            String posText) {
+        int x = baseX;
+
+        x = drawOptionalText(graphics, client, name, x, y, 0xFFF0F0F0);
+        x = drawOptionalText(graphics, client, arrow, x, y, 0xFF55FFFF);
+        x = drawOptionalText(graphics, client, distText, x, y, 0xFFB0B0B0);
+        x = drawOptionalText(graphics, client, healthText, x, y, 0xFF55FFFF);
+        drawOptionalText(graphics, client, posText, x, y, 0xFF909090);
+    }
+
+    private static int drawOptionalText(
+            GuiGraphicsExtractor graphics, Minecraft client, String text, int x, int y, int color) {
+        if (text == null || text.isBlank()) {
+            return x;
+        }
+
+        graphics.text(client.font, text, x, y, color, false);
+
+        return x + client.font.width(text + " ");
+    }
+
+    private static WaypointDisplay getWaypointDisplay(
+            Minecraft client, ClientLevel world, Entity camera, Object waypoint) {
+        Entity sourceEntity = findSourceEntity(world, waypoint);
+        TargetPosition targetPosition = getWaypointTargetPosition(camera, waypoint, sourceEntity);
 
-		int colonIndex = value.indexOf(':');
+        String healthText = getWaypointHealthText(sourceEntity);
+        String posText = targetPosition.posText;
 
-		if (colonIndex >= 0 && colonIndex + 1 < value.length()) {
-			value = value.substring(colonIndex + 1);
-		}
+        if (healthText == null && posText == null) {
+            return null;
+        }
 
-		int slashIndex = value.lastIndexOf('/');
+        String name = getWaypointName(client, world, waypoint, sourceEntity);
+        String arrow = getWaypointArrow(camera, targetPosition);
+        String distanceText = getWaypointDistanceText(camera, waypoint, targetPosition);
 
-		if (slashIndex >= 0 && slashIndex + 1 < value.length()) {
-			value = value.substring(slashIndex + 1);
-		}
+        return new WaypointDisplay(name, arrow, distanceText, healthText, posText);
+    }
 
-		value = value.replace('_', ' ');
-		value = value.replace('-', ' ');
-		value = value.replace('.', ' ');
+    private static boolean isAlreadyRenderedWaypoint(
+            Entity camera, Object waypoint, Set<UUID> renderedPlayerUuids) {
+        UUID sourceUuid = getWaypointSourceUuid(waypoint);
 
-		StringBuilder builder = new StringBuilder();
-		boolean capitalizeNext = true;
+        if (sourceUuid == null) {
+            return false;
+        }
 
-		for (int i = 0; i < value.length(); i++) {
-			char c = value.charAt(i);
+        if (sourceUuid.equals(camera.getUUID())) {
+            return true;
+        }
 
-			if (Character.isWhitespace(c)) {
-				builder.append(c);
-				capitalizeNext = true;
-				continue;
-			}
+        return renderedPlayerUuids.contains(sourceUuid);
+    }
 
-			if (capitalizeNext) {
-				builder.append(Character.toTitleCase(c));
-				capitalizeNext = false;
-				continue;
-			}
+    private static String getWaypointName(
+            Minecraft client, ClientLevel world, Object waypoint, Entity sourceEntity) {
+        if (sourceEntity != null) {
+            return sourceEntity.getName().getString();
+        }
 
-			builder.append(c);
-		}
+        UUID uuid = getWaypointSourceUuid(waypoint);
 
-		return builder.toString();
-	}
+        if (uuid != null) {
+            return resolveUuidName(client, world, uuid);
+        }
 
-	private static UUID parseUuid(String value) {
-		if (value == null) {
-			return null;
-		}
+        String id = getWaypointSourceString(waypoint);
 
-		try {
-			return UUID.fromString(value);
-		} catch (IllegalArgumentException ignored) {
-		}
+        if (id != null) {
+            return resolveStringIdName(client, world, id);
+        }
 
-		return null;
-	}
+        return "Waypoint";
+    }
 
-	private static Entity findSourceEntity(ClientLevel world, Object waypoint) {
-		UUID sourceUuid = getWaypointSourceUuid(waypoint);
+    private static String resolveUuidName(Minecraft client, ClientLevel world, UUID uuid) {
+        Entity entity = findEntityByUuid(world, uuid);
 
-		if (sourceUuid == null) {
-			return null;
-		}
+        if (entity != null) {
+            return entity.getName().getString();
+        }
 
-		return findEntityByUuid(world, sourceUuid);
-	}
+        Object networkHandler = client.getConnection();
 
-	private static Object getWaypointSource(Object waypoint) {
-		Object source = invokeNoArg(waypoint, "id", "source", "getSource");
+        if (networkHandler != null) {
+            Object entry = invokeMethod(networkHandler, "getPlayerInfo", uuid);
 
-		if (source != null) {
-			return source;
-		}
+            if (entry == null) {
+                entry = invokeMethod(networkHandler, "getPlayerListEntry", uuid);
+            }
 
-		return getPrivateFieldByClassName(waypoint, "Either");
-	}
-
-	private static UUID getWaypointSourceUuid(Object waypoint) {
-		Object source = getWaypointSource(waypoint);
+            Object profile = null;
 
-		if (source instanceof UUID uuid) {
-			return uuid;
-		}
-
-		Object value = getEitherLeftValue(source);
-
-		if (value instanceof UUID uuid) {
-			return uuid;
-		}
+            if (entry != null) {
+                profile = invokeNoArg(entry, "getProfile", "profile");
+            }
 
-		if (value instanceof String stringValue) {
-			return parseUuid(stringValue);
-		}
+            String profileName = getGameProfileName(profile);
 
-		Object rightValue = getEitherRightValue(source);
+            if (profileName != null && !profileName.isBlank()) {
+                return profileName;
+            }
+        }
 
-		if (rightValue instanceof String stringValue) {
-			return parseUuid(stringValue);
-		}
+        return uuid.toString();
+    }
 
-		return null;
-	}
+    private static String getGameProfileName(Object profile) {
+        if (profile == null) {
+            return null;
+        }
 
-	private static String getWaypointSourceString(Object waypoint) {
-		Object source = getWaypointSource(waypoint);
+        String name = invokeStringMethod(profile, "name");
 
-		if (source instanceof String stringValue) {
-			return stringValue;
-		}
+        if (name != null && !name.isBlank()) {
+            return name;
+        }
 
-		Object rightValue = getEitherRightValue(source);
+        name = invokeStringMethod(profile, "getName");
 
-		if (rightValue instanceof String stringValue) {
-			return stringValue;
-		}
+        if (name != null && !name.isBlank()) {
+            return name;
+        }
 
-		return null;
-	}
+        return null;
+    }
 
-	private static Object getEitherLeftValue(Object either) {
-		if (either == null) {
-			return null;
-		}
+    private static String invokeStringMethod(Object object, String methodName) {
+        Object value = invokeNoArg(object, methodName);
 
-		Object value = invokeNoArg(either, "left");
+        if (value instanceof String stringValue) {
+            return stringValue;
+        }
 
-		if (value instanceof Optional<?> optional) {
-			if (optional.isPresent()) {
-				return optional.get();
-			}
+        return null;
+    }
 
-			return null;
-		}
+    private static String resolveStringIdName(Minecraft client, ClientLevel world, String id) {
+        UUID uuid = parseUuid(id);
 
-		return value;
-	}
+        if (uuid != null) {
+            String uuidName = resolveUuidName(client, world, uuid);
 
-	private static Object getEitherRightValue(Object either) {
-		if (either == null) {
-			return null;
-		}
+            if (!uuidName.equals(uuid.toString())) {
+                return uuidName;
+            }
+        }
 
-		Object value = invokeNoArg(either, "right");
+        String translated = tryTranslateIdentifier(id);
 
-		if (value instanceof Optional<?> optional) {
-			if (optional.isPresent()) {
-				return optional.get();
-			}
+        if (translated != null) {
+            return translated;
+        }
 
-			return null;
-		}
+        return prettifyIdentifier(id);
+    }
 
-		return value;
-	}
+    private static String tryTranslateIdentifier(String id) {
+        if (id == null || id.isBlank()) {
+            return "Waypoint";
+        }
 
-	private static Entity findEntityByUuid(ClientLevel world, UUID uuid) {
-		for (Entity entity : world.entitiesForRendering()) {
-			if (entity.getUUID().equals(uuid)) {
-				return entity;
-			}
-		}
+        String direct = Component.translatable(id).getString();
 
-		return null;
-	}
+        if (!direct.equals(id)) {
+            return direct;
+        }
 
-	private static TargetPosition getWaypointTargetPosition(
-			Entity camera,
-			Object waypoint,
-			Entity sourceEntity
-	) {
-		if (sourceEntity != null) {
-			Vec3 entityPos = new Vec3(
-					sourceEntity.getX(),
-					sourceEntity.getY(),
-					sourceEntity.getZ()
-			);
+        int colonIndex = id.indexOf(':');
 
-			String posText = String.format(
-					"(%d, %d, %d)",
-					(int) entityPos.x,
-					(int) entityPos.y,
-					(int) entityPos.z
-			);
+        if (colonIndex > 0 && colonIndex + 1 < id.length()) {
+            String namespace = id.substring(0, colonIndex);
+            String path = id.substring(colonIndex + 1).replace('/', '.');
+            String entityKey = "entity." + namespace + "." + path;
+            String entityName = Component.translatable(entityKey).getString();
 
-			return new TargetPosition(entityPos, posText);
-		}
+            if (!entityName.equals(entityKey)) {
+                return entityName;
+            }
+        }
 
-		Vec3i pos = getPrivateFieldByType(waypoint, Vec3i.class);
+        return null;
+    }
 
-		if (pos != null) {
-			Vec3 targetPos = new Vec3(pos.getX(), pos.getY(), pos.getZ());
+    private static String prettifyIdentifier(String id) {
+        if (id == null || id.isBlank()) {
+            return "Waypoint";
+        }
 
-			String posText = String.format(
-					"(%d, %d, %d)",
-					pos.getX(),
-					pos.getY(),
-					pos.getZ()
-			);
+        String value = id;
 
-			return new TargetPosition(targetPos, posText);
-		}
+        int colonIndex = value.indexOf(':');
 
-		ChunkPos chunkPos = getPrivateFieldByType(waypoint, ChunkPos.class);
+        if (colonIndex >= 0 && colonIndex + 1 < value.length()) {
+            value = value.substring(colonIndex + 1);
+        }
 
-		if (chunkPos != null) {
-			Integer x = getChunkCenterX(chunkPos);
-			Integer z = getChunkCenterZ(chunkPos);
+        int slashIndex = value.lastIndexOf('/');
 
-			if (x != null && z != null) {
-				Vec3 targetPos = new Vec3(x, camera.getY(), z);
-				String posText = String.format("(%d, ?, %d)", x, z);
+        if (slashIndex >= 0 && slashIndex + 1 < value.length()) {
+            value = value.substring(slashIndex + 1);
+        }
 
-				return new TargetPosition(targetPos, posText);
-			}
-		}
+        value = value.replace('_', ' ');
+        value = value.replace('-', ' ');
+        value = value.replace('.', ' ');
 
-		return new TargetPosition(null, null);
-	}
+        StringBuilder builder = new StringBuilder();
+        boolean capitalizeNext = true;
 
-	private static Integer getChunkCenterX(ChunkPos chunkPos) {
-		Integer x = invokeIntegerMethod(chunkPos, "getMiddleBlockX");
+        for (int i = 0; i < value.length(); i++) {
+            char c = value.charAt(i);
 
-		if (x != null) {
-			return x;
-		}
+            if (Character.isWhitespace(c)) {
+                builder.append(c);
+                capitalizeNext = true;
+                continue;
+            }
 
-		x = invokeIntegerMethod(chunkPos, "getCenterX");
+            if (capitalizeNext) {
+                builder.append(Character.toTitleCase(c));
+                capitalizeNext = false;
+                continue;
+            }
 
-		if (x != null) {
-			return x;
-		}
+            builder.append(c);
+        }
 
-		Integer chunkX = getIntegerField(chunkPos, "x");
+        return builder.toString();
+    }
 
-		if (chunkX != null) {
-			return chunkX * 16 + 8;
-		}
+    private static UUID parseUuid(String value) {
+        if (value == null) {
+            return null;
+        }
 
-		return null;
-	}
+        try {
+            return UUID.fromString(value);
+        } catch (IllegalArgumentException ignored) {
+        }
 
-	private static Integer getChunkCenterZ(ChunkPos chunkPos) {
-		Integer z = invokeIntegerMethod(chunkPos, "getMiddleBlockZ");
+        return null;
+    }
 
-		if (z != null) {
-			return z;
-		}
+    private static Entity findSourceEntity(ClientLevel world, Object waypoint) {
+        UUID sourceUuid = getWaypointSourceUuid(waypoint);
 
-		z = invokeIntegerMethod(chunkPos, "getCenterZ");
+        if (sourceUuid == null) {
+            return null;
+        }
 
-		if (z != null) {
-			return z;
-		}
+        return findEntityByUuid(world, sourceUuid);
+    }
 
-		Integer chunkZ = getIntegerField(chunkPos, "z");
+    private static Object getWaypointSource(Object waypoint) {
+        Object source = invokeNoArg(waypoint, "id", "source", "getSource");
 
-		if (chunkZ != null) {
-			return chunkZ * 16 + 8;
-		}
+        if (source != null) {
+            return source;
+        }
 
-		return null;
-	}
+        return getPrivateFieldByClassName(waypoint, "Either");
+    }
 
-	private static String getWaypointArrow(Entity camera, TargetPosition targetPosition) {
-		if (targetPosition.pos != null) {
-			return getArrow(camera, targetPosition.pos);
-		}
+    private static UUID getWaypointSourceUuid(Object waypoint) {
+        Object source = getWaypointSource(waypoint);
 
-		return "?";
-	}
+        if (source instanceof UUID uuid) {
+            return uuid;
+        }
 
-	private static String getWaypointDistanceText(
-			Entity camera,
-			Object waypoint,
-			TargetPosition targetPosition
-	) {
-		if (targetPosition.pos != null) {
-			double dx = targetPosition.pos.x - camera.getX();
-			double dz = targetPosition.pos.z - camera.getZ();
-			int distance = (int) Math.sqrt(dx * dx + dz * dz);
+        Object value = getEitherLeftValue(source);
 
-			return distance + "m";
-		}
+        if (value instanceof UUID uuid) {
+            return uuid;
+        }
 
-		Double squaredDistance = invokeDoubleMethod(waypoint, "distanceSquared", camera);
+        if (value instanceof String stringValue) {
+            return parseUuid(stringValue);
+        }
 
-		if (squaredDistance == null) {
-			squaredDistance = invokeDoubleMethod(waypoint, "squaredDistanceTo", camera);
-		}
+        Object rightValue = getEitherRightValue(source);
 
-		if (squaredDistance != null && Double.isFinite(squaredDistance) && squaredDistance >= 0.0D) {
-			return ((int) Math.sqrt(squaredDistance)) + "m";
-		}
+        if (rightValue instanceof String stringValue) {
+            return parseUuid(stringValue);
+        }
 
-		return "?m";
-	}
+        return null;
+    }
 
-	private static String getWaypointHealthText(Entity sourceEntity) {
-		if (sourceEntity instanceof LivingEntity livingEntity) {
-			return "❤ " + String.format("%.1f", livingEntity.getHealth());
-		}
+    private static String getWaypointSourceString(Object waypoint) {
+        Object source = getWaypointSource(waypoint);
 
-		return null;
-	}
+        if (source instanceof String stringValue) {
+            return stringValue;
+        }
 
-	private static String getArrow(Entity self, Vec3 targetPos) {
-		Vec3 selfPos = new Vec3(self.getX(), self.getY(), self.getZ());
+        Object rightValue = getEitherRightValue(source);
 
-		double dx = targetPos.x - selfPos.x;
-		double dz = targetPos.z - selfPos.z;
+        if (rightValue instanceof String stringValue) {
+            return stringValue;
+        }
 
-		double targetYaw = Math.toDegrees(Math.atan2(-dx, dz));
-		float selfYaw = Mth.wrapDegrees(self.getYRot());
-		double diff = Mth.wrapDegrees(targetYaw - selfYaw);
+        return null;
+    }
 
-		return getArrowFromDiff(diff);
-	}
+    private static Object getEitherLeftValue(Object either) {
+        if (either == null) {
+            return null;
+        }
 
-	private static String getArrowFromDiff(double diff) {
-		diff = Mth.wrapDegrees(diff);
+        Object value = invokeNoArg(either, "left");
 
-		if (diff >= -22.5 && diff < 22.5) {
-			return "↑";
-		}
+        if (value instanceof Optional<?> optional) {
+            if (optional.isPresent()) {
+                return optional.get();
+            }
 
-		if (diff >= 22.5 && diff < 67.5) {
-			return "↗";
-		}
+            return null;
+        }
 
-		if (diff >= 67.5 && diff < 112.5) {
-			return "→";
-		}
+        return value;
+    }
 
-		if (diff >= 112.5 && diff < 157.5) {
-			return "↘";
-		}
+    private static Object getEitherRightValue(Object either) {
+        if (either == null) {
+            return null;
+        }
 
-		if (diff >= -67.5 && diff < -22.5) {
-			return "↖";
-		}
+        Object value = invokeNoArg(either, "right");
 
-		if (diff >= -112.5 && diff < -67.5) {
-			return "←";
-		}
+        if (value instanceof Optional<?> optional) {
+            if (optional.isPresent()) {
+                return optional.get();
+            }
 
-		if (diff >= -157.5 && diff < -112.5) {
-			return "↙";
-		}
+            return null;
+        }
 
-		return "↓";
-	}
+        return value;
+    }
 
-	private static Object findWaypointManager(Object networkHandler) {
-		Object manager = invokeNoArg(networkHandler, "getWaypointManager", "getWaypointHandler");
+    private static Entity findEntityByUuid(ClientLevel world, UUID uuid) {
+        for (Entity entity : world.entitiesForRendering()) {
+            if (entity.getUUID().equals(uuid)) {
+                return entity;
+            }
+        }
 
-		if (manager != null) {
-			return manager;
-		}
+        return null;
+    }
 
-		return getPrivateFieldByClassName(networkHandler, "Waypoint");
-	}
+    private static TargetPosition getWaypointTargetPosition(
+            Entity camera, Object waypoint, Entity sourceEntity) {
+        if (sourceEntity != null) {
+            Vec3 entityPos =
+                    new Vec3(sourceEntity.getX(), sourceEntity.getY(), sourceEntity.getZ());
 
-	private static boolean hasWaypoints(Object waypointManager) {
-		Object value = invokeNoArg(waypointManager, "hasWaypoints", "hasWaypoint");
+            String posText =
+                    String.format(
+                            "(%d, %d, %d)",
+                            (int) entityPos.x, (int) entityPos.y, (int) entityPos.z);
 
-		if (value instanceof Boolean booleanValue) {
-			return booleanValue;
-		}
+            return new TargetPosition(entityPos, posText);
+        }
 
-		return true;
-	}
+        Vec3i pos = getPrivateFieldByType(waypoint, Vec3i.class);
 
-	@SuppressWarnings("unchecked")
-	private static void forEachWaypoint(Object waypointManager, Entity camera, Consumer<Object> consumer) {
-		Method method = findCompatibleMethod(
-				waypointManager.getClass(),
-				"forEachWaypoint",
-				camera,
-				consumer
-		);
+        if (pos != null) {
+            Vec3 targetPos = new Vec3(pos.getX(), pos.getY(), pos.getZ());
 
-		if (method == null) {
-			return;
-		}
+            String posText = String.format("(%d, %d, %d)", pos.getX(), pos.getY(), pos.getZ());
 
-		try {
-			method.setAccessible(true);
-			method.invoke(waypointManager, camera, consumer);
-		} catch (ReflectiveOperationException | SecurityException ignored) {
-		}
-	}
+            return new TargetPosition(targetPos, posText);
+        }
 
-	@SuppressWarnings("unchecked")
-	private static <T> T getPrivateFieldByType(Object object, Class<T> type) {
-		if (object == null) {
-			return null;
-		}
+        ChunkPos chunkPos = getPrivateFieldByType(waypoint, ChunkPos.class);
 
-		Class<?> clazz = object.getClass();
+        if (chunkPos != null) {
+            Integer x = getChunkCenterX(chunkPos);
+            Integer z = getChunkCenterZ(chunkPos);
 
-		while (clazz != null) {
-			Field[] fields = clazz.getDeclaredFields();
+            if (x != null && z != null) {
+                Vec3 targetPos = new Vec3(x, camera.getY(), z);
+                String posText = String.format("(%d, ?, %d)", x, z);
 
-			for (Field field : fields) {
-				if (!type.isAssignableFrom(field.getType())) {
-					continue;
-				}
+                return new TargetPosition(targetPos, posText);
+            }
+        }
 
-				try {
-					field.setAccessible(true);
-					Object value = field.get(object);
+        return new TargetPosition(null, null);
+    }
 
-					if (type.isInstance(value)) {
-						return (T) value;
-					}
-				} catch (ReflectiveOperationException | SecurityException ignored) {
-				}
-			}
+    private static Integer getChunkCenterX(ChunkPos chunkPos) {
+        Integer x = invokeIntegerMethod(chunkPos, "getMiddleBlockX");
 
-			clazz = clazz.getSuperclass();
-		}
+        if (x != null) {
+            return x;
+        }
 
-		return null;
-	}
+        x = invokeIntegerMethod(chunkPos, "getCenterX");
 
-	private static Object getPrivateFieldByClassName(Object object, String classNamePart) {
-		if (object == null) {
-			return null;
-		}
+        if (x != null) {
+            return x;
+        }
 
-		Class<?> clazz = object.getClass();
+        Integer chunkX = getIntegerField(chunkPos, "x");
 
-		while (clazz != null) {
-			Field[] fields = clazz.getDeclaredFields();
+        if (chunkX != null) {
+            return chunkX * 16 + 8;
+        }
 
-			for (Field field : fields) {
-				if (!field.getType().getSimpleName().contains(classNamePart)) {
-					continue;
-				}
+        return null;
+    }
 
-				try {
-					field.setAccessible(true);
-					Object value = field.get(object);
+    private static Integer getChunkCenterZ(ChunkPos chunkPos) {
+        Integer z = invokeIntegerMethod(chunkPos, "getMiddleBlockZ");
 
-					if (value != null) {
-						return value;
-					}
-				} catch (ReflectiveOperationException | SecurityException ignored) {
-				}
-			}
+        if (z != null) {
+            return z;
+        }
 
-			clazz = clazz.getSuperclass();
-		}
+        z = invokeIntegerMethod(chunkPos, "getCenterZ");
 
-		return null;
-	}
+        if (z != null) {
+            return z;
+        }
 
-	private static Integer invokeIntegerMethod(Object object, String methodName) {
-		Object value = invokeNoArg(object, methodName);
+        Integer chunkZ = getIntegerField(chunkPos, "z");
 
-		if (value instanceof Number number) {
-			return number.intValue();
-		}
+        if (chunkZ != null) {
+            return chunkZ * 16 + 8;
+        }
 
-		return null;
-	}
+        return null;
+    }
 
-	private static Integer getIntegerField(Object object, String fieldName) {
-		if (object == null) {
-			return null;
-		}
+    private static String getWaypointArrow(Entity camera, TargetPosition targetPosition) {
+        if (targetPosition.pos != null) {
+            return getArrow(camera, targetPosition.pos);
+        }
 
-		Class<?> clazz = object.getClass();
+        return "?";
+    }
 
-		while (clazz != null) {
-			try {
-				Field field = clazz.getDeclaredField(fieldName);
-				field.setAccessible(true);
-				Object value = field.get(object);
+    private static String getWaypointDistanceText(
+            Entity camera, Object waypoint, TargetPosition targetPosition) {
+        if (targetPosition.pos != null) {
+            double dx = targetPosition.pos.x - camera.getX();
+            double dz = targetPosition.pos.z - camera.getZ();
+            int distance = (int) Math.sqrt(dx * dx + dz * dz);
 
-				if (value instanceof Number number) {
-					return number.intValue();
-				}
-			} catch (ReflectiveOperationException | SecurityException ignored) {
-			}
+            return distance + "m";
+        }
 
-			clazz = clazz.getSuperclass();
-		}
+        Double squaredDistance = invokeDoubleMethod(waypoint, "distanceSquared", camera);
 
-		return null;
-	}
+        if (squaredDistance == null) {
+            squaredDistance = invokeDoubleMethod(waypoint, "squaredDistanceTo", camera);
+        }
 
-	private static Double invokeDoubleMethod(Object object, String methodName, Object argument) {
-		Object value = invokeMethod(object, methodName, argument);
+        if (squaredDistance != null
+                && Double.isFinite(squaredDistance)
+                && squaredDistance >= 0.0D) {
+            return ((int) Math.sqrt(squaredDistance)) + "m";
+        }
 
-		if (value instanceof Number number) {
-			return number.doubleValue();
-		}
+        return "?m";
+    }
 
-		return null;
-	}
+    private static String getWaypointHealthText(Entity sourceEntity) {
+        if (sourceEntity instanceof LivingEntity livingEntity) {
+            return "❤ " + String.format("%.1f", livingEntity.getHealth());
+        }
 
-	private static Object invokeNoArg(Object object, String... methodNames) {
-		if (object == null) {
-			return null;
-		}
+        return null;
+    }
 
-		for (String methodName : methodNames) {
-			Object value = invokeMethod(object, methodName);
+    private static String getArrow(Entity self, Vec3 targetPos) {
+        Vec3 selfPos = new Vec3(self.getX(), self.getY(), self.getZ());
 
-			if (value != null) {
-				return value;
-			}
-		}
+        double dx = targetPos.x - selfPos.x;
+        double dz = targetPos.z - selfPos.z;
 
-		return null;
-	}
+        double targetYaw = Math.toDegrees(Math.atan2(-dx, dz));
+        float selfYaw = Mth.wrapDegrees(self.getYRot());
+        double diff = Mth.wrapDegrees(targetYaw - selfYaw);
 
-	private static Object invokeMethod(Object object, String methodName, Object... arguments) {
-		if (object == null) {
-			return null;
-		}
+        return getArrowFromDiff(diff);
+    }
 
-		Method method = findCompatibleMethod(object.getClass(), methodName, arguments);
+    private static String getArrowFromDiff(double diff) {
+        diff = Mth.wrapDegrees(diff);
 
-		if (method == null) {
-			return null;
-		}
+        if (diff >= -22.5 && diff < 22.5) {
+            return "↑";
+        }
 
-		try {
-			method.setAccessible(true);
-			return method.invoke(object, arguments);
-		} catch (ReflectiveOperationException | SecurityException ignored) {
-		}
+        if (diff >= 22.5 && diff < 67.5) {
+            return "↗";
+        }
 
-		return null;
-	}
+        if (diff >= 67.5 && diff < 112.5) {
+            return "→";
+        }
 
-	private static Method findCompatibleMethod(Class<?> type, String methodName, Object... arguments) {
-		Class<?> clazz = type;
+        if (diff >= 112.5 && diff < 157.5) {
+            return "↘";
+        }
 
-		while (clazz != null) {
-			Method[] methods = clazz.getDeclaredMethods();
+        if (diff >= -67.5 && diff < -22.5) {
+            return "↖";
+        }
 
-			for (Method method : methods) {
-				if (!method.getName().equals(methodName)) {
-					continue;
-				}
+        if (diff >= -112.5 && diff < -67.5) {
+            return "←";
+        }
 
-				Class<?>[] parameterTypes = method.getParameterTypes();
+        if (diff >= -157.5 && diff < -112.5) {
+            return "↙";
+        }
 
-				if (parameterTypes.length != arguments.length) {
-					continue;
-				}
+        return "↓";
+    }
 
-				if (parametersMatch(parameterTypes, arguments)) {
-					return method;
-				}
-			}
+    private static Object findWaypointManager(Object networkHandler) {
+        Object manager = invokeNoArg(networkHandler, "getWaypointManager", "getWaypointHandler");
 
-			clazz = clazz.getSuperclass();
-		}
+        if (manager != null) {
+            return manager;
+        }
 
-		return null;
-	}
+        return getPrivateFieldByClassName(networkHandler, "Waypoint");
+    }
 
-	private static boolean parametersMatch(Class<?>[] parameterTypes, Object[] arguments) {
-		for (int i = 0; i < parameterTypes.length; i++) {
-			Object argument = arguments[i];
+    private static boolean hasWaypoints(Object waypointManager) {
+        Object value = invokeNoArg(waypointManager, "hasWaypoints", "hasWaypoint");
 
-			if (argument == null) {
-				continue;
-			}
+        if (value instanceof Boolean booleanValue) {
+            return booleanValue;
+        }
 
-			Class<?> parameterType = wrapPrimitive(parameterTypes[i]);
+        return true;
+    }
 
-			if (!parameterType.isAssignableFrom(argument.getClass())) {
-				return false;
-			}
-		}
+    @SuppressWarnings("unchecked")
+    private static void forEachWaypoint(
+            Object waypointManager, Entity camera, Consumer<Object> consumer) {
+        Method method =
+                findCompatibleMethod(
+                        waypointManager.getClass(), "forEachWaypoint", camera, consumer);
 
-		return true;
-	}
+        if (method == null) {
+            return;
+        }
 
-	private static Class<?> wrapPrimitive(Class<?> type) {
-		if (!type.isPrimitive()) {
-			return type;
-		}
+        try {
+            method.setAccessible(true);
+            method.invoke(waypointManager, camera, consumer);
+        } catch (ReflectiveOperationException | SecurityException ignored) {
+        }
+    }
 
-		if (type == int.class) {
-			return Integer.class;
-		}
+    @SuppressWarnings("unchecked")
+    private static <T> T getPrivateFieldByType(Object object, Class<T> type) {
+        if (object == null) {
+            return null;
+        }
 
-		if (type == long.class) {
-			return Long.class;
-		}
+        Class<?> clazz = object.getClass();
 
-		if (type == float.class) {
-			return Float.class;
-		}
+        while (clazz != null) {
+            Field[] fields = clazz.getDeclaredFields();
 
-		if (type == double.class) {
-			return Double.class;
-		}
+            for (Field field : fields) {
+                if (!type.isAssignableFrom(field.getType())) {
+                    continue;
+                }
 
-		if (type == boolean.class) {
-			return Boolean.class;
-		}
+                try {
+                    field.setAccessible(true);
+                    Object value = field.get(object);
 
-		if (type == byte.class) {
-			return Byte.class;
-		}
+                    if (type.isInstance(value)) {
+                        return (T) value;
+                    }
+                } catch (ReflectiveOperationException | SecurityException ignored) {
+                }
+            }
 
-		if (type == short.class) {
-			return Short.class;
-		}
+            clazz = clazz.getSuperclass();
+        }
 
-		if (type == char.class) {
-			return Character.class;
-		}
+        return null;
+    }
 
-		return type;
-	}
+    private static Object getPrivateFieldByClassName(Object object, String classNamePart) {
+        if (object == null) {
+            return null;
+        }
 
-	private record TargetPosition(Vec3 pos, String posText) {
-	}
+        Class<?> clazz = object.getClass();
 
-	private record WaypointDisplay(
-			String name,
-			String arrow,
-			String distanceText,
-			String healthText,
-			String posText
-	) {
-	}
+        while (clazz != null) {
+            Field[] fields = clazz.getDeclaredFields();
+
+            for (Field field : fields) {
+                if (!field.getType().getSimpleName().contains(classNamePart)) {
+                    continue;
+                }
+
+                try {
+                    field.setAccessible(true);
+                    Object value = field.get(object);
+
+                    if (value != null) {
+                        return value;
+                    }
+                } catch (ReflectiveOperationException | SecurityException ignored) {
+                }
+            }
+
+            clazz = clazz.getSuperclass();
+        }
+
+        return null;
+    }
+
+    private static Integer invokeIntegerMethod(Object object, String methodName) {
+        Object value = invokeNoArg(object, methodName);
+
+        if (value instanceof Number number) {
+            return number.intValue();
+        }
+
+        return null;
+    }
+
+    private static Integer getIntegerField(Object object, String fieldName) {
+        if (object == null) {
+            return null;
+        }
+
+        Class<?> clazz = object.getClass();
+
+        while (clazz != null) {
+            try {
+                Field field = clazz.getDeclaredField(fieldName);
+                field.setAccessible(true);
+                Object value = field.get(object);
+
+                if (value instanceof Number number) {
+                    return number.intValue();
+                }
+            } catch (ReflectiveOperationException | SecurityException ignored) {
+            }
+
+            clazz = clazz.getSuperclass();
+        }
+
+        return null;
+    }
+
+    private static Double invokeDoubleMethod(Object object, String methodName, Object argument) {
+        Object value = invokeMethod(object, methodName, argument);
+
+        if (value instanceof Number number) {
+            return number.doubleValue();
+        }
+
+        return null;
+    }
+
+    private static Object invokeNoArg(Object object, String... methodNames) {
+        if (object == null) {
+            return null;
+        }
+
+        for (String methodName : methodNames) {
+            Object value = invokeMethod(object, methodName);
+
+            if (value != null) {
+                return value;
+            }
+        }
+
+        return null;
+    }
+
+    private static Object invokeMethod(Object object, String methodName, Object... arguments) {
+        if (object == null) {
+            return null;
+        }
+
+        Method method = findCompatibleMethod(object.getClass(), methodName, arguments);
+
+        if (method == null) {
+            return null;
+        }
+
+        try {
+            method.setAccessible(true);
+            return method.invoke(object, arguments);
+        } catch (ReflectiveOperationException | SecurityException ignored) {
+        }
+
+        return null;
+    }
+
+    private static Method findCompatibleMethod(
+            Class<?> type, String methodName, Object... arguments) {
+        Class<?> clazz = type;
+
+        while (clazz != null) {
+            Method[] methods = clazz.getDeclaredMethods();
+
+            for (Method method : methods) {
+                if (!method.getName().equals(methodName)) {
+                    continue;
+                }
+
+                Class<?>[] parameterTypes = method.getParameterTypes();
+
+                if (parameterTypes.length != arguments.length) {
+                    continue;
+                }
+
+                if (parametersMatch(parameterTypes, arguments)) {
+                    return method;
+                }
+            }
+
+            clazz = clazz.getSuperclass();
+        }
+
+        return null;
+    }
+
+    private static boolean parametersMatch(Class<?>[] parameterTypes, Object[] arguments) {
+        for (int i = 0; i < parameterTypes.length; i++) {
+            Object argument = arguments[i];
+
+            if (argument == null) {
+                continue;
+            }
+
+            Class<?> parameterType = wrapPrimitive(parameterTypes[i]);
+
+            if (!parameterType.isAssignableFrom(argument.getClass())) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    private static Class<?> wrapPrimitive(Class<?> type) {
+        if (!type.isPrimitive()) {
+            return type;
+        }
+
+        if (type == int.class) {
+            return Integer.class;
+        }
+
+        if (type == long.class) {
+            return Long.class;
+        }
+
+        if (type == float.class) {
+            return Float.class;
+        }
+
+        if (type == double.class) {
+            return Double.class;
+        }
+
+        if (type == boolean.class) {
+            return Boolean.class;
+        }
+
+        if (type == byte.class) {
+            return Byte.class;
+        }
+
+        if (type == short.class) {
+            return Short.class;
+        }
+
+        if (type == char.class) {
+            return Character.class;
+        }
+
+        return type;
+    }
+
+    private record TargetPosition(Vec3 pos, String posText) {}
+
+    private record WaypointDisplay(
+            String name, String arrow, String distanceText, String healthText, String posText) {}
 }

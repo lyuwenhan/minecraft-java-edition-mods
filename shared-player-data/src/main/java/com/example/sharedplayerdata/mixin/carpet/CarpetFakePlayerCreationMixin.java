@@ -2,11 +2,13 @@ package com.example.sharedplayerdata.mixin.carpet;
 
 import com.example.sharedplayerdata.SharedPlayerDataMod;
 import com.example.sharedplayerdata.SharedProfileManager;
+
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
+
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -19,8 +21,7 @@ import java.util.UUID;
 public abstract class CarpetFakePlayerCreationMixin {
     private static final ThreadLocal<UUID> sharedPlayerData$reservedSpawnUuid = new ThreadLocal<>();
 
-    private CarpetFakePlayerCreationMixin() {
-    }
+    private CarpetFakePlayerCreationMixin() {}
 
     @Inject(method = "createFake", at = @At("HEAD"), cancellable = true)
     private static void sharedPlayerData$prepareBoundCreateFake(
@@ -32,16 +33,16 @@ public abstract class CarpetFakePlayerCreationMixin {
             ResourceKey<Level> dimensionId,
             GameType gamemode,
             boolean flying,
-            CallbackInfoReturnable<Boolean> cir
-    ) {
+            CallbackInfoReturnable<Boolean> cir) {
         sharedPlayerData$reservedSpawnUuid.remove();
-        SharedProfileManager.CarpetFakeSpawnDecision decision = SharedPlayerDataMod.MANAGER.prepareCarpetFakeSpawn(server, username);
+        SharedProfileManager.CarpetFakeSpawnDecision decision =
+                SharedPlayerDataMod.MANAGER.prepareCarpetFakeSpawn(server, username);
 
         if (!decision.allowed()) {
             SharedPlayerDataMod.LOGGER.warn(
-                    "Blocked Carpet fake player spawn for '{}' because the Shared Player Data group is already occupied or could not be prepared.",
-                    username
-            );
+                    "Blocked Carpet fake player spawn for '{}' because the Shared Player Data group"
+                        + " is already occupied or could not be prepared.",
+                    username);
             cir.setReturnValue(false);
             return;
         }
@@ -63,8 +64,7 @@ public abstract class CarpetFakePlayerCreationMixin {
             ResourceKey<Level> dimensionId,
             GameType gamemode,
             boolean flying,
-            CallbackInfoReturnable<Boolean> cir
-    ) {
+            CallbackInfoReturnable<Boolean> cir) {
         UUID reservedUuid = sharedPlayerData$reservedSpawnUuid.get();
         sharedPlayerData$reservedSpawnUuid.remove();
 
@@ -80,9 +80,9 @@ public abstract class CarpetFakePlayerCreationMixin {
 
         SharedPlayerDataMod.MANAGER.releaseExternalReservation(reservedUuid);
         SharedPlayerDataMod.LOGGER.warn(
-                "Released Shared Player Data reservation for Carpet fake spawn '{}' ({}) because Carpet did not create the fake player.",
+                "Released Shared Player Data reservation for Carpet fake spawn '{}' ({}) because"
+                    + " Carpet did not create the fake player.",
                 username,
-                reservedUuid
-        );
+                reservedUuid);
     }
 }

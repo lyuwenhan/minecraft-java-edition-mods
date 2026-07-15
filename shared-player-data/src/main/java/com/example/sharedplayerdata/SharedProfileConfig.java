@@ -7,8 +7,10 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonParser;
+
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.server.players.NameAndId;
+
 import org.slf4j.Logger;
 
 import java.io.IOException;
@@ -32,7 +34,8 @@ import java.util.UUID;
 import java.util.regex.Pattern;
 
 public final class SharedProfileConfig {
-    private static final Gson GSON = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
+    private static final Gson GSON =
+            new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
     private static final Pattern SAFE_GROUP_ID = Pattern.compile("[A-Za-z0-9._-]+");
     private static final String CONFIG_FILE_NAME = "shared-player-data.json";
 
@@ -50,8 +53,7 @@ public final class SharedProfileConfig {
             boolean backupRealPlayerFilesBeforeOverwrite,
             boolean syncRealUuidFilesOnSave,
             Map<UUID, String> knownNames,
-            List<Group> groups
-    ) {
+            List<Group> groups) {
         this.path = path;
         this.rejectReasonKey = rejectReasonKey;
         this.backupRealPlayerFilesBeforeOverwrite = backupRealPlayerFilesBeforeOverwrite;
@@ -63,7 +65,8 @@ public final class SharedProfileConfig {
 
     public static SharedProfileConfig empty() {
         Path path = FabricLoader.getInstance().getConfigDir().resolve(CONFIG_FILE_NAME);
-        return new SharedProfileConfig(path, "multiplayer.disconnect.duplicate_login", true, true, Map.of(), List.of());
+        return new SharedProfileConfig(
+                path, "multiplayer.disconnect.duplicate_login", true, true, Map.of(), List.of());
     }
 
     public static SharedProfileConfig loadOrCreate(Logger logger) throws IOException {
@@ -72,17 +75,28 @@ public final class SharedProfileConfig {
         if (Files.notExists(path)) {
             Files.createDirectories(path.getParent());
             writeDefault(path);
-            logger.warn("Created default Shared Player Data config at {}. Edit groups before using the mod.", path);
+            logger.warn(
+                    "Created default Shared Player Data config at {}. Edit groups before using the"
+                        + " mod.",
+                    path);
         }
 
         try (Reader reader = Files.newBufferedReader(path, StandardCharsets.UTF_8)) {
             JsonObject root = JsonParser.parseReader(reader).getAsJsonObject();
-            String rejectReasonKey = getString(root, "rejectReasonKey", "multiplayer.disconnect.duplicate_login");
-            boolean backupRealPlayerFilesBeforeOverwrite = getBoolean(root, "backupRealPlayerFilesBeforeOverwrite", true);
+            String rejectReasonKey =
+                    getString(root, "rejectReasonKey", "multiplayer.disconnect.duplicate_login");
+            boolean backupRealPlayerFilesBeforeOverwrite =
+                    getBoolean(root, "backupRealPlayerFilesBeforeOverwrite", true);
             boolean syncRealUuidFilesOnSave = getBoolean(root, "syncRealUuidFilesOnSave", true);
             Map<UUID, String> knownNames = readKnownNames(root);
             List<Group> groups = readGroups(root, logger);
-            return new SharedProfileConfig(path, rejectReasonKey, backupRealPlayerFilesBeforeOverwrite, syncRealUuidFilesOnSave, knownNames, groups);
+            return new SharedProfileConfig(
+                    path,
+                    rejectReasonKey,
+                    backupRealPlayerFilesBeforeOverwrite,
+                    syncRealUuidFilesOnSave,
+                    knownNames,
+                    groups);
         } catch (IllegalStateException | JsonParseException exception) {
             throw new IOException("Invalid JSON in " + path, exception);
         }
@@ -185,7 +199,13 @@ public final class SharedProfileConfig {
 
         Map<UUID, String> updatedKnownNames = new LinkedHashMap<>(knownNames);
         updatedKnownNames.put(uuid, name);
-        return new SharedProfileConfig(path, rejectReasonKey, backupRealPlayerFilesBeforeOverwrite, syncRealUuidFilesOnSave, updatedKnownNames, groups);
+        return new SharedProfileConfig(
+                path,
+                rejectReasonKey,
+                backupRealPlayerFilesBeforeOverwrite,
+                syncRealUuidFilesOnSave,
+                updatedKnownNames,
+                groups);
     }
 
     public SharedProfileConfig withRememberedNames(NameAndId... nameAndIds) {
@@ -204,18 +224,35 @@ public final class SharedProfileConfig {
             return this;
         }
 
-        return new SharedProfileConfig(path, rejectReasonKey, backupRealPlayerFilesBeforeOverwrite, syncRealUuidFilesOnSave, updatedKnownNames, groups);
+        return new SharedProfileConfig(
+                path,
+                rejectReasonKey,
+                backupRealPlayerFilesBeforeOverwrite,
+                syncRealUuidFilesOnSave,
+                updatedKnownNames,
+                groups);
     }
 
     public SharedProfileConfig withCreatedGroup() {
         List<Group> updatedGroups = new ArrayList<>(groups);
         updatedGroups.add(new Group(chooseNewGroupId(), Set.of()));
-        return new SharedProfileConfig(path, rejectReasonKey, backupRealPlayerFilesBeforeOverwrite, syncRealUuidFilesOnSave, knownNames, updatedGroups);
+        return new SharedProfileConfig(
+                path,
+                rejectReasonKey,
+                backupRealPlayerFilesBeforeOverwrite,
+                syncRealUuidFilesOnSave,
+                knownNames,
+                updatedGroups);
     }
 
-    public SharedProfileConfig withPlayerAddedToGroup(int groupNumber, UUID uuid) throws IOException {
-        Group targetGroup = groupByNumber(groupNumber)
-                .orElseThrow(() -> new IOException("Playerbind group does not exist: " + groupNumber));
+    public SharedProfileConfig withPlayerAddedToGroup(int groupNumber, UUID uuid)
+            throws IOException {
+        Group targetGroup =
+                groupByNumber(groupNumber)
+                        .orElseThrow(
+                                () ->
+                                        new IOException(
+                                                "Playerbind group does not exist: " + groupNumber));
         Optional<Group> optionalExistingGroup = groupFor(uuid);
 
         if (optionalExistingGroup.isPresent()) {
@@ -227,7 +264,8 @@ public final class SharedProfileConfig {
         }
 
         Set<UUID> mergedMembers = new LinkedHashSet<>(targetGroup.members());
-        optionalExistingGroup.ifPresent(existingGroup -> mergedMembers.addAll(existingGroup.members()));
+        optionalExistingGroup.ifPresent(
+                existingGroup -> mergedMembers.addAll(existingGroup.members()));
         mergedMembers.add(uuid);
 
         List<Group> updatedGroups = new ArrayList<>();
@@ -245,12 +283,22 @@ public final class SharedProfileConfig {
             }
         }
 
-        return new SharedProfileConfig(path, rejectReasonKey, backupRealPlayerFilesBeforeOverwrite, syncRealUuidFilesOnSave, knownNames, updatedGroups);
+        return new SharedProfileConfig(
+                path,
+                rejectReasonKey,
+                backupRealPlayerFilesBeforeOverwrite,
+                syncRealUuidFilesOnSave,
+                knownNames,
+                updatedGroups);
     }
 
     public SharedProfileConfig withGroupRemoved(int groupNumber) throws IOException {
-        Group removedGroup = groupByNumber(groupNumber)
-                .orElseThrow(() -> new IOException("Playerbind group does not exist: " + groupNumber));
+        Group removedGroup =
+                groupByNumber(groupNumber)
+                        .orElseThrow(
+                                () ->
+                                        new IOException(
+                                                "Playerbind group does not exist: " + groupNumber));
         List<Group> updatedGroups = new ArrayList<>();
 
         for (Group group : groups) {
@@ -261,12 +309,23 @@ public final class SharedProfileConfig {
             updatedGroups.add(group);
         }
 
-        return new SharedProfileConfig(path, rejectReasonKey, backupRealPlayerFilesBeforeOverwrite, syncRealUuidFilesOnSave, knownNames, updatedGroups);
+        return new SharedProfileConfig(
+                path,
+                rejectReasonKey,
+                backupRealPlayerFilesBeforeOverwrite,
+                syncRealUuidFilesOnSave,
+                knownNames,
+                updatedGroups);
     }
 
-    public SharedProfileConfig withPlayerRemovedFromGroup(int groupNumber, UUID uuid) throws IOException {
-        Group targetGroup = groupByNumber(groupNumber)
-                .orElseThrow(() -> new IOException("Playerbind group does not exist: " + groupNumber));
+    public SharedProfileConfig withPlayerRemovedFromGroup(int groupNumber, UUID uuid)
+            throws IOException {
+        Group targetGroup =
+                groupByNumber(groupNumber)
+                        .orElseThrow(
+                                () ->
+                                        new IOException(
+                                                "Playerbind group does not exist: " + groupNumber));
 
         if (!targetGroup.members().contains(uuid)) {
             throw new IOException("UUID " + uuid + " is not in playerbind group " + groupNumber);
@@ -284,7 +343,13 @@ public final class SharedProfileConfig {
             }
         }
 
-        return new SharedProfileConfig(path, rejectReasonKey, backupRealPlayerFilesBeforeOverwrite, syncRealUuidFilesOnSave, knownNames, updatedGroups);
+        return new SharedProfileConfig(
+                path,
+                rejectReasonKey,
+                backupRealPlayerFilesBeforeOverwrite,
+                syncRealUuidFilesOnSave,
+                knownNames,
+                updatedGroups);
     }
 
     public SharedProfileConfig withBoundPlayers(UUID firstUuid, UUID secondUuid) {
@@ -300,7 +365,8 @@ public final class SharedProfileConfig {
             }
         }
 
-        String mergedGroupId = chooseMergedGroupId(optionalFirstGroup, optionalSecondGroup, firstUuid);
+        String mergedGroupId =
+                chooseMergedGroupId(optionalFirstGroup, optionalSecondGroup, firstUuid);
         Set<UUID> mergedMembers = new LinkedHashSet<>();
 
         optionalFirstGroup.ifPresent(group -> mergedMembers.addAll(group.members()));
@@ -326,19 +392,27 @@ public final class SharedProfileConfig {
         }
 
         updatedGroups.add(new Group(mergedGroupId, mergedMembers));
-        return new SharedProfileConfig(path, rejectReasonKey, backupRealPlayerFilesBeforeOverwrite, syncRealUuidFilesOnSave, knownNames, updatedGroups);
+        return new SharedProfileConfig(
+                path,
+                rejectReasonKey,
+                backupRealPlayerFilesBeforeOverwrite,
+                syncRealUuidFilesOnSave,
+                knownNames,
+                updatedGroups);
     }
 
     public static void validateGroupId(String id) throws IOException {
         if (!SAFE_GROUP_ID.matcher(id).matches()) {
-            throw new IOException("Invalid group id: " + id + ". Allowed characters: A-Z a-z 0-9 . _ -");
+            throw new IOException(
+                    "Invalid group id: " + id + ". Allowed characters: A-Z a-z 0-9 . _ -");
         }
     }
 
     private JsonObject toJsonObject() {
         JsonObject root = new JsonObject();
         root.addProperty("rejectReasonKey", rejectReasonKey);
-        root.addProperty("backupRealPlayerFilesBeforeOverwrite", backupRealPlayerFilesBeforeOverwrite);
+        root.addProperty(
+                "backupRealPlayerFilesBeforeOverwrite", backupRealPlayerFilesBeforeOverwrite);
         root.addProperty("syncRealUuidFilesOnSave", syncRealUuidFilesOnSave);
 
         JsonObject knownNamesObject = new JsonObject();
@@ -366,7 +440,10 @@ public final class SharedProfileConfig {
         return root;
     }
 
-    private String chooseMergedGroupId(Optional<Group> optionalFirstGroup, Optional<Group> optionalSecondGroup, UUID firstUuid) {
+    private String chooseMergedGroupId(
+            Optional<Group> optionalFirstGroup,
+            Optional<Group> optionalSecondGroup,
+            UUID firstUuid) {
         if (optionalFirstGroup.isPresent()) {
             return optionalFirstGroup.get().id();
         }
@@ -439,14 +516,18 @@ public final class SharedProfileConfig {
             JsonElement nameElement = entry.getValue();
 
             if (!nameElement.isJsonPrimitive()) {
-                throw new IOException("config field 'knownNames' contains a non-string name for UUID: " + entry.getKey());
+                throw new IOException(
+                        "config field 'knownNames' contains a non-string name for UUID: "
+                                + entry.getKey());
             }
 
             try {
                 UUID uuid = UUID.fromString(entry.getKey());
                 result.put(uuid, nameElement.getAsString());
             } catch (IllegalArgumentException exception) {
-                throw new IOException("config field 'knownNames' contains invalid UUID: " + entry.getKey(), exception);
+                throw new IOException(
+                        "config field 'knownNames' contains invalid UUID: " + entry.getKey(),
+                        exception);
             }
         }
 
@@ -496,12 +577,16 @@ public final class SharedProfileConfig {
                 try {
                     members.add(UUID.fromString(uuidText));
                 } catch (IllegalArgumentException exception) {
-                    throw new IOException("group '" + id + "' contains invalid UUID: " + uuidText, exception);
+                    throw new IOException(
+                            "group '" + id + "' contains invalid UUID: " + uuidText, exception);
                 }
             }
 
             if (members.size() < 2) {
-                logger.warn("Group '{}' has fewer than 2 members; it will still load but has no sharing effect.", id);
+                logger.warn(
+                        "Group '{}' has fewer than 2 members; it will still load but has no sharing"
+                            + " effect.",
+                        id);
             }
 
             result.add(new Group(id, members));
@@ -517,7 +602,14 @@ public final class SharedProfileConfig {
             for (UUID uuid : group.members()) {
                 Group existing = result.put(uuid, group);
                 if (existing != null) {
-                    throw new IllegalArgumentException("UUID " + uuid + " is assigned to both group '" + existing.id() + "' and group '" + group.id() + "'");
+                    throw new IllegalArgumentException(
+                            "UUID "
+                                    + uuid
+                                    + " is assigned to both group '"
+                                    + existing.id()
+                                    + "' and group '"
+                                    + group.id()
+                                    + "'");
                 }
             }
         }
@@ -563,6 +655,5 @@ public final class SharedProfileConfig {
         }
     }
 
-    public record KnownPlayer(UUID uuid, String name) {
-    }
+    public record KnownPlayer(UUID uuid, String name) {}
 }

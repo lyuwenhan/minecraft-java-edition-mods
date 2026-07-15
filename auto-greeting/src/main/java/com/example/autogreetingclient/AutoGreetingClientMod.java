@@ -1,430 +1,901 @@
 package com.example.autogreetingclient;
 
+import static net.fabricmc.fabric.api.client.command.v2.ClientCommands.*;
+
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.builder.RequiredArgumentBuilder;
+
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.minecraft.network.chat.Component;
+
 import java.util.List;
-import static net.fabricmc.fabric.api.client.command.v2.ClientCommands.*;
 
 public class AutoGreetingClientMod implements ClientModInitializer {
 
-	public static long joinWorldAt = 0L;
-	public static AutoGreetingClientConfig CONFIG = AutoGreetingClientConfigHolder.get();
+    public static long joinWorldAt = 0L;
+    public static AutoGreetingClientConfig CONFIG = AutoGreetingClientConfigHolder.get();
 
-	private static void sendList(
-		FabricClientCommandSource src,
-		String title,
-		List<String> list
-	) {
-		if (list.isEmpty()) {
-			src.sendFeedback(Component.literal(title + ": <empty>"));
-			return;
-		}
+    private static void sendList(FabricClientCommandSource src, String title, List<String> list) {
+        if (list.isEmpty()) {
+            src.sendFeedback(Component.literal(title + ": <empty>"));
+            return;
+        }
 
-		src.sendFeedback(Component.literal(title + ":"));
+        src.sendFeedback(Component.literal(title + ":"));
 
-		int i = 1;
-		for (String s : list) {
-			src.sendFeedback(Component.literal(i++ + ". " + s));
-		}
-	}
+        int i = 1;
+        for (String s : list) {
+            src.sendFeedback(Component.literal(i++ + ". " + s));
+        }
+    }
 
-	private static LiteralArgumentBuilder<FabricClientCommandSource> buildStringListNode(
-		String name,
-		String title,
-		List<String> list,
-		boolean isType1
-	) {
-		String pattern = isType1 ? "message" : "pattern";
-		RequiredArgumentBuilder<FabricClientCommandSource, String> addArg = argument(pattern, StringArgumentType.greedyString());
-		addArg = addArg.executes(ctx -> {
-			String msg = StringArgumentType.getString(ctx, pattern);
-			if (!isType1 && list.contains(msg)) {
-				ctx.getSource().sendFeedback(Component.literal(title + ": \"" + msg + "\" already exists."));
-				return 1;
-			}
-			list.add(msg);
-			CONFIG.save();
-			ctx.getSource().sendFeedback(Component.literal(title + ": appended \"" + msg + "\"."));
-			return 1;
-		});
-		if (isType1) {
-			addArg = addArg.then(argument("index", IntegerArgumentType.integer(1))
-				.executes(ctx -> {
-					String msg = StringArgumentType.getString(ctx, pattern);
-					int index = IntegerArgumentType.getInteger(ctx, "index");
-					if (!isType1 && list.contains(msg)) {
-						ctx.getSource().sendFeedback(Component.literal(title + ": \"" + msg + "\" already exists."));
-						return 1;
-					}
-					boolean isAppend = index > list.size();
-					int pos = Math.max(0, Math.min(index - 1, list.size()));
-					list.add(pos, msg);
-					CONFIG.save();
-					if (isAppend) {
-						ctx.getSource().sendFeedback(Component.literal(title + ": appended \"" + msg + "\"."));
-					} else {
-						ctx.getSource().sendFeedback(Component.literal(title + ": inserted \"" + msg + "\" at position " + index + "."));
-					}
-					return 1;
-				})
-			);
-		}
+    private static LiteralArgumentBuilder<FabricClientCommandSource> buildStringListNode(
+            String name, String title, List<String> list, boolean isType1) {
+        String pattern = isType1 ? "message" : "pattern";
+        RequiredArgumentBuilder<FabricClientCommandSource, String> addArg =
+                argument(pattern, StringArgumentType.greedyString());
+        addArg =
+                addArg.executes(
+                        ctx -> {
+                            String msg = StringArgumentType.getString(ctx, pattern);
+                            if (!isType1 && list.contains(msg)) {
+                                ctx.getSource()
+                                        .sendFeedback(
+                                                Component.literal(
+                                                        title
+                                                                + ": \""
+                                                                + msg
+                                                                + "\" already exists."));
+                                return 1;
+                            }
+                            list.add(msg);
+                            CONFIG.save();
+                            ctx.getSource()
+                                    .sendFeedback(
+                                            Component.literal(
+                                                    title + ": appended \"" + msg + "\"."));
+                            return 1;
+                        });
+        if (isType1) {
+            addArg =
+                    addArg.then(
+                            argument("index", IntegerArgumentType.integer(1))
+                                    .executes(
+                                            ctx -> {
+                                                String msg =
+                                                        StringArgumentType.getString(ctx, pattern);
+                                                int index =
+                                                        IntegerArgumentType.getInteger(
+                                                                ctx, "index");
+                                                if (!isType1 && list.contains(msg)) {
+                                                    ctx.getSource()
+                                                            .sendFeedback(
+                                                                    Component.literal(
+                                                                            title
+                                                                                    + ": \""
+                                                                                    + msg
+                                                                                    + "\" already"
+                                                                                    + " exists."));
+                                                    return 1;
+                                                }
+                                                boolean isAppend = index > list.size();
+                                                int pos =
+                                                        Math.max(
+                                                                0,
+                                                                Math.min(index - 1, list.size()));
+                                                list.add(pos, msg);
+                                                CONFIG.save();
+                                                if (isAppend) {
+                                                    ctx.getSource()
+                                                            .sendFeedback(
+                                                                    Component.literal(
+                                                                            title
+                                                                                    + ": appended"
+                                                                                    + " \""
+                                                                                    + msg
+                                                                                    + "\"."));
+                                                } else {
+                                                    ctx.getSource()
+                                                            .sendFeedback(
+                                                                    Component.literal(
+                                                                            title
+                                                                                    + ": inserted"
+                                                                                    + " \""
+                                                                                    + msg
+                                                                                    + "\" at"
+                                                                                    + " position "
+                                                                                    + index
+                                                                                    + "."));
+                                                }
+                                                return 1;
+                                            }));
+        }
 
-		return literal(name)
-			.then(literal("add").then(addArg))
+        return literal(name)
+                .then(literal("add").then(addArg))
+                .then(
+                        literal("remove")
+                                .executes(
+                                        ctx -> {
+                                            if (list.isEmpty()) {
+                                                ctx.getSource()
+                                                        .sendFeedback(
+                                                                Component.literal(
+                                                                        title + " is empty."));
+                                                return 1;
+                                            }
+                                            list.remove(list.size() - 1);
+                                            CONFIG.save();
+                                            ctx.getSource()
+                                                    .sendFeedback(
+                                                            Component.literal(
+                                                                    title
+                                                                            + ": removed last"
+                                                                            + " item."));
+                                            return 1;
+                                        })
+                                .then(
+                                        argument("index", IntegerArgumentType.integer(1))
+                                                .executes(
+                                                        ctx -> {
+                                                            int index =
+                                                                    IntegerArgumentType.getInteger(
+                                                                            ctx, "index");
+                                                            if (index < 1 || index > list.size()) {
+                                                                ctx.getSource()
+                                                                        .sendFeedback(
+                                                                                Component.literal(
+                                                                                        title
+                                                                                                + ": index"
+                                                                                                + " out of"
+                                                                                                + " range."));
+                                                                return 1;
+                                                            }
 
-			.then(literal("remove")
-				.executes(ctx -> {
-					if (list.isEmpty()) {
-						ctx.getSource().sendFeedback(Component.literal(title + " is empty."));
-						return 1;
-					}
-					list.remove(list.size() - 1);
-					CONFIG.save();
-					ctx.getSource().sendFeedback(Component.literal(title + ": removed last item."));
-					return 1;
-				})
+                                                            list.remove(index - 1);
+                                                            CONFIG.save();
+                                                            ctx.getSource()
+                                                                    .sendFeedback(
+                                                                            Component.literal(
+                                                                                    title
+                                                                                            + ": removed"
+                                                                                            + " #"
+                                                                                            + index
+                                                                                            + "."));
+                                                            return 1;
+                                                        }))
+                                .then(
+                                        literal("all")
+                                                .executes(
+                                                        ctx -> {
+                                                            if (list.isEmpty()) {
+                                                                ctx.getSource()
+                                                                        .sendFeedback(
+                                                                                Component.literal(
+                                                                                        title
+                                                                                                + " is already"
+                                                                                                + " empty."));
+                                                                return 1;
+                                                            }
+                                                            list.clear();
+                                                            CONFIG.save();
+                                                            ctx.getSource()
+                                                                    .sendFeedback(
+                                                                            Component.literal(
+                                                                                    title
+                                                                                            + ": all"
+                                                                                            + " entries"
+                                                                                            + " cleared."));
+                                                            return 1;
+                                                        })))
+                .then(
+                        literal("list")
+                                .executes(
+                                        ctx -> {
+                                            sendList(ctx.getSource(), title, list);
+                                            return 1;
+                                        }));
+    }
 
-				.then(argument("index", IntegerArgumentType.integer(1))
-					.executes(ctx -> {
-						int index = IntegerArgumentType.getInteger(ctx, "index");
-						if (index < 1 || index > list.size()) {
-							ctx.getSource().sendFeedback(Component.literal(title + ": index out of range."));
-							return 1;
-						}
+    @Override
+    public void onInitializeClient() {
+        AutoGreetingClientDelay.init();
 
-						list.remove(index - 1);
-						CONFIG.save();
-						ctx.getSource().sendFeedback(Component.literal(title + ": removed #" + index + "."));
-						return 1;
-					})
-				)
+        ClientPlayConnectionEvents.JOIN.register(
+                (handler, sender, client) -> {
+                    AutoGreetingClientMod.joinWorldAt = System.currentTimeMillis();
+                    AutoGreetingClientDelay.resetPlayerTracking();
+                    if (!CONFIG.selfEnabled) {
+                        return;
+                    }
 
-				.then(literal("all")
-					.executes(ctx -> {
-						if (list.isEmpty()) {
-							ctx.getSource().sendFeedback(Component.literal(title + " is already empty."));
-							return 1;
-						}
-						list.clear();
-						CONFIG.save();
-						ctx.getSource().sendFeedback(Component.literal(title + ": all entries cleared."));
-						return 1;
-					})
-				)
-			)
+                    AutoGreetingClientDelay.greetSelfAfter1Second();
+                });
 
-			.then(literal("list")
-				.executes(ctx -> {
-					sendList(ctx.getSource(), title, list);
-					return 1;
-				})
-			);
-	}
+        ClientCommandRegistrationCallback.EVENT.register(
+                (dispatcher, registryAccess) -> {
+                    dispatcher.register(
+                            literal("autogreet")
+                                    .then(
+                                            literal("self")
+                                                    .then(
+                                                            literal("status")
+                                                                    .executes(
+                                                                            ctx -> {
+                                                                                ctx.getSource()
+                                                                                        .sendFeedback(
+                                                                                                Component
+                                                                                                        .literal(
+                                                                                                                "Auto greeting"
+                                                                                                                    + " "
+                                                                                                                        + (CONFIG.selfEnabled
+                                                                                                                                ? "enabled"
+                                                                                                                                : "disabled")
+                                                                                                                        + "."));
+                                                                                return 1;
+                                                                            })
+                                                                    .then(
+                                                                            literal("enable")
+                                                                                    .executes(
+                                                                                            ctx -> {
+                                                                                                CONFIG.selfEnabled =
+                                                                                                        true;
+                                                                                                CONFIG
+                                                                                                        .save();
+                                                                                                ctx.getSource()
+                                                                                                        .sendFeedback(
+                                                                                                                Component
+                                                                                                                        .literal(
+                                                                                                                                "Auto greeting"
+                                                                                                                                    + " enabled."));
+                                                                                                return 1;
+                                                                                            }))
+                                                                    .then(
+                                                                            literal("disable")
+                                                                                    .executes(
+                                                                                            ctx -> {
+                                                                                                CONFIG.selfEnabled =
+                                                                                                        false;
+                                                                                                CONFIG
+                                                                                                        .save();
+                                                                                                ctx.getSource()
+                                                                                                        .sendFeedback(
+                                                                                                                Component
+                                                                                                                        .literal(
+                                                                                                                                "Auto greeting"
+                                                                                                                                    + " disabled."));
+                                                                                                return 1;
+                                                                                            }))
+                                                                    .then(
+                                                                            literal("toggle")
+                                                                                    .executes(
+                                                                                            ctx -> {
+                                                                                                CONFIG.selfEnabled =
+                                                                                                        !CONFIG.selfEnabled;
+                                                                                                CONFIG
+                                                                                                        .save();
+                                                                                                ctx.getSource()
+                                                                                                        .sendFeedback(
+                                                                                                                Component
+                                                                                                                        .literal(
+                                                                                                                                "Auto greeting"
+                                                                                                                                    + " is "
+                                                                                                                                        + (CONFIG.selfEnabled
+                                                                                                                                                ? "enabled"
+                                                                                                                                                : "disabled")
+                                                                                                                                        + "."));
+                                                                                                return 1;
+                                                                                            })))
+                                                    .then(
+                                                            buildStringListNode(
+                                                                    "message",
+                                                                    "Auto greeting",
+                                                                    CONFIG.selfGreetings,
+                                                                    true)))
+                                    .then(
+                                            literal("other")
+                                                    .then(
+                                                            literal("status")
+                                                                    .executes(
+                                                                            ctx -> {
+                                                                                ctx.getSource()
+                                                                                        .sendFeedback(
+                                                                                                Component
+                                                                                                        .literal(
+                                                                                                                "Auto greeting"
+                                                                                                                    + " "
+                                                                                                                        + (CONFIG.otherEnabled
+                                                                                                                                ? "enabled"
+                                                                                                                                : "disabled")));
+                                                                                return 1;
+                                                                            })
+                                                                    .then(
+                                                                            literal("enable")
+                                                                                    .executes(
+                                                                                            ctx -> {
+                                                                                                CONFIG.otherEnabled =
+                                                                                                        true;
+                                                                                                CONFIG
+                                                                                                        .save();
+                                                                                                ctx.getSource()
+                                                                                                        .sendFeedback(
+                                                                                                                Component
+                                                                                                                        .literal(
+                                                                                                                                "Auto greeting"
+                                                                                                                                    + " enabled."));
+                                                                                                return 1;
+                                                                                            }))
+                                                                    .then(
+                                                                            literal("disable")
+                                                                                    .executes(
+                                                                                            ctx -> {
+                                                                                                CONFIG.otherEnabled =
+                                                                                                        false;
+                                                                                                CONFIG
+                                                                                                        .save();
+                                                                                                ctx.getSource()
+                                                                                                        .sendFeedback(
+                                                                                                                Component
+                                                                                                                        .literal(
+                                                                                                                                "Auto greeting"
+                                                                                                                                    + " disabled."));
+                                                                                                return 1;
+                                                                                            }))
+                                                                    .then(
+                                                                            literal("toggle")
+                                                                                    .executes(
+                                                                                            ctx -> {
+                                                                                                CONFIG.otherEnabled =
+                                                                                                        !CONFIG.otherEnabled;
+                                                                                                CONFIG
+                                                                                                        .save();
+                                                                                                ctx.getSource()
+                                                                                                        .sendFeedback(
+                                                                                                                Component
+                                                                                                                        .literal(
+                                                                                                                                "Auto greeting"
+                                                                                                                                    + " "
+                                                                                                                                        + (CONFIG.otherEnabled
+                                                                                                                                                ? "enabled"
+                                                                                                                                                : "disabled")
+                                                                                                                                        + "."));
+                                                                                                return 1;
+                                                                                            })))
+                                                    .then(
+                                                            buildStringListNode(
+                                                                    "message",
+                                                                    "Auto greeting",
+                                                                    CONFIG.otherGreetings,
+                                                                    true))
+                                                    .then(
+                                                            literal("blacklist")
+                                                                    .then(
+                                                                            literal("match")
+                                                                                    .then(
+                                                                                            buildStringListNode(
+                                                                                                    "equal",
+                                                                                                    "Blacklist"
+                                                                                                        + " (Name"
+                                                                                                        + " Equal)",
+                                                                                                    CONFIG.otherBlacklist
+                                                                                                            .equal,
+                                                                                                    false))
+                                                                                    .then(
+                                                                                            buildStringListNode(
+                                                                                                    "contain",
+                                                                                                    "Blacklist"
+                                                                                                        + " (Name"
+                                                                                                        + " Contain)",
+                                                                                                    CONFIG.otherBlacklist
+                                                                                                            .contain,
+                                                                                                    false))
+                                                                                    .then(
+                                                                                            buildStringListNode(
+                                                                                                    "startWith",
+                                                                                                    "Blacklist"
+                                                                                                        + " (Name"
+                                                                                                        + " Starts"
+                                                                                                        + " with)",
+                                                                                                    CONFIG.otherBlacklist
+                                                                                                            .startWith,
+                                                                                                    false))
+                                                                                    .then(
+                                                                                            buildStringListNode(
+                                                                                                    "endWith",
+                                                                                                    "Blacklist"
+                                                                                                        + " (Name"
+                                                                                                        + " Ends"
+                                                                                                        + " with)",
+                                                                                                    CONFIG.otherBlacklist
+                                                                                                            .endWith,
+                                                                                                    false))
+                                                                                    .then(
+                                                                                            literal(
+                                                                                                            "list")
+                                                                                                    .executes(
+                                                                                                            ctx -> {
+                                                                                                                sendList(
+                                                                                                                        ctx
+                                                                                                                                .getSource(),
+                                                                                                                        "Match"
+                                                                                                                            + " (Name"
+                                                                                                                            + " Equal)",
+                                                                                                                        CONFIG.otherBlacklist
+                                                                                                                                .equal);
+                                                                                                                sendList(
+                                                                                                                        ctx
+                                                                                                                                .getSource(),
+                                                                                                                        "Match"
+                                                                                                                            + " (Name"
+                                                                                                                            + " Contain)",
+                                                                                                                        CONFIG.otherBlacklist
+                                                                                                                                .contain);
+                                                                                                                sendList(
+                                                                                                                        ctx
+                                                                                                                                .getSource(),
+                                                                                                                        "Match"
+                                                                                                                            + " (Name"
+                                                                                                                            + " Starts"
+                                                                                                                            + " with)",
+                                                                                                                        CONFIG.otherBlacklist
+                                                                                                                                .startWith);
+                                                                                                                sendList(
+                                                                                                                        ctx
+                                                                                                                                .getSource(),
+                                                                                                                        "Match"
+                                                                                                                            + " (Name"
+                                                                                                                            + " Ends"
+                                                                                                                            + " with)",
+                                                                                                                        CONFIG.otherBlacklist
+                                                                                                                                .endWith);
+                                                                                                                return 1;
+                                                                                                            })))
+                                                                    .then(
+                                                                            literal("except")
+                                                                                    .then(
+                                                                                            buildStringListNode(
+                                                                                                    "equal",
+                                                                                                    "Except"
+                                                                                                        + " (Name"
+                                                                                                        + " Equal)",
+                                                                                                    CONFIG.otherBlacklistExcept
+                                                                                                            .equal,
+                                                                                                    false))
+                                                                                    .then(
+                                                                                            buildStringListNode(
+                                                                                                    "contain",
+                                                                                                    "Except"
+                                                                                                        + " (Name"
+                                                                                                        + " Contain)",
+                                                                                                    CONFIG.otherBlacklistExcept
+                                                                                                            .contain,
+                                                                                                    false))
+                                                                                    .then(
+                                                                                            buildStringListNode(
+                                                                                                    "startWith",
+                                                                                                    "Except"
+                                                                                                        + " (Name"
+                                                                                                        + " Starts"
+                                                                                                        + " with)",
+                                                                                                    CONFIG.otherBlacklistExcept
+                                                                                                            .startWith,
+                                                                                                    false))
+                                                                                    .then(
+                                                                                            buildStringListNode(
+                                                                                                    "endWith",
+                                                                                                    "Except"
+                                                                                                        + " (Name"
+                                                                                                        + " Ends"
+                                                                                                        + " with)",
+                                                                                                    CONFIG.otherBlacklistExcept
+                                                                                                            .endWith,
+                                                                                                    false))
+                                                                                    .then(
+                                                                                            literal(
+                                                                                                            "list")
+                                                                                                    .executes(
+                                                                                                            ctx -> {
+                                                                                                                sendList(
+                                                                                                                        ctx
+                                                                                                                                .getSource(),
+                                                                                                                        "Except"
+                                                                                                                            + " (Name"
+                                                                                                                            + " Equal)",
+                                                                                                                        CONFIG.otherBlacklistExcept
+                                                                                                                                .equal);
+                                                                                                                sendList(
+                                                                                                                        ctx
+                                                                                                                                .getSource(),
+                                                                                                                        "Except"
+                                                                                                                            + " (Name"
+                                                                                                                            + " Contain)",
+                                                                                                                        CONFIG.otherBlacklistExcept
+                                                                                                                                .contain);
+                                                                                                                sendList(
+                                                                                                                        ctx
+                                                                                                                                .getSource(),
+                                                                                                                        "Except"
+                                                                                                                            + " (Name"
+                                                                                                                            + " Starts"
+                                                                                                                            + " with)",
+                                                                                                                        CONFIG.otherBlacklistExcept
+                                                                                                                                .startWith);
+                                                                                                                sendList(
+                                                                                                                        ctx
+                                                                                                                                .getSource(),
+                                                                                                                        "Except"
+                                                                                                                            + " (Name"
+                                                                                                                            + " Ends"
+                                                                                                                            + " with)",
+                                                                                                                        CONFIG.otherBlacklistExcept
+                                                                                                                                .endWith);
+                                                                                                                return 1;
+                                                                                                            })))
+                                                                    .then(
+                                                                            literal("list")
+                                                                                    .executes(
+                                                                                            ctx -> {
+                                                                                                sendList(
+                                                                                                        ctx
+                                                                                                                .getSource(),
+                                                                                                        "Match"
+                                                                                                            + " (Name"
+                                                                                                            + " Equal)",
+                                                                                                        CONFIG.otherBlacklist
+                                                                                                                .equal);
+                                                                                                sendList(
+                                                                                                        ctx
+                                                                                                                .getSource(),
+                                                                                                        "Match"
+                                                                                                            + " (Name"
+                                                                                                            + " Contain)",
+                                                                                                        CONFIG.otherBlacklist
+                                                                                                                .contain);
+                                                                                                sendList(
+                                                                                                        ctx
+                                                                                                                .getSource(),
+                                                                                                        "Match"
+                                                                                                            + " (Name"
+                                                                                                            + " Starts"
+                                                                                                            + " with)",
+                                                                                                        CONFIG.otherBlacklist
+                                                                                                                .startWith);
+                                                                                                sendList(
+                                                                                                        ctx
+                                                                                                                .getSource(),
+                                                                                                        "Match"
+                                                                                                            + " (Name"
+                                                                                                            + " Ends"
+                                                                                                            + " with)",
+                                                                                                        CONFIG.otherBlacklist
+                                                                                                                .endWith);
 
-	@Override
-	public void onInitializeClient() {
-		AutoGreetingClientDelay.init();
+                                                                                                sendList(
+                                                                                                        ctx
+                                                                                                                .getSource(),
+                                                                                                        "Except"
+                                                                                                            + " (Name"
+                                                                                                            + " Equal)",
+                                                                                                        CONFIG.otherBlacklistExcept
+                                                                                                                .equal);
+                                                                                                sendList(
+                                                                                                        ctx
+                                                                                                                .getSource(),
+                                                                                                        "Except"
+                                                                                                            + " (Name"
+                                                                                                            + " Contain)",
+                                                                                                        CONFIG.otherBlacklistExcept
+                                                                                                                .contain);
+                                                                                                sendList(
+                                                                                                        ctx
+                                                                                                                .getSource(),
+                                                                                                        "Except"
+                                                                                                            + " (Name"
+                                                                                                            + " Starts"
+                                                                                                            + " with)",
+                                                                                                        CONFIG.otherBlacklistExcept
+                                                                                                                .startWith);
+                                                                                                sendList(
+                                                                                                        ctx
+                                                                                                                .getSource(),
+                                                                                                        "Except"
+                                                                                                            + " (Name"
+                                                                                                            + " Ends"
+                                                                                                            + " with)",
+                                                                                                        CONFIG.otherBlacklistExcept
+                                                                                                                .endWith);
+                                                                                                return 1;
+                                                                                            }))
+                                                                    .then(
+                                                                            literal("clear")
+                                                                                    .then(
+                                                                                            literal(
+                                                                                                            "confirm")
+                                                                                                    .executes(
+                                                                                                            ctx -> {
+                                                                                                                CONFIG
+                                                                                                                        .otherBlacklist
+                                                                                                                        .clear();
+                                                                                                                CONFIG
+                                                                                                                        .otherBlacklistExcept
+                                                                                                                        .clear();
+                                                                                                                CONFIG
+                                                                                                                        .save();
+                                                                                                                ctx.getSource()
+                                                                                                                        .sendFeedback(
+                                                                                                                                Component
+                                                                                                                                        .literal(
+                                                                                                                                                "Blacklist"
+                                                                                                                                                    + " cleared."));
+                                                                                                                return 1;
+                                                                                                            }))))
+                                                    .then(
+                                                            literal("whitelist")
+                                                                    .then(
+                                                                            literal("match")
+                                                                                    .then(
+                                                                                            buildStringListNode(
+                                                                                                    "equal",
+                                                                                                    "Whitelist"
+                                                                                                        + " (Name"
+                                                                                                        + " Equal)",
+                                                                                                    CONFIG.otherWhitelist
+                                                                                                            .equal,
+                                                                                                    false))
+                                                                                    .then(
+                                                                                            buildStringListNode(
+                                                                                                    "contain",
+                                                                                                    "Whitelist"
+                                                                                                        + " (Name"
+                                                                                                        + " Contain)",
+                                                                                                    CONFIG.otherWhitelist
+                                                                                                            .contain,
+                                                                                                    false))
+                                                                                    .then(
+                                                                                            buildStringListNode(
+                                                                                                    "startWith",
+                                                                                                    "Whitelist"
+                                                                                                        + " (Name"
+                                                                                                        + " Starts"
+                                                                                                        + " with)",
+                                                                                                    CONFIG.otherWhitelist
+                                                                                                            .startWith,
+                                                                                                    false))
+                                                                                    .then(
+                                                                                            buildStringListNode(
+                                                                                                    "endWith",
+                                                                                                    "Whitelist"
+                                                                                                        + " (Name"
+                                                                                                        + " Ends"
+                                                                                                        + " with)",
+                                                                                                    CONFIG.otherWhitelist
+                                                                                                            .endWith,
+                                                                                                    false))
+                                                                                    .then(
+                                                                                            literal(
+                                                                                                            "list")
+                                                                                                    .executes(
+                                                                                                            ctx -> {
+                                                                                                                sendList(
+                                                                                                                        ctx
+                                                                                                                                .getSource(),
+                                                                                                                        "Whitelist"
+                                                                                                                            + " (Name"
+                                                                                                                            + " Equal)",
+                                                                                                                        CONFIG.otherWhitelist
+                                                                                                                                .equal);
+                                                                                                                sendList(
+                                                                                                                        ctx
+                                                                                                                                .getSource(),
+                                                                                                                        "Whitelist"
+                                                                                                                            + " (Name"
+                                                                                                                            + " Contain)",
+                                                                                                                        CONFIG.otherWhitelist
+                                                                                                                                .contain);
+                                                                                                                sendList(
+                                                                                                                        ctx
+                                                                                                                                .getSource(),
+                                                                                                                        "Whitelist"
+                                                                                                                            + " (Name"
+                                                                                                                            + " Starts"
+                                                                                                                            + " with)",
+                                                                                                                        CONFIG.otherWhitelist
+                                                                                                                                .startWith);
+                                                                                                                sendList(
+                                                                                                                        ctx
+                                                                                                                                .getSource(),
+                                                                                                                        "Whitelist"
+                                                                                                                            + " (Name"
+                                                                                                                            + " Ends"
+                                                                                                                            + " with)",
+                                                                                                                        CONFIG.otherWhitelist
+                                                                                                                                .endWith);
+                                                                                                                return 1;
+                                                                                                            })))
+                                                                    .then(
+                                                                            literal("except")
+                                                                                    .then(
+                                                                                            buildStringListNode(
+                                                                                                    "equal",
+                                                                                                    "Except"
+                                                                                                        + " (Name"
+                                                                                                        + " Equal)",
+                                                                                                    CONFIG.otherWhitelistExcept
+                                                                                                            .equal,
+                                                                                                    false))
+                                                                                    .then(
+                                                                                            buildStringListNode(
+                                                                                                    "contain",
+                                                                                                    "Except"
+                                                                                                        + " (Name"
+                                                                                                        + " Contain)",
+                                                                                                    CONFIG.otherWhitelistExcept
+                                                                                                            .contain,
+                                                                                                    false))
+                                                                                    .then(
+                                                                                            buildStringListNode(
+                                                                                                    "startWith",
+                                                                                                    "Except"
+                                                                                                        + " (Name"
+                                                                                                        + " Starts"
+                                                                                                        + " with)",
+                                                                                                    CONFIG.otherWhitelistExcept
+                                                                                                            .startWith,
+                                                                                                    false))
+                                                                                    .then(
+                                                                                            buildStringListNode(
+                                                                                                    "endWith",
+                                                                                                    "Except"
+                                                                                                        + " (Name"
+                                                                                                        + " Ends"
+                                                                                                        + " with)",
+                                                                                                    CONFIG.otherWhitelistExcept
+                                                                                                            .endWith,
+                                                                                                    false))
+                                                                                    .then(
+                                                                                            literal(
+                                                                                                            "list")
+                                                                                                    .executes(
+                                                                                                            ctx -> {
+                                                                                                                sendList(
+                                                                                                                        ctx
+                                                                                                                                .getSource(),
+                                                                                                                        "Except"
+                                                                                                                            + " (Name"
+                                                                                                                            + " Equal)",
+                                                                                                                        CONFIG.otherWhitelistExcept
+                                                                                                                                .equal);
+                                                                                                                sendList(
+                                                                                                                        ctx
+                                                                                                                                .getSource(),
+                                                                                                                        "Except"
+                                                                                                                            + " (Name"
+                                                                                                                            + " Contain)",
+                                                                                                                        CONFIG.otherWhitelistExcept
+                                                                                                                                .contain);
+                                                                                                                sendList(
+                                                                                                                        ctx
+                                                                                                                                .getSource(),
+                                                                                                                        "Except"
+                                                                                                                            + " (Name"
+                                                                                                                            + " Starts"
+                                                                                                                            + " with)",
+                                                                                                                        CONFIG.otherWhitelistExcept
+                                                                                                                                .startWith);
+                                                                                                                sendList(
+                                                                                                                        ctx
+                                                                                                                                .getSource(),
+                                                                                                                        "Except"
+                                                                                                                            + " (Name"
+                                                                                                                            + " Ends"
+                                                                                                                            + " with)",
+                                                                                                                        CONFIG.otherWhitelistExcept
+                                                                                                                                .endWith);
+                                                                                                                return 1;
+                                                                                                            })))
+                                                                    .then(
+                                                                            literal("list")
+                                                                                    .executes(
+                                                                                            ctx -> {
+                                                                                                sendList(
+                                                                                                        ctx
+                                                                                                                .getSource(),
+                                                                                                        "Whitelist"
+                                                                                                            + " (Name"
+                                                                                                            + " Equal)",
+                                                                                                        CONFIG.otherWhitelist
+                                                                                                                .equal);
+                                                                                                sendList(
+                                                                                                        ctx
+                                                                                                                .getSource(),
+                                                                                                        "Whitelist"
+                                                                                                            + " (Name"
+                                                                                                            + " Contain)",
+                                                                                                        CONFIG.otherWhitelist
+                                                                                                                .contain);
+                                                                                                sendList(
+                                                                                                        ctx
+                                                                                                                .getSource(),
+                                                                                                        "Whitelist"
+                                                                                                            + " (Name"
+                                                                                                            + " Starts"
+                                                                                                            + " with)",
+                                                                                                        CONFIG.otherWhitelist
+                                                                                                                .startWith);
+                                                                                                sendList(
+                                                                                                        ctx
+                                                                                                                .getSource(),
+                                                                                                        "Whitelist"
+                                                                                                            + " (Name"
+                                                                                                            + " Ends"
+                                                                                                            + " with)",
+                                                                                                        CONFIG.otherWhitelist
+                                                                                                                .endWith);
 
-		ClientPlayConnectionEvents.JOIN.register((handler, sender, client) -> {
-			AutoGreetingClientMod.joinWorldAt = System.currentTimeMillis();
-			AutoGreetingClientDelay.resetPlayerTracking();
-			if (!CONFIG.selfEnabled) {
-				return;
-			}
-
-			AutoGreetingClientDelay.greetSelfAfter1Second();
-		});
-
-		ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) -> {
-			dispatcher.register(literal("autogreet")
-				.then(literal("self")
-					.then(literal("status")
-						.executes(ctx -> {
-							ctx.getSource().sendFeedback(Component.literal("Auto greeting " + (CONFIG.selfEnabled ? "enabled" : "disabled") + "."));
-							return 1;
-						})
-
-						.then(literal("enable").executes(ctx -> {
-							CONFIG.selfEnabled = true;
-							CONFIG.save();
-							ctx.getSource().sendFeedback(Component.literal("Auto greeting enabled."));
-							return 1;
-						}))
-
-						.then(literal("disable").executes(ctx -> {
-							CONFIG.selfEnabled = false;
-							CONFIG.save();
-							ctx.getSource().sendFeedback(Component.literal("Auto greeting disabled."));
-							return 1;
-						}))
-
-						.then(literal("toggle").executes(ctx -> {
-							CONFIG.selfEnabled = !CONFIG.selfEnabled;
-							CONFIG.save();
-							ctx.getSource().sendFeedback(Component.literal("Auto greeting is " + (CONFIG.selfEnabled ? "enabled" : "disabled") + "."));
-							return 1;
-						}))
-					)
-
-					.then(buildStringListNode("message", "Auto greeting", CONFIG.selfGreetings, true))
-				)
-				.then(literal("other")
-					.then(literal("status")
-						.executes(ctx -> {
-							ctx.getSource().sendFeedback(Component.literal("Auto greeting " + (CONFIG.otherEnabled ? "enabled" : "disabled")));
-							return 1;
-						})
-
-						.then(literal("enable").executes(ctx -> {
-							CONFIG.otherEnabled = true;
-							CONFIG.save();
-							ctx.getSource().sendFeedback(Component.literal("Auto greeting enabled."));
-							return 1;
-						}))
-
-						.then(literal("disable").executes(ctx -> {
-							CONFIG.otherEnabled = false;
-							CONFIG.save();
-							ctx.getSource().sendFeedback(Component.literal("Auto greeting disabled."));
-							return 1;
-						}))
-
-						.then(literal("toggle").executes(ctx -> {
-							CONFIG.otherEnabled = !CONFIG.otherEnabled;
-							CONFIG.save();
-							ctx.getSource().sendFeedback(Component.literal("Auto greeting " + (CONFIG.otherEnabled ? "enabled" : "disabled") + "."));
-							return 1;
-						}))
-					)
-					.then(buildStringListNode("message", "Auto greeting", CONFIG.otherGreetings, true))
-
-					.then(literal("blacklist")
-						.then(literal("match")
-							.then(buildStringListNode(
-								"equal",
-								"Blacklist (Name Equal)",
-								CONFIG.otherBlacklist.equal,
-								false
-							))
-
-							.then(buildStringListNode(
-								"contain",
-								"Blacklist (Name Contain)",
-								CONFIG.otherBlacklist.contain,
-								false
-							))
-
-							.then(buildStringListNode(
-								"startWith",
-								"Blacklist (Name Starts with)",
-								CONFIG.otherBlacklist.startWith,
-								false
-							))
-
-							.then(buildStringListNode(
-								"endWith",
-								"Blacklist (Name Ends with)",
-								CONFIG.otherBlacklist.endWith,
-								false
-							))
-
-							.then(literal("list")
-								.executes(ctx -> {
-									sendList(ctx.getSource(), "Match (Name Equal)", CONFIG.otherBlacklist.equal);
-									sendList(ctx.getSource(), "Match (Name Contain)", CONFIG.otherBlacklist.contain);
-									sendList(ctx.getSource(), "Match (Name Starts with)", CONFIG.otherBlacklist.startWith);
-									sendList(ctx.getSource(), "Match (Name Ends with)", CONFIG.otherBlacklist.endWith);
-									return 1;
-								})
-							)
-						)
-
-						.then(literal("except")
-							.then(buildStringListNode(
-								"equal",
-								"Except (Name Equal)",
-								CONFIG.otherBlacklistExcept.equal,
-								false
-							))
-
-							.then(buildStringListNode(
-								"contain",
-								"Except (Name Contain)",
-								CONFIG.otherBlacklistExcept.contain,
-								false
-							))
-
-							.then(buildStringListNode(
-								"startWith",
-								"Except (Name Starts with)",
-								CONFIG.otherBlacklistExcept.startWith,
-								false
-							))
-
-							.then(buildStringListNode(
-								"endWith",
-								"Except (Name Ends with)",
-								CONFIG.otherBlacklistExcept.endWith,
-								false
-							))
-
-							.then(literal("list")
-								.executes(ctx -> {
-									sendList(ctx.getSource(), "Except (Name Equal)", CONFIG.otherBlacklistExcept.equal);
-									sendList(ctx.getSource(), "Except (Name Contain)", CONFIG.otherBlacklistExcept.contain);
-									sendList(ctx.getSource(), "Except (Name Starts with)", CONFIG.otherBlacklistExcept.startWith);
-									sendList(ctx.getSource(), "Except (Name Ends with)", CONFIG.otherBlacklistExcept.endWith);
-									return 1;
-								})
-							)
-						)
-
-						.then(literal("list")
-							.executes(ctx -> {
-								sendList(ctx.getSource(), "Match (Name Equal)", CONFIG.otherBlacklist.equal);
-								sendList(ctx.getSource(), "Match (Name Contain)", CONFIG.otherBlacklist.contain);
-								sendList(ctx.getSource(), "Match (Name Starts with)", CONFIG.otherBlacklist.startWith);
-								sendList(ctx.getSource(), "Match (Name Ends with)", CONFIG.otherBlacklist.endWith);
-
-								sendList(ctx.getSource(), "Except (Name Equal)", CONFIG.otherBlacklistExcept.equal);
-								sendList(ctx.getSource(), "Except (Name Contain)", CONFIG.otherBlacklistExcept.contain);
-								sendList(ctx.getSource(), "Except (Name Starts with)", CONFIG.otherBlacklistExcept.startWith);
-								sendList(ctx.getSource(), "Except (Name Ends with)", CONFIG.otherBlacklistExcept.endWith);
-								return 1;
-							})
-						)
-
-						.then(literal("clear")
-							.then(literal("confirm")
-								.executes(ctx -> {
-									CONFIG.otherBlacklist.clear();
-									CONFIG.otherBlacklistExcept.clear();
-									CONFIG.save();
-									ctx.getSource().sendFeedback(Component.literal("Blacklist cleared."));
-									return 1;
-								})
-							)
-						)
-					)
-
-					.then(literal("whitelist")
-						.then(literal("match")
-							.then(buildStringListNode(
-								"equal",
-								"Whitelist (Name Equal)",
-								CONFIG.otherWhitelist.equal,
-								false
-							))
-
-							.then(buildStringListNode(
-								"contain",
-								"Whitelist (Name Contain)",
-								CONFIG.otherWhitelist.contain,
-								false
-							))
-
-							.then(buildStringListNode(
-								"startWith",
-								"Whitelist (Name Starts with)",
-								CONFIG.otherWhitelist.startWith,
-								false
-							))
-
-							.then(buildStringListNode(
-								"endWith",
-								"Whitelist (Name Ends with)",
-								CONFIG.otherWhitelist.endWith,
-								false
-							))
-
-							.then(literal("list")
-								.executes(ctx -> {
-									sendList(ctx.getSource(), "Whitelist (Name Equal)", CONFIG.otherWhitelist.equal);
-									sendList(ctx.getSource(), "Whitelist (Name Contain)", CONFIG.otherWhitelist.contain);
-									sendList(ctx.getSource(), "Whitelist (Name Starts with)", CONFIG.otherWhitelist.startWith);
-									sendList(ctx.getSource(), "Whitelist (Name Ends with)", CONFIG.otherWhitelist.endWith);
-									return 1;
-								})
-							)
-						)
-
-						.then(literal("except")
-							.then(buildStringListNode(
-								"equal",
-								"Except (Name Equal)",
-								CONFIG.otherWhitelistExcept.equal,
-								false
-							))
-
-							.then(buildStringListNode(
-								"contain",
-								"Except (Name Contain)",
-								CONFIG.otherWhitelistExcept.contain,
-								false
-							))
-
-							.then(buildStringListNode(
-								"startWith",
-								"Except (Name Starts with)",
-								CONFIG.otherWhitelistExcept.startWith,
-								false
-							))
-
-							.then(buildStringListNode(
-								"endWith",
-								"Except (Name Ends with)",
-								CONFIG.otherWhitelistExcept.endWith,
-								false
-							))
-
-							.then(literal("list")
-								.executes(ctx -> {
-									sendList(ctx.getSource(), "Except (Name Equal)", CONFIG.otherWhitelistExcept.equal);
-									sendList(ctx.getSource(), "Except (Name Contain)", CONFIG.otherWhitelistExcept.contain);
-									sendList(ctx.getSource(), "Except (Name Starts with)", CONFIG.otherWhitelistExcept.startWith);
-									sendList(ctx.getSource(), "Except (Name Ends with)", CONFIG.otherWhitelistExcept.endWith);
-									return 1;
-								})
-							)
-						)
-
-						.then(literal("list")
-							.executes(ctx -> {
-								sendList(ctx.getSource(), "Whitelist (Name Equal)", CONFIG.otherWhitelist.equal);
-								sendList(ctx.getSource(), "Whitelist (Name Contain)", CONFIG.otherWhitelist.contain);
-								sendList(ctx.getSource(), "Whitelist (Name Starts with)", CONFIG.otherWhitelist.startWith);
-								sendList(ctx.getSource(), "Whitelist (Name Ends with)", CONFIG.otherWhitelist.endWith);
-
-								sendList(ctx.getSource(), "Except (Name Equal)", CONFIG.otherWhitelistExcept.equal);
-								sendList(ctx.getSource(), "Except (Name Contain)", CONFIG.otherWhitelistExcept.contain);
-								sendList(ctx.getSource(), "Except (Name Starts with)", CONFIG.otherWhitelistExcept.startWith);
-								sendList(ctx.getSource(), "Except (Name Ends with)", CONFIG.otherWhitelistExcept.endWith);
-								return 1;
-							})
-						)
-
-						.then(literal("clear")
-							.then(literal("confirm")
-								.executes(ctx -> {
-									CONFIG.otherWhitelist.clear();
-									CONFIG.otherWhitelistExcept.clear();
-									CONFIG.save();
-									ctx.getSource().sendFeedback(Component.literal("Whitelist cleared."));
-									return 1;
-								})
-							)
-						)
-					)
-				)
-			);
-		});
-	}
+                                                                                                sendList(
+                                                                                                        ctx
+                                                                                                                .getSource(),
+                                                                                                        "Except"
+                                                                                                            + " (Name"
+                                                                                                            + " Equal)",
+                                                                                                        CONFIG.otherWhitelistExcept
+                                                                                                                .equal);
+                                                                                                sendList(
+                                                                                                        ctx
+                                                                                                                .getSource(),
+                                                                                                        "Except"
+                                                                                                            + " (Name"
+                                                                                                            + " Contain)",
+                                                                                                        CONFIG.otherWhitelistExcept
+                                                                                                                .contain);
+                                                                                                sendList(
+                                                                                                        ctx
+                                                                                                                .getSource(),
+                                                                                                        "Except"
+                                                                                                            + " (Name"
+                                                                                                            + " Starts"
+                                                                                                            + " with)",
+                                                                                                        CONFIG.otherWhitelistExcept
+                                                                                                                .startWith);
+                                                                                                sendList(
+                                                                                                        ctx
+                                                                                                                .getSource(),
+                                                                                                        "Except"
+                                                                                                            + " (Name"
+                                                                                                            + " Ends"
+                                                                                                            + " with)",
+                                                                                                        CONFIG.otherWhitelistExcept
+                                                                                                                .endWith);
+                                                                                                return 1;
+                                                                                            }))
+                                                                    .then(
+                                                                            literal("clear")
+                                                                                    .then(
+                                                                                            literal(
+                                                                                                            "confirm")
+                                                                                                    .executes(
+                                                                                                            ctx -> {
+                                                                                                                CONFIG
+                                                                                                                        .otherWhitelist
+                                                                                                                        .clear();
+                                                                                                                CONFIG
+                                                                                                                        .otherWhitelistExcept
+                                                                                                                        .clear();
+                                                                                                                CONFIG
+                                                                                                                        .save();
+                                                                                                                ctx.getSource()
+                                                                                                                        .sendFeedback(
+                                                                                                                                Component
+                                                                                                                                        .literal(
+                                                                                                                                                "Whitelist"
+                                                                                                                                                    + " cleared."));
+                                                                                                                return 1;
+                                                                                                            }))))));
+                });
+    }
 }

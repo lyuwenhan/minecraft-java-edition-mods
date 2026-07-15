@@ -1,7 +1,8 @@
 package com.example.sharedplayerdata;
 
-import net.minecraft.world.level.storage.LevelResource;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.world.level.storage.LevelResource;
+
 import org.slf4j.Logger;
 
 import java.io.IOException;
@@ -17,7 +18,8 @@ import java.util.UUID;
 import java.util.stream.Stream;
 
 public final class PlayerDataFileMirror {
-    private static final DateTimeFormatter BACKUP_TIMESTAMP_FORMATTER = DateTimeFormatter.ofPattern("yyyyMMdd-HHmmss-SSS").withZone(ZoneOffset.UTC);
+    private static final DateTimeFormatter BACKUP_TIMESTAMP_FORMATTER =
+            DateTimeFormatter.ofPattern("yyyyMMdd-HHmmss-SSS").withZone(ZoneOffset.UTC);
 
     private final Logger logger;
 
@@ -25,7 +27,12 @@ public final class PlayerDataFileMirror {
         this.logger = logger;
     }
 
-    public void stageForLogin(MinecraftServer server, SharedProfileConfig config, SharedProfileConfig.Group group, UUID uuid) throws IOException {
+    public void stageForLogin(
+            MinecraftServer server,
+            SharedProfileConfig config,
+            SharedProfileConfig.Group group,
+            UUID uuid)
+            throws IOException {
         SharedProfileConfig.validateGroupId(group.id());
         FileSet real = realFiles(server, uuid);
         FileSet shared = sharedFiles(server, group);
@@ -36,17 +43,25 @@ public final class PlayerDataFileMirror {
 
         copySharedToReal(config, group, uuid, shared.playerData(), real.playerData(), "playerdata");
         copySharedToReal(config, group, uuid, shared.stats(), real.stats(), "stats");
-        copySharedToReal(config, group, uuid, shared.advancements(), real.advancements(), "advancements");
+        copySharedToReal(
+                config, group, uuid, shared.advancements(), real.advancements(), "advancements");
     }
 
-    public void syncFromPlayer(MinecraftServer server, SharedProfileConfig config, SharedProfileConfig.Group group, UUID sourceUuid) throws IOException {
+    public void syncFromPlayer(
+            MinecraftServer server,
+            SharedProfileConfig config,
+            SharedProfileConfig.Group group,
+            UUID sourceUuid)
+            throws IOException {
         SharedProfileConfig.validateGroupId(group.id());
         FileSet real = realFiles(server, sourceUuid);
         FileSet shared = sharedFiles(server, group);
 
-        copyRealToShared(real.playerData(), shared.playerData(), "playerdata", sourceUuid, group.id());
+        copyRealToShared(
+                real.playerData(), shared.playerData(), "playerdata", sourceUuid, group.id());
         copyRealToShared(real.stats(), shared.stats(), "stats", sourceUuid, group.id());
-        copyRealToShared(real.advancements(), shared.advancements(), "advancements", sourceUuid, group.id());
+        copyRealToShared(
+                real.advancements(), shared.advancements(), "advancements", sourceUuid, group.id());
 
         if (config.syncRealUuidFilesOnSave()) {
             for (UUID member : group.members()) {
@@ -65,7 +80,8 @@ public final class PlayerDataFileMirror {
         deleteIfExists(real.advancements(), "advancements", uuid);
     }
 
-    public void clearSharedGroupFiles(MinecraftServer server, SharedProfileConfig.Group group) throws IOException {
+    public void clearSharedGroupFiles(MinecraftServer server, SharedProfileConfig.Group group)
+            throws IOException {
         SharedProfileConfig.validateGroupId(group.id());
         Path root = sharedGroupRoot(server, group);
         deleteRecursivelyIfExists(root);
@@ -90,13 +106,15 @@ public final class PlayerDataFileMirror {
             UUID uuid,
             Path sharedFile,
             Path realFile,
-            String label
-    ) throws IOException {
+            String label)
+            throws IOException {
         if (Files.notExists(sharedFile)) {
             return;
         }
 
-        if (config.backupRealPlayerFilesBeforeOverwrite() && Files.exists(realFile) && !sameContent(realFile, sharedFile)) {
+        if (config.backupRealPlayerFilesBeforeOverwrite()
+                && Files.exists(realFile)
+                && !sameContent(realFile, sharedFile)) {
             Path backup = backupPath(realFile, group.id(), uuid, label);
             Files.createDirectories(backup.getParent());
             atomicCopy(realFile, backup);
@@ -107,9 +125,17 @@ public final class PlayerDataFileMirror {
         atomicCopy(sharedFile, realFile);
     }
 
-    private void copyRealToShared(Path realFile, Path sharedFile, String label, UUID uuid, String groupId) throws IOException {
+    private void copyRealToShared(
+            Path realFile, Path sharedFile, String label, UUID uuid, String groupId)
+            throws IOException {
         if (Files.notExists(realFile)) {
-            logger.warn("Skipped syncing {} for {} in group '{}' because the real file does not exist: {}", label, uuid, groupId, realFile);
+            logger.warn(
+                    "Skipped syncing {} for {} in group '{}' because the real file does not exist:"
+                        + " {}",
+                    label,
+                    uuid,
+                    groupId,
+                    realFile);
             return;
         }
 
@@ -131,8 +157,8 @@ public final class PlayerDataFileMirror {
         return new FileSet(
                 server.getWorldPath(LevelResource.PLAYER_DATA_DIR).resolve(fileName + ".dat"),
                 server.getWorldPath(LevelResource.PLAYER_STATS_DIR).resolve(fileName + ".json"),
-                server.getWorldPath(LevelResource.PLAYER_ADVANCEMENTS_DIR).resolve(fileName + ".json")
-        );
+                server.getWorldPath(LevelResource.PLAYER_ADVANCEMENTS_DIR)
+                        .resolve(fileName + ".json"));
     }
 
     private FileSet sharedFiles(MinecraftServer server, SharedProfileConfig.Group group) {
@@ -140,12 +166,14 @@ public final class PlayerDataFileMirror {
         return new FileSet(
                 root.resolve("playerdata.dat"),
                 root.resolve("stats.json"),
-                root.resolve("advancements.json")
-        );
+                root.resolve("advancements.json"));
     }
 
     private Path sharedGroupRoot(MinecraftServer server, SharedProfileConfig.Group group) {
-        return server.getWorldPath(LevelResource.ROOT).resolve("shared-player-data").resolve("groups").resolve(group.id());
+        return server.getWorldPath(LevelResource.ROOT)
+                .resolve("shared-player-data")
+                .resolve("groups")
+                .resolve(group.id());
     }
 
     private void deleteIfExists(Path path, String label, UUID uuid) throws IOException {
@@ -175,7 +203,11 @@ public final class PlayerDataFileMirror {
         Path worldRoot = realFile.getParent().getParent();
         String timestamp = BACKUP_TIMESTAMP_FORMATTER.format(Instant.now());
         String fileName = label + "-" + uuid + "-" + timestamp + getExtension(realFile);
-        return worldRoot.resolve("shared-player-data").resolve("backups").resolve(groupId).resolve(fileName);
+        return worldRoot
+                .resolve("shared-player-data")
+                .resolve("backups")
+                .resolve(groupId)
+                .resolve(fileName);
     }
 
     private String getExtension(Path path) {
@@ -216,9 +248,17 @@ public final class PlayerDataFileMirror {
         Path temp = Files.createTempFile(parent, target.getFileName().toString(), ".tmp");
 
         try {
-            Files.copy(source, temp, StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.COPY_ATTRIBUTES);
+            Files.copy(
+                    source,
+                    temp,
+                    StandardCopyOption.REPLACE_EXISTING,
+                    StandardCopyOption.COPY_ATTRIBUTES);
             try {
-                Files.move(temp, target, StandardCopyOption.ATOMIC_MOVE, StandardCopyOption.REPLACE_EXISTING);
+                Files.move(
+                        temp,
+                        target,
+                        StandardCopyOption.ATOMIC_MOVE,
+                        StandardCopyOption.REPLACE_EXISTING);
             } catch (AtomicMoveNotSupportedException exception) {
                 Files.move(temp, target, StandardCopyOption.REPLACE_EXISTING);
             }
@@ -227,6 +267,5 @@ public final class PlayerDataFileMirror {
         }
     }
 
-    private record FileSet(Path playerData, Path stats, Path advancements) {
-    }
+    private record FileSet(Path playerData, Path stats, Path advancements) {}
 }

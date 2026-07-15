@@ -9,6 +9,7 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
+
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
@@ -26,57 +27,95 @@ public final class SharedPlayerDataCommands {
     private static final String GROUP_ARGUMENT = "group";
     private static final String NAME_ARGUMENT = "name";
 
-    private SharedPlayerDataCommands() {
-    }
+    private SharedPlayerDataCommands() {}
 
     public static void register() {
-        CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> {
-            if (!environment.includeDedicated) {
-                return;
-            }
+        CommandRegistrationCallback.EVENT.register(
+                (dispatcher, registryAccess, environment) -> {
+                    if (!environment.includeDedicated) {
+                        return;
+                    }
 
-            var root = Commands.literal("playerbind")
-                    .requires(source -> source.permissions().hasPermission(Permissions.COMMANDS_OWNER));
+                    var root =
+                            Commands.literal("playerbind")
+                                    .requires(
+                                            source ->
+                                                    source.permissions()
+                                                            .hasPermission(
+                                                                    Permissions.COMMANDS_OWNER));
 
-            var groupRoot = Commands.literal("group");
-            groupRoot.then(Commands.literal("add")
-                    .executes(SharedPlayerDataCommands::executeGroupCreate));
+                    var groupRoot = Commands.literal("group");
+                    groupRoot.then(
+                            Commands.literal("add")
+                                    .executes(SharedPlayerDataCommands::executeGroupCreate));
 
-            var groupNumber = Commands.argument(GROUP_ARGUMENT, IntegerArgumentType.integer(1))
-                    .suggests(SharedPlayerDataCommands::suggestGroupNumbers);
+                    var groupNumber =
+                            Commands.argument(GROUP_ARGUMENT, IntegerArgumentType.integer(1))
+                                    .suggests(SharedPlayerDataCommands::suggestGroupNumbers);
 
-            groupNumber.then(Commands.literal("add")
-                    .then(Commands.argument(NAME_ARGUMENT, StringArgumentType.word())
-                            .suggests(SharedPlayerDataCommands::suggestOnlinePlayerNames)
-                            .executes(SharedPlayerDataCommands::executeGroupAddPlayer)));
+                    groupNumber.then(
+                            Commands.literal("add")
+                                    .then(
+                                            Commands.argument(
+                                                            NAME_ARGUMENT,
+                                                            StringArgumentType.word())
+                                                    .suggests(
+                                                            SharedPlayerDataCommands
+                                                                    ::suggestOnlinePlayerNames)
+                                                    .executes(
+                                                            SharedPlayerDataCommands
+                                                                    ::executeGroupAddPlayer)));
 
-            groupNumber.then(Commands.literal("list")
-                    .executes(SharedPlayerDataCommands::executeGroupList));
+                    groupNumber.then(
+                            Commands.literal("list")
+                                    .executes(SharedPlayerDataCommands::executeGroupList));
 
-            groupNumber.then(Commands.literal("remove")
-                    .then(Commands.literal("confirm")
-                            .executes(SharedPlayerDataCommands::executeGroupRemoveConfirm))
-                    .then(Commands.argument(NAME_ARGUMENT, StringArgumentType.word())
-                            .suggests(SharedPlayerDataCommands::suggestGroupMemberNames)
-                            .then(Commands.literal("confirm")
-                                    .executes(SharedPlayerDataCommands::executeGroupRemovePlayerConfirm))));
+                    groupNumber.then(
+                            Commands.literal("remove")
+                                    .then(
+                                            Commands.literal("confirm")
+                                                    .executes(
+                                                            SharedPlayerDataCommands
+                                                                    ::executeGroupRemoveConfirm))
+                                    .then(
+                                            Commands.argument(
+                                                            NAME_ARGUMENT,
+                                                            StringArgumentType.word())
+                                                    .suggests(
+                                                            SharedPlayerDataCommands
+                                                                    ::suggestGroupMemberNames)
+                                                    .then(
+                                                            Commands.literal("confirm")
+                                                                    .executes(
+                                                                            SharedPlayerDataCommands
+                                                                                    ::executeGroupRemovePlayerConfirm))));
 
-            groupRoot.then(groupNumber);
-            root.then(groupRoot);
+                    groupRoot.then(groupNumber);
+                    root.then(groupRoot);
 
-            root.then(Commands.literal("find")
-                    .then(Commands.argument(NAME_ARGUMENT, StringArgumentType.word())
-                            .suggests(SharedPlayerDataCommands::suggestKnownAndOnlinePlayerNames)
-                            .executes(SharedPlayerDataCommands::executeFind)));
+                    root.then(
+                            Commands.literal("find")
+                                    .then(
+                                            Commands.argument(
+                                                            NAME_ARGUMENT,
+                                                            StringArgumentType.word())
+                                                    .suggests(
+                                                            SharedPlayerDataCommands
+                                                                    ::suggestKnownAndOnlinePlayerNames)
+                                                    .executes(
+                                                            SharedPlayerDataCommands
+                                                                    ::executeFind)));
 
-            root.then(Commands.literal("list")
-                    .executes(SharedPlayerDataCommands::executeList));
+                    root.then(
+                            Commands.literal("list")
+                                    .executes(SharedPlayerDataCommands::executeList));
 
-            dispatcher.register(root);
-        });
+                    dispatcher.register(root);
+                });
     }
 
-    private static int executeGroupCreate(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
+    private static int executeGroupCreate(CommandContext<CommandSourceStack> context)
+            throws CommandSyntaxException {
         SharedProfileManager.CreateGroupResult result;
 
         try {
@@ -87,11 +126,14 @@ public final class SharedPlayerDataCommands {
         }
 
         CommandSourceStack source = context.getSource();
-        source.sendSuccess(() -> Component.literal("Created playerbind group " + result.groupNumber() + "."), true);
+        source.sendSuccess(
+                () -> Component.literal("Created playerbind group " + result.groupNumber() + "."),
+                true);
         return Command.SINGLE_SUCCESS;
     }
 
-    private static int executeGroupAddPlayer(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
+    private static int executeGroupAddPlayer(CommandContext<CommandSourceStack> context)
+            throws CommandSyntaxException {
         CommandSourceStack source = context.getSource();
         MinecraftServer server = source.getServer();
         int groupNumber = IntegerArgumentType.getInteger(context, GROUP_ARGUMENT);
@@ -104,40 +146,73 @@ public final class SharedPlayerDataCommands {
 
         SharedProfileManager.AddPlayerToGroupResult result;
         try {
-            result = SharedPlayerDataMod.MANAGER.addOnlinePlayerToGroup(server, groupNumber, player, source.getPlayer());
+            result =
+                    SharedPlayerDataMod.MANAGER.addOnlinePlayerToGroup(
+                            server, groupNumber, player, source.getPlayer());
         } catch (IOException | RuntimeException exception) {
-            SharedPlayerDataMod.LOGGER.error("Failed to execute /playerbind group {} add {}.", groupNumber, playerName, exception);
-            throw failure("/playerbind group " + groupNumber + " add failed. Check the server log.");
+            SharedPlayerDataMod.LOGGER.error(
+                    "Failed to execute /playerbind group {} add {}.",
+                    groupNumber,
+                    playerName,
+                    exception);
+            throw failure(
+                    "/playerbind group " + groupNumber + " add failed. Check the server log.");
         }
 
         if (result.changed()) {
             final String conflictMessage;
 
             if (!result.disconnectedPlayerNames().isEmpty()) {
-                conflictMessage = " Disconnected due to online group conflict: " + String.join(", ", result.disconnectedPlayerNames()) + ".";
+                conflictMessage =
+                        " Disconnected due to online group conflict: "
+                                + String.join(", ", result.disconnectedPlayerNames())
+                                + ".";
             } else {
                 conflictMessage = "";
             }
 
-            source.sendSuccess(() -> Component.literal("Added " + result.playerName() + " to playerbind group " + result.groupNumber() + ". Group members: " + result.memberCount() + "." + conflictMessage), true);
+            source.sendSuccess(
+                    () ->
+                            Component.literal(
+                                    "Added "
+                                            + result.playerName()
+                                            + " to playerbind group "
+                                            + result.groupNumber()
+                                            + ". Group members: "
+                                            + result.memberCount()
+                                            + "."
+                                            + conflictMessage),
+                    true);
         } else {
-            source.sendSuccess(() -> Component.literal(result.playerName() + " is already in playerbind group " + result.groupNumber() + "."), false);
+            source.sendSuccess(
+                    () ->
+                            Component.literal(
+                                    result.playerName()
+                                            + " is already in playerbind group "
+                                            + result.groupNumber()
+                                            + "."),
+                    false);
         }
 
         return Command.SINGLE_SUCCESS;
     }
 
-    private static int executeGroupList(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
+    private static int executeGroupList(CommandContext<CommandSourceStack> context)
+            throws CommandSyntaxException {
         int groupNumber = IntegerArgumentType.getInteger(context, GROUP_ARGUMENT);
-        SharedProfileManager.GroupDetails details = SharedPlayerDataMod.MANAGER.groupDetails(groupNumber)
-                .orElseThrow(() -> failure("Playerbind group does not exist: " + groupNumber));
+        SharedProfileManager.GroupDetails details =
+                SharedPlayerDataMod.MANAGER
+                        .groupDetails(groupNumber)
+                        .orElseThrow(
+                                () -> failure("Playerbind group does not exist: " + groupNumber));
 
         CommandSourceStack source = context.getSource();
         source.sendSuccess(() -> Component.literal(formatGroupDetails(details)), false);
         return Command.SINGLE_SUCCESS;
     }
 
-    private static int executeGroupRemoveConfirm(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
+    private static int executeGroupRemoveConfirm(CommandContext<CommandSourceStack> context)
+            throws CommandSyntaxException {
         CommandSourceStack source = context.getSource();
         MinecraftServer server = source.getServer();
         int groupNumber = IntegerArgumentType.getInteger(context, GROUP_ARGUMENT);
@@ -146,15 +221,34 @@ public final class SharedPlayerDataCommands {
         try {
             result = SharedPlayerDataMod.MANAGER.removeGroup(server, groupNumber);
         } catch (IOException | RuntimeException exception) {
-            SharedPlayerDataMod.LOGGER.error("Failed to execute /playerbind group {} remove confirm.", groupNumber, exception);
-            throw failure("/playerbind group " + groupNumber + " remove confirm failed. Check the server log.");
+            SharedPlayerDataMod.LOGGER.error(
+                    "Failed to execute /playerbind group {} remove confirm.",
+                    groupNumber,
+                    exception);
+            throw failure(
+                    "/playerbind group "
+                            + groupNumber
+                            + " remove confirm failed. Check the server log.");
         }
 
-        source.sendSuccess(() -> Component.literal("Removed playerbind group " + result.removedGroupNumber() + ". Former members: " + result.removedMemberCount() + ". Player data, advancements, stats, OP status, and shared group files were left unchanged. Groups remaining: " + result.remainingGroupCount() + "."), true);
+        source.sendSuccess(
+                () ->
+                        Component.literal(
+                                "Removed playerbind group "
+                                        + result.removedGroupNumber()
+                                        + ". Former members: "
+                                        + result.removedMemberCount()
+                                        + ". Player data, advancements, stats, OP status, and"
+                                        + " shared group files were left unchanged. Groups"
+                                        + " remaining: "
+                                        + result.remainingGroupCount()
+                                        + "."),
+                true);
         return Command.SINGLE_SUCCESS;
     }
 
-    private static int executeGroupRemovePlayerConfirm(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
+    private static int executeGroupRemovePlayerConfirm(CommandContext<CommandSourceStack> context)
+            throws CommandSyntaxException {
         CommandSourceStack source = context.getSource();
         MinecraftServer server = source.getServer();
         int groupNumber = IntegerArgumentType.getInteger(context, GROUP_ARGUMENT);
@@ -162,28 +256,62 @@ public final class SharedPlayerDataCommands {
         SharedProfileManager.RemovePlayerFromGroupResult result;
 
         try {
-            result = SharedPlayerDataMod.MANAGER.removePlayerFromGroup(server, groupNumber, playerName);
+            result =
+                    SharedPlayerDataMod.MANAGER.removePlayerFromGroup(
+                            server, groupNumber, playerName);
         } catch (IOException | RuntimeException exception) {
-            SharedPlayerDataMod.LOGGER.error("Failed to execute /playerbind group {} remove {} confirm.", groupNumber, playerName, exception);
-            throw failure("/playerbind group " + groupNumber + " remove " + playerName + " confirm failed. Check the server log.");
+            SharedPlayerDataMod.LOGGER.error(
+                    "Failed to execute /playerbind group {} remove {} confirm.",
+                    groupNumber,
+                    playerName,
+                    exception);
+            throw failure(
+                    "/playerbind group "
+                            + groupNumber
+                            + " remove "
+                            + playerName
+                            + " confirm failed. Check the server log.");
         }
 
-        source.sendSuccess(() -> Component.literal("Removed " + result.playerName() + " from playerbind group " + result.groupNumber() + ". Remaining members: " + result.remainingMemberCount() + ". Reset offline members: " + result.immediateResetCount() + ". Online members disconnected for reset: " + result.pendingResetCount() + "."), true);
+        source.sendSuccess(
+                () ->
+                        Component.literal(
+                                "Removed "
+                                        + result.playerName()
+                                        + " from playerbind group "
+                                        + result.groupNumber()
+                                        + ". Remaining members: "
+                                        + result.remainingMemberCount()
+                                        + ". Reset offline members: "
+                                        + result.immediateResetCount()
+                                        + ". Online members disconnected for reset: "
+                                        + result.pendingResetCount()
+                                        + "."),
+                true);
         return Command.SINGLE_SUCCESS;
     }
 
-    private static int executeFind(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
+    private static int executeFind(CommandContext<CommandSourceStack> context)
+            throws CommandSyntaxException {
         CommandSourceStack source = context.getSource();
         MinecraftServer server = source.getServer();
         String playerName = StringArgumentType.getString(context, NAME_ARGUMENT);
-        SharedProfileManager.FindPlayerResult result = SharedPlayerDataMod.MANAGER.findPlayer(server, playerName)
-                .orElseThrow(() -> failure("Unknown player name: " + playerName));
+        SharedProfileManager.FindPlayerResult result =
+                SharedPlayerDataMod.MANAGER
+                        .findPlayer(server, playerName)
+                        .orElseThrow(() -> failure("Unknown player name: " + playerName));
 
         if (result.groupNumber().isPresent()) {
             int groupNumber = result.groupNumber().getAsInt();
-            source.sendSuccess(() -> Component.literal(result.name() + " is in playerbind group " + groupNumber + "."), false);
+            source.sendSuccess(
+                    () ->
+                            Component.literal(
+                                    result.name() + " is in playerbind group " + groupNumber + "."),
+                    false);
         } else {
-            source.sendSuccess(() -> Component.literal(result.name() + " is not in any playerbind group."), false);
+            source.sendSuccess(
+                    () -> Component.literal(result.name() + " is not in any playerbind group."),
+                    false);
         }
 
         return Command.SINGLE_SUCCESS;
@@ -196,7 +324,8 @@ public final class SharedPlayerDataCommands {
         return Command.SINGLE_SUCCESS;
     }
 
-    private static CompletableFuture<Suggestions> suggestOnlinePlayerNames(CommandContext<CommandSourceStack> context, SuggestionsBuilder builder) {
+    private static CompletableFuture<Suggestions> suggestOnlinePlayerNames(
+            CommandContext<CommandSourceStack> context, SuggestionsBuilder builder) {
         CommandSourceStack source = context.getSource();
         Collection<String> playerNames = source.getOnlinePlayerNames();
 
@@ -207,7 +336,8 @@ public final class SharedPlayerDataCommands {
         return builder.buildFuture();
     }
 
-    private static CompletableFuture<Suggestions> suggestKnownAndOnlinePlayerNames(CommandContext<CommandSourceStack> context, SuggestionsBuilder builder) {
+    private static CompletableFuture<Suggestions> suggestKnownAndOnlinePlayerNames(
+            CommandContext<CommandSourceStack> context, SuggestionsBuilder builder) {
         CommandSourceStack source = context.getSource();
 
         for (String playerName : source.getOnlinePlayerNames()) {
@@ -221,7 +351,8 @@ public final class SharedPlayerDataCommands {
         return builder.buildFuture();
     }
 
-    private static CompletableFuture<Suggestions> suggestGroupNumbers(CommandContext<CommandSourceStack> context, SuggestionsBuilder builder) {
+    private static CompletableFuture<Suggestions> suggestGroupNumbers(
+            CommandContext<CommandSourceStack> context, SuggestionsBuilder builder) {
         int groupCount = SharedPlayerDataMod.MANAGER.groupCount();
 
         for (int groupNumber = 1; groupNumber <= groupCount; groupNumber++) {
@@ -231,7 +362,8 @@ public final class SharedPlayerDataCommands {
         return builder.buildFuture();
     }
 
-    private static CompletableFuture<Suggestions> suggestGroupMemberNames(CommandContext<CommandSourceStack> context, SuggestionsBuilder builder) {
+    private static CompletableFuture<Suggestions> suggestGroupMemberNames(
+            CommandContext<CommandSourceStack> context, SuggestionsBuilder builder) {
         int groupNumber;
 
         try {
@@ -240,13 +372,16 @@ public final class SharedPlayerDataCommands {
             return builder.buildFuture();
         }
 
-        SharedPlayerDataMod.MANAGER.groupDetails(groupNumber).ifPresent(details -> {
-            for (SharedProfileManager.MemberDetails member : details.members()) {
-                if (!isUuidText(member.name())) {
-                    suggestIfMatches(builder, member.name());
-                }
-            }
-        });
+        SharedPlayerDataMod.MANAGER
+                .groupDetails(groupNumber)
+                .ifPresent(
+                        details -> {
+                            for (SharedProfileManager.MemberDetails member : details.members()) {
+                                if (!isUuidText(member.name())) {
+                                    suggestIfMatches(builder, member.name());
+                                }
+                            }
+                        });
 
         return builder.buildFuture();
     }
