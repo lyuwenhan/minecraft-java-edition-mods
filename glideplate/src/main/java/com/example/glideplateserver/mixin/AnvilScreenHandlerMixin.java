@@ -63,6 +63,18 @@ public abstract class AnvilScreenHandlerMixin extends ItemCombinerMenu {
         callbackInfo.cancel();
     }
 
+    @Inject(method = "setItemName", at = @At("HEAD"), cancellable = true)
+    private void glideplateServer$setItemName(
+            String itemName, CallbackInfoReturnable<Boolean> callbackInfoReturnable) {
+        ItemStack left = this.inputSlots.getItem(0);
+        ItemStack right = this.inputSlots.getItem(1);
+
+        if (GlideplateServerUtil.canCombine(left, right)
+                || GlideplateServerUtil.isBlockedDoubleCombine(left, right)) {
+            callbackInfoReturnable.setReturnValue(false);
+        }
+    }
+
     @Inject(method = "mayPickup", at = @At("HEAD"), cancellable = true)
     private void glideplateServer$mayPickup(
             Player player,
