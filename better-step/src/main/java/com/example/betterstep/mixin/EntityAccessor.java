@@ -9,6 +9,6 @@ import org.spongepowered.asm.mixin.gen.Invoker;
 @Mixin(Entity.class)
 public interface EntityAccessor {
 
-    @Invoker("collide")
-    Vec3 betterstep$invokeCollide(Vec3 movement);
+	@Invoker("collide")
+	Vec3 betterstep$invokeCollide(Vec3 movement);
 }

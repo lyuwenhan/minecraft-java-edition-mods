@@ -4,56 +4,56 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class StringMatchRules {
-    public final List<String> equal = new ArrayList<>();
-    public final List<String> contain = new ArrayList<>();
-    public final List<String> startWith = new ArrayList<>();
-    public final List<String> endWith = new ArrayList<>();
+	public final List<String> equal = new ArrayList<>();
+	public final List<String> contain = new ArrayList<>();
+	public final List<String> startWith = new ArrayList<>();
+	public final List<String> endWith = new ArrayList<>();
 
-    public boolean isEmpty() {
-        return equal.isEmpty() && contain.isEmpty() && startWith.isEmpty() && endWith.isEmpty();
-    }
+	public boolean isEmpty() {
+		return equal.isEmpty() && contain.isEmpty() && startWith.isEmpty() && endWith.isEmpty();
+	}
 
-    public void clear() {
-        equal.clear();
-        contain.clear();
-        startWith.clear();
-        endWith.clear();
-    }
+	public void clear() {
+		equal.clear();
+		contain.clear();
+		startWith.clear();
+		endWith.clear();
+	}
 
-    public StringMatchRules copy() {
-        StringMatchRules rules = new StringMatchRules();
-        rules.equal.addAll(this.equal);
-        rules.contain.addAll(this.contain);
-        rules.startWith.addAll(this.startWith);
-        rules.endWith.addAll(this.endWith);
-        return rules;
-    }
+	public StringMatchRules copy() {
+		StringMatchRules rules = new StringMatchRules();
+		rules.equal.addAll(this.equal);
+		rules.contain.addAll(this.contain);
+		rules.startWith.addAll(this.startWith);
+		rules.endWith.addAll(this.endWith);
+		return rules;
+	}
 
-    public boolean match(String name) {
-        for (String v : equal) {
-            if (name.equals(v)) {
-                return true;
-            }
-        }
+	public boolean match(String name) {
+		for (String v : equal) {
+			if (name.equals(v)) {
+				return true;
+			}
+		}
 
-        for (String v : contain) {
-            if (name.contains(v)) {
-                return true;
-            }
-        }
+		for (String v : contain) {
+			if (name.contains(v)) {
+				return true;
+			}
+		}
 
-        for (String v : startWith) {
-            if (name.startsWith(v)) {
-                return true;
-            }
-        }
+		for (String v : startWith) {
+			if (name.startsWith(v)) {
+				return true;
+			}
+		}
 
-        for (String v : endWith) {
-            if (name.endsWith(v)) {
-                return true;
-            }
-        }
+		for (String v : endWith) {
+			if (name.endsWith(v)) {
+				return true;
+			}
+		}
 
-        return false;
-    }
+		return false;
+	}
 }

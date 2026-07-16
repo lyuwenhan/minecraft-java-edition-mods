@@ -11,11 +11,11 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(MouseHandler.class)
 public abstract class MouseHandlerMixin {
-    @Inject(method = "onScroll", at = @At("HEAD"), cancellable = true)
-    private void flySpeedModifier$onScroll(
-            long window, double horizontalScroll, double verticalScroll, CallbackInfo ci) {
-        if (FreecamSpeedController.handleMouseScroll(verticalScroll)) {
-            ci.cancel();
-        }
-    }
+	@Inject(method = "onScroll", at = @At("HEAD"), cancellable = true)
+	private void flySpeedModifier$onScroll(
+			long window, double horizontalScroll, double verticalScroll, CallbackInfo ci) {
+		if (FreecamSpeedController.handleMouseScroll(verticalScroll)) {
+			ci.cancel();
+		}
+	}
 }

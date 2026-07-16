@@ -12,12 +12,12 @@ import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
 @Mixin(WingsLayer.class)
 public abstract class ElytraFeatureRendererMixin {
-    @ModifyVariable(method = "submit", at = @At("STORE"), ordinal = 0, require = 0)
-    private ItemStack glideplate$useElytraEquipmentForMarkedChestplate(ItemStack stack) {
-        if (GlideplateUtil.isChestplate(stack) && GlideplateUtil.hasElytra(stack)) {
-            return Items.ELYTRA.getDefaultInstance();
-        }
+	@ModifyVariable(method = "submit", at = @At("STORE"), ordinal = 0, require = 0)
+	private ItemStack glideplate$useElytraEquipmentForMarkedChestplate(ItemStack stack) {
+		if (GlideplateUtil.isChestplate(stack) && GlideplateUtil.hasElytra(stack)) {
+			return Items.ELYTRA.getDefaultInstance();
+		}
 
-        return stack;
-    }
+		return stack;
+	}
 }

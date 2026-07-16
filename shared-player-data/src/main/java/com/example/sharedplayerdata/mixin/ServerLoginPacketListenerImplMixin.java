@@ -12,13 +12,13 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ServerLoginPacketListenerImpl.class)
 public abstract class ServerLoginPacketListenerImplMixin {
-    @Inject(method = "verifyLoginAndFinishConnectionSetup", at = @At("HEAD"))
-    private void sharedplayerdata$enterLoginScope(GameProfile gameProfile, CallbackInfo ci) {
-        SharedPlayerDataMod.MANAGER.enterLogin((ServerLoginPacketListenerImpl) (Object) this);
-    }
+	@Inject(method = "verifyLoginAndFinishConnectionSetup", at = @At("HEAD"))
+	private void sharedplayerdata$enterLoginScope(GameProfile gameProfile, CallbackInfo ci) {
+		SharedPlayerDataMod.MANAGER.enterLogin((ServerLoginPacketListenerImpl) (Object) this);
+	}
 
-    @Inject(method = "verifyLoginAndFinishConnectionSetup", at = @At("RETURN"))
-    private void sharedplayerdata$exitLoginScope(GameProfile gameProfile, CallbackInfo ci) {
-        SharedPlayerDataMod.MANAGER.exitLogin((ServerLoginPacketListenerImpl) (Object) this);
-    }
+	@Inject(method = "verifyLoginAndFinishConnectionSetup", at = @At("RETURN"))
+	private void sharedplayerdata$exitLoginScope(GameProfile gameProfile, CallbackInfo ci) {
+		SharedPlayerDataMod.MANAGER.exitLogin((ServerLoginPacketListenerImpl) (Object) this);
+	}
 }

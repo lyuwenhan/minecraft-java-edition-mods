@@ -19,70 +19,70 @@ import java.util.UUID;
 
 @Mixin(targets = "carpet.patches.EntityPlayerMPFake", remap = false)
 public abstract class CarpetFakePlayerCreationMixin {
-    private static final ThreadLocal<UUID> sharedPlayerData$reservedSpawnUuid = new ThreadLocal<>();
+	private static final ThreadLocal<UUID> sharedPlayerData$reservedSpawnUuid = new ThreadLocal<>();
 
-    private CarpetFakePlayerCreationMixin() {}
+	private CarpetFakePlayerCreationMixin() {}
 
-    @Inject(method = "createFake", at = @At("HEAD"), cancellable = true)
-    private static void sharedPlayerData$prepareBoundCreateFake(
-            String username,
-            MinecraftServer server,
-            Vec3 pos,
-            double yaw,
-            double pitch,
-            ResourceKey<Level> dimensionId,
-            GameType gamemode,
-            boolean flying,
-            CallbackInfoReturnable<Boolean> cir) {
-        sharedPlayerData$reservedSpawnUuid.remove();
-        SharedProfileManager.CarpetFakeSpawnDecision decision =
-                SharedPlayerDataMod.MANAGER.prepareCarpetFakeSpawn(server, username);
+	@Inject(method = "createFake", at = @At("HEAD"), cancellable = true)
+	private static void sharedPlayerData$prepareBoundCreateFake(
+			String username,
+			MinecraftServer server,
+			Vec3 pos,
+			double yaw,
+			double pitch,
+			ResourceKey<Level> dimensionId,
+			GameType gamemode,
+			boolean flying,
+			CallbackInfoReturnable<Boolean> cir) {
+		sharedPlayerData$reservedSpawnUuid.remove();
+		SharedProfileManager.CarpetFakeSpawnDecision decision =
+				SharedPlayerDataMod.MANAGER.prepareCarpetFakeSpawn(server, username);
 
-        if (!decision.allowed()) {
-            SharedPlayerDataMod.LOGGER.warn(
-                    "Blocked Carpet fake player spawn for '{}' because the Shared Player Data group"
-                        + " is already occupied or could not be prepared.",
-                    username);
-            cir.setReturnValue(false);
-            return;
-        }
+		if (!decision.allowed()) {
+			SharedPlayerDataMod.LOGGER.warn(
+					"Blocked Carpet fake player spawn for '{}' because the Shared Player Data group"
+							+ " is already occupied or could not be prepared.",
+					username);
+			cir.setReturnValue(false);
+			return;
+		}
 
-        Optional<UUID> optionalReservedUuid = decision.reservedUuid();
+		Optional<UUID> optionalReservedUuid = decision.reservedUuid();
 
-        if (optionalReservedUuid.isPresent()) {
-            sharedPlayerData$reservedSpawnUuid.set(optionalReservedUuid.get());
-        }
-    }
+		if (optionalReservedUuid.isPresent()) {
+			sharedPlayerData$reservedSpawnUuid.set(optionalReservedUuid.get());
+		}
+	}
 
-    @Inject(method = "createFake", at = @At("RETURN"))
-    private static void sharedPlayerData$releaseFailedBoundCreateFake(
-            String username,
-            MinecraftServer server,
-            Vec3 pos,
-            double yaw,
-            double pitch,
-            ResourceKey<Level> dimensionId,
-            GameType gamemode,
-            boolean flying,
-            CallbackInfoReturnable<Boolean> cir) {
-        UUID reservedUuid = sharedPlayerData$reservedSpawnUuid.get();
-        sharedPlayerData$reservedSpawnUuid.remove();
+	@Inject(method = "createFake", at = @At("RETURN"))
+	private static void sharedPlayerData$releaseFailedBoundCreateFake(
+			String username,
+			MinecraftServer server,
+			Vec3 pos,
+			double yaw,
+			double pitch,
+			ResourceKey<Level> dimensionId,
+			GameType gamemode,
+			boolean flying,
+			CallbackInfoReturnable<Boolean> cir) {
+		UUID reservedUuid = sharedPlayerData$reservedSpawnUuid.get();
+		sharedPlayerData$reservedSpawnUuid.remove();
 
-        if (reservedUuid == null) {
-            return;
-        }
+		if (reservedUuid == null) {
+			return;
+		}
 
-        Boolean created = cir.getReturnValue();
+		Boolean created = cir.getReturnValue();
 
-        if (Boolean.TRUE.equals(created)) {
-            return;
-        }
+		if (Boolean.TRUE.equals(created)) {
+			return;
+		}
 
-        SharedPlayerDataMod.MANAGER.releaseExternalReservation(reservedUuid);
-        SharedPlayerDataMod.LOGGER.warn(
-                "Released Shared Player Data reservation for Carpet fake spawn '{}' ({}) because"
-                    + " Carpet did not create the fake player.",
-                username,
-                reservedUuid);
-    }
+		SharedPlayerDataMod.MANAGER.releaseExternalReservation(reservedUuid);
+		SharedPlayerDataMod.LOGGER.warn(
+				"Released Shared Player Data reservation for Carpet fake spawn '{}' ({}) because"
+						+ " Carpet did not create the fake player.",
+				username,
+				reservedUuid);
+	}
 }

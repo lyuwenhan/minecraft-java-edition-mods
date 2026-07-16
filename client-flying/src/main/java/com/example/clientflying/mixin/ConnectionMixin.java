@@ -13,20 +13,20 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(Connection.class)
 public class ConnectionMixin {
-    @Inject(method = "send(Lnet/minecraft/network/protocol/Packet;)V", at = @At("HEAD"))
-    private void clientflying$onSend(Packet<?> packet, CallbackInfo ci) {
-        if (ClientFlyingMod.isSendingInternalStartFallFlyingPacket()) {
-            return;
-        }
+	@Inject(method = "send(Lnet/minecraft/network/protocol/Packet;)V", at = @At("HEAD"))
+	private void clientflying$onSend(Packet<?> packet, CallbackInfo ci) {
+		if (ClientFlyingMod.isSendingInternalStartFallFlyingPacket()) {
+			return;
+		}
 
-        if (!(packet instanceof ServerboundPlayerCommandPacket commandPacket)) {
-            return;
-        }
+		if (!(packet instanceof ServerboundPlayerCommandPacket commandPacket)) {
+			return;
+		}
 
-        if (commandPacket.getAction() != ServerboundPlayerCommandPacket.Action.START_FALL_FLYING) {
-            return;
-        }
+		if (commandPacket.getAction() != ServerboundPlayerCommandPacket.Action.START_FALL_FLYING) {
+			return;
+		}
 
-        ClientFlyingMod.onClientStartFallFlyingPacket();
-    }
+		ClientFlyingMod.onClientStartFallFlyingPacket();
+	}
 }

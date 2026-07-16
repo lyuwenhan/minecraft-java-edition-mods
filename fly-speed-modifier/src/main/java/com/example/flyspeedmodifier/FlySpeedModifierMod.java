@@ -11,26 +11,26 @@ import net.minecraft.resources.Identifier;
 import org.lwjgl.glfw.GLFW;
 
 public final class FlySpeedModifierMod implements ClientModInitializer {
-    public static final String MOD_ID = "fly-speed-modifier";
+	public static final String MOD_ID = "fly-speed-modifier";
 
-    private static final KeyMapping.Category CATEGORY =
-            KeyMapping.Category.register(Identifier.fromNamespaceAndPath(MOD_ID, "general"));
+	private static final KeyMapping.Category CATEGORY =
+			KeyMapping.Category.register(Identifier.fromNamespaceAndPath(MOD_ID, "general"));
 
-    private static KeyMapping adjustSpeedKey;
+	private static KeyMapping adjustSpeedKey;
 
-    @Override
-    public void onInitializeClient() {
-        FlySpeedModifierConfig.load();
+	@Override
+	public void onInitializeClient() {
+		FlySpeedModifierConfig.load();
 
-        adjustSpeedKey =
-                KeyMappingHelper.registerKeyMapping(
-                        new KeyMapping(
-                                "key.fly-speed-modifier.adjust_speed",
-                                InputConstants.Type.KEYSYM,
-                                GLFW.GLFW_KEY_LEFT_ALT,
-                                CATEGORY));
+		adjustSpeedKey =
+				KeyMappingHelper.registerKeyMapping(
+						new KeyMapping(
+								"key.fly-speed-modifier.adjust_speed",
+								InputConstants.Type.KEYSYM,
+								GLFW.GLFW_KEY_LEFT_ALT,
+								CATEGORY));
 
-        FreecamSpeedController.setAdjustSpeedKey(adjustSpeedKey);
-        ClientTickEvents.END_CLIENT_TICK.register(FreecamSpeedController::onEndClientTick);
-    }
+		FreecamSpeedController.setAdjustSpeedKey(adjustSpeedKey);
+		ClientTickEvents.END_CLIENT_TICK.register(FreecamSpeedController::onEndClientTick);
+	}
 }

@@ -15,82 +15,82 @@ import java.util.Map;
 import java.util.UUID;
 
 public final class BetterElytraTakeoffState {
-    private static final int FIRST_ROCKET_TICK = 1;
-    private static final int LAST_GLIDING_TICK = -8;
-    private static final String INFINITY_FIREWORKS_MOD_ID = "infinity-fireworks";
-    private static final Map<UUID, PendingTakeoff> PENDING_TAKEOFFS = new HashMap<>();
+	private static final int FIRST_ROCKET_TICK = 1;
+	private static final int LAST_GLIDING_TICK = -8;
+	private static final String INFINITY_FIREWORKS_MOD_ID = "infinity-fireworks";
+	private static final Map<UUID, PendingTakeoff> PENDING_TAKEOFFS = new HashMap<>();
 
-    private BetterElytraTakeoffState() {}
+	private BetterElytraTakeoffState() {}
 
-    public static void schedule(ServerPlayer player, ItemStack stack) {
-        ItemStack rocket = stack.copyWithCount(1);
-        PENDING_TAKEOFFS.put(player.getUUID(), new PendingTakeoff(FIRST_ROCKET_TICK, rocket));
+	public static void schedule(ServerPlayer player, ItemStack stack) {
+		ItemStack rocket = stack.copyWithCount(1);
+		PENDING_TAKEOFFS.put(player.getUUID(), new PendingTakeoff(FIRST_ROCKET_TICK, rocket));
 
-        player.startFallFlying();
+		player.startFallFlying();
 
-        if (!player.isCreative()
-                && !FabricLoader.getInstance().isModLoaded(INFINITY_FIREWORKS_MOD_ID)) {
-            stack.shrink(1);
-        }
+		if (!player.isCreative()
+				&& !FabricLoader.getInstance().isModLoaded(INFINITY_FIREWORKS_MOD_ID)) {
+			stack.shrink(1);
+		}
 
-        player.awardStat(Stats.ITEM_USED.get(Items.FIREWORK_ROCKET));
-    }
+		player.awardStat(Stats.ITEM_USED.get(Items.FIREWORK_ROCKET));
+	}
 
-    public static void tick(ServerPlayer player) {
-        PendingTakeoff pending = PENDING_TAKEOFFS.get(player.getUUID());
+	public static void tick(ServerPlayer player) {
+		PendingTakeoff pending = PENDING_TAKEOFFS.get(player.getUUID());
 
-        if (pending == null) {
-            return;
-        }
+		if (pending == null) {
+			return;
+		}
 
-        if (pending.ticksLeft < LAST_GLIDING_TICK) {
-            PENDING_TAKEOFFS.remove(player.getUUID());
-            return;
-        }
+		if (pending.ticksLeft < LAST_GLIDING_TICK) {
+			PENDING_TAKEOFFS.remove(player.getUUID());
+			return;
+		}
 
-        if (!canUseTakeoff(player)) {
-            PENDING_TAKEOFFS.remove(player.getUUID());
-            return;
-        }
+		if (!canUseTakeoff(player)) {
+			PENDING_TAKEOFFS.remove(player.getUUID());
+			return;
+		}
 
-        player.startFallFlying();
+		player.startFallFlying();
 
-        if (pending.ticksLeft == FIRST_ROCKET_TICK
-                && player.level() instanceof ServerLevel serverLevel) {
-            FireworkRocketEntity firework =
-                    new FireworkRocketEntity(serverLevel, pending.rocket, player);
-            serverLevel.addFreshEntity(firework);
-            PENDING_TAKEOFFS.put(player.getUUID(), pending.next());
-            return;
-        }
+		if (pending.ticksLeft == FIRST_ROCKET_TICK
+				&& player.level() instanceof ServerLevel serverLevel) {
+			FireworkRocketEntity firework =
+					new FireworkRocketEntity(serverLevel, pending.rocket, player);
+			serverLevel.addFreshEntity(firework);
+			PENDING_TAKEOFFS.put(player.getUUID(), pending.next());
+			return;
+		}
 
-        PENDING_TAKEOFFS.put(player.getUUID(), pending.next());
-    }
+		PENDING_TAKEOFFS.put(player.getUUID(), pending.next());
+	}
 
-    public static boolean canUseTakeoff(ServerPlayer player) {
-        return !player.isSpectator()
-                && !player.isPassenger()
-                && !player.getAbilities().flying
-                && isWearingGlider(player);
-    }
+	public static boolean canUseTakeoff(ServerPlayer player) {
+		return !player.isSpectator()
+				&& !player.isPassenger()
+				&& !player.getAbilities().flying
+				&& isWearingGlider(player);
+	}
 
-    private static boolean isWearingGlider(ServerPlayer player) {
-        for (EquipmentSlot slot : EquipmentSlot.values()) {
-            if (slot == EquipmentSlot.OFFHAND) {
-                continue;
-            }
+	private static boolean isWearingGlider(ServerPlayer player) {
+		for (EquipmentSlot slot : EquipmentSlot.values()) {
+			if (slot == EquipmentSlot.OFFHAND) {
+				continue;
+			}
 
-            if (player.getItemBySlot(slot).has(DataComponents.GLIDER)) {
-                return true;
-            }
-        }
+			if (player.getItemBySlot(slot).has(DataComponents.GLIDER)) {
+				return true;
+			}
+		}
 
-        return false;
-    }
+		return false;
+	}
 
-    private record PendingTakeoff(int ticksLeft, ItemStack rocket) {
-        private PendingTakeoff next() {
-            return new PendingTakeoff(this.ticksLeft - 1, this.rocket);
-        }
-    }
+	private record PendingTakeoff(int ticksLeft, ItemStack rocket) {
+		private PendingTakeoff next() {
+			return new PendingTakeoff(this.ticksLeft - 1, this.rocket);
+		}
+	}
 }
