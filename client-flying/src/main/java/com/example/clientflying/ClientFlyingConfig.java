@@ -3,12 +3,10 @@ package com.example.clientflying;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonParseException;
-
-import net.fabricmc.loader.api.FabricLoader;
-
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import net.fabricmc.loader.api.FabricLoader;
 
 public class ClientFlyingConfig {
 	private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();

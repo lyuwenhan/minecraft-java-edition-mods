@@ -24,8 +24,7 @@ public final class BetterElytraTakeoffMod implements ModInitializer {
 					}
 				});
 
-		UseItemCallback.EVENT.register(
-				(player, world, hand) -> tryTakeOff(player, world, hand, false));
+		UseItemCallback.EVENT.register((player, world, hand) -> tryTakeOff(player, world, hand, false));
 
 		UseBlockCallback.EVENT.register(
 				(player, world, hand, hitResult) -> tryTakeOff(player, world, hand, true));

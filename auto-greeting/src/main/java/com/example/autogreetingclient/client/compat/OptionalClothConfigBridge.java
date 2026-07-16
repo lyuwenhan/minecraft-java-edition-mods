@@ -1,8 +1,7 @@
 package com.example.autogreetingclient.client.compat;
 
-import net.minecraft.client.gui.screens.Screen;
-
 import java.lang.reflect.Method;
+import net.minecraft.client.gui.screens.Screen;
 
 public final class OptionalClothConfigBridge {
 	private static final String PROVIDER_CLASS =

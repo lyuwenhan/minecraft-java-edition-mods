@@ -2,7 +2,6 @@ package com.example.playerhighlighter;
 
 import com.example.playerhighlighter.client.HudIconRenderer;
 import com.mojang.blaze3d.platform.InputConstants;
-
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommands;
@@ -13,7 +12,6 @@ import net.fabricmc.fabric.api.client.rendering.v1.hud.VanillaHudElements;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
-
 import org.lwjgl.glfw.GLFW;
 
 public class PlayerHighlighterMod implements ClientModInitializer {
@@ -54,9 +52,7 @@ public class PlayerHighlighterMod implements ClientModInitializer {
 
 						if (client.player != null) {
 							client.player.sendSystemMessage(
-									Component.literal(
-											"Keep Player Highlight: "
-													+ (config.keep ? "ON" : "OFF")));
+									Component.literal("Keep Player Highlight: " + (config.keep ? "ON" : "OFF")));
 						}
 					}
 				});
@@ -83,41 +79,27 @@ public class PlayerHighlighterMod implements ClientModInitializer {
 																ClientCommands.literal("on")
 																		.executes(
 																				context ->
-																						setInformationHudVisible(
-																								context
-																										.getSource(),
-																								true)))
+																						setInformationHudVisible(context.getSource(), true)))
 														.then(
 																ClientCommands.literal("off")
 																		.executes(
 																				context ->
-																						setInformationHudVisible(
-																								context
-																										.getSource(),
-																								false)))
+																						setInformationHudVisible(context.getSource(), false)))
 														.then(
 																ClientCommands.literal("toggle")
-																		.executes(
-																				context ->
-																						toggleInformationHud(
-																								context
-																										.getSource())))
+																		.executes(context -> toggleInformationHud(context.getSource())))
 														.then(
 																ClientCommands.literal("status")
 																		.executes(
 																				context ->
-																						showInformationHudStatus(
-																								context
-																										.getSource()))))));
+																						showInformationHudStatus(context.getSource()))))));
 	}
 
 	private static int setInformationHudVisible(
-			net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource source,
-			boolean visible) {
+			net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource source, boolean visible) {
 		config.informationHud = visible;
 		config.save();
-		source.sendFeedback(
-				Component.literal("Player Information HUD: " + (visible ? "ON" : "OFF")));
+		source.sendFeedback(Component.literal("Player Information HUD: " + (visible ? "ON" : "OFF")));
 		return 1;
 	}
 
@@ -125,8 +107,7 @@ public class PlayerHighlighterMod implements ClientModInitializer {
 			net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource source) {
 		source.sendFeedback(
 				Component.literal(
-						"Player Highlighter hud "
-								+ (isInformationHudVisible() ? "enabled." : "disabled.")));
+						"Player Highlighter hud " + (isInformationHudVisible() ? "enabled." : "disabled.")));
 		return 1;
 	}
 

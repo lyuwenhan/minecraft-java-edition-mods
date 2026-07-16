@@ -1,5 +1,9 @@
 package com.example.glideplateserver;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
@@ -11,11 +15,6 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.item.component.CustomModelData;
 import net.minecraft.world.item.component.ItemLore;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 
 public final class GlideplateServerUtil {
 	public static final float CUSTOM_MODEL_DATA_NUMBER = 121211.0F;
@@ -29,19 +28,14 @@ public final class GlideplateServerUtil {
 					Items.LEATHER_CHESTPLATE,
 							new ChestplateLevel(Items.LEATHER_CHESTPLATE, "leather", "Leather"),
 					Items.CHAINMAIL_CHESTPLATE,
-							new ChestplateLevel(
-									Items.CHAINMAIL_CHESTPLATE, "chainmail", "Chainmail"),
-					Items.COPPER_CHESTPLATE,
-							new ChestplateLevel(Items.COPPER_CHESTPLATE, "copper", "Copper"),
-					Items.IRON_CHESTPLATE,
-							new ChestplateLevel(Items.IRON_CHESTPLATE, "iron", "Iron"),
-					Items.GOLDEN_CHESTPLATE,
-							new ChestplateLevel(Items.GOLDEN_CHESTPLATE, "golden", "Golden"),
+							new ChestplateLevel(Items.CHAINMAIL_CHESTPLATE, "chainmail", "Chainmail"),
+					Items.COPPER_CHESTPLATE, new ChestplateLevel(Items.COPPER_CHESTPLATE, "copper", "Copper"),
+					Items.IRON_CHESTPLATE, new ChestplateLevel(Items.IRON_CHESTPLATE, "iron", "Iron"),
+					Items.GOLDEN_CHESTPLATE, new ChestplateLevel(Items.GOLDEN_CHESTPLATE, "golden", "Golden"),
 					Items.DIAMOND_CHESTPLATE,
 							new ChestplateLevel(Items.DIAMOND_CHESTPLATE, "diamond", "Diamond"),
 					Items.NETHERITE_CHESTPLATE,
-							new ChestplateLevel(
-									Items.NETHERITE_CHESTPLATE, "netherite", "Netherite"));
+							new ChestplateLevel(Items.NETHERITE_CHESTPLATE, "netherite", "Netherite"));
 
 	private GlideplateServerUtil() {}
 

@@ -2,7 +2,8 @@ package com.example.sharedplayerdata.mixin;
 
 import com.example.sharedplayerdata.LoginDecision;
 import com.example.sharedplayerdata.SharedPlayerDataMod;
-
+import java.net.SocketAddress;
+import java.util.Optional;
 import net.minecraft.network.Connection;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.MinecraftServer;
@@ -11,15 +12,11 @@ import net.minecraft.server.network.CommonListenerCookie;
 import net.minecraft.server.permissions.LevelBasedPermissionSet;
 import net.minecraft.server.players.NameAndId;
 import net.minecraft.server.players.PlayerList;
-
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-
-import java.net.SocketAddress;
-import java.util.Optional;
 
 @Mixin(PlayerList.class)
 public abstract class PlayerListMixin {
@@ -42,10 +39,7 @@ public abstract class PlayerListMixin {
 
 	@Inject(method = "placeNewPlayer", at = @At("TAIL"))
 	private void sharedplayerdata$afterPlaceNewPlayer(
-			Connection connection,
-			ServerPlayer player,
-			CommonListenerCookie cookie,
-			CallbackInfo ci) {
+			Connection connection, ServerPlayer player, CommonListenerCookie cookie, CallbackInfo ci) {
 		MinecraftServer server = ((PlayerList) (Object) this).getServer();
 		SharedPlayerDataMod.MANAGER.markPlayJoined(server, player);
 	}

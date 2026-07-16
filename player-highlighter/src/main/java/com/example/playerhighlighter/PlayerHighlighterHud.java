@@ -1,5 +1,12 @@
 package com.example.playerhighlighter;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.util.HashSet;
+import java.util.Optional;
+import java.util.Set;
+import java.util.UUID;
+import java.util.function.Consumer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -10,14 +17,6 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.phys.Vec3;
-
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
-import java.util.UUID;
-import java.util.function.Consumer;
 
 public class PlayerHighlighterHud {
 	public static void render(GuiGraphicsExtractor graphics) {
@@ -64,9 +63,7 @@ public class PlayerHighlighterHud {
 			String distText = distance + "m";
 			String healthText = "❤ " + String.format("%.1f", health);
 			String posText =
-					String.format(
-							"(%d, %d, %d)",
-							(int) targetPos.x, (int) targetPos.y, (int) targetPos.z);
+					String.format("(%d, %d, %d)", (int) targetPos.x, (int) targetPos.y, (int) targetPos.z);
 
 			drawLine(graphics, client, baseX, y, name, arrow, distText, healthText, posText);
 
@@ -499,13 +496,10 @@ public class PlayerHighlighterHud {
 	private static TargetPosition getWaypointTargetPosition(
 			Entity camera, Object waypoint, Entity sourceEntity) {
 		if (sourceEntity != null) {
-			Vec3 entityPos =
-					new Vec3(sourceEntity.getX(), sourceEntity.getY(), sourceEntity.getZ());
+			Vec3 entityPos = new Vec3(sourceEntity.getX(), sourceEntity.getY(), sourceEntity.getZ());
 
 			String posText =
-					String.format(
-							"(%d, %d, %d)",
-							(int) entityPos.x, (int) entityPos.y, (int) entityPos.z);
+					String.format("(%d, %d, %d)", (int) entityPos.x, (int) entityPos.y, (int) entityPos.z);
 
 			return new TargetPosition(entityPos, posText);
 		}
@@ -605,9 +599,7 @@ public class PlayerHighlighterHud {
 			squaredDistance = invokeDoubleMethod(waypoint, "squaredDistanceTo", camera);
 		}
 
-		if (squaredDistance != null
-				&& Double.isFinite(squaredDistance)
-				&& squaredDistance >= 0.0D) {
+		if (squaredDistance != null && Double.isFinite(squaredDistance) && squaredDistance >= 0.0D) {
 			return ((int) Math.sqrt(squaredDistance)) + "m";
 		}
 
@@ -693,8 +685,7 @@ public class PlayerHighlighterHud {
 	private static void forEachWaypoint(
 			Object waypointManager, Entity camera, Consumer<Object> consumer) {
 		Method method =
-				findCompatibleMethod(
-						waypointManager.getClass(), "forEachWaypoint", camera, consumer);
+				findCompatibleMethod(waypointManager.getClass(), "forEachWaypoint", camera, consumer);
 
 		if (method == null) {
 			return;

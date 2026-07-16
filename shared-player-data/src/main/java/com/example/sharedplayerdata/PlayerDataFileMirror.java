@@ -1,10 +1,5 @@
 package com.example.sharedplayerdata;
 
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.world.level.storage.LevelResource;
-
-import org.slf4j.Logger;
-
 import java.io.IOException;
 import java.nio.file.AtomicMoveNotSupportedException;
 import java.nio.file.Files;
@@ -16,6 +11,9 @@ import java.time.format.DateTimeFormatter;
 import java.util.Comparator;
 import java.util.UUID;
 import java.util.stream.Stream;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.world.level.storage.LevelResource;
+import org.slf4j.Logger;
 
 public final class PlayerDataFileMirror {
 	private static final DateTimeFormatter BACKUP_TIMESTAMP_FORMATTER =
@@ -57,8 +55,7 @@ public final class PlayerDataFileMirror {
 		FileSet real = realFiles(server, sourceUuid);
 		FileSet shared = sharedFiles(server, group);
 
-		copyRealToShared(
-				real.playerData(), shared.playerData(), "playerdata", sourceUuid, group.id());
+		copyRealToShared(real.playerData(), shared.playerData(), "playerdata", sourceUuid, group.id());
 		copyRealToShared(real.stats(), shared.stats(), "stats", sourceUuid, group.id());
 		copyRealToShared(
 				real.advancements(), shared.advancements(), "advancements", sourceUuid, group.id());
@@ -126,12 +123,10 @@ public final class PlayerDataFileMirror {
 	}
 
 	private void copyRealToShared(
-			Path realFile, Path sharedFile, String label, UUID uuid, String groupId)
-			throws IOException {
+			Path realFile, Path sharedFile, String label, UUID uuid, String groupId) throws IOException {
 		if (Files.notExists(realFile)) {
 			logger.warn(
-					"Skipped syncing {} for {} in group '{}' because the real file does not exist:"
-							+ " {}",
+					"Skipped syncing {} for {} in group '{}' because the real file does not exist:" + " {}",
 					label,
 					uuid,
 					groupId,
@@ -157,8 +152,7 @@ public final class PlayerDataFileMirror {
 		return new FileSet(
 				server.getWorldPath(LevelResource.PLAYER_DATA_DIR).resolve(fileName + ".dat"),
 				server.getWorldPath(LevelResource.PLAYER_STATS_DIR).resolve(fileName + ".json"),
-				server.getWorldPath(LevelResource.PLAYER_ADVANCEMENTS_DIR)
-						.resolve(fileName + ".json"));
+				server.getWorldPath(LevelResource.PLAYER_ADVANCEMENTS_DIR).resolve(fileName + ".json"));
 	}
 
 	private FileSet sharedFiles(MinecraftServer server, SharedProfileConfig.Group group) {
@@ -170,7 +164,8 @@ public final class PlayerDataFileMirror {
 	}
 
 	private Path sharedGroupRoot(MinecraftServer server, SharedProfileConfig.Group group) {
-		return server.getWorldPath(LevelResource.ROOT)
+		return server
+				.getWorldPath(LevelResource.ROOT)
 				.resolve("shared-player-data")
 				.resolve("groups")
 				.resolve(group.id());
@@ -249,16 +244,10 @@ public final class PlayerDataFileMirror {
 
 		try {
 			Files.copy(
-					source,
-					temp,
-					StandardCopyOption.REPLACE_EXISTING,
-					StandardCopyOption.COPY_ATTRIBUTES);
+					source, temp, StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.COPY_ATTRIBUTES);
 			try {
 				Files.move(
-						temp,
-						target,
-						StandardCopyOption.ATOMIC_MOVE,
-						StandardCopyOption.REPLACE_EXISTING);
+						temp, target, StandardCopyOption.ATOMIC_MOVE, StandardCopyOption.REPLACE_EXISTING);
 			} catch (AtomicMoveNotSupportedException exception) {
 				Files.move(temp, target, StandardCopyOption.REPLACE_EXISTING);
 			}

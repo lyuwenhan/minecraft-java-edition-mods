@@ -2,14 +2,12 @@ package com.example.flyspeedmodifier;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-
-import net.fabricmc.loader.api.FabricLoader;
-
 import java.io.IOException;
 import java.io.Reader;
 import java.io.Writer;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import net.fabricmc.loader.api.FabricLoader;
 
 public final class FlySpeedModifierConfig {
 	public static final double DEFAULT_MIN_SPEED = 0.0D;
@@ -125,17 +123,11 @@ public final class FlySpeedModifierConfig {
 
 		sanitized.minSpeed =
 				clampFinite(
-						sanitized.minSpeed,
-						DEFAULT_MIN_SPEED,
-						MIN_ALLOWED_MIN_SPEED,
-						MAX_ALLOWED_MIN_SPEED);
+						sanitized.minSpeed, DEFAULT_MIN_SPEED, MIN_ALLOWED_MIN_SPEED, MAX_ALLOWED_MIN_SPEED);
 
 		sanitized.maxSpeed =
 				clampFinite(
-						sanitized.maxSpeed,
-						DEFAULT_MAX_SPEED,
-						MIN_ALLOWED_MAX_SPEED,
-						MAX_ALLOWED_MAX_SPEED);
+						sanitized.maxSpeed, DEFAULT_MAX_SPEED, MIN_ALLOWED_MAX_SPEED, MAX_ALLOWED_MAX_SPEED);
 
 		sanitized.initialSpeed =
 				roundToTwoDecimals(
@@ -197,10 +189,7 @@ public final class FlySpeedModifierConfig {
 		double sanitized =
 				roundToOneDecimal(
 						clampFinite(
-								value,
-								DEFAULT_SCROLL_STEP,
-								MIN_ALLOWED_SCROLL_STEP,
-								MAX_ALLOWED_SCROLL_STEP));
+								value, DEFAULT_SCROLL_STEP, MIN_ALLOWED_SCROLL_STEP, MAX_ALLOWED_SCROLL_STEP));
 		return (int) Math.round(sanitized * 10.0D);
 	}
 
@@ -215,9 +204,7 @@ public final class FlySpeedModifierConfig {
 				roundToTwoDecimals(
 						clampFinite(value, DEFAULT_MAX_SPEED, MIN_ALLOWED_MAX_SPEED, upperBound));
 		return clampInt(
-				(int) Math.round(sanitized * 100.0D),
-				MAX_SPEED_SLIDER_MIN,
-				maxSpeedSliderMax(fullRange));
+				(int) Math.round(sanitized * 100.0D), MAX_SPEED_SLIDER_MIN, maxSpeedSliderMax(fullRange));
 	}
 
 	public static double sliderToMaxSpeed(int sliderValue, boolean fullRange) {

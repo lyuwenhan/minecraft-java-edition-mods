@@ -1,7 +1,5 @@
 package com.example.autologin;
 
-import net.fabricmc.loader.api.FabricLoader;
-
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -9,6 +7,7 @@ import java.nio.file.attribute.PosixFilePermission;
 import java.security.SecureRandom;
 import java.util.HashSet;
 import java.util.Set;
+import net.fabricmc.loader.api.FabricLoader;
 
 /**
  * Manages a random 256-bit device key stored in a separate file. The key is not derivable from any

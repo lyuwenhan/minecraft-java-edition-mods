@@ -1,11 +1,10 @@
 package com.example.flyspeedmodifier;
 
+import java.util.Locale;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
-
-import java.util.Locale;
 
 public final class FreecamSpeedController {
 	private static final String FREECAM_MOD_ID = "freecam";
@@ -127,7 +126,8 @@ public final class FreecamSpeedController {
 			return;
 		}
 
-		client.player
+		client
+				.player
 				.getAbilities()
 				.setFlyingSpeed((float) (directOriginalFlyingSpeed * temporaryMultiplier));
 	}
@@ -223,10 +223,7 @@ public final class FreecamSpeedController {
 
 		boolean increase = scrollAmount > 0.0D;
 		for (int i = 0; i < operationCount; i++) {
-			result =
-					increase
-							? increaseOneSignificantStep(result)
-							: decreaseOneSignificantStep(result);
+			result = increase ? increaseOneSignificantStep(result) : decreaseOneSignificantStep(result);
 			result = clampMultiplier(result);
 		}
 
@@ -254,9 +251,7 @@ public final class FreecamSpeedController {
 	}
 
 	private static boolean wouldBorrowToLowerMagnitude(double originalValue, double nextValue) {
-		if (!Double.isFinite(originalValue)
-				|| !Double.isFinite(nextValue)
-				|| originalValue <= 0.0D) {
+		if (!Double.isFinite(originalValue) || !Double.isFinite(nextValue) || originalValue <= 0.0D) {
 			return false;
 		}
 
@@ -340,9 +335,7 @@ public final class FreecamSpeedController {
 		}
 
 		String label =
-				target == SpeedTarget.FREECAM
-						? "Freecam speed multiplier"
-						: "Flight speed multiplier";
+				target == SpeedTarget.FREECAM ? "Freecam speed multiplier" : "Flight speed multiplier";
 		String text = String.format(Locale.ROOT, "%s: %.2fx", label, multiplier);
 		client.player.sendOverlayMessage(Component.literal(text));
 	}

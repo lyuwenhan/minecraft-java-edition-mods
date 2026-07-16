@@ -1,5 +1,7 @@
 package com.example.glideplate;
 
+import java.util.Map;
+import java.util.Optional;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.Item;
@@ -8,23 +10,16 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.item.component.CustomModelData;
 
-import java.util.Map;
-import java.util.Optional;
-
 public final class GlideplateUtil {
 	private static final Map<Item, ChestplateLevel> CHESTPLATES =
 			Map.of(
-					Items.LEATHER_CHESTPLATE,
-							new ChestplateLevel(Items.LEATHER_CHESTPLATE, "leather"),
-					Items.CHAINMAIL_CHESTPLATE,
-							new ChestplateLevel(Items.CHAINMAIL_CHESTPLATE, "chainmail"),
+					Items.LEATHER_CHESTPLATE, new ChestplateLevel(Items.LEATHER_CHESTPLATE, "leather"),
+					Items.CHAINMAIL_CHESTPLATE, new ChestplateLevel(Items.CHAINMAIL_CHESTPLATE, "chainmail"),
 					Items.COPPER_CHESTPLATE, new ChestplateLevel(Items.COPPER_CHESTPLATE, "copper"),
 					Items.IRON_CHESTPLATE, new ChestplateLevel(Items.IRON_CHESTPLATE, "iron"),
 					Items.GOLDEN_CHESTPLATE, new ChestplateLevel(Items.GOLDEN_CHESTPLATE, "golden"),
-					Items.DIAMOND_CHESTPLATE,
-							new ChestplateLevel(Items.DIAMOND_CHESTPLATE, "diamond"),
-					Items.NETHERITE_CHESTPLATE,
-							new ChestplateLevel(Items.NETHERITE_CHESTPLATE, "netherite"));
+					Items.DIAMOND_CHESTPLATE, new ChestplateLevel(Items.DIAMOND_CHESTPLATE, "diamond"),
+					Items.NETHERITE_CHESTPLATE, new ChestplateLevel(Items.NETHERITE_CHESTPLATE, "netherite"));
 
 	private GlideplateUtil() {}
 

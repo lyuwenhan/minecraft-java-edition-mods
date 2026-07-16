@@ -3,15 +3,12 @@ package com.example.autogreetingclient.client.compat;
 import com.example.autogreetingclient.AutoGreetingClientConfig;
 import com.example.autogreetingclient.AutoGreetingClientConfigHolder;
 import com.example.autogreetingclient.rules.StringMatchRules;
-
+import java.util.ArrayList;
 import me.shedaniel.clothconfig2.api.ConfigBuilder;
 import me.shedaniel.clothconfig2.api.ConfigCategory;
 import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
-
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
-
-import java.util.ArrayList;
 
 public final class ClothConfigScreenProvider {
 	private ClothConfigScreenProvider() {}
@@ -41,9 +38,7 @@ public final class ClothConfigScreenProvider {
 						.build());
 
 		self.addEntry(
-				eb.startStrList(
-								Component.literal("Greetings"),
-								new ArrayList<>(editing.selfGreetings))
+				eb.startStrList(Component.literal("Greetings"), new ArrayList<>(editing.selfGreetings))
 						.setDefaultValue(new ArrayList<>())
 						.setSaveConsumer(
 								v -> {
@@ -60,9 +55,7 @@ public final class ClothConfigScreenProvider {
 						.build());
 
 		other.addEntry(
-				eb.startStrList(
-								Component.literal("Greetings"),
-								new ArrayList<>(editing.otherGreetings))
+				eb.startStrList(Component.literal("Greetings"), new ArrayList<>(editing.otherGreetings))
 						.setDefaultValue(new ArrayList<>())
 						.setSaveConsumer(
 								v -> {

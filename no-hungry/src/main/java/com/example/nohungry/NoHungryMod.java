@@ -1,12 +1,10 @@
 package com.example.nohungry;
 
 import com.mojang.brigadier.arguments.IntegerArgumentType;
-
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.Component;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,12 +35,10 @@ public final class NoHungryMod implements ModInitializer {
 					int value = IntegerArgumentType.getInteger(context, "value");
 					config.setFoodMinimum(value);
 					config.save();
-					context.getSource()
+					context
+							.getSource()
 							.sendSuccess(
-									() ->
-											Component.literal(
-													"Minimum hunger level set to " + value + "."),
-									true);
+									() -> Component.literal("Minimum hunger level set to " + value + "."), true);
 					return 1;
 				});
 		minHungerCommand.then(minHungerValue);
@@ -55,7 +51,8 @@ public final class NoHungryMod implements ModInitializer {
 					int value = IntegerArgumentType.getInteger(context, "value");
 					config.setSaturationMinimum(value);
 					config.save();
-					context.getSource()
+					context
+							.getSource()
 							.sendSuccess(
 									() ->
 											Component.literal(
@@ -74,8 +71,7 @@ public final class NoHungryMod implements ModInitializer {
 				context -> {
 					config.setEnabled(true);
 					config.save();
-					context.getSource()
-							.sendSuccess(() -> Component.literal("No Hungry enabled."), true);
+					context.getSource().sendSuccess(() -> Component.literal("No Hungry enabled."), true);
 					return 1;
 				});
 		rootCommand.then(onCommand);
@@ -85,8 +81,7 @@ public final class NoHungryMod implements ModInitializer {
 				context -> {
 					config.setEnabled(false);
 					config.save();
-					context.getSource()
-							.sendSuccess(() -> Component.literal("No Hungry disabled."), true);
+					context.getSource().sendSuccess(() -> Component.literal("No Hungry disabled."), true);
 					return 1;
 				});
 		rootCommand.then(offCommand);
@@ -96,13 +91,10 @@ public final class NoHungryMod implements ModInitializer {
 				context -> {
 					boolean enabled = config.toggleEnabled();
 					config.save();
-					context.getSource()
+					context
+							.getSource()
 							.sendSuccess(
-									() ->
-											Component.literal(
-													"No Hungry "
-															+ (enabled ? "enabled" : "disabled")
-															+ "."),
+									() -> Component.literal("No Hungry " + (enabled ? "enabled" : "disabled") + "."),
 									true);
 					return 1;
 				});
@@ -111,8 +103,7 @@ public final class NoHungryMod implements ModInitializer {
 		var statusCommand = Commands.literal("status");
 		statusCommand.executes(
 				context -> {
-					context.getSource()
-							.sendSuccess(() -> Component.literal(getStatusMessage()), false);
+					context.getSource().sendSuccess(() -> Component.literal(getStatusMessage()), false);
 					return 1;
 				});
 		rootCommand.then(statusCommand);

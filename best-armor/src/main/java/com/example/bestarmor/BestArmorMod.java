@@ -1,5 +1,8 @@
 package com.example.bestarmor;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.creativetab.v1.CreativeModeTabEvents;
 import net.fabricmc.fabric.api.creativetab.v1.FabricCreativeModeTabOutput;
@@ -37,10 +40,6 @@ import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.item.enchantment.ItemEnchantments;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
 public final class BestArmorMod implements ClientModInitializer {
 	@Override
 	public void onInitializeClient() {
@@ -62,14 +61,11 @@ public final class BestArmorMod implements ClientModInitializer {
 
 		HolderLookup.Provider registries = level.registryAccess();
 		output.accept(
-				createYellowShulkerBox(registries),
-				CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS);
+				createYellowShulkerBox(registries), CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS);
 		output.accept(
-				createOrangeShulkerBox(registries),
-				CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS);
+				createOrangeShulkerBox(registries), CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS);
 		output.accept(
-				createRedShulkerBox(registries),
-				CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS);
+				createRedShulkerBox(registries), CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS);
 	}
 
 	private static ItemStack createYellowShulkerBox(HolderLookup.Provider registries) {
@@ -1324,12 +1320,8 @@ public final class BestArmorMod implements ClientModInitializer {
 				DataComponents.LORE,
 				new ItemLore(
 						List.of(
-								Component.translatableWithFallback(
-												"tooltip.glideplate.with_elytra", "With Elytra")
-										.withStyle(
-												style ->
-														style.withColor(ChatFormatting.GRAY)
-																.withItalic(false)))));
+								Component.translatableWithFallback("tooltip.glideplate.with_elytra", "With Elytra")
+										.withStyle(style -> style.withColor(ChatFormatting.GRAY).withItalic(false)))));
 	}
 
 	private static List<ItemStack> createContainerItems(int size) {
@@ -1356,14 +1348,12 @@ public final class BestArmorMod implements ClientModInitializer {
 			return;
 		}
 
-		HolderGetter<Enchantment> enchantmentLookup =
-				registries.lookupOrThrow(Registries.ENCHANTMENT);
+		HolderGetter<Enchantment> enchantmentLookup = registries.lookupOrThrow(Registries.ENCHANTMENT);
 		ItemEnchantments.Mutable mutableEnchantments =
 				new ItemEnchantments.Mutable(ItemEnchantments.EMPTY);
 
 		for (EnchantmentLevel enchantment : enchantments) {
-			mutableEnchantments.set(
-					enchantmentLookup.getOrThrow(enchantment.key()), enchantment.level());
+			mutableEnchantments.set(enchantmentLookup.getOrThrow(enchantment.key()), enchantment.level());
 		}
 
 		stack.set(DataComponents.ENCHANTMENTS, mutableEnchantments.toImmutable());
