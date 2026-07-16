@@ -133,8 +133,7 @@ public final class BestArmorMod implements ClientModInitializer {
 						enchantment(Enchantments.FLAME, 1),
 						enchantment(Enchantments.PUNCH, 2),
 						enchantment(Enchantments.UNBREAKING, 3),
-						enchantment(Enchantments.INFINITY, 1),
-						enchantment(Enchantments.MENDING, 1));
+						enchantment(Enchantments.INFINITY, 1));
 		containerItems.set(5, slot5Stack);
 
 		ItemStack slot6Stack =
@@ -586,24 +585,7 @@ public final class BestArmorMod implements ClientModInitializer {
 						enchantment(Enchantments.MENDING, 1));
 		setUnbreakable(slot17Stack);
 
-		HolderLookup.RegistryLookup<DamageType> damageTypes =
-				registries.lookupOrThrow(Registries.DAMAGE_TYPE);
-
-		HolderSet<DamageType> blockedDamageTypes =
-				HolderSet.direct(damageTypes.listElements().toList());
-
-		slot17Stack.set(
-				DataComponents.BLOCKS_ATTACKS,
-				new BlocksAttacks(
-						0.0F,
-						0.0F,
-						List.of(
-								new BlocksAttacks.DamageReduction(
-										360.0F, Optional.of(blockedDamageTypes), 1000.0F, 1000.0F)),
-						new BlocksAttacks.ItemDamageFunction(0.0F, 0.0F, 0.0F),
-						Optional.empty(),
-						Optional.empty(),
-						Optional.empty()));
+		setInvincibleShield(slot17Stack, registries);
 
 		containerItems.set(17, slot17Stack);
 
@@ -803,6 +785,7 @@ public final class BestArmorMod implements ClientModInitializer {
 						1024.0D,
 						AttributeModifier.Operation.ADD_VALUE,
 						EquipmentSlotGroup.MAINHAND));
+		setInvincibleShield(slot0Stack, registries);
 		containerItems.set(0, slot0Stack);
 
 		ItemStack slot1Stack =
@@ -1111,24 +1094,7 @@ public final class BestArmorMod implements ClientModInitializer {
 						enchantment(Enchantments.MENDING, 1));
 		setUnbreakable(slot17Stack);
 
-		HolderLookup.RegistryLookup<DamageType> damageTypes =
-				registries.lookupOrThrow(Registries.DAMAGE_TYPE);
-
-		HolderSet<DamageType> blockedDamageTypes =
-				HolderSet.direct(damageTypes.listElements().toList());
-
-		slot17Stack.set(
-				DataComponents.BLOCKS_ATTACKS,
-				new BlocksAttacks(
-						0.0F,
-						0.0F,
-						List.of(
-								new BlocksAttacks.DamageReduction(
-										360.0F, Optional.of(blockedDamageTypes), 1000.0F, 1000.0F)),
-						new BlocksAttacks.ItemDamageFunction(0.0F, 0.0F, 0.0F),
-						Optional.empty(),
-						Optional.empty(),
-						Optional.empty()));
+		setInvincibleShield(slot17Stack, registries);
 
 		containerItems.set(17, slot17Stack);
 
@@ -1365,6 +1331,27 @@ public final class BestArmorMod implements ClientModInitializer {
 
 	private static void setUnbreakable(ItemStack stack) {
 		stack.set(DataComponents.UNBREAKABLE, Unit.INSTANCE);
+	}
+
+	private static void setInvincibleShield(ItemStack stack, HolderLookup.Provider registries) {
+		HolderLookup.RegistryLookup<DamageType> damageTypes =
+				registries.lookupOrThrow(Registries.DAMAGE_TYPE);
+
+		HolderSet<DamageType> blockedDamageTypes =
+				HolderSet.direct(damageTypes.listElements().toList());
+
+		stack.set(
+				DataComponents.BLOCKS_ATTACKS,
+				new BlocksAttacks(
+						0.0F,
+						0.0F,
+						List.of(
+								new BlocksAttacks.DamageReduction(
+										360.0F, Optional.of(blockedDamageTypes), 1000.0F, 1000.0F)),
+						new BlocksAttacks.ItemDamageFunction(0.0F, 0.0F, 0.0F),
+						Optional.empty(),
+						Optional.empty(),
+						Optional.empty()));
 	}
 
 	private static void setAttributeModifiers(ItemStack stack, AttributeModifierSpec... modifiers) {
