@@ -309,7 +309,12 @@ public final class BestArmorMod implements ClientModInitializer {
 						enchantment(Enchantments.MENDING, 1));
 		containerItems.set(21, slot21Stack);
 
-		ItemStack elytraStack = new ItemStack(Items.ELYTRA);
+		ItemStack elytraStack =
+				createItemStack(
+						Items.ELYTRA,
+						registries,
+						enchantment(Enchantments.UNBREAKING, 3),
+						enchantment(Enchantments.MENDING, 1));
 		containerItems.set(22, elytraStack);
 
 		ItemStack glideplateChestplateStack =
@@ -678,7 +683,12 @@ public final class BestArmorMod implements ClientModInitializer {
 						EquipmentSlotGroup.FEET));
 		containerItems.set(21, slot21Stack);
 
-		ItemStack elytraStack = new ItemStack(Items.ELYTRA);
+		ItemStack elytraStack =
+				createItemStack(
+						Items.ELYTRA,
+						registries,
+						enchantment(Enchantments.UNBREAKING, 255),
+						enchantment(Enchantments.MENDING, 1));
 		containerItems.set(22, elytraStack);
 
 		ItemStack glideplateChestplateStack =
@@ -1202,7 +1212,12 @@ public final class BestArmorMod implements ClientModInitializer {
 						EquipmentSlotGroup.FEET));
 		containerItems.set(21, slot21Stack);
 
-		ItemStack elytraStack = new ItemStack(Items.ELYTRA);
+		ItemStack elytraStack =
+				createItemStack(
+						Items.ELYTRA,
+						registries,
+						enchantment(Enchantments.UNBREAKING, 255),
+						enchantment(Enchantments.MENDING, 1));
 		containerItems.set(22, elytraStack);
 
 		ItemStack glideplateChestplateStack =
