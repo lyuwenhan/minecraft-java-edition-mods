@@ -30,6 +30,7 @@ import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.component.AttackRange;
 import net.minecraft.world.item.component.BlocksAttacks;
 import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.item.component.CustomModelData;
@@ -786,6 +787,7 @@ public final class BestArmorMod implements ClientModInitializer {
 						AttributeModifier.Operation.ADD_VALUE,
 						EquipmentSlotGroup.MAINHAND));
 		setInvincibleShield(slot0Stack, registries);
+		setAttackRange(slot0Stack);
 		containerItems.set(0, slot0Stack);
 
 		ItemStack slot1Stack =
@@ -814,6 +816,7 @@ public final class BestArmorMod implements ClientModInitializer {
 						1024.0D,
 						AttributeModifier.Operation.ADD_VALUE,
 						EquipmentSlotGroup.MAINHAND));
+		setAttackRange(slot1Stack);
 		containerItems.set(1, slot1Stack);
 
 		ItemStack slot2Stack =
@@ -825,6 +828,7 @@ public final class BestArmorMod implements ClientModInitializer {
 						enchantment(Enchantments.UNBREAKING, 255),
 						enchantment(Enchantments.MENDING, 1));
 		setUnbreakable(slot2Stack);
+		setAttackRange(slot2Stack);
 		containerItems.set(2, slot2Stack);
 
 		ItemStack slot3Stack =
@@ -836,6 +840,7 @@ public final class BestArmorMod implements ClientModInitializer {
 						enchantment(Enchantments.UNBREAKING, 255),
 						enchantment(Enchantments.MENDING, 1));
 		setUnbreakable(slot3Stack);
+		setAttackRange(slot3Stack);
 		containerItems.set(3, slot3Stack);
 
 		ItemStack slot4Stack =
@@ -847,6 +852,7 @@ public final class BestArmorMod implements ClientModInitializer {
 						enchantment(Enchantments.UNBREAKING, 255),
 						enchantment(Enchantments.MENDING, 1));
 		setUnbreakable(slot4Stack);
+		setAttackRange(slot4Stack);
 		containerItems.set(4, slot4Stack);
 
 		ItemStack slot5Stack =
@@ -885,6 +891,7 @@ public final class BestArmorMod implements ClientModInitializer {
 						1024.0D,
 						AttributeModifier.Operation.ADD_VALUE,
 						EquipmentSlotGroup.MAINHAND));
+		setAttackRange(slot6Stack);
 		containerItems.set(6, slot6Stack);
 
 		ItemStack slot7Stack =
@@ -911,6 +918,7 @@ public final class BestArmorMod implements ClientModInitializer {
 						1024.0D,
 						AttributeModifier.Operation.ADD_VALUE,
 						EquipmentSlotGroup.MAINHAND));
+		setAttackRange(slot7Stack);
 		containerItems.set(7, slot7Stack);
 
 		ItemStack slot8Stack =
@@ -937,6 +945,7 @@ public final class BestArmorMod implements ClientModInitializer {
 						1024.0D,
 						AttributeModifier.Operation.ADD_VALUE,
 						EquipmentSlotGroup.MAINHAND));
+		setAttackRange(slot8Stack);
 		containerItems.set(8, slot8Stack);
 
 		ItemStack slot9Stack =
@@ -967,6 +976,7 @@ public final class BestArmorMod implements ClientModInitializer {
 						1024.0D,
 						AttributeModifier.Operation.ADD_VALUE,
 						EquipmentSlotGroup.MAINHAND));
+		setAttackRange(slot9Stack);
 		containerItems.set(9, slot9Stack);
 
 		ItemStack slot10Stack =
@@ -981,6 +991,7 @@ public final class BestArmorMod implements ClientModInitializer {
 						enchantment(Enchantments.UNBREAKING, 255),
 						enchantment(Enchantments.MENDING, 1));
 		setUnbreakable(slot10Stack);
+		setAttackRange(slot10Stack);
 		containerItems.set(10, slot10Stack);
 
 		ItemStack slot11Stack =
@@ -992,6 +1003,7 @@ public final class BestArmorMod implements ClientModInitializer {
 						enchantment(Enchantments.UNBREAKING, 255),
 						enchantment(Enchantments.MENDING, 1));
 		setUnbreakable(slot11Stack);
+		setAttackRange(slot11Stack);
 		containerItems.set(11, slot11Stack);
 
 		ItemStack slot12Stack =
@@ -1003,6 +1015,7 @@ public final class BestArmorMod implements ClientModInitializer {
 						enchantment(Enchantments.UNBREAKING, 255),
 						enchantment(Enchantments.MENDING, 1));
 		setUnbreakable(slot12Stack);
+		setAttackRange(slot12Stack);
 		containerItems.set(12, slot12Stack);
 
 		ItemStack slot13Stack =
@@ -1014,6 +1027,7 @@ public final class BestArmorMod implements ClientModInitializer {
 						enchantment(Enchantments.UNBREAKING, 255),
 						enchantment(Enchantments.MENDING, 1));
 		setUnbreakable(slot13Stack);
+		setAttackRange(slot13Stack);
 		containerItems.set(13, slot13Stack);
 
 		ItemStack slot14Stack =
@@ -1055,6 +1069,7 @@ public final class BestArmorMod implements ClientModInitializer {
 						1024.0D,
 						AttributeModifier.Operation.ADD_VALUE,
 						EquipmentSlotGroup.MAINHAND));
+		setAttackRange(slot15Stack);
 		containerItems.set(15, slot15Stack);
 
 		ItemStack slot16Stack =
@@ -1084,6 +1099,7 @@ public final class BestArmorMod implements ClientModInitializer {
 						1024.0D,
 						AttributeModifier.Operation.ADD_VALUE,
 						EquipmentSlotGroup.MAINHAND));
+		setAttackRange(slot16Stack);
 		containerItems.set(16, slot16Stack);
 
 		ItemStack slot17Stack =
@@ -1331,6 +1347,27 @@ public final class BestArmorMod implements ClientModInitializer {
 
 	private static void setUnbreakable(ItemStack stack) {
 		stack.set(DataComponents.UNBREAKABLE, Unit.INSTANCE);
+	}
+
+	private static void setAttackRange(ItemStack stack) {
+		stack.set(DataComponents.ATTACK_RANGE, new AttackRange(0.0F, 8.0F, 0.0F, 8.0F, 1.0F, 0.0F));
+
+		ItemAttributeModifiers currentModifiers =
+				stack.getOrDefault(DataComponents.ATTRIBUTE_MODIFIERS, ItemAttributeModifiers.EMPTY);
+
+		ItemAttributeModifiers.Builder builder = ItemAttributeModifiers.builder();
+
+		for (ItemAttributeModifiers.Entry entry : currentModifiers.modifiers()) {
+			builder.add(entry.attribute(), entry.modifier(), entry.slot());
+		}
+
+		builder.add(
+				Attributes.BLOCK_INTERACTION_RANGE,
+				new AttributeModifier(
+						minecraft("block_interaction_range"), 3.0D, AttributeModifier.Operation.ADD_VALUE),
+				EquipmentSlotGroup.MAINHAND);
+
+		stack.set(DataComponents.ATTRIBUTE_MODIFIERS, builder.build());
 	}
 
 	private static void setInvincibleShield(ItemStack stack, HolderLookup.Provider registries) {
