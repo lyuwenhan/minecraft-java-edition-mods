@@ -152,7 +152,6 @@ public final class BestArmorMod implements ClientModInitializer {
 						Items.TRIDENT,
 						registries,
 						enchantment(Enchantments.IMPALING, 5),
-						enchantment(Enchantments.LOYALTY, 3),
 						enchantment(Enchantments.RIPTIDE, 3),
 						enchantment(Enchantments.UNBREAKING, 3),
 						enchantment(Enchantments.MENDING, 1));
