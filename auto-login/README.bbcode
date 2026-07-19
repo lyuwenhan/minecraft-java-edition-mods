@@ -4,15 +4,13 @@ authentication-based Minecraft servers (e.g. EasyAuth, AuthMe)
 using a locally encrypted password.
 This mod runs entirely on the client and does [b]not[/b] modify
 any server behavior.
-[hr]
 [h2]Features[/h2][list]
 [*]Automatically sends [b]/login <password>[/b] after joining a server[/*]
 [*]Password is stored [b]locally and encrypted[/b] (AES-GCM with random device key)[/*]
 [*]No server-side plugin or mod required[/*]
 [*]Client-only, safe for multiplayer servers[/*]
 [*]Manual trigger via command for testing or fallback[/*]
-[/list][hr]
-[h2]Commands[/h2][h3]Set password (required once)[/h3][code]/autologin set <password>[/code]
+[/list][h2]Commands[/h2][h3]Set password (required once)[/h3][code]/autologin set <password>[/code]
 [list]
 [*]Encrypts and saves the password locally[/*]
 [*]Enables auto-login automatically[/*]
@@ -26,8 +24,7 @@ any server behavior.
 [list]
 [*]Deletes stored credentials[/*]
 [*]Disables auto-login[/*]
-[/list][hr]
-[h2]How It Works[/h2][list]
+[/list][h2]How It Works[/h2][list]
 [*]On first setup, the password is encrypted and saved locally[/*]
 [*]When you join a server:
 [list]
@@ -37,7 +34,6 @@ any server behavior.
 [*]The password is [b]never sent anywhere else[/b] and is not logged[/*]
 [/list]The mod does [b]not[/b] intercept packets, modify UI, or hook into
 server authentication logic.
-[hr]
 [h2]Security Notes[/h2][list]
 [*]Passwords are stored [b]only on your local machine[/b][/*]
 [*]Encryption uses:
@@ -48,11 +44,9 @@ server authentication logic.
 [*]The encryption key is stored in a separate file from the config[/*]
 [*]No plaintext password is written to disk[/*]
 [*]Do [b]not[/b] reuse important real-world passwords[/*]
-[/list][hr]
-[h2]Supported Versions[/h2][list]
+[/list][h2]Supported Versions[/h2][list]
 [*]Minecraft 26.1.2[/*]
 [*]Fabric Loader 0.19.2+[/*]
 [*]Fabric API 0.150.0+[/*]
 [*]Java 25[/*]
-[/list][hr]
-[h2]License[/h2]MIT
+[/list][h2]License[/h2]MIT

@@ -1,6 +1,5 @@
 [h1]Languages[/h1][url=https://lyuwenhan.github.io/extensions/minecraft-java/data/assets/player-highlighter/README/README.html]EN/English[/url] | [url=https://lyuwenhan.github.io/extensions/minecraft-java/data/assets/player-highlighter/README/README_ZH-CN.html]ZH-CN/简体中文[/url]
 [h1]Player Highlighter[/h1]A lightweight [b]client-side Fabric mod[/b] that improves player awareness by combining glowing outlines, on-screen target icons, and a nearby-player information HUD.
-[hr]
 [h2]Overview[/h2]Player Highlighter makes other players easier to locate and track without requiring any server-side installation.
 The mod provides three visual features:
 [list]
@@ -9,7 +8,6 @@ The mod provides three visual features:
 [*]A HUD list showing nearby player information[/*]
 [/list]Glowing outlines and target icons appear while the configured hold key is pressed or while keep mode is enabled. The player information HUD remains available independently.
 All features are handled entirely on the client.
-[hr]
 [h2]Key Features[/h2][list]
 [*]Highlights other players with a glowing outline[/*]
 [*]Displays target icons over players currently visible on screen[/*]
@@ -18,8 +16,7 @@ All features are handled entirely on the client.
 [*]Supports a hold key for temporary highlighting[/*]
 [*]Supports toggleable keep mode for persistent highlighting[/*]
 [*]Supports a client command for showing or hiding the player information HUD[/*]
-[/list][hr]
-[h2]Highlight Controls[/h2]Highlighting is active when either of the following conditions is met:
+[/list][h2]Highlight Controls[/h2]Highlighting is active when either of the following conditions is met:
 [list]
 [*]The highlight hold key is pressed
 Default key: [b]TAB[/b][/*]
@@ -30,7 +27,6 @@ Default toggle key: [b]I[/b][/*]
 [*]Other players receive a glowing outline[/*]
 [*]Visible players receive a small target icon at their projected screen position[/*]
 [/list]When neither condition is active, the glowing outlines and target icons disappear immediately.
-[hr]
 [h2]Player Information HUD[/h2]The HUD displays nearby players in the bottom-left corner of the screen.
 Example:
 [code]Player867 ↑ 11m ❤ 20.0 (123, 64, -456)[/code]
@@ -56,8 +52,7 @@ Command behavior:
 [*][b]/playerhighlighter hud off[/b] hides the Player Information HUD[/*]
 [*][b]/playerhighlighter hud toggle[/b] switches the HUD between shown and hidden[/*]
 [*][b]/playerhighlighter hud status[/b] shows the current HUD state[/*]
-[/list][hr]
-[h2]Target Icons[/h2]While highlighting is active, a small target icon is rendered over each visible player.
+[/list][h2]Target Icons[/h2]While highlighting is active, a small target icon is rendered over each visible player.
 Icons are only displayed when the player:
 [list]
 [*]Is in front of the camera[/*]
@@ -65,7 +60,6 @@ Icons are only displayed when the player:
 [*]Is within the visible screen boundaries[/*]
 [*]Is not the current camera entity[/*]
 [/list]Players behind the camera or outside the screen are not assigned an icon.
-[hr]
 [h2]Glowing Outline[/h2]Other players are rendered using an outline similar to Minecraft's vanilla Glowing effect.
 Behavior:
 [list]
@@ -75,11 +69,9 @@ Behavior:
 [*]The outline follows vanilla outline rendering rules[/*]
 [*]Team-based outline colors may still apply where supported[/*]
 [*]No real status effect is added to the player[/*]
-[/list][hr]
-[h2]Supported Versions[/h2][list]
+[/list][h2]Supported Versions[/h2][list]
 [*]Minecraft 26.1.2[/*]
 [*]Fabric Loader 0.19.2+[/*]
 [*]Fabric API 0.150.0+[/*]
 [*]Java 25[/*]
-[/list][hr]
-[h2]License[/h2]MIT
+[/list][h2]License[/h2]MIT

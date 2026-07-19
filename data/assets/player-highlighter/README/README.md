@@ -6,8 +6,6 @@
 
 A lightweight **client-side Fabric mod** that improves player awareness by combining glowing outlines, on-screen target icons, and a nearby-player information HUD.
 
----
-
 ## Overview
 
 Player Highlighter makes other players easier to locate and track without requiring any server-side installation.
@@ -22,8 +20,6 @@ Glowing outlines and target icons appear while the configured hold key is presse
 
 All features are handled entirely on the client.
 
----
-
 ## Key Features
 
 - Highlights other players with a glowing outline
@@ -33,8 +29,6 @@ All features are handled entirely on the client.
 - Supports a hold key for temporary highlighting
 - Supports toggleable keep mode for persistent highlighting
 - Supports a client command for showing or hiding the player information HUD
-
----
 
 ## Highlight Controls
 
@@ -51,8 +45,6 @@ When highlighting is active:
 - Visible players receive a small target icon at their projected screen position
 
 When neither condition is active, the glowing outlines and target icons disappear immediately.
-
----
 
 ## Player Information HUD
 
@@ -98,8 +90,6 @@ Command behavior:
 - `/playerhighlighter hud toggle` switches the HUD between shown and hidden
 - `/playerhighlighter hud status` shows the current HUD state
 
----
-
 ## Target Icons
 
 While highlighting is active, a small target icon is rendered over each visible player.
@@ -112,8 +102,6 @@ Icons are only displayed when the player:
 - Is not the current camera entity
 
 Players behind the camera or outside the screen are not assigned an icon.
-
----
 
 ## Glowing Outline
 
@@ -128,16 +116,12 @@ Behavior:
 - Team-based outline colors may still apply where supported
 - No real status effect is added to the player
 
----
-
 ## Supported Versions
 
 - Minecraft 26.1.2
 - Fabric Loader 0.19.2+
 - Fabric API 0.150.0+
 - Java 25
-
----
 
 ## License
 

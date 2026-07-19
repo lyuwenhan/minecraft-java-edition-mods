@@ -6,8 +6,6 @@
 
 A lightweight **server-side Fabric mod** that prevents player hunger and saturation from dropping below configurable minimum values.
 
----
-
 ## Overview
 
 No Hungry adds configurable lower limits for player hunger and saturation.
@@ -18,8 +16,6 @@ When hunger or saturation drops below the configured minimum, the mod restores i
 
 The mod works entirely on the server. Players do not need to install it on the client.
 
----
-
 ## Key Features
 
 - Configurable minimum hunger level
@@ -27,8 +23,6 @@ The mod works entirely on the server. Players do not need to install it on the c
 - Normal exhaustion mechanics remain active
 - Hunger and saturation can decrease normally above the configured minimum
 - Supports enabling and disabling the mod at runtime
-
----
 
 ## Gameplay Behavior
 
@@ -43,8 +37,6 @@ For example, with the minimum hunger level set to `18`:
 - Sprinting, jumping, attacking, swimming, mining, and similar actions still consume saturation and hunger
 - Players can still eat food normally
 - The mod does not affect health, damage, movement speed, inventory, or item behavior
-
----
 
 ## Commands
 
@@ -120,16 +112,12 @@ When disabled, the command displays:
 No Hungry disabled.
 ```
 
----
-
 ## Supported Versions
 
 - Minecraft 26.1.2
 - Fabric Loader 0.19.2+
 - Fabric API 0.150.0+
 - Java 25
-
----
 
 ## License
 
