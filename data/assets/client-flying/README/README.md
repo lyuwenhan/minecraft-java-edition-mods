@@ -4,15 +4,15 @@
 
 # Client Flying
 
-A lightweight **client-side Fabric mod** that enables controlled flight behavior in Survival and Adventure modes while preventing Elytra conflicts, operating entirely on the client.
+A lightweight **client-side Fabric mod** that enables controlled flight in Survival and Adventure modes while avoiding Elytra conflicts and operating entirely on the client.
 
 ## Overview
 
-Client Flying allows players to toggle flight in Survival and Adventure modes when not wearing Elytra.
+Client Flying allows players to toggle flight in Survival and Adventure modes when they are not wearing Elytra.
 
-The mod also forces the client to continuously report grounded movement to the server and enables local invulnerability flags. All changes are handled entirely on the client side.
+The mod also forces the client to continuously report grounded movement to the server and enables local invulnerability flags. All behavior is handled entirely on the client side.
 
-When Elytra is equipped, flight permission is automatically disabled to avoid interference with vanilla glide mechanics.
+When Elytra is equipped, flight permission is automatically disabled to avoid interfering with vanilla gliding mechanics.
 
 ## Key Features
 
@@ -26,9 +26,9 @@ When Elytra is equipped, flight permission is automatically disabled to avoid in
 ## Visual Behavior
 
 - Flight becomes available in Survival and Adventure modes
-- Elytra usage automatically disables custom flight
+- Wearing Elytra automatically disables custom flight
 - Movement packets are sent every tick with grounded state
-- No visual UI changes or overlays
+- No visual UI or overlay is added
 
 ## Multiplayer Safety
 
@@ -36,7 +36,7 @@ When Elytra is equipped, flight permission is automatically disabled to avoid in
 - No server modifications required
 - Movement packets are manually sent each tick
 - Server authority still applies
-- May cause desynchronization on strict anti-cheat servers
+- May cause desynchronization on servers with strict anti-cheat checks
 
 ## Supported Versions
 

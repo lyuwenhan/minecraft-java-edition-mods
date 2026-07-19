@@ -4,16 +4,16 @@
 
 # Auto Greeting
 
-A Fabric mod that automatically sends greeting messages when **you** or **other players** join a server
+A Fabric mod that automatically sends preset greeting messages when **you** or **other players** join a server.
 
 ## Features
 
 - Supports multiple messages
-- Supports plain chat messages and commands
+- Supports plain chat messages as well as commands
 - Supports blacklist / whitelist rules for player names
 - Supports placeholders
-- Automatically sends messages for **yourself** after joining a server
-- Automatically sends messages when **other players** join
+- Automatically sends preset messages after **you** join a server
+- Automatically sends preset messages when **other players** join a server
 
 ## Command Overview
 
@@ -57,9 +57,9 @@ Controls whether auto greeting is **enabled** or **disabled**.
 
 ### Message
 
-Controls what the mod sends.
+Controls the messages sent by the mod.
 
-You can use placeholders.
+Placeholders are supported.
 
 ```text
 /autogreet [self|other] message add <message>
@@ -116,13 +116,13 @@ You can use placeholders.
 
 ## Message Behavior
 
-If a message **does** start with `/`, it is executed as a command.
+If a message starts with `/`, it is executed as a command.
 
-If a message does **not** start with `/`, it is sent as a normal chat message.
+If a message does not start with `/`, it is sent as a normal chat message.
 
 ## Filtering
 
-**other**  greetings support:
+**other** greetings support:
 
 - blacklist
 - whitelist
@@ -133,7 +133,7 @@ If a message does **not** start with `/`, it is sent as a normal chat message.
 - `startWith`
 - `endWith`
 
-These rules are used to decide whether a joining player's name should trigger greeting logic.
+These rules determine whether the name of a joining player should trigger greeting logic.
 
 ### Filtering behavior
 
@@ -146,12 +146,12 @@ These rules are used to decide whether a joining player's name should trigger gr
 
 - `index` is optional and 1-based
 - `add <message> <index>` inserts before the existing item at that position
-- If `index` is omitted or out of range, the message is appended
+- If `index` is omitted or outside the valid range, the message is appended
 - `remove <index>` removes the specified item
 - `remove` without an index removes the last item
 - `remove all` clears the message list
 - `clear confirm` clears the entire blacklist or whitelist rule set
-- Numeric values are formatted with up to 3 decimal places, with trailing zeros removed
+- Numeric values are formatted with up to 3 decimal places, and trailing zeros are removed
 
 ## Supported Versions
 
@@ -159,8 +159,8 @@ These rules are used to decide whether a joining player's name should trigger gr
 - Fabric Loader 0.19.2+
 - Fabric API 0.150.0+
 - Java 25
-- Cloth config 21.11.153 (Optional)
-- Modmenu 17.0.0-beta.2 (Optional)
+- Cloth config (Optional)
+- Modmenu (Optional)
 
 ## License
 

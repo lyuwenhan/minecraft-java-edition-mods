@@ -1,6 +1,6 @@
 [h1]Languages[/h1][url=https://lyuwenhan.github.io/extensions/minecraft-java/data/assets/best-armor/README/README.html]EN/English[/url] | [url=https://lyuwenhan.github.io/extensions/minecraft-java/data/assets/best-armor/README/README_ZH-CN.html]ZH-CN/简体中文[/url]
 [h1]Best Armor[/h1]A lightweight [b]client-side Fabric mod[/b] that adds three prebuilt administrator shulker boxes and a Void Sword to the operator creative tab.
-[h2]Overview[/h2]Best Armor adds four generated items to the operator-only creative tab:
+[h2]Overview[/h2]Best Armor adds four dynamically generated items to the operator-only creative tab:
 [list]
 [*]Yellow Shulker Box[/*]
 [*]Orange Shulker Box[/*]
@@ -8,7 +8,7 @@
 [*]Void Sword[/*]
 [/list]The three shulker boxes contain different equipment presets:
 [list]
-[*]The yellow shulker box contains high-end equipment based primarily on enchantment levels obtainable through normal Survival gameplay.[/*]
+[*]The yellow shulker box contains high-end equipment based primarily on enchantment levels obtainable in normal Survival gameplay.[/*]
 [*]The orange shulker box keeps a mostly vanilla-looking equipment profile while adding normally incompatible enchantments, extreme protection levels, unbreakable items, special boots, and a shield that blocks all registered damage types.[/*]
 [*]The red shulker box contains full-power administrator equipment with extreme enchantments, custom combat attributes, increased attack range, fall-damage immunity boots, and other non-Survival item components.[/*]
 [/list][h2]Key Features[/h2][list]
@@ -487,7 +487,7 @@ Most items are marked unbreakable and include Unbreaking 255 in addition to Mend
 [*]Unbreakable[/*]
 [/list][/*]
 [/list][h3]Red Shulker Box[/h3]The Red Shulker Box contains 26 full-power administrator items.
-Its equipment uses extreme enchantments, custom attributes, extended interaction range, unbreakable components, and other item data that cannot normally be created through standard Survival gameplay.
+Its equipment uses extreme enchantments, custom attributes, extended interaction range, unbreakable components, and other item data that cannot normally be created in standard Survival gameplay.
 [h4]Melee Weapons[/h4]The following weapons receive custom main-hand attributes:
 [list]
 [*]Attack Damage: +2048[/*]
@@ -745,7 +745,7 @@ It is internally based on a netherite sword but uses the diamond sword item mode
 [*]Enchantment glint: Always enabled[/*]
 [*]Unbreakable[/*]
 [/list][h3]Damage Behavior[/h3]The sword uses the [b]fell_out_of_world[/b] damage type.
-This is the same damage type associated with void damage rather than normal melee damage.
+This is the damage type associated with void damage rather than normal melee damage.
 [h3]Attributes[/h3]When held in either hand, the sword provides:
 [list]
 [*]Attack Damage: +2,147,483,647[/*]
@@ -760,9 +760,9 @@ This is the same damage type associated with void damage rather than normal mele
 [*]Uses zero blocking delay[/*]
 [*]Takes no durability damage while blocking[/*]
 [*]Applies a very high damage-reduction value[/*]
-[/list]Actual server behavior remains subject to server-side item validation and combat authority.
+[/list]Actual behavior remains subject to server-side item validation and combat authority.
 [h2]Glideplate Compatibility[/h2]Each shulker box includes a specially configured netherite chestplate with Elytra functionality.
-The chestplate receives:
+The chestplate includes:
 [list]
 [*][b]glideplate_has_elytra[/b] custom data[/*]
 [*][b]gliding[/b] custom data[/*]
@@ -773,7 +773,7 @@ The chestplate receives:
 [*]The lore text [b]With Elytra[/b][/*]
 [/list]These components allow the item to behave as a gliding chestplate without registering a new item type.
 The generated chestplate uses compatibility data associated with [url=https://modrinth.com/mod/glideplate]Glideplate[/url].
-Installing Glideplate may improve related item naming, models, and visual presentation, but Best Armor generates the item stacks directly.
+Installing Glideplate may improve the related item names, models, and visual presentation, but Best Armor generates the item stacks directly.
 [h2]Creative Tab Behavior[/h2]The generated items are added to the operator creative tab only when operator-restricted items are visible.
 The following items are added to both the main operator-tab display and creative inventory search:
 [list]
@@ -823,7 +823,7 @@ The mod uses components including:
 [*]No server installation is required for the mod itself to load[/*]
 [*]Server authority still controls inventory and combat behavior[/*]
 [*]Servers may validate, alter, reject, or remove generated item stacks[/*]
-[*]Unsupported enchantment combinations may not behave consistently on every server[/*]
+[*]Unsupported enchantment combinations may behave inconsistently across servers[/*]
 [*]Custom attributes and data components may be rejected by server-side validation[/*]
 [*]The Void Sword and administrator equipment can severely disrupt normal gameplay[/*]
 [*]Use these items only in private worlds or on servers where administrator equipment is explicitly allowed[/*]

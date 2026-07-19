@@ -4,13 +4,13 @@
 
 # No Hungry
 
-A lightweight **server-side Fabric mod** that prevents player hunger and saturation from dropping below configurable minimum values.
+A lightweight **server-side Fabric mod** that prevents player hunger and saturation from dropping below configured minimum values.
 
 ## Overview
 
-No Hungry adds configurable lower limits for player hunger and saturation.
+No Hungry adds lower limits for player hunger and saturation.
 
-Unlike the original behavior, the mod no longer keeps hunger and saturation permanently full and no longer blocks exhaustion. Normal survival mechanics such as sprinting, jumping, attacking, swimming, mining, and Spear Lunge can still consume saturation and hunger.
+Unlike the original behavior, the mod no longer keeps hunger and saturation permanently full, and it no longer blocks exhaustion. Normal survival mechanics such as sprinting, jumping, attacking, swimming, mining, and Spear Lunge can still consume saturation and hunger.
 
 When hunger or saturation drops below the configured minimum, the mod restores it to that minimum value.
 

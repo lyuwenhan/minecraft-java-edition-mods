@@ -1,20 +1,20 @@
 [h1]Languages[/h1][url=https://lyuwenhan.github.io/extensions/minecraft-java/data/assets/auto-login/README/README.html]EN/English[/url] | [url=https://lyuwenhan.github.io/extensions/minecraft-java/data/assets/auto-login/README/README_ZH-CN.html]ZH-CN/简体中文[/url]
-[h1]Auto Login[/h1]Client-side Fabric mod that automatically logs you into authentication-based Minecraft servers (e.g. EasyAuth, AuthMe) using a locally encrypted password.
+[h1]Auto Login[/h1]A client-side Fabric mod that automatically logs you into authentication-based Minecraft servers (e.g. EasyAuth, AuthMe) using a locally encrypted password.
 This mod runs entirely on the client and does [b]not[/b] modify any server behavior.
 [h2]Features[/h2][list]
 [*]Automatically sends [b]/login <password>[/b] after joining a server[/*]
 [*]Password is stored [b]locally and encrypted[/b] (AES-GCM with random device key)[/*]
 [*]No server-side plugin or mod required[/*]
-[*]Client-only, safe for multiplayer servers[/*]
-[*]Manual trigger via command for testing or fallback[/*]
+[*]Client-only and suitable for multiplayer servers[/*]
+[*]Manual command trigger for testing or fallback use[/*]
 [/list][h2]Commands[/h2][h3]Set password (required once)[/h3][code]/autologin set <password>[/code]
 [list]
 [*]Encrypts and saves the password locally[/*]
 [*]Enables auto-login automatically[/*]
 [/list][h3]Trigger auto-login immediately[/h3][code]/autologin login[/code]
 [list]
-[*]Executes login attempt right now[/*]
-[*]Useful for testing or manual retry[/*]
+[*]Runs a login attempt immediately[/*]
+[*]Useful for testing or manual retries[/*]
 [/list][h3]Enable / disable[/h3][code]/autologin on
 /autologin off[/code]
 [h3]Clear saved password[/h3][code]/autologin clear[/code]
@@ -28,7 +28,7 @@ This mod runs entirely on the client and does [b]not[/b] modify any server behav
 [*]The mod waits until the client is fully initialized[/*]
 [*]Then sends the login command directly to the server[/*]
 [/list][list]
-[*]The password is [b]never sent anywhere else[/b] and is not logged[/*]
+[*]The password is [b]never sent anywhere else[/b] and is never logged[/*]
 [/list]The mod does [b]not[/b] intercept packets, modify UI, or hook into server authentication logic.
 [h2]Security Notes[/h2][list]
 [*]Passwords are stored [b]only on your local machine[/b][/*]

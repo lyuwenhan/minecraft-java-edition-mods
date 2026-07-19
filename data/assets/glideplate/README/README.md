@@ -4,7 +4,7 @@
 
 # Glideplate
 
-Glideplate is a Fabric mod that lets players combine a chestplate with an elytra and gives the resulting item proper Glideplate visuals.
+Glideplate is a Fabric mod that lets players combine a chestplate with an elytra, then gives the resulting item proper Glideplate visuals.
 
 Place a chestplate in the left anvil slot and an elytra in the right slot. The output keeps the chestplate as armor, adds gliding support, and carries item data that identifies it as a Glideplate.
 

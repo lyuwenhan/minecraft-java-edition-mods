@@ -4,20 +4,20 @@
 
 # Better Step
 
-A Fabric server-side / single-player mod that improves player stepping behavior when moving across uneven terrain.
+A Fabric server-side and single-player mod that improves player stepping behavior when moving across uneven terrain.
 
 ## Features
 
-- Allows smoother stepping up while moving
-- Adds controlled step-down behavior for small height drops
+- Allows smoother step-up movement
+- Adds controlled step-down behavior for small drops
 - Prevents unsafe automatic step-down in survival-like modes
 - Treats creative mode as always safe for step-down
 - Does not trigger air step-up while the player is creative-flying
-- Works on dedicated servers and single-player worlds
+- Works on dedicated servers and in single-player worlds
 
 ## Behavior
 
-The mod improves how players move across block-height changes by adding custom step-up and step-down handling.
+The mod improves movement across block-height changes by adding custom step-up and step-down handling.
 
 Step-up behavior:
 

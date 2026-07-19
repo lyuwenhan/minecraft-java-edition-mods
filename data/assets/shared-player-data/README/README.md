@@ -4,15 +4,15 @@
 
 # Shared Player Data
 
-A **server-side Fabric mod** that allows selected online players to share the same persistent player profile data through explicit administrator binding.
+A **server-side Fabric mod** that lets selected online players share the same persistent player profile data through explicit administrator binding.
 
 ## Overview
 
-Shared Player Data lets server administrators bind players together so that they use a shared player data profile.
+Shared Player Data lets server administrators bind players together so they use a shared player data profile.
 
 After players are bound, they share the same persistent gameplay state, including vanilla player data such as inventory, position, experience, health, statistics, advancements, and related saved profile data.
 
-Only one player from the same bound group may be online at the same time. If another player from the same group attempts to join while the shared profile is already in use, the join is rejected with the vanilla duplicate-login message.
+Only one player from the same bound group may be online at a time. If another player from the same group attempts to join while the shared profile is already in use, the join is rejected with the vanilla duplicate-login message.
 
 ## Key Features
 
