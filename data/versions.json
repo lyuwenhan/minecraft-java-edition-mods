@@ -1,7 +1,4 @@
 {
-	"data": {
-		"ext": "jar"
-	},
 	"auto-greeting": {
 		"versions": [
 			"1.0.0",
@@ -61,6 +58,112 @@
 			"Planet Minecraft": "https://www.planetminecraft.com/mod/auto-login/"
 		}
 	},
+	"best-armor": {
+		"versions": [
+			"1.1.0",
+			"1.1.1",
+			"1.1.2"
+		],
+		"hasIcon": true,
+		"displayName": "Best Armor",
+		"description": "Adds generated equipment shulker boxes to the operator creative tab.",
+		"link": {}
+	},
+	"better-elytra-takeoff": {
+		"versions": [
+			"1.0.0",
+			"1.0.1",
+			"1.1.0",
+			"1.1.1",
+			"1.1.2",
+			"1.1.3",
+			"1.1.4"
+		],
+		"hasIcon": true,
+		"displayName": "Better Elytra Takeoff",
+		"description": "Starts Elytra gliding immediately while using fireworks.",
+		"link": {
+			"Modrinth": "https://modrinth.com/mod/better-elytra-takeoff",
+			"Curseforge": "https://www.curseforge.com/minecraft/mc-mods/better-elytra-takeoff",
+			"Planet Minecraft": "https://www.planetminecraft.com/mod/better-elytra-takeoff/"
+		}
+	},
+	"better-step": {
+		"versions": [
+			"1.1.0",
+			"1.1.1"
+		],
+		"hasIcon": true,
+		"displayName": "Better Step",
+		"description": "Improves player stepping by removing the vanilla ground restriction for stepping up and adding controlled stepping down.",
+		"link": {}
+	},
+	"client-flying": {
+		"versions": [
+			"1.0.0",
+			"1.0.1",
+			"1.0.2",
+			"1.0.3",
+			"1.1.0",
+			"1.1.1",
+			"1.1.2",
+			"1.1.3",
+			"1.1.4",
+			"1.1.5",
+			"1.1.6"
+		],
+		"hasIcon": true,
+		"displayName": "Client Flying",
+		"description": "Enables flight in Survival and Adventure modes without OP permissions.",
+		"link": {}
+	},
+	"creeper-no-break": {
+		"versions": [
+			"1.1.0",
+			"1.1.1"
+		],
+		"hasIcon": true,
+		"displayName": "Creeper No Break",
+		"description": "Prevents creeper explosions from destroying blocks.",
+		"link": {
+			"Modrinth": "https://modrinth.com/mod/creeper-no-break",
+			"Curseforge": "https://www.curseforge.com/minecraft/mc-mods/creeper-no-break",
+			"Planet Minecraft": "https://www.planetminecraft.com/mod/creeper-no-break/"
+		}
+	},
+	"data": {
+		"ext": "jar"
+	},
+	"fly-speed-modifier": {
+		"versions": [
+			"1.1.0",
+			"1.1.1",
+			"1.1.2",
+			"1.1.3",
+			"1.1.4"
+		],
+		"hasIcon": true,
+		"displayName": "Fly Speed Modifier",
+		"description": "Temporarily adjusts Freecam or player flight speed using a key and the mouse wheel.",
+		"link": {}
+	},
+	"glideplate": {
+		"versions": [
+			"1.0.0",
+			"1.0.1",
+			"1.1.0",
+			"1.1.1",
+			"1.1.2"
+		],
+		"hasIcon": true,
+		"displayName": "Glideplate",
+		"description": "Allows chestplates and Elytra to be combined in an anvil without XP costs or prior-work penalties.",
+		"link": {
+			"Modrinth": "https://modrinth.com/mod/glideplate",
+			"Curseforge": "https://www.curseforge.com/minecraft/mc-mods/glideplate",
+			"Planet Minecraft": "https://www.planetminecraft.com/mod/glideplate/"
+		}
+	},
 	"hide-password": {
 		"versions": [
 			"1.0.0",
@@ -82,6 +185,39 @@
 			"Modrinth": "https://modrinth.com/mod/hide-password",
 			"Curseforge": "https://www.curseforge.com/minecraft/mc-mods/hide-password",
 			"Planet Minecraft": "https://www.planetminecraft.com/mod/hide-password/"
+		}
+	},
+	"infinity-fireworks": {
+		"versions": [
+			"1.0.0",
+			"1.0.1",
+			"1.1.0",
+			"1.1.1",
+			"1.1.2",
+			"1.1.3"
+		],
+		"hasIcon": true,
+		"displayName": "Infinity Fireworks",
+		"description": "Prevents firework rockets from being consumed when used.",
+		"link": {
+			"Modrinth": "https://modrinth.com/mod/infinity-fireworks",
+			"Curseforge": "https://www.curseforge.com/minecraft/mc-mods/infinity-fireworks",
+			"Planet Minecraft": "https://www.planetminecraft.com/mod/infinity-fireworks/"
+		}
+	},
+	"no-hungry": {
+		"versions": [
+			"1.1.0",
+			"1.1.1",
+			"1.1.2"
+		],
+		"hasIcon": true,
+		"displayName": "No Hungry",
+		"description": "Prevents player hunger and saturation from falling below configurable minimum levels.",
+		"link": {
+			"Modrinth": "https://modrinth.com/mod/no-hungry",
+			"Curseforge": "https://www.curseforge.com/minecraft/mc-mods/no-hungry",
+			"Planet Minecraft": "https://www.planetminecraft.com/mod/no-hungry/"
 		}
 	},
 	"player-highlighter": {
@@ -109,108 +245,6 @@
 			"Planet Minecraft": "https://www.planetminecraft.com/mod/player-highlighter/"
 		}
 	},
-	"client-flying": {
-		"versions": [
-			"1.0.0",
-			"1.0.1",
-			"1.0.2",
-			"1.0.3",
-			"1.1.0",
-			"1.1.1",
-			"1.1.2",
-			"1.1.3",
-			"1.1.4",
-			"1.1.5",
-			"1.1.6"
-		],
-		"hasIcon": true,
-		"displayName": "Client Flying",
-		"description": "Enables flight in Survival and Adventure modes without OP permissions.",
-		"link": {}
-	},
-	"glideplate": {
-		"versions": [
-			"1.0.0",
-			"1.0.1",
-			"1.1.0",
-			"1.1.1",
-			"1.1.2"
-		],
-		"hasIcon": true,
-		"displayName": "Glideplate",
-		"description": "Allows chestplates and Elytra to be combined in an anvil without XP costs or prior-work penalties.",
-		"link": {
-			"Modrinth": "https://modrinth.com/mod/glideplate",
-			"Curseforge": "https://www.curseforge.com/minecraft/mc-mods/glideplate",
-			"Planet Minecraft": "https://www.planetminecraft.com/mod/glideplate/"
-		}
-	},
-	"infinity-fireworks": {
-		"versions": [
-			"1.0.0",
-			"1.0.1",
-			"1.1.0",
-			"1.1.1",
-			"1.1.2",
-			"1.1.3"
-		],
-		"hasIcon": true,
-		"displayName": "Infinity Fireworks",
-		"description": "Prevents firework rockets from being consumed when used.",
-		"link": {
-			"Modrinth": "https://modrinth.com/mod/infinity-fireworks",
-			"Curseforge": "https://www.curseforge.com/minecraft/mc-mods/infinity-fireworks",
-			"Planet Minecraft": "https://www.planetminecraft.com/mod/infinity-fireworks/"
-		}
-	},
-	"better-elytra-takeoff": {
-		"versions": [
-			"1.0.0",
-			"1.0.1",
-			"1.1.0",
-			"1.1.1",
-			"1.1.2",
-			"1.1.3",
-			"1.1.4"
-		],
-		"hasIcon": true,
-		"displayName": "Better Elytra Takeoff",
-		"description": "Starts Elytra gliding immediately while using fireworks.",
-		"link": {
-			"Modrinth": "https://modrinth.com/mod/better-elytra-takeoff",
-			"Curseforge": "https://www.curseforge.com/minecraft/mc-mods/better-elytra-takeoff",
-			"Planet Minecraft": "https://www.planetminecraft.com/mod/better-elytra-takeoff/"
-		}
-	},
-	"creeper-no-break": {
-		"versions": [
-			"1.1.0",
-			"1.1.1"
-		],
-		"hasIcon": true,
-		"displayName": "Creeper No Break",
-		"description": "Prevents creeper explosions from destroying blocks.",
-		"link": {
-			"Modrinth": "https://modrinth.com/mod/creeper-no-break",
-			"Curseforge": "https://www.curseforge.com/minecraft/mc-mods/creeper-no-break",
-			"Planet Minecraft": "https://www.planetminecraft.com/mod/creeper-no-break/"
-		}
-	},
-	"no-hungry": {
-		"versions": [
-			"1.1.0",
-			"1.1.1",
-			"1.1.2"
-		],
-		"hasIcon": true,
-		"displayName": "No Hungry",
-		"description": "Prevents player hunger and saturation from falling below configurable minimum levels.",
-		"link": {
-			"Modrinth": "https://modrinth.com/mod/no-hungry",
-			"Curseforge": "https://www.curseforge.com/minecraft/mc-mods/no-hungry",
-			"Planet Minecraft": "https://www.planetminecraft.com/mod/no-hungry/"
-		}
-	},
 	"shared-player-data": {
 		"versions": [
 			"1.1.0",
@@ -224,39 +258,5 @@
 			"Curseforge": "https://www.curseforge.com/minecraft/mc-mods/shared-player-data",
 			"Planet Minecraft": "https://www.planetminecraft.com/mod/shared-player-data/"
 		}
-	},
-	"best-armor": {
-		"versions": [
-			"1.1.0",
-			"1.1.1",
-			"1.1.2"
-		],
-		"hasIcon": true,
-		"displayName": "Best Armor",
-		"description": "Adds generated equipment shulker boxes to the operator creative tab.",
-		"link": {}
-	},
-	"fly-speed-modifier": {
-		"versions": [
-			"1.1.0",
-			"1.1.1",
-			"1.1.2",
-			"1.1.3",
-			"1.1.4"
-		],
-		"hasIcon": true,
-		"displayName": "Fly Speed Modifier",
-		"description": "Temporarily adjusts Freecam or player flight speed using a key and the mouse wheel.",
-		"link": {}
-	},
-	"better-step": {
-		"versions": [
-			"1.1.0",
-			"1.1.1"
-		],
-		"hasIcon": true,
-		"displayName": "Better Step",
-		"description": "Improves player stepping by removing the vanilla ground restriction for stepping up and adding controlled stepping down.",
-		"link": {}
 	}
 }
