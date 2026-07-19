@@ -3,7 +3,7 @@
 	"id": "shared-player-data",
 	"version": "${version}",
 	"name": "Shared Player Data",
-	"description": "Server-only shared vanilla player profile data for bound UUID groups.",
+	"description": "Shares vanilla player profile data among configured UUID groups.",
 	"authors": [
 		"Wenhan"
 	],

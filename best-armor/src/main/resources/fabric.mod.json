@@ -3,7 +3,7 @@
 	"id": "best-armor",
 	"version": "${version}",
 	"name": "Best Armor",
-	"description": "Adds three generated shulker boxes to the operator creative tab.",
+	"description": "Adds generated equipment shulker boxes to the operator creative tab.",
 	"authors": [
 		"Wenhan"
 	],

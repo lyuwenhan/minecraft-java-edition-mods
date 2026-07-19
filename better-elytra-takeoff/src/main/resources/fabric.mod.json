@@ -3,7 +3,7 @@
 	"id": "better-elytra-takeoff",
 	"version": "${version}",
 	"name": "Better Elytra Takeoff",
-	"description": "Start gliding and immediately use a held firework when looking horizontally or upward.",
+	"description": "Starts Elytra gliding immediately while using fireworks",
 	"authors": [
 		"Wenhan"
 	],

@@ -3,7 +3,7 @@
 	"id": "player-highlighter",
 	"version": "${version}",
 	"name": "Player Highlighter",
-	"description": "A lightweight client-side Fabric mod that highlights players with a glowing outline and HUD target icon.",
+	"description": "Highlights players with a glowing outline and a HUD target icon.",
 	"authors": [
 		"Wenhan"
 	],

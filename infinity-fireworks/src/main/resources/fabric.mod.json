@@ -3,7 +3,7 @@
 	"id": "infinity-fireworks",
 	"version": "${version}",
 	"name": "Infinity Fireworks",
-	"description": "Fabric mod that allows you to use firework rockets without consuming them.",
+	"description": "Prevents firework rockets from being consumed when used.",
 	"authors": [
 		"Wenhan"
 	],

@@ -3,7 +3,7 @@
 	"id": "auto-greeting-server",
 	"version": "${version}",
 	"name": "Auto Greeting - Server",
-	"description": "A Fabric mod that automatically sends greeting messages.",
+	"description": "Automatically sends greeting messages to players based on configured conditions.",
 	"authors": [
 		"Wenhan"
 	],

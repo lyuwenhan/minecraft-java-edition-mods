@@ -3,7 +3,7 @@
 	"id": "fly-speed-modifier",
 	"version": "${version}",
 	"name": "Fly Speed Modifier",
-	"description": "Temporarily adjusts Freecam and direct player flight speed while a key is held and the mouse wheel is scrolled.",
+	"description": "Temporarily adjusts Freecam or player flight speed using a key and the mouse wheel.",
 	"authors": [
 		"Wenhan"
 	],

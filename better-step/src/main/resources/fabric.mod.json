@@ -3,7 +3,7 @@
 	"id": "better-step",
 	"version": "${version}",
 	"name": "Better Step",
-	"description": "Improves player stepping by removing the vanilla ground gate for step-up and adding controlled step-down.",
+	"description": "Improves player stepping by removing the vanilla ground restriction for stepping up and adding controlled stepping down.",
 	"authors": [
 		"Wenhan"
 	],

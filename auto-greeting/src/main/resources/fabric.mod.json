@@ -1,9 +1,9 @@
 {
-	"schemaVersion": 1,
+	"schemaVersion":1 ,
 	"id": "auto-greeting",
 	"version": "${version}",
 	"name": "Auto Greeting",
-	"description": "A Fabric client-side mod that automatically sends greeting messages.",
+	"description": "Automatically sends greeting messages based on configured conditions.",
 	"authors": [
 		"Wenhan"
 	],

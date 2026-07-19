@@ -3,7 +3,7 @@
 	"id": "glideplate",
 	"version": "${version}",
 	"name": "Glideplate",
-	"description": "Allows chestplates and elytra to be combined in an anvil without XP cost or prior-work penalty.",
+	"description": "Allows chestplates and Elytra to be combined in an anvil without XP costs or prior-work penalties.",
 	"authors": [
 		"Wenhan"
 	],

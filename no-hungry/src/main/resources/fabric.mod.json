@@ -3,7 +3,7 @@
 	"id": "no-hungry",
 	"version": "${version}",
 	"name": "No Hungry",
-	"description": "Keeps player hunger and saturation from falling below configurable minimum levels.",
+	"description": "Prevents player hunger and saturation from falling below configurable minimum levels.",
 	"authors": [
 		"Wenhan"
 	],

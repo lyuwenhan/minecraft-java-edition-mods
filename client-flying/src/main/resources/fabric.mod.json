@@ -3,7 +3,7 @@
 	"id": "client-flying",
 	"version": "${version}",
 	"name": "Client Flying",
-	"description": "A client-side Fabric mod that enables flight in Survival and Adventure modes while automatically handling Elytra conflicts and continuously syncing movement behavior.",
+	"description": "Enables flight in Survival and Adventure modes without OP permissions.",
 	"authors": [
 		"Wenhan"
 	],
