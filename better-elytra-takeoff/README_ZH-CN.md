@@ -2,7 +2,7 @@
 
 [EN/English](https://lyuwenhan.github.io/extensions/minecraft-java/data/assets/better-elytra-takeoff/README/README.html) | [ZH-CN/简体中文](https://lyuwenhan.github.io/extensions/minecraft-java/data/assets/better-elytra-takeoff/README/README_ZH-CN.html)
 
-# Better Elytra Takeoff（鞘翅助飞）
+# Better Elytra Takeoff (鞘翅助飞)
 
 一个 Fabric 服务端 / 单人游戏模组，可以让玩家在地面上使用烟花火箭直接启动鞘翅滑翔。
 

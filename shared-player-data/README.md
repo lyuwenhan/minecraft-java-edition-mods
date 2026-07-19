@@ -20,15 +20,15 @@ Only one player from the same bound group may be online at the same time. If ano
 
 ## Key Features
 
-* Bind two online players with a simple command
-* Bound players share the same persistent player profile
-* Only one player from the same bound group can be online at once
-* Uses the vanilla duplicate-login disconnect message when a bound profile is already in use
-* Supports online-player name suggestions for commands
-* Automatically saves binding configuration
-* Synchronizes operator status within bound groups
-* Designed for dedicated servers
-* No client-side installation required
+- Bind two online players with a simple command
+- Bound players share the same persistent player profile
+- Only one player from the same bound group can be online at once
+- Uses the vanilla duplicate-login disconnect message when a bound profile is already in use
+- Supports online-player name suggestions for commands
+- Automatically saves binding configuration
+- Synchronizes operator status within bound groups
+- Designed for dedicated servers
+- No client-side installation required
 
 ---
 
@@ -40,16 +40,16 @@ Only one player from the same bound group may be online at the same time. If ano
 
 ### Behavior
 
-* Both players must be online
-* `<name1>` remains online
-* `<name2>` is bound to the same shared profile group and then disconnected
-* The command requires level 4 permission
-* The command can be used by level 4 operators, the server console, and RCON
+- Both players must be online
+- `<name1>` remains online
+- `<name2>` is bound to the same shared profile group and then disconnected
+- The command requires level 4 permission
+- The command can be used by level 4 operators, the server console, and RCON
 
 ### Restrictions
 
-* The first and second player cannot be the same player
-* A player cannot bind themselves as the second target
+- The first and second player cannot be the same player
+- A player cannot bind themselves as the second target
 
 ---
 
@@ -65,22 +65,22 @@ If one member of the group is removed from the operator list, the other known me
 
 ## Multiplayer Behavior
 
-* Bound players share one persistent gameplay profile
-* Only one bound player may use the shared profile at a time
-* Other players in the same bound group receive the vanilla duplicate-login disconnect message while the profile is in use
-* Players outside the bound group are unaffected
+- Bound players share one persistent gameplay profile
+- Only one bound player may use the shared profile at a time
+- Other players in the same bound group receive the vanilla duplicate-login disconnect message while the profile is in use
+- Players outside the bound group are unaffected
 
 ---
 
 ## Server Safety
 
-* Server-side only
-* Dedicated-server focused
-* No client mod required
-* Does not require players to install anything
-* Does not change player authentication identity
-* Keeps real player accounts separate while sharing bound gameplay data
-* Prevents simultaneous access to the same shared profile
+- Server-side only
+- Dedicated-server focused
+- No client mod required
+- Does not require players to install anything
+- Does not change player authentication identity
+- Keeps real player accounts separate while sharing bound gameplay data
+- Prevents simultaneous access to the same shared profile
 
 ---
 
@@ -100,10 +100,10 @@ Manual configuration edits should be made while the server is stopped.
 
 ## Supported Versions
 
-* Minecraft 26.1.2
-* Fabric Loader 0.19.2+
-* Fabric API 0.150.0+
-* Java 25
+- Minecraft 26.1.2
+- Fabric Loader 0.19.2+
+- Fabric API 0.150.0+
+- Java 25
 
 ---
 

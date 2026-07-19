@@ -14,15 +14,15 @@ Best Armor adds three preset shulker boxes to the operator-only creative tab.
 
 The boxes are designed as three equipment tiers:
 
-* The yellow shulker box contains the best equipment that can be obtained through normal Survival gameplay.
-* The orange shulker box looks almost identical to the yellow set from the outside, but its internal attributes are much higher.
-* The red shulker box contains equipment with very high visible and internal power.
+- The yellow shulker box contains the best equipment that can be obtained through normal Survival gameplay.
+- The orange shulker box looks almost identical to the yellow set from the outside, but its internal attributes are much higher.
+- The red shulker box contains equipment with very high visible and internal power.
 
 Each set includes:
 
-* A normal netherite chestplate
-* A vanilla elytra
-* A Glideplate-style netherite chestplate with gliding support
+- A normal netherite chestplate
+- A vanilla elytra
+- A Glideplate-style netherite chestplate with gliding support
 
 The mod does not register new items, blocks, commands, screens, or configuration files. It directly generates existing item stacks in code and adds them to the operator creative tab.
 
@@ -30,17 +30,17 @@ The mod does not register new items, blocks, commands, screens, or configuration
 
 ## Key Features
 
-* Adds three prebuilt shulker boxes to the operator creative tab
-* Includes yellow, orange, and red equipment presets
-* Uses vanilla shulker boxes with preconfigured container contents
-* Includes normal chestplates, elytra, and Glideplate-style chestplates
-* Generates all items directly in Java code
-* Does not load item definitions from text files
-* Does not parse `/give` command strings
-* Does not register custom items or blocks
-* No commands or configuration required
-* Client-side only
-* Lightweight with minimal runtime logic
+- Adds three prebuilt shulker boxes to the operator creative tab
+- Includes yellow, orange, and red equipment presets
+- Uses vanilla shulker boxes with preconfigured container contents
+- Includes normal chestplates, elytra, and Glideplate-style chestplates
+- Generates all items directly in Java code
+- Does not load item definitions from text files
+- Does not parse `/give` command strings
+- Does not register custom items or blocks
+- No commands or configuration required
+- Client-side only
+- Lightweight with minimal runtime logic
 
 ---
 
@@ -84,33 +84,33 @@ No server-side Glideplate installation is required for these preset item stacks 
 
 ## Visual Behavior
 
-* The three shulker boxes appear in the operator creative tab
-* The yellow box represents the best normal Survival-style set
-* The orange box looks similar to the yellow set but contains stronger hidden attributes
-* The red box represents the strongest full-power set
-* Each set includes a normal chestplate, a vanilla elytra, and a Glideplate-style chestplate
-* No custom UI or overlay is added
-* No custom textures or models are required by this mod
+- The three shulker boxes appear in the operator creative tab
+- The yellow box represents the best normal Survival-style set
+- The orange box looks similar to the yellow set but contains stronger hidden attributes
+- The red box represents the strongest full-power set
+- Each set includes a normal chestplate, a vanilla elytra, and a Glideplate-style chestplate
+- No custom UI or overlay is added
+- No custom textures or models are required by this mod
 
 ---
 
 ## Multiplayer Safety
 
-* Client-side only
-* No server modifications are required by this mod
-* Server authority still applies
-* Creative inventory item stacks may be validated or rejected by the server
-* Some servers may not allow modified creative inventory items
-* Use on multiplayer servers only where administrator tools of this type are allowed
+- Client-side only
+- No server modifications are required by this mod
+- Server authority still applies
+- Creative inventory item stacks may be validated or rejected by the server
+- Some servers may not allow modified creative inventory items
+- Use on multiplayer servers only where administrator tools of this type are allowed
 
 ---
 
 ## Supported Versions
 
-* Minecraft 26.1.2
-* Fabric Loader 0.19.2+
-* Fabric API 0.150.0+
-* Java 25
+- Minecraft 26.1.2
+- Fabric Loader 0.19.2+
+- Fabric API 0.150.0+
+- Java 25
 
 ---
 
