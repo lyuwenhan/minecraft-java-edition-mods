@@ -1,8 +1,8 @@
-# 语言
+# Languages (语言)
 
 [EN/English](https://lyuwenhan.github.io/extensions/minecraft-java/data/assets/hide-password/README/README.html) | [ZH-CN/简体中文](https://lyuwenhan.github.io/extensions/minecraft-java/data/assets/hide-password/README/README_ZH-CN.html)
 
-# Hide Password
+# Hide Password (隐藏密码)
 
 一个客户端 Fabric 模组，可在聊天输入框中隐藏敏感命令参数（例如 `/login`、`/register`）。
 
