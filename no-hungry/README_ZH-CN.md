@@ -44,8 +44,7 @@ No Hungry 只控制饥饿值和饱和度的最低边界。
 
 ```text
 /nohungry set minHunger <0-20>
-````
-
+```
 示例：
 
 ```text

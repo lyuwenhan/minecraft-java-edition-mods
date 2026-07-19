@@ -34,10 +34,10 @@ All features are handled entirely on the client.
 
 Highlighting is active when either of the following conditions is met:
 
-- The highlight hold key is pressed 
-  Default key: **TAB**
-- Keep mode is enabled 
-  Default toggle key: **I**
+- The highlight hold key is pressed
+Default key: **TAB**
+- Keep mode is enabled
+Default toggle key: **I**
 
 When highlighting is active:
 
