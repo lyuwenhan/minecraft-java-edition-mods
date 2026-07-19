@@ -6,8 +6,6 @@
 
 A lightweight **client-side Fabric mod** that adds three prebuilt administrator shulker boxes and a Void Sword to the operator creative tab.
 
----
-
 ## Overview
 
 Best Armor adds four generated items to the operator-only creative tab:
@@ -23,15 +21,11 @@ The three shulker boxes contain different equipment presets:
 - The orange shulker box keeps a mostly vanilla-looking equipment profile while adding normally incompatible enchantments, extreme protection levels, unbreakable items, special boots, and a shield that blocks all registered damage types.
 - The red shulker box contains full-power administrator equipment with extreme enchantments, custom combat attributes, increased attack range, fall-damage immunity boots, and other non-Survival item components.
 
----
-
 ## Key Features
 
 - Adds three prebuilt equipment shulker boxes
 - Adds a Void Sword
 - Includes weapons, tools, armor, Elytra equipment, shields, and fishing rods
-
----
 
 ## Added Creative Items
 
@@ -231,8 +225,6 @@ The Yellow Shulker Box contains 27 equipment items intended to represent a compl
   - Lure III
   - Unbreaking III
   - Mending
-
----
 
 ### Orange Shulker Box
 
@@ -478,8 +470,6 @@ The fall-damage multiplier removes normal fall damage while the boots are equipp
   - Unbreaking 255
   - Mending
   - Unbreakable
-
----
 
 ### Red Shulker Box
 
@@ -754,8 +744,6 @@ Both boot variants receive:
 - Mending
 - Unbreakable
 
----
-
 ## Void Sword
 
 The Void Sword is added directly to the operator creative tab as a separate item.
@@ -801,8 +789,6 @@ The sword also receives the same all-damage blocking component used by the admin
 
 Actual server behavior remains subject to server-side item validation and combat authority.
 
----
-
 ## Glideplate Compatibility
 
 Each shulker box includes a specially configured netherite chestplate with Elytra functionality.
@@ -823,8 +809,6 @@ The generated chestplate uses compatibility data associated with [Glideplate](ht
 
 Installing Glideplate may improve related item naming, models, and visual presentation, but Best Armor generates the item stacks directly.
 
----
-
 ## Creative Tab Behavior
 
 The generated items are added to the operator creative tab only when operator-restricted items are visible.
@@ -837,8 +821,6 @@ The following items are added to both the main operator-tab display and creative
 - Void Sword
 
 The items are generated only when a client world is available because the mod requires the active registry access to resolve enchantments and damage types.
-
----
 
 ## Technical Behavior
 
@@ -872,8 +854,6 @@ The mod does not:
 - Execute `/give` commands
 - Parse command strings
 
----
-
 ## Visual Behavior
 
 - The yellow, orange, and red boxes appear as vanilla colored shulker boxes
@@ -884,8 +864,6 @@ The mod does not:
 - Glideplate-style chestplates include custom naming, lore, and model data
 - No custom textures are included by this mod
 - No custom user interface or HUD is added
-
----
 
 ## Multiplayer Safety
 
@@ -898,16 +876,12 @@ The mod does not:
 - The Void Sword and administrator equipment can severely disrupt normal gameplay
 - Use these items only in private worlds or on servers where administrator equipment is explicitly allowed
 
----
-
 ## Supported Versions
 
 - Minecraft 26.1.2
 - Fabric Loader 0.19.2+
 - Fabric API 0.150.0+
 - Java 25
-
----
 
 ## License
 

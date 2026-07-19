@@ -6,8 +6,6 @@
 
 A lightweight **client-side Fabric mod** that enables controlled flight behavior in Survival and Adventure modes while preventing Elytra conflicts, operating entirely on the client.
 
----
-
 ## Overview
 
 Client Flying allows players to toggle flight in Survival and Adventure modes when not wearing Elytra.
@@ -15,8 +13,6 @@ Client Flying allows players to toggle flight in Survival and Adventure modes wh
 The mod also forces the client to continuously report grounded movement to the server and enables local invulnerability flags. All changes are handled entirely on the client side.
 
 When Elytra is equipped, flight permission is automatically disabled to avoid interference with vanilla glide mechanics.
-
----
 
 ## Key Features
 
@@ -27,16 +23,12 @@ When Elytra is equipped, flight permission is automatically disabled to avoid in
 - No commands or configuration required
 - Lightweight with minimal performance impact
 
----
-
 ## Visual Behavior
 
 - Flight becomes available in Survival and Adventure modes
 - Elytra usage automatically disables custom flight
 - Movement packets are sent every tick with grounded state
 - No visual UI changes or overlays
-
----
 
 ## Multiplayer Safety
 
@@ -46,16 +38,12 @@ When Elytra is equipped, flight permission is automatically disabled to avoid in
 - Server authority still applies
 - May cause desynchronization on strict anti-cheat servers
 
----
-
 ## Supported Versions
 
 - Minecraft 26.1.2
 - Fabric Loader 0.19.2+
 - Fabric API 0.150.0+
 - Java 25
-
----
 
 ## License
 

@@ -11,8 +11,6 @@ using a locally encrypted password.
 This mod runs entirely on the client and does **not** modify
 any server behavior.
 
----
-
 ## Features
 
 - Automatically sends `/login <password>` after joining a server
@@ -20,8 +18,6 @@ any server behavior.
 - No server-side plugin or mod required
 - Client-only, safe for multiplayer servers
 - Manual trigger via command for testing or fallback
-
----
 
 ## Commands
 
@@ -59,8 +55,6 @@ any server behavior.
 - Deletes stored credentials
 - Disables auto-login
 
----
-
 ## How It Works
 
 1. On first setup, the password is encrypted and saved locally
@@ -72,8 +66,6 @@ any server behavior.
 The mod does **not** intercept packets, modify UI, or hook into
 server authentication logic.
 
----
-
 ## Security Notes
 
 - Passwords are stored **only on your local machine**
@@ -84,16 +76,12 @@ server authentication logic.
 - No plaintext password is written to disk
 - Do **not** reuse important real-world passwords
 
----
-
 ## Supported Versions
 
 - Minecraft 26.1.2
 - Fabric Loader 0.19.2+
 - Fabric API 0.150.0+
 - Java 25
-
----
 
 ## License
 
