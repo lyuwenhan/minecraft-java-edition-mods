@@ -2,7 +2,7 @@
 	"schemaVersion": 1,
 	"id": "auto-greeting-server",
 	"version": "${version}",
-	"name": "Auto Greeting Server",
+	"name": "Auto Greeting - Server",
 	"description": "A Fabric mod that automatically sends greeting messages.",
 	"authors": [
 		"Wenhan"

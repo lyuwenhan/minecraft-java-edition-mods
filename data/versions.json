@@ -32,7 +32,7 @@
 			"1.1.0"
 		],
 		"hasIcon": true,
-		"displayName": "Auto Greeting Server",
+		"displayName": "Auto Greeting - Server",
 		"description": "A Fabric mod that automatically sends greeting messages.",
 		"link": {
 			"Modrinth": "https://modrinth.com/mod/auto-greeting-server",
