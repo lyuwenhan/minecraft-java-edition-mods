@@ -56,11 +56,9 @@ public final class BestArmorMod implements ClientModInitializer {
 
 	private static void addOperatorTabItem(FabricCreativeModeTabOutput output) {
 		ClientLevel level = Minecraft.getInstance().level;
-
 		if (level == null) {
 			return;
 		}
-
 		HolderLookup.Provider registries = level.registryAccess();
 		output.accept(
 				createYellowShulkerBox(registries), CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS);
@@ -74,7 +72,6 @@ public final class BestArmorMod implements ClientModInitializer {
 
 	private static ItemStack createYellowShulkerBox(HolderLookup.Provider registries) {
 		List<ItemStack> containerItems = createContainerItems(27);
-
 		ItemStack slot0Stack =
 				createItemStack(
 						Items.NETHERITE_SWORD,
@@ -87,7 +84,6 @@ public final class BestArmorMod implements ClientModInitializer {
 						enchantment(Enchantments.UNBREAKING, 3),
 						enchantment(Enchantments.MENDING, 1));
 		containerItems.set(0, slot0Stack);
-
 		ItemStack slot1Stack =
 				createItemStack(
 						Items.NETHERITE_AXE,
@@ -98,7 +94,6 @@ public final class BestArmorMod implements ClientModInitializer {
 						enchantment(Enchantments.UNBREAKING, 3),
 						enchantment(Enchantments.MENDING, 1));
 		containerItems.set(1, slot1Stack);
-
 		ItemStack slot2Stack =
 				createItemStack(
 						Items.NETHERITE_PICKAXE,
@@ -108,7 +103,6 @@ public final class BestArmorMod implements ClientModInitializer {
 						enchantment(Enchantments.UNBREAKING, 3),
 						enchantment(Enchantments.MENDING, 1));
 		containerItems.set(2, slot2Stack);
-
 		ItemStack slot3Stack =
 				createItemStack(
 						Items.NETHERITE_SHOVEL,
@@ -118,7 +112,6 @@ public final class BestArmorMod implements ClientModInitializer {
 						enchantment(Enchantments.UNBREAKING, 3),
 						enchantment(Enchantments.MENDING, 1));
 		containerItems.set(3, slot3Stack);
-
 		ItemStack slot4Stack =
 				createItemStack(
 						Items.NETHERITE_HOE,
@@ -128,7 +121,6 @@ public final class BestArmorMod implements ClientModInitializer {
 						enchantment(Enchantments.UNBREAKING, 3),
 						enchantment(Enchantments.MENDING, 1));
 		containerItems.set(4, slot4Stack);
-
 		ItemStack slot5Stack =
 				createItemStack(
 						Items.BOW,
@@ -139,7 +131,6 @@ public final class BestArmorMod implements ClientModInitializer {
 						enchantment(Enchantments.UNBREAKING, 3),
 						enchantment(Enchantments.INFINITY, 1));
 		containerItems.set(5, slot5Stack);
-
 		ItemStack slot6Stack =
 				createItemStack(
 						Items.TRIDENT,
@@ -149,7 +140,6 @@ public final class BestArmorMod implements ClientModInitializer {
 						enchantment(Enchantments.UNBREAKING, 3),
 						enchantment(Enchantments.MENDING, 1));
 		containerItems.set(6, slot6Stack);
-
 		ItemStack slot7Stack =
 				createItemStack(
 						Items.TRIDENT,
@@ -159,7 +149,6 @@ public final class BestArmorMod implements ClientModInitializer {
 						enchantment(Enchantments.UNBREAKING, 3),
 						enchantment(Enchantments.MENDING, 1));
 		containerItems.set(7, slot7Stack);
-
 		ItemStack slot8Stack =
 				createItemStack(
 						Items.TRIDENT,
@@ -170,7 +159,6 @@ public final class BestArmorMod implements ClientModInitializer {
 						enchantment(Enchantments.UNBREAKING, 3),
 						enchantment(Enchantments.MENDING, 1));
 		containerItems.set(8, slot8Stack);
-
 		ItemStack slot9Stack =
 				createItemStack(
 						Items.NETHERITE_SPEAR,
@@ -183,7 +171,6 @@ public final class BestArmorMod implements ClientModInitializer {
 						enchantment(Enchantments.LUNGE, 3),
 						enchantment(Enchantments.MENDING, 1));
 		containerItems.set(9, slot9Stack);
-
 		ItemStack slot10Stack =
 				createItemStack(
 						Items.NETHERITE_AXE,
@@ -194,7 +181,6 @@ public final class BestArmorMod implements ClientModInitializer {
 						enchantment(Enchantments.UNBREAKING, 3),
 						enchantment(Enchantments.MENDING, 1));
 		containerItems.set(10, slot10Stack);
-
 		ItemStack slot11Stack =
 				createItemStack(
 						Items.NETHERITE_PICKAXE,
@@ -204,7 +190,6 @@ public final class BestArmorMod implements ClientModInitializer {
 						enchantment(Enchantments.UNBREAKING, 3),
 						enchantment(Enchantments.MENDING, 1));
 		containerItems.set(11, slot11Stack);
-
 		ItemStack slot12Stack =
 				createItemStack(
 						Items.NETHERITE_SHOVEL,
@@ -214,7 +199,6 @@ public final class BestArmorMod implements ClientModInitializer {
 						enchantment(Enchantments.UNBREAKING, 3),
 						enchantment(Enchantments.MENDING, 1));
 		containerItems.set(12, slot12Stack);
-
 		ItemStack slot13Stack =
 				createItemStack(
 						Items.NETHERITE_HOE,
@@ -224,7 +208,6 @@ public final class BestArmorMod implements ClientModInitializer {
 						enchantment(Enchantments.UNBREAKING, 3),
 						enchantment(Enchantments.MENDING, 1));
 		containerItems.set(13, slot13Stack);
-
 		ItemStack slot14Stack =
 				createItemStack(
 						Items.CROSSBOW,
@@ -234,7 +217,6 @@ public final class BestArmorMod implements ClientModInitializer {
 						enchantment(Enchantments.UNBREAKING, 3),
 						enchantment(Enchantments.MENDING, 1));
 		containerItems.set(14, slot14Stack);
-
 		ItemStack slot15Stack =
 				createItemStack(
 						Items.MACE,
@@ -244,7 +226,6 @@ public final class BestArmorMod implements ClientModInitializer {
 						enchantment(Enchantments.UNBREAKING, 3),
 						enchantment(Enchantments.MENDING, 1));
 		containerItems.set(15, slot15Stack);
-
 		ItemStack slot16Stack =
 				createItemStack(
 						Items.MACE,
@@ -254,7 +235,6 @@ public final class BestArmorMod implements ClientModInitializer {
 						enchantment(Enchantments.UNBREAKING, 3),
 						enchantment(Enchantments.MENDING, 1));
 		containerItems.set(16, slot16Stack);
-
 		ItemStack slot17Stack =
 				createItemStack(
 						Items.MACE,
@@ -264,7 +244,6 @@ public final class BestArmorMod implements ClientModInitializer {
 						enchantment(Enchantments.UNBREAKING, 3),
 						enchantment(Enchantments.MENDING, 1));
 		containerItems.set(17, slot17Stack);
-
 		ItemStack slot18Stack =
 				createItemStack(
 						Items.NETHERITE_HELMET,
@@ -276,7 +255,6 @@ public final class BestArmorMod implements ClientModInitializer {
 						enchantment(Enchantments.UNBREAKING, 3),
 						enchantment(Enchantments.MENDING, 1));
 		containerItems.set(18, slot18Stack);
-
 		ItemStack slot19Stack =
 				createItemStack(
 						Items.NETHERITE_CHESTPLATE,
@@ -286,7 +264,6 @@ public final class BestArmorMod implements ClientModInitializer {
 						enchantment(Enchantments.UNBREAKING, 3),
 						enchantment(Enchantments.MENDING, 1));
 		containerItems.set(19, slot19Stack);
-
 		ItemStack slot20Stack =
 				createItemStack(
 						Items.NETHERITE_LEGGINGS,
@@ -297,7 +274,6 @@ public final class BestArmorMod implements ClientModInitializer {
 						enchantment(Enchantments.UNBREAKING, 3),
 						enchantment(Enchantments.MENDING, 1));
 		containerItems.set(20, slot20Stack);
-
 		ItemStack slot21Stack =
 				createItemStack(
 						Items.NETHERITE_BOOTS,
@@ -310,7 +286,6 @@ public final class BestArmorMod implements ClientModInitializer {
 						enchantment(Enchantments.UNBREAKING, 3),
 						enchantment(Enchantments.MENDING, 1));
 		containerItems.set(21, slot21Stack);
-
 		ItemStack elytraStack =
 				createItemStack(
 						Items.ELYTRA,
@@ -318,7 +293,6 @@ public final class BestArmorMod implements ClientModInitializer {
 						enchantment(Enchantments.UNBREAKING, 3),
 						enchantment(Enchantments.MENDING, 1));
 		containerItems.set(22, elytraStack);
-
 		ItemStack glideplateChestplateStack =
 				createItemStack(
 						Items.NETHERITE_CHESTPLATE,
@@ -329,7 +303,6 @@ public final class BestArmorMod implements ClientModInitializer {
 						enchantment(Enchantments.MENDING, 1));
 		applyGlideplateData(glideplateChestplateStack);
 		containerItems.set(23, glideplateChestplateStack);
-
 		ItemStack slot24Stack =
 				createItemStack(
 						Items.NETHERITE_BOOTS,
@@ -342,7 +315,6 @@ public final class BestArmorMod implements ClientModInitializer {
 						enchantment(Enchantments.UNBREAKING, 3),
 						enchantment(Enchantments.MENDING, 1));
 		containerItems.set(24, slot24Stack);
-
 		ItemStack slot25Stack =
 				createItemStack(
 						Items.SHIELD,
@@ -350,7 +322,6 @@ public final class BestArmorMod implements ClientModInitializer {
 						enchantment(Enchantments.UNBREAKING, 3),
 						enchantment(Enchantments.MENDING, 1));
 		containerItems.set(25, slot25Stack);
-
 		ItemStack slot26Stack =
 				createItemStack(
 						Items.FISHING_ROD,
@@ -360,7 +331,6 @@ public final class BestArmorMod implements ClientModInitializer {
 						enchantment(Enchantments.UNBREAKING, 3),
 						enchantment(Enchantments.MENDING, 1));
 		containerItems.set(26, slot26Stack);
-
 		ItemStack box = new ItemStack(Items.YELLOW_SHULKER_BOX);
 		box.set(DataComponents.ITEM_NAME, Component.literal("Yellow box"));
 		box.set(DataComponents.CONTAINER, ItemContainerContents.fromItems(containerItems));
@@ -369,7 +339,6 @@ public final class BestArmorMod implements ClientModInitializer {
 
 	private static ItemStack createOrangeShulkerBox(HolderLookup.Provider registries) {
 		List<ItemStack> containerItems = createContainerItems(26);
-
 		ItemStack slot0Stack =
 				createItemStack(
 						Items.NETHERITE_SWORD,
@@ -385,7 +354,6 @@ public final class BestArmorMod implements ClientModInitializer {
 						enchantment(Enchantments.MENDING, 1));
 		setUnbreakable(slot0Stack);
 		containerItems.set(0, slot0Stack);
-
 		ItemStack slot1Stack =
 				createItemStack(
 						Items.NETHERITE_AXE,
@@ -399,7 +367,6 @@ public final class BestArmorMod implements ClientModInitializer {
 						enchantment(Enchantments.MENDING, 1));
 		setUnbreakable(slot1Stack);
 		containerItems.set(1, slot1Stack);
-
 		ItemStack slot2Stack =
 				createItemStack(
 						Items.NETHERITE_PICKAXE,
@@ -410,7 +377,6 @@ public final class BestArmorMod implements ClientModInitializer {
 						enchantment(Enchantments.MENDING, 1));
 		setUnbreakable(slot2Stack);
 		containerItems.set(2, slot2Stack);
-
 		ItemStack slot3Stack =
 				createItemStack(
 						Items.NETHERITE_SHOVEL,
@@ -421,7 +387,6 @@ public final class BestArmorMod implements ClientModInitializer {
 						enchantment(Enchantments.MENDING, 1));
 		setUnbreakable(slot3Stack);
 		containerItems.set(3, slot3Stack);
-
 		ItemStack slot4Stack =
 				createItemStack(
 						Items.NETHERITE_HOE,
@@ -432,7 +397,6 @@ public final class BestArmorMod implements ClientModInitializer {
 						enchantment(Enchantments.MENDING, 1));
 		setUnbreakable(slot4Stack);
 		containerItems.set(4, slot4Stack);
-
 		ItemStack slot5Stack =
 				createItemStack(
 						Items.BOW,
@@ -445,7 +409,6 @@ public final class BestArmorMod implements ClientModInitializer {
 						enchantment(Enchantments.MENDING, 1));
 		setUnbreakable(slot5Stack);
 		containerItems.set(5, slot5Stack);
-
 		ItemStack slot6Stack =
 				createItemStack(
 						Items.TRIDENT,
@@ -456,7 +419,6 @@ public final class BestArmorMod implements ClientModInitializer {
 						enchantment(Enchantments.MENDING, 1));
 		setUnbreakable(slot6Stack);
 		containerItems.set(6, slot6Stack);
-
 		ItemStack slot7Stack =
 				createItemStack(
 						Items.TRIDENT,
@@ -467,7 +429,6 @@ public final class BestArmorMod implements ClientModInitializer {
 						enchantment(Enchantments.MENDING, 1));
 		setUnbreakable(slot7Stack);
 		containerItems.set(7, slot7Stack);
-
 		ItemStack slot8Stack =
 				createItemStack(
 						Items.TRIDENT,
@@ -479,7 +440,6 @@ public final class BestArmorMod implements ClientModInitializer {
 						enchantment(Enchantments.MENDING, 1));
 		setUnbreakable(slot8Stack);
 		containerItems.set(8, slot8Stack);
-
 		ItemStack slot9Stack =
 				createItemStack(
 						Items.NETHERITE_SPEAR,
@@ -495,7 +455,6 @@ public final class BestArmorMod implements ClientModInitializer {
 						enchantment(Enchantments.MENDING, 1));
 		setUnbreakable(slot9Stack);
 		containerItems.set(9, slot9Stack);
-
 		ItemStack slot10Stack =
 				createItemStack(
 						Items.NETHERITE_AXE,
@@ -509,7 +468,6 @@ public final class BestArmorMod implements ClientModInitializer {
 						enchantment(Enchantments.MENDING, 1));
 		setUnbreakable(slot10Stack);
 		containerItems.set(10, slot10Stack);
-
 		ItemStack slot11Stack =
 				createItemStack(
 						Items.NETHERITE_PICKAXE,
@@ -520,7 +478,6 @@ public final class BestArmorMod implements ClientModInitializer {
 						enchantment(Enchantments.MENDING, 1));
 		setUnbreakable(slot11Stack);
 		containerItems.set(11, slot11Stack);
-
 		ItemStack slot12Stack =
 				createItemStack(
 						Items.NETHERITE_SHOVEL,
@@ -531,7 +488,6 @@ public final class BestArmorMod implements ClientModInitializer {
 						enchantment(Enchantments.MENDING, 1));
 		setUnbreakable(slot12Stack);
 		containerItems.set(12, slot12Stack);
-
 		ItemStack slot13Stack =
 				createItemStack(
 						Items.NETHERITE_HOE,
@@ -542,7 +498,6 @@ public final class BestArmorMod implements ClientModInitializer {
 						enchantment(Enchantments.MENDING, 1));
 		setUnbreakable(slot13Stack);
 		containerItems.set(13, slot13Stack);
-
 		ItemStack slot14Stack =
 				createItemStack(
 						Items.CROSSBOW,
@@ -555,7 +510,6 @@ public final class BestArmorMod implements ClientModInitializer {
 						enchantment(Enchantments.MENDING, 1));
 		setUnbreakable(slot14Stack);
 		containerItems.set(14, slot14Stack);
-
 		ItemStack slot15Stack =
 				createItemStack(
 						Items.MACE,
@@ -569,7 +523,6 @@ public final class BestArmorMod implements ClientModInitializer {
 						enchantment(Enchantments.MENDING, 1));
 		setUnbreakable(slot15Stack);
 		containerItems.set(15, slot15Stack);
-
 		ItemStack slot16Stack =
 				createItemStack(
 						Items.MACE,
@@ -584,7 +537,6 @@ public final class BestArmorMod implements ClientModInitializer {
 						enchantment(Enchantments.MENDING, 1));
 		setUnbreakable(slot16Stack);
 		containerItems.set(16, slot16Stack);
-
 		ItemStack slot17Stack =
 				createItemStack(
 						Items.SHIELD,
@@ -592,11 +544,8 @@ public final class BestArmorMod implements ClientModInitializer {
 						enchantment(Enchantments.UNBREAKING, 255),
 						enchantment(Enchantments.MENDING, 1));
 		setUnbreakable(slot17Stack);
-
 		setInvincibleShield(slot17Stack, registries);
-
 		containerItems.set(17, slot17Stack);
-
 		ItemStack slot18Stack =
 				createItemStack(
 						Items.NETHERITE_HELMET,
@@ -612,7 +561,6 @@ public final class BestArmorMod implements ClientModInitializer {
 						enchantment(Enchantments.MENDING, 1));
 		setUnbreakable(slot18Stack);
 		containerItems.set(18, slot18Stack);
-
 		ItemStack slot19Stack =
 				createItemStack(
 						Items.NETHERITE_CHESTPLATE,
@@ -626,7 +574,6 @@ public final class BestArmorMod implements ClientModInitializer {
 						enchantment(Enchantments.MENDING, 1));
 		setUnbreakable(slot19Stack);
 		containerItems.set(19, slot19Stack);
-
 		ItemStack slot20Stack =
 				createItemStack(
 						Items.NETHERITE_LEGGINGS,
@@ -641,7 +588,6 @@ public final class BestArmorMod implements ClientModInitializer {
 						enchantment(Enchantments.MENDING, 1));
 		setUnbreakable(slot20Stack);
 		containerItems.set(20, slot20Stack);
-
 		ItemStack slot21Stack =
 				createItemStack(
 						Items.NETHERITE_BOOTS,
@@ -684,7 +630,6 @@ public final class BestArmorMod implements ClientModInitializer {
 						AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL,
 						EquipmentSlotGroup.FEET));
 		containerItems.set(21, slot21Stack);
-
 		ItemStack elytraStack =
 				createItemStack(
 						Items.ELYTRA,
@@ -692,7 +637,6 @@ public final class BestArmorMod implements ClientModInitializer {
 						enchantment(Enchantments.UNBREAKING, 255),
 						enchantment(Enchantments.MENDING, 1));
 		containerItems.set(22, elytraStack);
-
 		ItemStack glideplateChestplateStack =
 				createItemStack(
 						Items.NETHERITE_CHESTPLATE,
@@ -707,7 +651,6 @@ public final class BestArmorMod implements ClientModInitializer {
 		setUnbreakable(glideplateChestplateStack);
 		applyGlideplateData(glideplateChestplateStack);
 		containerItems.set(23, glideplateChestplateStack);
-
 		ItemStack slot24Stack =
 				createItemStack(
 						Items.NETHERITE_BOOTS,
@@ -750,7 +693,6 @@ public final class BestArmorMod implements ClientModInitializer {
 						AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL,
 						EquipmentSlotGroup.FEET));
 		containerItems.set(24, slot24Stack);
-
 		ItemStack slot25Stack =
 				createItemStack(
 						Items.FISHING_ROD,
@@ -761,7 +703,6 @@ public final class BestArmorMod implements ClientModInitializer {
 						enchantment(Enchantments.MENDING, 1));
 		setUnbreakable(slot25Stack);
 		containerItems.set(25, slot25Stack);
-
 		ItemStack box = new ItemStack(Items.ORANGE_SHULKER_BOX);
 		box.set(DataComponents.ITEM_NAME, Component.literal("Orange box"));
 		box.set(DataComponents.CONTAINER, ItemContainerContents.fromItems(containerItems));
@@ -770,7 +711,6 @@ public final class BestArmorMod implements ClientModInitializer {
 
 	private static ItemStack createRedShulkerBox(HolderLookup.Provider registries) {
 		List<ItemStack> containerItems = createContainerItems(26);
-
 		ItemStack slot0Stack =
 				createItemStack(
 						Items.NETHERITE_SWORD,
@@ -802,7 +742,6 @@ public final class BestArmorMod implements ClientModInitializer {
 		setInvincibleShield(slot0Stack, registries);
 		setAttackRange(slot0Stack);
 		containerItems.set(0, slot0Stack);
-
 		ItemStack slot1Stack =
 				createItemStack(
 						Items.NETHERITE_AXE,
@@ -831,7 +770,6 @@ public final class BestArmorMod implements ClientModInitializer {
 						EquipmentSlotGroup.MAINHAND));
 		setAttackRange(slot1Stack);
 		containerItems.set(1, slot1Stack);
-
 		ItemStack slot2Stack =
 				createItemStack(
 						Items.NETHERITE_PICKAXE,
@@ -843,7 +781,6 @@ public final class BestArmorMod implements ClientModInitializer {
 		setUnbreakable(slot2Stack);
 		setAttackRange(slot2Stack);
 		containerItems.set(2, slot2Stack);
-
 		ItemStack slot3Stack =
 				createItemStack(
 						Items.NETHERITE_SHOVEL,
@@ -855,7 +792,6 @@ public final class BestArmorMod implements ClientModInitializer {
 		setUnbreakable(slot3Stack);
 		setAttackRange(slot3Stack);
 		containerItems.set(3, slot3Stack);
-
 		ItemStack slot4Stack =
 				createItemStack(
 						Items.NETHERITE_HOE,
@@ -867,7 +803,6 @@ public final class BestArmorMod implements ClientModInitializer {
 		setUnbreakable(slot4Stack);
 		setAttackRange(slot4Stack);
 		containerItems.set(4, slot4Stack);
-
 		ItemStack slot5Stack =
 				createItemStack(
 						Items.BOW,
@@ -880,7 +815,6 @@ public final class BestArmorMod implements ClientModInitializer {
 						enchantment(Enchantments.MENDING, 1));
 		setUnbreakable(slot5Stack);
 		containerItems.set(5, slot5Stack);
-
 		ItemStack slot6Stack =
 				createItemStack(
 						Items.TRIDENT,
@@ -906,7 +840,6 @@ public final class BestArmorMod implements ClientModInitializer {
 						EquipmentSlotGroup.MAINHAND));
 		setAttackRange(slot6Stack);
 		containerItems.set(6, slot6Stack);
-
 		ItemStack slot7Stack =
 				createItemStack(
 						Items.TRIDENT,
@@ -932,7 +865,6 @@ public final class BestArmorMod implements ClientModInitializer {
 						EquipmentSlotGroup.MAINHAND));
 		setAttackRange(slot7Stack);
 		containerItems.set(7, slot7Stack);
-
 		ItemStack slot8Stack =
 				createItemStack(
 						Items.TRIDENT,
@@ -959,7 +891,6 @@ public final class BestArmorMod implements ClientModInitializer {
 						EquipmentSlotGroup.MAINHAND));
 		setAttackRange(slot8Stack);
 		containerItems.set(8, slot8Stack);
-
 		ItemStack slot9Stack =
 				createItemStack(
 						Items.NETHERITE_SPEAR,
@@ -990,7 +921,6 @@ public final class BestArmorMod implements ClientModInitializer {
 						EquipmentSlotGroup.MAINHAND));
 		setAttackRange(slot9Stack);
 		containerItems.set(9, slot9Stack);
-
 		ItemStack slot10Stack =
 				createItemStack(
 						Items.NETHERITE_AXE,
@@ -1005,7 +935,6 @@ public final class BestArmorMod implements ClientModInitializer {
 		setUnbreakable(slot10Stack);
 		setAttackRange(slot10Stack);
 		containerItems.set(10, slot10Stack);
-
 		ItemStack slot11Stack =
 				createItemStack(
 						Items.NETHERITE_PICKAXE,
@@ -1017,7 +946,6 @@ public final class BestArmorMod implements ClientModInitializer {
 		setUnbreakable(slot11Stack);
 		setAttackRange(slot11Stack);
 		containerItems.set(11, slot11Stack);
-
 		ItemStack slot12Stack =
 				createItemStack(
 						Items.NETHERITE_SHOVEL,
@@ -1029,7 +957,6 @@ public final class BestArmorMod implements ClientModInitializer {
 		setUnbreakable(slot12Stack);
 		setAttackRange(slot12Stack);
 		containerItems.set(12, slot12Stack);
-
 		ItemStack slot13Stack =
 				createItemStack(
 						Items.NETHERITE_HOE,
@@ -1041,7 +968,6 @@ public final class BestArmorMod implements ClientModInitializer {
 		setUnbreakable(slot13Stack);
 		setAttackRange(slot13Stack);
 		containerItems.set(13, slot13Stack);
-
 		ItemStack slot14Stack =
 				createItemStack(
 						Items.CROSSBOW,
@@ -1054,7 +980,6 @@ public final class BestArmorMod implements ClientModInitializer {
 						enchantment(Enchantments.MENDING, 1));
 		setUnbreakable(slot14Stack);
 		containerItems.set(14, slot14Stack);
-
 		ItemStack slot15Stack =
 				createItemStack(
 						Items.MACE,
@@ -1083,7 +1008,6 @@ public final class BestArmorMod implements ClientModInitializer {
 						EquipmentSlotGroup.MAINHAND));
 		setAttackRange(slot15Stack);
 		containerItems.set(15, slot15Stack);
-
 		ItemStack slot16Stack =
 				createItemStack(
 						Items.MACE,
@@ -1113,7 +1037,6 @@ public final class BestArmorMod implements ClientModInitializer {
 						EquipmentSlotGroup.MAINHAND));
 		setAttackRange(slot16Stack);
 		containerItems.set(16, slot16Stack);
-
 		ItemStack slot17Stack =
 				createItemStack(
 						Items.SHIELD,
@@ -1121,11 +1044,8 @@ public final class BestArmorMod implements ClientModInitializer {
 						enchantment(Enchantments.UNBREAKING, 255),
 						enchantment(Enchantments.MENDING, 1));
 		setUnbreakable(slot17Stack);
-
 		setInvincibleShield(slot17Stack, registries);
-
 		containerItems.set(17, slot17Stack);
-
 		ItemStack slot18Stack =
 				createItemStack(
 						Items.NETHERITE_HELMET,
@@ -1141,7 +1061,6 @@ public final class BestArmorMod implements ClientModInitializer {
 						enchantment(Enchantments.MENDING, 1));
 		setUnbreakable(slot18Stack);
 		containerItems.set(18, slot18Stack);
-
 		ItemStack slot19Stack =
 				createItemStack(
 						Items.NETHERITE_CHESTPLATE,
@@ -1155,7 +1074,6 @@ public final class BestArmorMod implements ClientModInitializer {
 						enchantment(Enchantments.MENDING, 1));
 		setUnbreakable(slot19Stack);
 		containerItems.set(19, slot19Stack);
-
 		ItemStack slot20Stack =
 				createItemStack(
 						Items.NETHERITE_LEGGINGS,
@@ -1170,7 +1088,6 @@ public final class BestArmorMod implements ClientModInitializer {
 						enchantment(Enchantments.MENDING, 1));
 		setUnbreakable(slot20Stack);
 		containerItems.set(20, slot20Stack);
-
 		ItemStack slot21Stack =
 				createItemStack(
 						Items.NETHERITE_BOOTS,
@@ -1213,7 +1130,6 @@ public final class BestArmorMod implements ClientModInitializer {
 						AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL,
 						EquipmentSlotGroup.FEET));
 		containerItems.set(21, slot21Stack);
-
 		ItemStack elytraStack =
 				createItemStack(
 						Items.ELYTRA,
@@ -1221,7 +1137,6 @@ public final class BestArmorMod implements ClientModInitializer {
 						enchantment(Enchantments.UNBREAKING, 255),
 						enchantment(Enchantments.MENDING, 1));
 		containerItems.set(22, elytraStack);
-
 		ItemStack glideplateChestplateStack =
 				createItemStack(
 						Items.NETHERITE_CHESTPLATE,
@@ -1236,7 +1151,6 @@ public final class BestArmorMod implements ClientModInitializer {
 		setUnbreakable(glideplateChestplateStack);
 		applyGlideplateData(glideplateChestplateStack);
 		containerItems.set(23, glideplateChestplateStack);
-
 		ItemStack slot24Stack =
 				createItemStack(
 						Items.NETHERITE_BOOTS,
@@ -1279,7 +1193,6 @@ public final class BestArmorMod implements ClientModInitializer {
 						AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL,
 						EquipmentSlotGroup.FEET));
 		containerItems.set(24, slot24Stack);
-
 		ItemStack slot25Stack =
 				createItemStack(
 						Items.FISHING_ROD,
@@ -1290,7 +1203,6 @@ public final class BestArmorMod implements ClientModInitializer {
 						enchantment(Enchantments.MENDING, 1));
 		setUnbreakable(slot25Stack);
 		containerItems.set(25, slot25Stack);
-
 		ItemStack box = new ItemStack(Items.RED_SHULKER_BOX);
 		box.set(DataComponents.ITEM_NAME, Component.literal("Red box"));
 		box.set(DataComponents.CONTAINER, ItemContainerContents.fromItems(containerItems));
@@ -1299,7 +1211,6 @@ public final class BestArmorMod implements ClientModInitializer {
 
 	private static ItemStack createVoidSword(HolderLookup.Provider registries) {
 		ItemStack voidSwordStack = new ItemStack(Items.NETHERITE_SWORD);
-
 		voidSwordStack.set(
 				DataComponents.DAMAGE_TYPE,
 				registries.lookupOrThrow(Registries.DAMAGE_TYPE).getOrThrow(DamageTypes.FELL_OUT_OF_WORLD));
@@ -1308,9 +1219,7 @@ public final class BestArmorMod implements ClientModInitializer {
 				DataComponents.ITEM_NAME,
 				Component.literal("Void Sword")
 						.withStyle(ChatFormatting.LIGHT_PURPLE, ChatFormatting.BOLD));
-
 		setUnbreakable(voidSwordStack);
-
 		setAttributeModifiers(
 				voidSwordStack,
 				attributeModifier(
@@ -1325,7 +1234,6 @@ public final class BestArmorMod implements ClientModInitializer {
 						2147483647.0D,
 						AttributeModifier.Operation.ADD_VALUE,
 						EquipmentSlotGroup.HAND));
-
 		voidSwordStack.set(
 				DataComponents.ATTACK_RANGE, new AttackRange(0.0F, 64.0F, 0.0F, 64.0F, 1.0F, 0.0F));
 		voidSwordStack.set(DataComponents.ENCHANTMENT_GLINT_OVERRIDE, true);
@@ -1362,11 +1270,9 @@ public final class BestArmorMod implements ClientModInitializer {
 
 	private static List<ItemStack> createContainerItems(int size) {
 		List<ItemStack> stacks = new ArrayList<>();
-
 		for (int index = 0; index < size; index++) {
 			stacks.add(ItemStack.EMPTY);
 		}
-
 		return stacks;
 	}
 
@@ -1374,7 +1280,6 @@ public final class BestArmorMod implements ClientModInitializer {
 			Item item, HolderLookup.Provider registries, EnchantmentLevel... enchantments) {
 		ItemStack stack = new ItemStack(item);
 		setEnchantments(stack, registries, enchantments);
-
 		return stack;
 	}
 
@@ -1383,15 +1288,12 @@ public final class BestArmorMod implements ClientModInitializer {
 		if (enchantments.length == 0) {
 			return;
 		}
-
 		HolderGetter<Enchantment> enchantmentLookup = registries.lookupOrThrow(Registries.ENCHANTMENT);
 		ItemEnchantments.Mutable mutableEnchantments =
 				new ItemEnchantments.Mutable(ItemEnchantments.EMPTY);
-
 		for (EnchantmentLevel enchantment : enchantments) {
 			mutableEnchantments.set(enchantmentLookup.getOrThrow(enchantment.key()), enchantment.level());
 		}
-
 		stack.set(DataComponents.ENCHANTMENTS, mutableEnchantments.toImmutable());
 	}
 
@@ -1405,32 +1307,25 @@ public final class BestArmorMod implements ClientModInitializer {
 
 	private static void setAttackRange(ItemStack stack) {
 		stack.set(DataComponents.ATTACK_RANGE, new AttackRange(0.0F, 8.0F, 0.0F, 8.0F, 1.0F, 0.0F));
-
 		ItemAttributeModifiers currentModifiers =
 				stack.getOrDefault(DataComponents.ATTRIBUTE_MODIFIERS, ItemAttributeModifiers.EMPTY);
-
 		ItemAttributeModifiers.Builder builder = ItemAttributeModifiers.builder();
-
 		for (ItemAttributeModifiers.Entry entry : currentModifiers.modifiers()) {
 			builder.add(entry.attribute(), entry.modifier(), entry.slot());
 		}
-
 		builder.add(
 				Attributes.BLOCK_INTERACTION_RANGE,
 				new AttributeModifier(
 						minecraft("block_interaction_range"), 3.0D, AttributeModifier.Operation.ADD_VALUE),
 				EquipmentSlotGroup.MAINHAND);
-
 		stack.set(DataComponents.ATTRIBUTE_MODIFIERS, builder.build());
 	}
 
 	private static void setInvincibleShield(ItemStack stack, HolderLookup.Provider registries) {
 		HolderLookup.RegistryLookup<DamageType> damageTypes =
 				registries.lookupOrThrow(Registries.DAMAGE_TYPE);
-
 		HolderSet<DamageType> blockedDamageTypes =
 				HolderSet.direct(damageTypes.listElements().toList());
-
 		stack.set(
 				DataComponents.BLOCKS_ATTACKS,
 				new BlocksAttacks(
@@ -1447,7 +1342,6 @@ public final class BestArmorMod implements ClientModInitializer {
 
 	private static void setAttributeModifiers(ItemStack stack, AttributeModifierSpec... modifiers) {
 		ItemAttributeModifiers.Builder builder = ItemAttributeModifiers.builder();
-
 		for (AttributeModifierSpec modifier : modifiers) {
 			builder.add(
 					modifier.attribute(),
@@ -1455,7 +1349,6 @@ public final class BestArmorMod implements ClientModInitializer {
 							minecraft(modifier.idPath()), modifier.amount(), modifier.operation()),
 					modifier.slot());
 		}
-
 		stack.set(DataComponents.ATTRIBUTE_MODIFIERS, builder.build());
 	}
 

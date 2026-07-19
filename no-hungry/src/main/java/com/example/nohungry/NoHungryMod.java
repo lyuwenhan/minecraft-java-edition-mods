@@ -11,7 +11,6 @@ import org.slf4j.LoggerFactory;
 public final class NoHungryMod implements ModInitializer {
 	public static final String MOD_ID = "no-hungry";
 	public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
-
 	private static NoHungryConfig config;
 
 	@Override
@@ -26,7 +25,6 @@ public final class NoHungryMod implements ModInitializer {
 					dispatcher) {
 		var rootCommand = Commands.literal("nohungry");
 		rootCommand.requires(Commands.hasPermission(Commands.LEVEL_ADMINS));
-
 		var setCommand = Commands.literal("set");
 		var minHungerCommand = Commands.literal("minHunger");
 		var minHungerValue = Commands.argument("value", IntegerArgumentType.integer(0, 20));
@@ -43,7 +41,6 @@ public final class NoHungryMod implements ModInitializer {
 				});
 		minHungerCommand.then(minHungerValue);
 		setCommand.then(minHungerCommand);
-
 		var minSaturationCommand = Commands.literal("minSaturation");
 		var minSaturationValue = Commands.argument("value", IntegerArgumentType.integer(0, 20));
 		minSaturationValue.executes(
@@ -65,7 +62,6 @@ public final class NoHungryMod implements ModInitializer {
 		minSaturationCommand.then(minSaturationValue);
 		setCommand.then(minSaturationCommand);
 		rootCommand.then(setCommand);
-
 		var onCommand = Commands.literal("on");
 		onCommand.executes(
 				context -> {
@@ -75,7 +71,6 @@ public final class NoHungryMod implements ModInitializer {
 					return 1;
 				});
 		rootCommand.then(onCommand);
-
 		var offCommand = Commands.literal("off");
 		offCommand.executes(
 				context -> {
@@ -85,7 +80,6 @@ public final class NoHungryMod implements ModInitializer {
 					return 1;
 				});
 		rootCommand.then(offCommand);
-
 		var toggleCommand = Commands.literal("toggle");
 		toggleCommand.executes(
 				context -> {
@@ -99,7 +93,6 @@ public final class NoHungryMod implements ModInitializer {
 					return 1;
 				});
 		rootCommand.then(toggleCommand);
-
 		var statusCommand = Commands.literal("status");
 		statusCommand.executes(
 				context -> {
@@ -107,7 +100,6 @@ public final class NoHungryMod implements ModInitializer {
 					return 1;
 				});
 		rootCommand.then(statusCommand);
-
 		dispatcher.register(rootCommand);
 	}
 
@@ -120,7 +112,6 @@ public final class NoHungryMod implements ModInitializer {
 		if (!enabled) {
 			return "No Hungry disabled.";
 		}
-
 		int minimumFoodLevel = config.getMinimumFoodLevel();
 		int minimumSaturationLevel = (int) config.getMinimumSaturationLevel();
 		return "No Hungry enabled.\nminimum hunger: "

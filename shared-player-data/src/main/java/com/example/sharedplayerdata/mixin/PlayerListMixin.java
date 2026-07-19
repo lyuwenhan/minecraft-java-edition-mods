@@ -26,12 +26,10 @@ public abstract class PlayerListMixin {
 		if (cir.getReturnValue() != null) {
 			return;
 		}
-
 		MinecraftServer server = ((PlayerList) (Object) this).getServer();
 		LoginDecision decision =
 				SharedPlayerDataMod.MANAGER.afterVanillaCanPlayerLogin(
 						server, nameAndId.id(), nameAndId.name());
-
 		if (!decision.allowed()) {
 			cir.setReturnValue(decision.reason());
 		}

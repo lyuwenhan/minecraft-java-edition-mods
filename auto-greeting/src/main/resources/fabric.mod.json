@@ -1,5 +1,5 @@
 {
-	"schemaVersion":1 ,
+	"schemaVersion": 1,
 	"id": "auto-greeting",
 	"version": "${version}",
 	"name": "Auto Greeting",

@@ -13,7 +13,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(FoodData.class)
 public abstract class FoodDataMixin {
 	@Shadow private int foodLevel;
-
 	@Shadow private float saturationLevel;
 
 	@Inject(method = "tick", at = @At("RETURN"))
@@ -22,14 +21,11 @@ public abstract class FoodDataMixin {
 		if (config == null || !config.isEnabled()) {
 			return;
 		}
-
 		int minimumFoodLevel = config.getMinimumFoodLevel();
 		float minimumSaturationLevel = config.getMinimumSaturationLevel();
-
 		if (this.foodLevel < minimumFoodLevel) {
 			this.foodLevel = minimumFoodLevel;
 		}
-
 		if (this.saturationLevel < minimumSaturationLevel) {
 			this.saturationLevel = minimumSaturationLevel;
 		}

@@ -26,25 +26,21 @@ public class StringMatchRules {
 				return true;
 			}
 		}
-
 		for (String v : contain) {
 			if (name.contains(v)) {
 				return true;
 			}
 		}
-
 		for (String v : startWith) {
 			if (name.startsWith(v)) {
 				return true;
 			}
 		}
-
 		for (String v : endWith) {
 			if (name.endsWith(v)) {
 				return true;
 			}
 		}
-
 		return false;
 	}
 }

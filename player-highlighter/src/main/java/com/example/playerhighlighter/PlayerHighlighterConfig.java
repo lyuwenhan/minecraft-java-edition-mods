@@ -11,7 +11,6 @@ public class PlayerHighlighterConfig {
 	private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 	private static final Path CONFIG_PATH =
 			FabricLoader.getInstance().getConfigDir().resolve("player-highlighter.json");
-
 	public boolean keep = false;
 	public Boolean informationHud = true;
 
@@ -21,15 +20,12 @@ public class PlayerHighlighterConfig {
 			cfg.save();
 			return cfg;
 		}
-
 		try {
 			PlayerHighlighterConfig cfg =
 					GSON.fromJson(Files.readString(CONFIG_PATH), PlayerHighlighterConfig.class);
-
 			if (cfg == null) {
 				return new PlayerHighlighterConfig();
 			}
-
 			return cfg;
 		} catch (IOException e) {
 			throw new RuntimeException("Failed to load player-highlighter config", e);

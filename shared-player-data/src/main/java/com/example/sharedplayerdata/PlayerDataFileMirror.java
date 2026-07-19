@@ -18,7 +18,6 @@ import org.slf4j.Logger;
 public final class PlayerDataFileMirror {
 	private static final DateTimeFormatter BACKUP_TIMESTAMP_FORMATTER =
 			DateTimeFormatter.ofPattern("yyyyMMdd-HHmmss-SSS").withZone(ZoneOffset.UTC);
-
 	private final Logger logger;
 
 	public PlayerDataFileMirror(Logger logger) {
@@ -34,11 +33,9 @@ public final class PlayerDataFileMirror {
 		SharedProfileConfig.validateGroupId(group.id());
 		FileSet real = realFiles(server, uuid);
 		FileSet shared = sharedFiles(server, group);
-
 		initializeSharedFileIfMissing(real.playerData(), shared.playerData());
 		initializeSharedFileIfMissing(real.stats(), shared.stats());
 		initializeSharedFileIfMissing(real.advancements(), shared.advancements());
-
 		copySharedToReal(config, group, uuid, shared.playerData(), real.playerData(), "playerdata");
 		copySharedToReal(config, group, uuid, shared.stats(), real.stats(), "stats");
 		copySharedToReal(
@@ -54,12 +51,10 @@ public final class PlayerDataFileMirror {
 		SharedProfileConfig.validateGroupId(group.id());
 		FileSet real = realFiles(server, sourceUuid);
 		FileSet shared = sharedFiles(server, group);
-
 		copyRealToShared(real.playerData(), shared.playerData(), "playerdata", sourceUuid, group.id());
 		copyRealToShared(real.stats(), shared.stats(), "stats", sourceUuid, group.id());
 		copyRealToShared(
 				real.advancements(), shared.advancements(), "advancements", sourceUuid, group.id());
-
 		if (config.syncRealUuidFilesOnSave()) {
 			for (UUID member : group.members()) {
 				FileSet memberReal = realFiles(server, member);
@@ -88,11 +83,9 @@ public final class PlayerDataFileMirror {
 		if (Files.exists(sharedFile)) {
 			return;
 		}
-
 		if (Files.notExists(realFile)) {
 			return;
 		}
-
 		Files.createDirectories(sharedFile.getParent());
 		atomicCopy(realFile, sharedFile);
 	}
@@ -108,7 +101,6 @@ public final class PlayerDataFileMirror {
 		if (Files.notExists(sharedFile)) {
 			return;
 		}
-
 		if (config.backupRealPlayerFilesBeforeOverwrite()
 				&& Files.exists(realFile)
 				&& !sameContent(realFile, sharedFile)) {
@@ -117,7 +109,6 @@ public final class PlayerDataFileMirror {
 			atomicCopy(realFile, backup);
 			logger.info("Backed up {} for {} in group '{}' to {}", label, uuid, group.id(), backup);
 		}
-
 		Files.createDirectories(realFile.getParent());
 		atomicCopy(sharedFile, realFile);
 	}
@@ -133,7 +124,6 @@ public final class PlayerDataFileMirror {
 					realFile);
 			return;
 		}
-
 		Files.createDirectories(sharedFile.getParent());
 		atomicCopy(realFile, sharedFile);
 	}
@@ -142,7 +132,6 @@ public final class PlayerDataFileMirror {
 		if (Files.notExists(source)) {
 			return;
 		}
-
 		Files.createDirectories(target.getParent());
 		atomicCopy(source, target);
 	}
@@ -175,7 +164,6 @@ public final class PlayerDataFileMirror {
 		if (Files.notExists(path)) {
 			return;
 		}
-
 		Files.delete(path);
 		logger.info("Deleted {} file for removed player {}: {}", label, uuid, path);
 	}
@@ -184,13 +172,11 @@ public final class PlayerDataFileMirror {
 		if (Files.notExists(root)) {
 			return;
 		}
-
 		try (Stream<Path> paths = Files.walk(root)) {
 			for (Path path : paths.sorted(Comparator.reverseOrder()).toList()) {
 				Files.deleteIfExists(path);
 			}
 		}
-
 		logger.info("Deleted shared player data group directory: {}", root);
 	}
 
@@ -208,11 +194,9 @@ public final class PlayerDataFileMirror {
 	private String getExtension(Path path) {
 		String fileName = path.getFileName().toString();
 		int dotIndex = fileName.lastIndexOf('.');
-
 		if (dotIndex < 0) {
 			return "";
 		}
-
 		return fileName.substring(dotIndex);
 	}
 
@@ -220,20 +204,16 @@ public final class PlayerDataFileMirror {
 		if (Files.size(first) != Files.size(second)) {
 			return false;
 		}
-
 		byte[] firstBytes = Files.readAllBytes(first);
 		byte[] secondBytes = Files.readAllBytes(second);
-
 		if (firstBytes.length != secondBytes.length) {
 			return false;
 		}
-
 		for (int index = 0; index < firstBytes.length; index++) {
 			if (firstBytes[index] != secondBytes[index]) {
 				return false;
 			}
 		}
-
 		return true;
 	}
 
@@ -241,7 +221,6 @@ public final class PlayerDataFileMirror {
 		Path parent = target.getParent();
 		Files.createDirectories(parent);
 		Path temp = Files.createTempFile(parent, target.getFileName().toString(), ".tmp");
-
 		try {
 			Files.copy(
 					source, temp, StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.COPY_ATTRIBUTES);

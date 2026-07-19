@@ -10,7 +10,6 @@ public class ModMenuIntegration implements ModMenuApi {
 		if (!FabricLoader.getInstance().isModLoaded("cloth-config")) {
 			return null;
 		}
-
 		return parent -> OptionalClothConfigBridge.create(parent);
 	}
 }

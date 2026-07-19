@@ -16,27 +16,22 @@ public final class ClothConfigScreenProvider {
 	public static Screen create(Screen parent) {
 		AutoGreetingClientConfig current = AutoGreetingClientConfigHolder.get();
 		AutoGreetingClientConfig editing = current.copy();
-
 		ConfigBuilder builder =
 				ConfigBuilder.create()
 						.setParentScreen(parent)
 						.setTitle(Component.literal("Auto Greeting Config"));
-
 		builder.setSavingRunnable(
 				() -> {
 					AutoGreetingClientConfigHolder.set(editing);
 					AutoGreetingClientConfigHolder.save();
 				});
-
 		ConfigEntryBuilder eb = builder.entryBuilder();
-
 		ConfigCategory self = builder.getOrCreateCategory(Component.literal("Self"));
 		self.addEntry(
 				eb.startBooleanToggle(Component.literal("Enabled"), editing.selfEnabled)
 						.setDefaultValue(true)
 						.setSaveConsumer(v -> editing.selfEnabled = v)
 						.build());
-
 		self.addEntry(
 				eb.startStrList(Component.literal("Greetings"), new ArrayList<>(editing.selfGreetings))
 						.setDefaultValue(new ArrayList<>())
@@ -46,14 +41,12 @@ public final class ClothConfigScreenProvider {
 									editing.selfGreetings.addAll(v);
 								})
 						.build());
-
 		ConfigCategory other = builder.getOrCreateCategory(Component.literal("Other"));
 		other.addEntry(
 				eb.startBooleanToggle(Component.literal("Enabled"), editing.otherEnabled)
 						.setDefaultValue(true)
 						.setSaveConsumer(v -> editing.otherEnabled = v)
 						.build());
-
 		other.addEntry(
 				eb.startStrList(Component.literal("Greetings"), new ArrayList<>(editing.otherGreetings))
 						.setDefaultValue(new ArrayList<>())
@@ -63,19 +56,16 @@ public final class ClothConfigScreenProvider {
 									editing.otherGreetings.addAll(v);
 								})
 						.build());
-
 		addRulesCategory(builder, eb, "Other Blacklist", editing.otherBlacklist);
 		addRulesCategory(builder, eb, "Other Blacklist Except", editing.otherBlacklistExcept);
 		addRulesCategory(builder, eb, "Other Whitelist", editing.otherWhitelist);
 		addRulesCategory(builder, eb, "Other Whitelist Except", editing.otherWhitelistExcept);
-
 		return builder.build();
 	}
 
 	private static void addRulesCategory(
 			ConfigBuilder builder, ConfigEntryBuilder eb, String title, StringMatchRules rules) {
 		ConfigCategory cat = builder.getOrCreateCategory(Component.literal(title));
-
 		cat.addEntry(
 				eb.startStrList(Component.literal("Equal"), new ArrayList<>(rules.equal))
 						.setDefaultValue(new ArrayList<>())
@@ -85,7 +75,6 @@ public final class ClothConfigScreenProvider {
 									rules.equal.addAll(v);
 								})
 						.build());
-
 		cat.addEntry(
 				eb.startStrList(Component.literal("Contain"), new ArrayList<>(rules.contain))
 						.setDefaultValue(new ArrayList<>())
@@ -95,7 +84,6 @@ public final class ClothConfigScreenProvider {
 									rules.contain.addAll(v);
 								})
 						.build());
-
 		cat.addEntry(
 				eb.startStrList(Component.literal("Start With"), new ArrayList<>(rules.startWith))
 						.setDefaultValue(new ArrayList<>())
@@ -105,7 +93,6 @@ public final class ClothConfigScreenProvider {
 									rules.startWith.addAll(v);
 								})
 						.build());
-
 		cat.addEntry(
 				eb.startStrList(Component.literal("End With"), new ArrayList<>(rules.endWith))
 						.setDefaultValue(new ArrayList<>())

@@ -18,11 +18,9 @@ import net.minecraft.world.item.component.ItemLore;
 
 public final class GlideplateServerUtil {
 	public static final float CUSTOM_MODEL_DATA_NUMBER = 121211.0F;
-
 	private static final Component LORE_LINE =
 			Component.translatableWithFallback("tooltip.glideplate.with_elytra", "With Elytra")
 					.withStyle(style -> style.withColor(ChatFormatting.GRAY).withItalic(false));
-
 	private static final Map<Item, ChestplateLevel> CHESTPLATES =
 			Map.of(
 					Items.LEATHER_CHESTPLATE,
@@ -43,7 +41,6 @@ public final class GlideplateServerUtil {
 		if (stack.isEmpty()) {
 			return Optional.empty();
 		}
-
 		return Optional.ofNullable(CHESTPLATES.get(stack.getItem()));
 	}
 
@@ -67,23 +64,18 @@ public final class GlideplateServerUtil {
 		if (stack.isEmpty()) {
 			return false;
 		}
-
 		CustomData data = stack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY);
 		CompoundTag customData = data.copyTag();
-
 		if (customData.getBoolean("gliding").orElse(false)) {
 			return true;
 		}
-
 		if (customData.getBoolean("glideplate_has_elytra").orElse(false)) {
 			return true;
 		}
-
 		CustomModelData customModelData = stack.get(DataComponents.CUSTOM_MODEL_DATA);
 		if (customModelData == null) {
 			return false;
 		}
-
 		return customModelData.strings().contains("glideplate:with_elytra");
 	}
 
@@ -95,7 +87,6 @@ public final class GlideplateServerUtil {
 		ChestplateLevel level = getChestplateLevel(chestplate).orElseThrow();
 		ItemStack result = chestplate.copy();
 		result.setCount(1);
-
 		CustomData.update(
 				DataComponents.CUSTOM_DATA,
 				result,
@@ -104,13 +95,11 @@ public final class GlideplateServerUtil {
 					tag.putBoolean("glideplate_has_elytra", true);
 					tag.putString("gliding_chestplate_has_elytra", level.id());
 				});
-
 		result.set(
 				DataComponents.ITEM_NAME,
 				Component.translatableWithFallback(
 						"item.glideplate." + level.id() + "_chestplate_with_elytra",
 						level.englishName() + " Chestplate with Elytra"));
-
 		ItemLore lore = result.getOrDefault(DataComponents.LORE, ItemLore.EMPTY);
 		result.set(DataComponents.LORE, lore.withLineAdded(LORE_LINE));
 		result.set(DataComponents.CUSTOM_MODEL_DATA, mergeCustomModelData(result, level));
@@ -126,14 +115,11 @@ public final class GlideplateServerUtil {
 		List<Boolean> flags = new ArrayList<>(existing.flags());
 		List<String> strings = new ArrayList<>(existing.strings());
 		List<Integer> colors = new ArrayList<>(existing.colors());
-
 		if (!floats.contains(CUSTOM_MODEL_DATA_NUMBER)) {
 			floats.add(CUSTOM_MODEL_DATA_NUMBER);
 		}
-
 		addStringTag(strings, "glideplate:with_elytra");
 		addStringTag(strings, "glideplate:" + level.id());
-
 		return new CustomModelData(
 				List.copyOf(floats), List.copyOf(flags), List.copyOf(strings), List.copyOf(colors));
 	}

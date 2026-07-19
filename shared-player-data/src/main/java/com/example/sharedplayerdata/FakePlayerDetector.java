@@ -14,7 +14,6 @@ public final class FakePlayerDetector {
 		if (!CARPET_LOADED) {
 			return false;
 		}
-
 		return CarpetCompat.isCarpetFakePlayer(player);
 	}
 

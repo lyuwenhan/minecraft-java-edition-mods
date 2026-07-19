@@ -10,7 +10,6 @@ import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
 
 public class Crypto {
-
 	public static class Result {
 		public String enc;
 		public String salt;

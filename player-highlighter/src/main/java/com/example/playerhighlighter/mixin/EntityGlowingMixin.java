@@ -13,7 +13,6 @@ public abstract class EntityGlowingMixin {
 	@Inject(method = "isCurrentlyGlowing", at = @At("HEAD"), cancellable = true)
 	private void playerhighlighter$glowOnlyWhenTabPressed(CallbackInfoReturnable<Boolean> cir) {
 		Entity self = (Entity) (Object) this;
-
 		if (self instanceof Player && PlayerHighlighterMod.isHighlightActive()) {
 			cir.setReturnValue(true);
 		}

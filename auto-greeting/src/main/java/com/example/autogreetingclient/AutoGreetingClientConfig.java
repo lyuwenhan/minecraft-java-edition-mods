@@ -11,17 +11,13 @@ import java.util.List;
 import net.fabricmc.loader.api.FabricLoader;
 
 public class AutoGreetingClientConfig {
-
 	private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 	private static final Path CONFIG_PATH =
 			FabricLoader.getInstance().getConfigDir().resolve("auto-greeting.json");
-
 	public boolean selfEnabled = true;
 	public List<String> selfGreetings = new ArrayList<>();
-
 	public boolean otherEnabled = true;
 	public List<String> otherGreetings = new ArrayList<>();
-
 	public StringMatchRules otherBlacklist = new StringMatchRules();
 	public StringMatchRules otherBlacklistExcept = new StringMatchRules();
 	public StringMatchRules otherWhitelist = new StringMatchRules();
@@ -33,7 +29,6 @@ public class AutoGreetingClientConfig {
 			cfg.save();
 			return cfg;
 		}
-
 		try {
 			AutoGreetingClientConfig cfg =
 					GSON.fromJson(Files.readString(CONFIG_PATH), AutoGreetingClientConfig.class);

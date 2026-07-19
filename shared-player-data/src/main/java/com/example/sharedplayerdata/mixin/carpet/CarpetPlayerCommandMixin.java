@@ -25,12 +25,10 @@ public abstract class CarpetPlayerCommandMixin {
 	private static void sharedPlayerData$blockOccupiedBoundSpawnAfterCarpetChecks(
 			CommandContext<CommandSourceStack> context, CallbackInfoReturnable<Integer> cir) {
 		String playerName = StringArgumentType.getString(context, "player");
-
 		if (!SharedPlayerDataMod.MANAGER.isKnownBoundPlayerGroupOccupied(
 				context.getSource().getServer(), playerName)) {
 			return;
 		}
-
 		Messenger.m(
 				context.getSource(),
 				"r Player ",

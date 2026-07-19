@@ -15,7 +15,6 @@ import net.fabricmc.loader.api.FabricLoader;
  * stealing only the config file does not allow decryption.
  */
 public final class DeviceKey {
-
 	private static final int KEY_SIZE = 32;
 	private static byte[] cachedKey;
 

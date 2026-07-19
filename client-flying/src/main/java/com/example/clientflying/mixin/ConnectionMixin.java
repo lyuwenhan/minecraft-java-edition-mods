@@ -16,15 +16,12 @@ public class ConnectionMixin {
 		if (ClientFlyingMod.isSendingInternalStartFallFlyingPacket()) {
 			return;
 		}
-
 		if (!(packet instanceof ServerboundPlayerCommandPacket commandPacket)) {
 			return;
 		}
-
 		if (commandPacket.getAction() != ServerboundPlayerCommandPacket.Action.START_FALL_FLYING) {
 			return;
 		}
-
 		ClientFlyingMod.onClientStartFallFlyingPacket();
 	}
 }

@@ -19,7 +19,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(ServerExplosion.class)
 public abstract class ServerExplosionMixin {
 	@Mutable @Shadow @Final private boolean fire;
-
 	@Mutable @Shadow @Final private Explosion.BlockInteraction blockInteraction;
 
 	@Inject(

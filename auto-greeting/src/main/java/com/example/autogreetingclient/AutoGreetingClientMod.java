@@ -14,7 +14,6 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.minecraft.network.chat.Component;
 
 public class AutoGreetingClientMod implements ClientModInitializer {
-
 	public static long joinWorldAt = 0L;
 	public static AutoGreetingClientConfig CONFIG = AutoGreetingClientConfigHolder.get();
 
@@ -23,9 +22,7 @@ public class AutoGreetingClientMod implements ClientModInitializer {
 			src.sendFeedback(Component.literal(title + ": <empty>"));
 			return;
 		}
-
 		src.sendFeedback(Component.literal(title + ":"));
-
 		int i = 1;
 		for (String s : list) {
 			src.sendFeedback(Component.literal(i++ + ". " + s));
@@ -91,7 +88,6 @@ public class AutoGreetingClientMod implements ClientModInitializer {
 												return 1;
 											}));
 		}
-
 		return literal(name)
 				.then(literal("add").then(addArg))
 				.then(
@@ -120,7 +116,6 @@ public class AutoGreetingClientMod implements ClientModInitializer {
 																						title + ": index" + " out of" + " range."));
 																return 1;
 															}
-
 															list.remove(index - 1);
 															CONFIG.save();
 															ctx.getSource()
@@ -158,7 +153,6 @@ public class AutoGreetingClientMod implements ClientModInitializer {
 	@Override
 	public void onInitializeClient() {
 		AutoGreetingClientDelay.init();
-
 		ClientPlayConnectionEvents.JOIN.register(
 				(handler, sender, client) -> {
 					AutoGreetingClientMod.joinWorldAt = System.currentTimeMillis();
@@ -166,10 +160,8 @@ public class AutoGreetingClientMod implements ClientModInitializer {
 					if (!CONFIG.selfEnabled) {
 						return;
 					}
-
 					AutoGreetingClientDelay.greetSelfAfter1Second();
 				});
-
 		ClientCommandRegistrationCallback.EVENT.register(
 				(dispatcher, registryAccess) -> {
 					dispatcher.register(
@@ -416,7 +408,6 @@ public class AutoGreetingClientMod implements ClientModInitializer {
 																										ctx.getSource(),
 																										"Match" + " (Name" + " Ends" + " with)",
 																										CONFIG.otherBlacklist.endWith);
-
 																								sendList(
 																										ctx.getSource(),
 																										"Except" + " (Name" + " Equal)",
@@ -576,7 +567,6 @@ public class AutoGreetingClientMod implements ClientModInitializer {
 																										ctx.getSource(),
 																										"Whitelist" + " (Name" + " Ends" + " with)",
 																										CONFIG.otherWhitelist.endWith);
-
 																								sendList(
 																										ctx.getSource(),
 																										"Except" + " (Name" + " Equal)",

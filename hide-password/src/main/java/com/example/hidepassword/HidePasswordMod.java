@@ -25,24 +25,18 @@ import org.slf4j.LoggerFactory;
 public class HidePasswordMod implements ClientModInitializer {
 	public static final String MOD_ID = "hide-password";
 	public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
-
 	private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 	private static final KeyMapping.Category CATEGORY =
 			KeyMapping.Category.register(Identifier.fromNamespaceAndPath(MOD_ID, "general"));
-
 	public static HidePasswordConfig CONFIG;
-
 	private static Path configPath;
 	private static KeyMapping toggleKey;
 
 	@Override
 	public void onInitializeClient() {
 		configPath = FabricLoader.getInstance().getConfigDir().resolve("hide-password.json");
-
 		loadConfig();
-
 		LOGGER.info("HidePassword loaded, enabled={}", CONFIG.enabled);
-
 		registerCommands();
 		registerKeyMapping();
 	}
@@ -52,15 +46,12 @@ public class HidePasswordMod implements ClientModInitializer {
 				KeyMappingHelper.registerKeyMapping(
 						new KeyMapping(
 								"key.hidepassword.toggle", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_F8, CATEGORY));
-
 		ClientTickEvents.END_CLIENT_TICK.register(
 				client -> {
 					while (toggleKey.consumeClick()) {
 						CONFIG.enabled = !CONFIG.enabled;
 						saveConfig();
-
 						LOGGER.info("HidePassword enabled={}", CONFIG.enabled);
-
 						if (client.player != null) {
 							client.player.sendSystemMessage(
 									Component.literal("HidePassword " + (CONFIG.enabled ? "Enabled" : "Disabled")));
@@ -73,14 +64,11 @@ public class HidePasswordMod implements ClientModInitializer {
 		try {
 			if (Files.exists(configPath)) {
 				CONFIG = GSON.fromJson(Files.readString(configPath), HidePasswordConfig.class);
-
 				if (CONFIG == null) {
 					CONFIG = new HidePasswordConfig();
 				}
-
 				return;
 			}
-
 			CONFIG = new HidePasswordConfig();
 			saveConfig();
 		} catch (Exception e) {
@@ -139,11 +127,9 @@ public class HidePasswordMod implements ClientModInitializer {
 	private static int setEnabled(FabricClientCommandSource source, boolean enabled) {
 		CONFIG.enabled = enabled;
 		saveConfig();
-
 		source.sendFeedback(
 				Component.literal("HidePassword " + (CONFIG.enabled ? "Enabled" : "Disabled")));
 		LOGGER.info("HidePassword enabled={}", CONFIG.enabled);
-
 		return Command.SINGLE_SUCCESS;
 	}
 
@@ -156,12 +142,10 @@ public class HidePasswordMod implements ClientModInitializer {
 	private static int setHideLength(FabricClientCommandSource source, boolean hideLength) {
 		CONFIG.hideLength = hideLength;
 		saveConfig();
-
 		source.sendFeedback(
 				Component.literal(
 						"HidePassword hide length " + (CONFIG.hideLength ? "Enabled" : "Disabled")));
 		LOGGER.info("HidePassword hideLength={}", CONFIG.hideLength);
-
 		return Command.SINGLE_SUCCESS;
 	}
 

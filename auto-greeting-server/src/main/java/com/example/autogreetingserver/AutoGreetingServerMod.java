@@ -24,9 +24,7 @@ public class AutoGreetingServerMod implements DedicatedServerModInitializer {
 			src.sendSuccess(() -> Component.literal(title + ": <empty>"), false);
 			return;
 		}
-
 		src.sendSuccess(() -> Component.literal(title + ":"), false);
-
 		int i = 1;
 		for (String s : list) {
 			final int index = i++;
@@ -103,7 +101,6 @@ public class AutoGreetingServerMod implements DedicatedServerModInitializer {
 												return 1;
 											}));
 		}
-
 		return literal(name)
 				.then(literal("add").then(addArg))
 				.then(
@@ -137,7 +134,6 @@ public class AutoGreetingServerMod implements DedicatedServerModInitializer {
 																				false);
 																return 1;
 															}
-
 															list.remove(index - 1);
 															CONFIG.save();
 															ctx.getSource()
@@ -180,16 +176,13 @@ public class AutoGreetingServerMod implements DedicatedServerModInitializer {
 
 	private static boolean shouldGreet(ServerPlayer player) {
 		String name = player.getName().getString();
-
 		if (CONFIG.serverBlacklist.match(name) && !CONFIG.serverBlacklistExcept.match(name)) {
 			return false;
 		}
-
 		if (!CONFIG.serverWhitelist.isEmpty()
 				&& (!CONFIG.serverWhitelist.match(name) || CONFIG.serverWhitelistExcept.match(name))) {
 			return false;
 		}
-
 		return true;
 	}
 
@@ -200,15 +193,12 @@ public class AutoGreetingServerMod implements DedicatedServerModInitializer {
 					if (!CONFIG.serverEnabled) {
 						return;
 					}
-
 					ServerPlayer player = handler.player;
 					if (!shouldGreet(player)) {
 						return;
 					}
-
 					AutoGreetingServerDelay.greetAfter1Second(player);
 				});
-
 		CommandRegistrationCallback.EVENT.register(
 				(dispatcher, registryAccess, environment) -> {
 					dispatcher.register(
@@ -398,7 +388,6 @@ public class AutoGreetingServerMod implements DedicatedServerModInitializer {
 																						ctx.getSource(),
 																						"Match" + " (Name" + " Ends" + " with)",
 																						CONFIG.serverBlacklist.endWith);
-
 																				sendList(
 																						ctx.getSource(),
 																						"Except" + " (Name" + " Equal)",
@@ -552,7 +541,6 @@ public class AutoGreetingServerMod implements DedicatedServerModInitializer {
 																						ctx.getSource(),
 																						"Whitelist" + " (Name" + " Ends" + " with)",
 																						CONFIG.serverWhitelist.endWith);
-
 																				sendList(
 																						ctx.getSource(),
 																						"Except" + " (Name" + " Equal)",

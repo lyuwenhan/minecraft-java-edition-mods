@@ -23,9 +23,7 @@ public final class BetterElytraTakeoffMod implements ModInitializer {
 						BetterElytraTakeoffState.tick(player);
 					}
 				});
-
 		UseItemCallback.EVENT.register((player, world, hand) -> tryTakeOff(player, world, hand, false));
-
 		UseBlockCallback.EVENT.register(
 				(player, world, hand, hitResult) -> tryTakeOff(player, world, hand, true));
 	}
@@ -35,17 +33,13 @@ public final class BetterElytraTakeoffMod implements ModInitializer {
 		if (world.isClientSide()) {
 			return InteractionResult.PASS;
 		}
-
 		if (!(player instanceof ServerPlayer serverPlayer)) {
 			return InteractionResult.PASS;
 		}
-
 		ItemStack stack = serverPlayer.getItemInHand(hand);
-
 		if (!shouldTakeOff(serverPlayer, stack, hasBlockTarget)) {
 			return InteractionResult.PASS;
 		}
-
 		BetterElytraTakeoffState.schedule(serverPlayer, stack);
 		return InteractionResult.FAIL;
 	}

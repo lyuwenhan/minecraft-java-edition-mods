@@ -24,36 +24,28 @@ public final class BetterElytraTakeoffState {
 	public static void schedule(ServerPlayer player, ItemStack stack) {
 		ItemStack rocket = stack.copyWithCount(1);
 		PENDING_TAKEOFFS.put(player.getUUID(), new PendingTakeoff(FIRST_ROCKET_TICK, rocket));
-
 		player.startFallFlying();
-
 		if (!player.isCreative()
 				&& !FabricLoader.getInstance().isModLoaded(INFINITY_FIREWORKS_MOD_ID)) {
 			stack.shrink(1);
 		}
-
 		player.awardStat(Stats.ITEM_USED.get(Items.FIREWORK_ROCKET));
 	}
 
 	public static void tick(ServerPlayer player) {
 		PendingTakeoff pending = PENDING_TAKEOFFS.get(player.getUUID());
-
 		if (pending == null) {
 			return;
 		}
-
 		if (pending.ticksLeft < LAST_GLIDING_TICK) {
 			PENDING_TAKEOFFS.remove(player.getUUID());
 			return;
 		}
-
 		if (!canUseTakeoff(player)) {
 			PENDING_TAKEOFFS.remove(player.getUUID());
 			return;
 		}
-
 		player.startFallFlying();
-
 		if (pending.ticksLeft == FIRST_ROCKET_TICK
 				&& player.level() instanceof ServerLevel serverLevel) {
 			FireworkRocketEntity firework = new FireworkRocketEntity(serverLevel, pending.rocket, player);
@@ -61,7 +53,6 @@ public final class BetterElytraTakeoffState {
 			PENDING_TAKEOFFS.put(player.getUUID(), pending.next());
 			return;
 		}
-
 		PENDING_TAKEOFFS.put(player.getUUID(), pending.next());
 	}
 
@@ -77,12 +68,10 @@ public final class BetterElytraTakeoffState {
 			if (slot == EquipmentSlot.OFFHAND) {
 				continue;
 			}
-
 			if (player.getItemBySlot(slot).has(DataComponents.GLIDER)) {
 				return true;
 			}
 		}
-
 		return false;
 	}
 

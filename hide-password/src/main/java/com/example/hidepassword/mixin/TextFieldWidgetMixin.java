@@ -21,7 +21,6 @@ public abstract class TextFieldWidgetMixin {
 
 	private String hidepassword$real;
 	private boolean hidepassword$active;
-
 	private static final List<String> COMMAND_PREFIXES =
 			List.of(
 					"/login",
@@ -32,7 +31,6 @@ public abstract class TextFieldWidgetMixin {
 					"/autologin set",
 					"/account unregister",
 					"/account changepassword");
-
 	private static final String FIXED_MASK = "********";
 
 	@Inject(method = "extractWidgetRenderState", at = @At("HEAD"))
@@ -41,16 +39,12 @@ public abstract class TextFieldWidgetMixin {
 		if (HidePasswordMod.CONFIG == null) {
 			return;
 		}
-
 		if (!HidePasswordMod.CONFIG.enabled) {
 			return;
 		}
-
 		hidepassword$real = this.getValue();
-
 		String masked = maskIfNeeded(hidepassword$real);
 		hidepassword$active = masked != null;
-
 		if (hidepassword$active) {
 			this.setValue(masked);
 		}
@@ -70,23 +64,18 @@ public abstract class TextFieldWidgetMixin {
 		if (input == null || input.isEmpty()) {
 			return null;
 		}
-
 		String lower = input.toLowerCase(Locale.ROOT);
-
 		for (String cmd : COMMAND_PREFIXES) {
 			if (lower.startsWith(cmd + " ")) {
 				int prefixLen = cmd.length();
 				String visiblePrefix = input.substring(0, prefixLen + 1);
-
 				if (visiblePrefix.isEmpty()) {
 					return "";
 				}
-
 				String password = input.substring(prefixLen + 1);
 				return visiblePrefix + maskPassword(password);
 			}
 		}
-
 		return null;
 	}
 
@@ -94,7 +83,6 @@ public abstract class TextFieldWidgetMixin {
 		if (HidePasswordMod.CONFIG.hideLength) {
 			return FIXED_MASK;
 		}
-
 		return password.replaceAll("\\S", "*");
 	}
 }

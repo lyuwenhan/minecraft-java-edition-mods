@@ -16,7 +16,6 @@ public final class FlySpeedModifierConfig {
 	public static final double DEFAULT_SCROLL_STEP = 0.1D;
 	public static final boolean DEFAULT_FULL_RANGE = false;
 	public static final boolean DEFAULT_RESET_ON_ADJUST = true;
-
 	public static final double MIN_ALLOWED_MIN_SPEED = 0.0D;
 	public static final double MAX_ALLOWED_MIN_SPEED = 1.0D;
 	public static final double MIN_ALLOWED_MAX_SPEED = 1.0D;
@@ -27,7 +26,6 @@ public final class FlySpeedModifierConfig {
 	public static final double MAX_ALLOWED_INITIAL_SPEED = 100.0D;
 	public static final double MIN_ALLOWED_SCROLL_STEP = 0.1D;
 	public static final double MAX_ALLOWED_SCROLL_STEP = 2.0D;
-
 	public static final int MAX_SPEED_SLIDER_MIN = 100;
 	public static final int STANDARD_MAX_SPEED_SLIDER_MAX = 2000;
 	public static final int FULL_RANGE_MAX_SPEED_SLIDER_MAX = 10000;
@@ -37,11 +35,9 @@ public final class FlySpeedModifierConfig {
 	public static final int INITIAL_SPEED_SLIDER_MAX = 10000;
 	public static final int SCROLL_STEP_SLIDER_MIN = 1;
 	public static final int SCROLL_STEP_SLIDER_MAX = 20;
-
 	private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 	private static final Path CONFIG_PATH =
 			FabricLoader.getInstance().getConfigDir().resolve(FlySpeedModifierMod.MOD_ID + ".json");
-
 	private static Values current = Values.defaults();
 
 	private FlySpeedModifierConfig() {}
@@ -52,7 +48,6 @@ public final class FlySpeedModifierConfig {
 			save();
 			return;
 		}
-
 		try (Reader reader = Files.newBufferedReader(CONFIG_PATH)) {
 			Values loaded = GSON.fromJson(reader, Values.class);
 			if (loaded == null) {
@@ -63,7 +58,6 @@ public final class FlySpeedModifierConfig {
 		} catch (IOException | RuntimeException ignored) {
 			current = Values.defaults();
 		}
-
 		save();
 	}
 
@@ -120,15 +114,12 @@ public final class FlySpeedModifierConfig {
 
 	public static Values sanitize(Values values) {
 		Values sanitized = values == null ? Values.defaults() : values.copy();
-
 		sanitized.minSpeed =
 				clampFinite(
 						sanitized.minSpeed, DEFAULT_MIN_SPEED, MIN_ALLOWED_MIN_SPEED, MAX_ALLOWED_MIN_SPEED);
-
 		sanitized.maxSpeed =
 				clampFinite(
 						sanitized.maxSpeed, DEFAULT_MAX_SPEED, MIN_ALLOWED_MAX_SPEED, MAX_ALLOWED_MAX_SPEED);
-
 		sanitized.initialSpeed =
 				roundToTwoDecimals(
 						clampFinite(
@@ -136,17 +127,14 @@ public final class FlySpeedModifierConfig {
 								DEFAULT_INITIAL_SPEED,
 								MIN_ALLOWED_INITIAL_SPEED,
 								MAX_ALLOWED_INITIAL_SPEED));
-
 		if (!sanitized.fullRange) {
 			if (sanitized.maxSpeed > STANDARD_MAX_SPEED) {
 				sanitized.maxSpeed = DEFAULT_MAX_SPEED;
 			}
-
 			if (sanitized.initialSpeed > STANDARD_MAX_SPEED) {
 				sanitized.initialSpeed = DEFAULT_INITIAL_SPEED;
 			}
 		}
-
 		sanitized.scrollStep =
 				roundToOneDecimal(
 						clampFinite(
@@ -154,7 +142,6 @@ public final class FlySpeedModifierConfig {
 								DEFAULT_SCROLL_STEP,
 								MIN_ALLOWED_SCROLL_STEP,
 								MAX_ALLOWED_SCROLL_STEP));
-
 		return sanitized;
 	}
 
@@ -216,7 +203,6 @@ public final class FlySpeedModifierConfig {
 		if (fullRange) {
 			return FULL_RANGE_MAX_SPEED_SLIDER_MAX;
 		}
-
 		return STANDARD_MAX_SPEED_SLIDER_MAX;
 	}
 

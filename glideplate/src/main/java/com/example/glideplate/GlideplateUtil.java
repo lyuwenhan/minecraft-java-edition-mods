@@ -31,7 +31,6 @@ public final class GlideplateUtil {
 		if (stack.isEmpty()) {
 			return Optional.empty();
 		}
-
 		return Optional.ofNullable(CHESTPLATES.get(stack.getItem()));
 	}
 
@@ -39,23 +38,18 @@ public final class GlideplateUtil {
 		if (stack.isEmpty()) {
 			return false;
 		}
-
 		CustomData data = stack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY);
 		CompoundTag customData = data.copyTag();
-
 		if (customData.getBoolean("gliding").orElse(false)) {
 			return true;
 		}
-
 		if (customData.getBoolean("glideplate_has_elytra").orElse(false)) {
 			return true;
 		}
-
 		CustomModelData customModelData = stack.get(DataComponents.CUSTOM_MODEL_DATA);
 		if (customModelData == null) {
 			return false;
 		}
-
 		return customModelData.strings().contains("glideplate:with_elytra");
 	}
 

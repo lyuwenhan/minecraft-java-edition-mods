@@ -19,7 +19,6 @@ public final class FreecamSpeedController {
 	private static boolean hasTemporaryMultiplier;
 	private static double temporaryMultiplier = 1.0D;
 	private static boolean wasAdjustSpeedKeyDown;
-
 	private static boolean hasDirectOriginalFlyingSpeed;
 	private static float directOriginalFlyingSpeed;
 
@@ -31,14 +30,11 @@ public final class FreecamSpeedController {
 
 	public static void onEndClientTick(Minecraft client) {
 		updateAdjustKeyState();
-
 		SpeedTarget activeTarget = resolveActiveTarget(client);
-
 		if (activeTarget == SpeedTarget.DIRECT_FLIGHT) {
 			applyDirectFlyingSpeed(client);
 			return;
 		}
-
 		if (hasDirectOriginalFlyingSpeed) {
 			restoreDirectFlyingSpeed(client);
 		}
@@ -52,30 +48,24 @@ public final class FreecamSpeedController {
 		if (verticalScroll == 0.0D) {
 			return false;
 		}
-
 		if (!isAdjustKeyDown()) {
 			return false;
 		}
-
 		Minecraft client = Minecraft.getInstance();
 		SpeedTarget activeTarget = resolveActiveTarget(client);
 		if (activeTarget == SpeedTarget.NONE) {
 			return false;
 		}
-
 		if (!hasTemporaryMultiplier) {
 			temporaryMultiplier = clampMultiplier(FlySpeedModifierConfig.initialSpeed());
 			hasTemporaryMultiplier = true;
 		}
-
 		temporaryMultiplier =
 				adjustMultiplierNonLinearly(
 						temporaryMultiplier, verticalScroll, FlySpeedModifierConfig.scrollStep());
-
 		if (activeTarget == SpeedTarget.DIRECT_FLIGHT) {
 			applyDirectFlyingSpeed(client);
 		}
-
 		showMultiplierOverlay(activeTarget, temporaryMultiplier);
 		return true;
 	}
@@ -84,7 +74,6 @@ public final class FreecamSpeedController {
 		if (!shouldUseTemporaryFreecamMultiplier()) {
 			return originalSpeed;
 		}
-
 		return originalSpeed * temporaryMultiplier;
 	}
 
@@ -92,7 +81,6 @@ public final class FreecamSpeedController {
 		if (!shouldUseTemporaryFreecamMultiplier()) {
 			return originalFlyingSpeed;
 		}
-
 		return (float) (originalFlyingSpeed * temporaryMultiplier);
 	}
 
@@ -104,11 +92,9 @@ public final class FreecamSpeedController {
 		if (isFreecamEnabled()) {
 			return SpeedTarget.FREECAM;
 		}
-
 		if (isDirectFlyingActive(client)) {
 			return SpeedTarget.DIRECT_FLIGHT;
 		}
-
 		return SpeedTarget.NONE;
 	}
 
@@ -120,12 +106,10 @@ public final class FreecamSpeedController {
 		if (!isDirectFlyingActive(client) || !hasTemporaryMultiplier) {
 			return;
 		}
-
 		captureDirectOriginalFlyingSpeed(client);
 		if (!hasDirectOriginalFlyingSpeed) {
 			return;
 		}
-
 		client
 				.player
 				.getAbilities()
@@ -136,7 +120,6 @@ public final class FreecamSpeedController {
 		if (hasDirectOriginalFlyingSpeed || client == null || client.player == null) {
 			return;
 		}
-
 		directOriginalFlyingSpeed = client.player.getAbilities().getFlyingSpeed();
 		hasDirectOriginalFlyingSpeed = true;
 	}
@@ -145,11 +128,9 @@ public final class FreecamSpeedController {
 		if (!hasDirectOriginalFlyingSpeed) {
 			return;
 		}
-
 		if (client != null && client.player != null) {
 			client.player.getAbilities().setFlyingSpeed(directOriginalFlyingSpeed);
 		}
-
 		hasDirectOriginalFlyingSpeed = false;
 		directOriginalFlyingSpeed = 0.0F;
 	}
@@ -159,7 +140,6 @@ public final class FreecamSpeedController {
 		if (isDown && !wasAdjustSpeedKeyDown) {
 			showCurrentMultiplierOnKeyPress();
 		}
-
 		wasAdjustSpeedKeyDown = isDown;
 	}
 
@@ -170,24 +150,20 @@ public final class FreecamSpeedController {
 		} else {
 			temporaryMultiplier = clampMultiplier(temporaryMultiplier);
 		}
-
 		Minecraft client = Minecraft.getInstance();
 		SpeedTarget activeTarget = resolveActiveTarget(client);
 		if (activeTarget == SpeedTarget.NONE) {
 			return;
 		}
-
 		if (activeTarget == SpeedTarget.DIRECT_FLIGHT) {
 			applyDirectFlyingSpeed(client);
 		}
-
 		showMultiplierOverlay(activeTarget, temporaryMultiplier);
 	}
 
 	private static void resetTemporaryMultiplierSilently() {
 		temporaryMultiplier = clampMultiplier(FlySpeedModifierConfig.initialSpeed());
 		hasTemporaryMultiplier = true;
-
 		Minecraft client = Minecraft.getInstance();
 		SpeedTarget activeTarget = resolveActiveTarget(client);
 		if (activeTarget == SpeedTarget.DIRECT_FLIGHT) {
@@ -203,7 +179,6 @@ public final class FreecamSpeedController {
 		if (!FabricLoader.getInstance().isModLoaded(FREECAM_MOD_ID)) {
 			return false;
 		}
-
 		try {
 			Class<?> freecamClass = Class.forName("net.xolt.freecam.Freecam");
 			Object value = freecamClass.getMethod("isEnabled").invoke(null);
@@ -220,13 +195,11 @@ public final class FreecamSpeedController {
 		if (operationCount <= 0) {
 			return result;
 		}
-
 		boolean increase = scrollAmount > 0.0D;
 		for (int i = 0; i < operationCount; i++) {
 			result = increase ? increaseOneSignificantStep(result) : decreaseOneSignificantStep(result);
 			result = clampMultiplier(result);
 		}
-
 		return clampMultiplier(alignToHundredthTowardChangeDirection(result, increase));
 	}
 
@@ -240,13 +213,11 @@ public final class FreecamSpeedController {
 		double place = significantPlace(value, 1);
 		double units = Math.floor(value / place + 1.0E-9D);
 		double candidate = truncateToPlace((units - 1.0D) * place, place);
-
 		if (wouldBorrowToLowerMagnitude(value, candidate)) {
 			double fallbackPlace = significantPlace(value, 2);
 			double fallbackUnits = Math.floor(value / fallbackPlace + 1.0E-9D);
 			return truncateToPlace((fallbackUnits - 1.0D) * fallbackPlace, fallbackPlace);
 		}
-
 		return candidate;
 	}
 
@@ -254,7 +225,6 @@ public final class FreecamSpeedController {
 		if (!Double.isFinite(originalValue) || !Double.isFinite(nextValue) || originalValue <= 0.0D) {
 			return false;
 		}
-
 		double highestPlace = highestSignificantPlace(originalValue);
 		return nextValue > 0.0D && nextValue < highestPlace;
 	}
@@ -264,13 +234,11 @@ public final class FreecamSpeedController {
 		if (!Double.isFinite(abs) || abs <= 0.0D) {
 			return 0.01D;
 		}
-
 		int highestPower = (int) Math.floor(Math.log10(abs));
 		double place = Math.pow(10.0D, highestPower);
 		if (!Double.isFinite(place) || place <= 0.0D) {
 			return 0.01D;
 		}
-
 		return place;
 	}
 
@@ -279,13 +247,11 @@ public final class FreecamSpeedController {
 		if (!Double.isFinite(abs) || abs <= 0.0D) {
 			return 0.01D;
 		}
-
 		int highestPower = (int) Math.floor(Math.log10(abs));
 		double place = Math.pow(10.0D, highestPower - offsetFromHighest);
 		if (!Double.isFinite(place) || place <= 0.0D) {
 			return 0.01D;
 		}
-
 		return place;
 	}
 
@@ -293,7 +259,6 @@ public final class FreecamSpeedController {
 		if (!Double.isFinite(value)) {
 			return value;
 		}
-
 		double place = 0.01D;
 		double scaled = value / place;
 		double units = increase ? Math.ceil(scaled - 1.0E-9D) : Math.floor(scaled + 1.0E-9D);
@@ -304,7 +269,6 @@ public final class FreecamSpeedController {
 		if (!Double.isFinite(value) || !Double.isFinite(place) || place <= 0.0D) {
 			return value;
 		}
-
 		double units = Math.floor(value / place + 1.0E-9D);
 		return units * place;
 	}
@@ -313,18 +277,14 @@ public final class FreecamSpeedController {
 		if (!Double.isFinite(value)) {
 			return FlySpeedModifierConfig.minSpeed();
 		}
-
 		double min = FlySpeedModifierConfig.minSpeed();
 		double max = FlySpeedModifierConfig.maxSpeed();
-
 		if (value < min) {
 			return min;
 		}
-
 		if (value > max) {
 			return max;
 		}
-
 		return value;
 	}
 
@@ -333,7 +293,6 @@ public final class FreecamSpeedController {
 		if (client.player == null) {
 			return;
 		}
-
 		String label =
 				target == SpeedTarget.FREECAM ? "Freecam speed multiplier" : "Flight speed multiplier";
 		String text = String.format(Locale.ROOT, "%s: %.2fx", label, multiplier);

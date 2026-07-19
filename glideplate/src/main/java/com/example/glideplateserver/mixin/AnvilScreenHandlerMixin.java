@@ -38,10 +38,8 @@ public abstract class AnvilScreenHandlerMixin extends ItemCombinerMenu {
 		if (!this.glideplateServer$isLogicalServer()) {
 			return;
 		}
-
 		ItemStack left = this.inputSlots.getItem(0);
 		ItemStack right = this.inputSlots.getItem(1);
-
 		if (GlideplateServerUtil.isBlockedDoubleCombine(left, right)) {
 			this.resultSlots.setItem(0, ItemStack.EMPTY);
 			this.cost.set(0);
@@ -49,11 +47,9 @@ public abstract class AnvilScreenHandlerMixin extends ItemCombinerMenu {
 			callbackInfo.cancel();
 			return;
 		}
-
 		if (!GlideplateServerUtil.canCombine(left, right)) {
 			return;
 		}
-
 		this.resultSlots.setItem(0, GlideplateServerUtil.createGlideplateServer(left));
 		this.repairItemCountCost = 1;
 		this.cost.set(0);
@@ -66,7 +62,6 @@ public abstract class AnvilScreenHandlerMixin extends ItemCombinerMenu {
 			String itemName, CallbackInfoReturnable<Boolean> callbackInfoReturnable) {
 		ItemStack left = this.inputSlots.getItem(0);
 		ItemStack right = this.inputSlots.getItem(1);
-
 		if (GlideplateServerUtil.canCombine(left, right)
 				|| GlideplateServerUtil.isBlockedDoubleCombine(left, right)) {
 			callbackInfoReturnable.setReturnValue(false);
@@ -79,11 +74,9 @@ public abstract class AnvilScreenHandlerMixin extends ItemCombinerMenu {
 		if (!this.glideplateServer$isLogicalServer()) {
 			return;
 		}
-
 		if (!present) {
 			return;
 		}
-
 		if (GlideplateServerUtil.canCombine(this.inputSlots.getItem(0), this.inputSlots.getItem(1))) {
 			callbackInfoReturnable.setReturnValue(true);
 		}
@@ -94,21 +87,16 @@ public abstract class AnvilScreenHandlerMixin extends ItemCombinerMenu {
 		if (!this.glideplateServer$isLogicalServer()) {
 			return;
 		}
-
 		ItemStack left = this.inputSlots.getItem(0);
 		ItemStack right = this.inputSlots.getItem(1);
-
 		if (!GlideplateServerUtil.canCombine(left, right) || !GlideplateServerUtil.hasElytra(stack)) {
 			return;
 		}
-
 		this.inputSlots.setItem(0, ItemStack.EMPTY);
 		right.shrink(1);
-
 		if (right.isEmpty()) {
 			this.inputSlots.setItem(1, ItemStack.EMPTY);
 		}
-
 		this.repairItemCountCost = 0;
 		this.cost.set(0);
 		this.access.execute((level, pos) -> level.levelEvent(LevelEvent.SOUND_ANVIL_USED, pos, 0));

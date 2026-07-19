@@ -21,19 +21,15 @@ import org.lwjgl.glfw.GLFW;
 public class ClientFlyingMod implements ClientModInitializer {
 	private static final String MOD_ID = "client-flying";
 	private static final String KEY_TOGGLE = "key.client-flying.toggle";
-
 	private final KeyMapping.Category category =
 			KeyMapping.Category.register(Identifier.fromNamespaceAndPath(MOD_ID, "client_flying"));
-
 	private KeyMapping toggleKey;
 	private ClientFlyingConfig config = new ClientFlyingConfig();
-
 	private boolean first = true;
 	private boolean lastElytra = false;
 	private boolean lastFlying = false;
 	private boolean lastFallFlying = false;
 	private static int notFlyingTicks = 0;
-
 	private static int startFallFlyingResendTicks = 0;
 	private static boolean sendingInternalStartFallFlyingPacket = false;
 
@@ -52,14 +48,11 @@ public class ClientFlyingMod implements ClientModInitializer {
 			resetState();
 			return;
 		}
-
 		GameType gameMode = client.gameMode.getPlayerMode();
-
 		if (gameMode == GameType.SURVIVAL || gameMode == GameType.ADVENTURE) {
 			client.player.getAbilities().flying = false;
 			client.player.getAbilities().mayfly = false;
 		}
-
 		resetState();
 	}
 
@@ -67,18 +60,14 @@ public class ClientFlyingMod implements ClientModInitializer {
 		if (toggleKey == null || client.player == null) {
 			return;
 		}
-
 		while (toggleKey.consumeClick()) {
 			config.enabled = !config.enabled;
-
 			if (config.enabled) {
 				resetState();
 			} else {
 				disableClientFlight(client);
 			}
-
 			config.save();
-
 			client.player.sendOverlayMessage(
 					Component.literal("Client Flying: " + (config.enabled ? "ON" : "OFF")));
 		}
@@ -92,7 +81,6 @@ public class ClientFlyingMod implements ClientModInitializer {
 		if (sendingInternalStartFallFlyingPacket) {
 			return;
 		}
-
 		startFallFlyingResendTicks = 10;
 		notFlyingTicks = 0;
 	}
@@ -102,9 +90,7 @@ public class ClientFlyingMod implements ClientModInitializer {
 		if (client.player == null) {
 			return;
 		}
-
 		sendingInternalStartFallFlyingPacket = true;
-
 		try {
 			connection.send(
 					new ServerboundPlayerCommandPacket(
@@ -117,52 +103,40 @@ public class ClientFlyingMod implements ClientModInitializer {
 	@Override
 	public void onInitializeClient() {
 		System.out.println("[ClientFlying] Client initialized");
-
 		config = ClientFlyingConfig.load();
-
 		toggleKey =
 				KeyMappingHelper.registerKeyMapping(
 						new KeyMapping(KEY_TOGGLE, InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_V, category));
-
 		ClientPlayConnectionEvents.JOIN.register(
 				(handler, sender, client) -> {
 					resetState();
 					System.out.println("[ClientFlying] State reset on join");
 				});
-
 		ClientPlayConnectionEvents.DISCONNECT.register(
 				(handler, client) -> {
 					resetState();
 					System.out.println("[ClientFlying] State reset on disconnect");
 				});
-
 		ClientTickEvents.END_CLIENT_TICK.register(
 				client -> {
 					if (client.player == null || client.gameMode == null) {
 						return;
 					}
-
 					handleToggleKey(client);
-
 					if (!config.enabled) {
 						return;
 					}
-
 					GameType gameMode = client.gameMode.getPlayerMode();
-
 					if (gameMode == GameType.SURVIVAL || gameMode == GameType.ADVENTURE) {
 						ItemStack chestStack = client.player.getItemBySlot(EquipmentSlot.CHEST);
 						boolean wearingGlider = chestStack.get(DataComponents.GLIDER) != null;
 						boolean inAir = !client.player.onGround();
 						boolean shouldStartGliding = false;
-
 						client.player.getAbilities().mayfly = true;
-
 						if (inAir && (first || wearingGlider != lastElytra)) {
 							client.player.getAbilities().flying = !wearingGlider;
 							shouldStartGliding = wearingGlider;
 						}
-
 						ClientPacketListener connection = client.getConnection();
 						if (connection != null) {
 							if (startFallFlyingResendTicks > 0) {
@@ -200,7 +174,6 @@ public class ClientFlyingMod implements ClientModInitializer {
 								notFlyingTicks = Math.max(0, notFlyingTicks - 1);
 							}
 						}
-
 						lastElytra = wearingGlider;
 						lastFlying = client.player.getAbilities().flying;
 						lastFallFlying = client.player.isFallFlying();

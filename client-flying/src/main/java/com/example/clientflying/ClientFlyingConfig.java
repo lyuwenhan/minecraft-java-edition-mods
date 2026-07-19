@@ -12,7 +12,6 @@ public class ClientFlyingConfig {
 	private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 	private static final Path CONFIG_PATH =
 			FabricLoader.getInstance().getConfigDir().resolve("client-flying.json");
-
 	public boolean enabled = true;
 
 	public static ClientFlyingConfig load() {
@@ -21,16 +20,13 @@ public class ClientFlyingConfig {
 			cfg.save();
 			return cfg;
 		}
-
 		try {
 			ClientFlyingConfig cfg =
 					GSON.fromJson(Files.readString(CONFIG_PATH), ClientFlyingConfig.class);
-
 			if (cfg == null) {
 				cfg = new ClientFlyingConfig();
 				cfg.save();
 			}
-
 			return cfg;
 		} catch (IOException | JsonParseException e) {
 			throw new RuntimeException("Failed to load client-flying config", e);
@@ -43,7 +39,6 @@ public class ClientFlyingConfig {
 			if (parent != null) {
 				Files.createDirectories(parent);
 			}
-
 			Files.writeString(CONFIG_PATH, GSON.toJson(this));
 		} catch (IOException e) {
 			throw new RuntimeException("Failed to save client-flying config", e);

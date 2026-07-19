@@ -34,7 +34,6 @@ public class AutoGreetingClientDelay {
 		if (pending.containsKey(uuid)) {
 			return;
 		}
-
 		pending.put(uuid, new PendingGreeting(playerName, uuid, 20));
 		registerIfNeeded();
 	}
@@ -43,9 +42,7 @@ public class AutoGreetingClientDelay {
 		if (registered) {
 			return;
 		}
-
 		registered = true;
-
 		ClientTickEvents.END_CLIENT_TICK.register(
 				client -> {
 					updatePlayerTracking(client);
@@ -59,50 +56,37 @@ public class AutoGreetingClientDelay {
 			knownPlayerUuids.clear();
 			return;
 		}
-
 		if (client.getConnection() == null) {
 			knownPlayerUuids.clear();
 			return;
 		}
-
 		boolean warmup = System.currentTimeMillis() - AutoGreetingClientMod.joinWorldAt < 1000L;
 		Set<UUID> currentPlayerUuids = new HashSet<>();
-
 		for (PlayerInfo playerInfo : client.getConnection().getOnlinePlayers()) {
 			GameProfile profile = playerInfo.getProfile();
 			UUID uuid = getProfileUuid(profile);
-
 			if (uuid == null) {
 				continue;
 			}
-
 			currentPlayerUuids.add(uuid);
-
 			if (uuid.equals(client.player.getUUID())) {
 				continue;
 			}
-
 			if (warmup) {
 				continue;
 			}
-
 			if (knownPlayerUuids.contains(uuid)) {
 				continue;
 			}
-
 			String name = getProfileName(profile);
-
 			if (name == null || name.isBlank()) {
 				name = uuid.toString();
 			}
-
 			if (!shouldGreetOtherPlayer(name)) {
 				continue;
 			}
-
 			greetAfter1Second(name, uuid.toString());
 		}
-
 		knownPlayerUuids.clear();
 		knownPlayerUuids.addAll(currentPlayerUuids);
 	}
@@ -111,18 +95,15 @@ public class AutoGreetingClientDelay {
 		if (!AutoGreetingClientMod.CONFIG.otherEnabled) {
 			return false;
 		}
-
 		if (AutoGreetingClientMod.CONFIG.otherBlacklist.match(name)
 				&& !AutoGreetingClientMod.CONFIG.otherBlacklistExcept.match(name)) {
 			return false;
 		}
-
 		if (!AutoGreetingClientMod.CONFIG.otherWhitelist.isEmpty()
 				&& (!AutoGreetingClientMod.CONFIG.otherWhitelist.match(name)
 						|| AutoGreetingClientMod.CONFIG.otherWhitelistExcept.match(name))) {
 			return false;
 		}
-
 		return true;
 	}
 
@@ -130,13 +111,10 @@ public class AutoGreetingClientDelay {
 		if (profile == null) {
 			return null;
 		}
-
 		UUID uuid = invokeUuidMethod(profile, "id");
-
 		if (uuid != null) {
 			return uuid;
 		}
-
 		return invokeUuidMethod(profile, "getId");
 	}
 
@@ -144,13 +122,10 @@ public class AutoGreetingClientDelay {
 		if (profile == null) {
 			return null;
 		}
-
 		String name = invokeStringMethod(profile, "name");
-
 		if (name != null && !name.isBlank()) {
 			return name;
 		}
-
 		return invokeStringMethod(profile, "getName");
 	}
 
@@ -158,7 +133,6 @@ public class AutoGreetingClientDelay {
 		try {
 			Method method = object.getClass().getMethod(methodName);
 			Object value = method.invoke(object);
-
 			if (value instanceof UUID uuid) {
 				return uuid;
 			}
@@ -167,7 +141,6 @@ public class AutoGreetingClientDelay {
 				| NoSuchMethodException
 				| SecurityException ignored) {
 		}
-
 		return null;
 	}
 
@@ -175,7 +148,6 @@ public class AutoGreetingClientDelay {
 		try {
 			Method method = object.getClass().getMethod(methodName);
 			Object value = method.invoke(object);
-
 			if (value instanceof String stringValue) {
 				return stringValue;
 			}
@@ -184,7 +156,6 @@ public class AutoGreetingClientDelay {
 				| NoSuchMethodException
 				| SecurityException ignored) {
 		}
-
 		return null;
 	}
 
@@ -192,17 +163,13 @@ public class AutoGreetingClientDelay {
 		if (client.player == null) {
 			return;
 		}
-
 		if (selfPending == null) {
 			return;
 		}
-
 		selfPending.ticksLeft--;
-
 		if (selfPending.ticksLeft > 0) {
 			return;
 		}
-
 		sendSelfGreeting(client);
 		selfPending = null;
 	}
@@ -211,37 +178,28 @@ public class AutoGreetingClientDelay {
 		if (client.player == null) {
 			return;
 		}
-
 		if (pending.isEmpty()) {
 			return;
 		}
-
 		Iterator<PendingGreeting> it = pending.values().iterator();
-
 		while (it.hasNext()) {
 			PendingGreeting p = it.next();
 			p.ticksLeft--;
-
 			if (p.ticksLeft > 0) {
 				continue;
 			}
-
 			if (!AutoGreetingClientMod.CONFIG.otherEnabled) {
 				it.remove();
 				continue;
 			}
-
 			for (String msg : AutoGreetingClientMod.CONFIG.otherGreetings) {
 				if (msg == null || msg.isBlank()) {
 					continue;
 				}
-
 				msg = msg.trim();
-
 				String finalMsg = msg.replace("@player", p.playerName).replace("@UUID", p.uuid);
 				sendChatOrCommand(client, msg, finalMsg);
 			}
-
 			it.remove();
 		}
 	}
@@ -282,26 +240,20 @@ public class AutoGreetingClientDelay {
 		if (!AutoGreetingClientMod.CONFIG.selfEnabled) {
 			return;
 		}
-
 		if (client.player == null) {
 			return;
 		}
-
 		String playerName = client.player.getName().getString();
 		String playerUUID = client.player.getUUID().toString();
-
 		String playerX = fmt(client.player.getX());
 		String playerY = fmt(client.player.getY());
 		String playerZ = fmt(client.player.getZ());
-
 		String health = fmt(client.player.getHealth());
 		String level = Integer.toString(client.player.experienceLevel);
-
 		for (String msg : AutoGreetingClientMod.CONFIG.selfGreetings) {
 			if (msg == null || msg.isBlank()) {
 				continue;
 			}
-
 			msg = msg.trim();
 			String finalMsg =
 					msg.replace("@player", playerName)
@@ -311,7 +263,6 @@ public class AutoGreetingClientDelay {
 							.replace("@Z", playerZ)
 							.replace("@health", health)
 							.replace("@level", level);
-
 			sendChatOrCommand(client, msg, finalMsg);
 		}
 	}
@@ -321,12 +272,10 @@ public class AutoGreetingClientDelay {
 		if (client.getConnection() == null) {
 			return;
 		}
-
 		if (templateMessage.startsWith("/")) {
 			client.getConnection().sendCommand(finalMessage.substring(1));
 			return;
 		}
-
 		client.getConnection().sendChat(finalMessage);
 	}
 }

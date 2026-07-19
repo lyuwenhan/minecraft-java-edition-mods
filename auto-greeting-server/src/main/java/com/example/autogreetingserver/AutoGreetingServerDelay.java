@@ -26,7 +26,6 @@ public class AutoGreetingServerDelay {
 		if (pending.containsKey(uuid)) {
 			return;
 		}
-
 		pending.put(uuid, new PendingGreeting(name, uuid, x, y, z, health, level, 20));
 		registerIfNeeded();
 	}
@@ -36,27 +35,22 @@ public class AutoGreetingServerDelay {
 			return;
 		}
 		registered = true;
-
 		ServerTickEvents.END_SERVER_TICK.register(
 				server -> {
 					if (pending.isEmpty()) {
 						return;
 					}
-
 					Iterator<PendingGreeting> it = pending.values().iterator();
 					while (it.hasNext()) {
 						PendingGreeting p = it.next();
 						p.ticksLeft--;
-
 						if (p.ticksLeft > 0) {
 							continue;
 						}
-
 						if (!AutoGreetingServerMod.CONFIG.serverEnabled) {
 							it.remove();
 							continue;
 						}
-
 						sendConfiguredGreetings(server, p.playerName, p.uuid, p.x, p.y, p.z, p.health, p.level);
 						it.remove();
 					}
@@ -83,7 +77,6 @@ public class AutoGreetingServerDelay {
 			if (msg == null || msg.isBlank()) {
 				continue;
 			}
-
 			msg = msg.trim();
 			String finalMsg =
 					msg.replace("@player", playerName)
@@ -93,7 +86,6 @@ public class AutoGreetingServerDelay {
 							.replace("@Z", playerZ)
 							.replace("@health", health)
 							.replace("@level", level);
-
 			if (msg.startsWith("/")) {
 				CommandSourceStack source = server.createCommandSourceStack();
 				server.getCommands().performPrefixedCommand(source, finalMsg);

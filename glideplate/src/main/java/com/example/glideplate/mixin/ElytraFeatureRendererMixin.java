@@ -15,7 +15,6 @@ public abstract class ElytraFeatureRendererMixin {
 		if (GlideplateUtil.isChestplate(stack) && GlideplateUtil.hasElytra(stack)) {
 			return Items.ELYTRA.getDefaultInstance();
 		}
-
 		return stack;
 	}
 }

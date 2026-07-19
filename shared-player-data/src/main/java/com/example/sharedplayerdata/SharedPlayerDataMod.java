@@ -16,12 +16,10 @@ public final class SharedPlayerDataMod implements DedicatedServerModInitializer 
 	public void onInitializeServer() {
 		MANAGER.loadConfig();
 		SharedPlayerDataCommands.register();
-
 		ServerLifecycleEvents.SERVER_STOPPING.register(MANAGER::onServerStopping);
 		ServerTickEvents.END_SERVER_TICK.register(MANAGER::enforceExclusiveOnlinePlayers);
 		ServerLoginConnectionEvents.DISCONNECT.register(
 				(listener, server) -> MANAGER.releaseLoginListener(listener));
-
 		LOGGER.info("Shared Player Data initialized for dedicated server use.");
 	}
 }

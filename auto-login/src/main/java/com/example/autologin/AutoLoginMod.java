@@ -11,7 +11,6 @@ import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.network.chat.Component;
 
 public class AutoLoginMod implements ClientModInitializer {
-
 	private static boolean attempted = false;
 	private static boolean pendingLogin = false;
 
@@ -22,19 +21,15 @@ public class AutoLoginMod implements ClientModInitializer {
 					attempted = false;
 					pendingLogin = true;
 				});
-
 		ClientTickEvents.END_CLIENT_TICK.register(
 				client -> {
 					if (!pendingLogin || attempted || client.player == null) {
 						return;
 					}
-
 					attempted = true;
 					pendingLogin = false;
-
 					tryAutoLogin(client);
 				});
-
 		ClientCommandRegistrationCallback.EVENT.register(
 				(dispatcher, registryAccess) -> {
 					dispatcher.register(
@@ -47,7 +42,6 @@ public class AutoLoginMod implements ClientModInitializer {
 																			ctx -> {
 																				Minecraft client = Minecraft.getInstance();
 																				String serverKey = getCurrentServerKey(client);
-
 																				if (serverKey == null) {
 																					ctx.getSource()
 																							.sendError(
@@ -55,14 +49,11 @@ public class AutoLoginMod implements ClientModInitializer {
 																											"command.autologin.login.failed.no_server"));
 																					return 0;
 																				}
-
 																				AutoLoginConfig cfg = AutoLoginConfig.load();
 																				AutoLoginConfig.Credential cred =
 																						new AutoLoginConfig.Credential();
-
 																				try {
 																					byte[] deviceKey = DeviceKey.get();
-
 																					if (deviceKey == null) {
 																						ctx.getSource()
 																								.sendError(
@@ -70,20 +61,16 @@ public class AutoLoginMod implements ClientModInitializer {
 																												"command.autologin.login.failed.key"));
 																						return 0;
 																					}
-
 																					Crypto.Result result =
 																							Crypto.encrypt(
 																									StringArgumentType.getString(ctx, "password"),
 																									deviceKey);
-
 																					cred.enc = result.enc;
 																					cred.salt = result.salt;
 																					cred.iv = result.iv;
 																					cred.enabled = true;
-
 																					cfg.servers.put(serverKey, cred);
 																					cfg.save();
-
 																					ctx.getSource()
 																							.sendFeedback(
 																									Component.translatable("command.autologin.set"));
@@ -93,7 +80,6 @@ public class AutoLoginMod implements ClientModInitializer {
 																									Component.literal(
 																											"Failed" + " to save" + " password."));
 																				}
-
 																				return 1;
 																			})))
 									.then(
@@ -102,14 +88,12 @@ public class AutoLoginMod implements ClientModInitializer {
 															ctx -> {
 																Minecraft client = Minecraft.getInstance();
 																LoginAttemptResult result = tryAutoLogin(client);
-
 																if (result.sent()) {
 																	ctx.getSource()
 																			.sendFeedback(
 																					Component.translatable(result.translationKey()));
 																	return 1;
 																}
-
 																ctx.getSource()
 																		.sendError(Component.translatable(result.translationKey()));
 																return 0;
@@ -120,7 +104,6 @@ public class AutoLoginMod implements ClientModInitializer {
 															ctx -> {
 																Minecraft client = Minecraft.getInstance();
 																String serverKey = getCurrentServerKey(client);
-
 																if (serverKey == null) {
 																	ctx.getSource()
 																			.sendError(
@@ -128,11 +111,9 @@ public class AutoLoginMod implements ClientModInitializer {
 																							"command.autologin.login.failed.no_server"));
 																	return 0;
 																}
-
 																AutoLoginConfig cfg = AutoLoginConfig.load();
 																cfg.servers.remove(serverKey);
 																cfg.save();
-
 																ctx.getSource()
 																		.sendFeedback(
 																				Component.translatable("command.autologin.clear"));
@@ -149,7 +130,6 @@ public class AutoLoginMod implements ClientModInitializer {
 																							"command.autologin.login.failed.no_password"));
 																	return 0;
 																}
-
 																ctx.getSource()
 																		.sendFeedback(
 																				Component.translatable("command.autologin.toggle.on"));
@@ -166,7 +146,6 @@ public class AutoLoginMod implements ClientModInitializer {
 																							"command.autologin.login.failed.no_password"));
 																	return 0;
 																}
-
 																ctx.getSource()
 																		.sendFeedback(
 																				Component.translatable("command.autologin.toggle.off"));
@@ -177,7 +156,6 @@ public class AutoLoginMod implements ClientModInitializer {
 													.executes(
 															ctx -> {
 																AutoLoginConfig.Credential cred = getCurrentServerCredential();
-
 																if (cred == null) {
 																	ctx.getSource()
 																			.sendError(
@@ -185,9 +163,7 @@ public class AutoLoginMod implements ClientModInitializer {
 																							"command.autologin.login.failed.no_password"));
 																	return 0;
 																}
-
 																boolean enabled = !cred.enabled;
-
 																if (!toggleForCurrentServer(enabled)) {
 																	ctx.getSource()
 																			.sendError(
@@ -195,14 +171,12 @@ public class AutoLoginMod implements ClientModInitializer {
 																							"command.autologin.login.failed.no_password"));
 																	return 0;
 																}
-
 																if (enabled) {
 																	ctx.getSource()
 																			.sendFeedback(
 																					Component.translatable("command.autologin.toggle.on"));
 																	return 1;
 																}
-
 																ctx.getSource()
 																		.sendFeedback(
 																				Component.translatable("command.autologin.toggle.off"));
@@ -215,44 +189,32 @@ public class AutoLoginMod implements ClientModInitializer {
 		if (client.player == null) {
 			return failed("command.autologin.login.failed.no_player");
 		}
-
 		String serverKey = getCurrentServerKey(client);
-
 		if (serverKey == null) {
 			return failed("command.autologin.login.failed.no_server");
 		}
-
 		AutoLoginConfig cfg = AutoLoginConfig.load();
 		AutoLoginConfig.Credential cred = cfg.servers.get(serverKey);
-
 		if (cred == null) {
 			return failed("command.autologin.login.failed.no_password");
 		}
-
 		if (!cred.enabled) {
 			return failed("command.autologin.login.failed.disabled");
 		}
-
 		byte[] deviceKey = DeviceKey.get();
-
 		if (deviceKey == null) {
 			return failed("command.autologin.login.failed.key");
 		}
-
 		String password;
-
 		try {
 			password = decryptPasswordAndMigrateIfNeeded(cfg, serverKey, cred, deviceKey);
 		} catch (Exception e) {
 			return failed("command.autologin.login.failed.decrypt");
 		}
-
 		var connection = client.getConnection();
-
 		if (connection == null) {
 			return failed("command.autologin.login.failed.no_connection");
 		}
-
 		try {
 			connection.sendCommand("login " + password);
 			return sent();
@@ -270,20 +232,15 @@ public class AutoLoginMod implements ClientModInitializer {
 			if (cred.salt == null || cred.salt.isEmpty()) {
 				throw e;
 			}
-
 			char[] legacy =
 					(System.getProperty("user.name", "") + System.getProperty("os.name", "")).toCharArray();
-
 			String password = Crypto.decryptLegacy(cred, legacy);
-
 			Crypto.Result result = Crypto.encrypt(password, deviceKey);
 			cred.enc = result.enc;
 			cred.salt = result.salt;
 			cred.iv = result.iv;
-
 			cfg.servers.put(serverKey, cred);
 			cfg.save();
-
 			return password;
 		}
 	}
@@ -298,26 +255,21 @@ public class AutoLoginMod implements ClientModInitializer {
 
 	private static String getCurrentServerKey(Minecraft client) {
 		ServerData server = client.getCurrentServer();
-
 		if (server == null) {
 			return null;
 		}
-
 		if (server.ip == null || server.ip.isBlank()) {
 			return null;
 		}
-
 		return server.ip;
 	}
 
 	private static AutoLoginConfig.Credential getCurrentServerCredential() {
 		Minecraft client = Minecraft.getInstance();
 		String serverKey = getCurrentServerKey(client);
-
 		if (serverKey == null) {
 			return null;
 		}
-
 		AutoLoginConfig cfg = AutoLoginConfig.load();
 		return cfg.servers.get(serverKey);
 	}
@@ -325,18 +277,14 @@ public class AutoLoginMod implements ClientModInitializer {
 	private static boolean toggleForCurrentServer(boolean enabled) {
 		Minecraft client = Minecraft.getInstance();
 		String serverKey = getCurrentServerKey(client);
-
 		if (serverKey == null) {
 			return false;
 		}
-
 		AutoLoginConfig cfg = AutoLoginConfig.load();
 		AutoLoginConfig.Credential cred = cfg.servers.get(serverKey);
-
 		if (cred == null) {
 			return false;
 		}
-
 		cred.enabled = enabled;
 		cfg.save();
 		return true;

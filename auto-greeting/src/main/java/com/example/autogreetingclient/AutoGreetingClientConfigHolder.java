@@ -13,7 +13,6 @@ public final class AutoGreetingClientConfigHolder {
 		if (newConfig == null) {
 			return;
 		}
-
 		config = newConfig;
 		AutoGreetingClientMod.CONFIG = newConfig;
 	}

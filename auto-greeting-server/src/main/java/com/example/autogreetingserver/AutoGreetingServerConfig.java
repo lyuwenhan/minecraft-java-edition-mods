@@ -11,14 +11,11 @@ import java.util.List;
 import net.fabricmc.loader.api.FabricLoader;
 
 public class AutoGreetingServerConfig {
-
 	private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 	private static final Path CONFIG_PATH =
 			FabricLoader.getInstance().getConfigDir().resolve("auto-greeting-server.json");
-
 	public boolean serverEnabled = true;
 	public List<String> serverGreetings = new ArrayList<>();
-
 	public StringMatchRules serverBlacklist = new StringMatchRules();
 	public StringMatchRules serverBlacklistExcept = new StringMatchRules();
 	public StringMatchRules serverWhitelist = new StringMatchRules();
@@ -30,15 +27,12 @@ public class AutoGreetingServerConfig {
 			cfg.save();
 			return cfg;
 		}
-
 		try {
 			AutoGreetingServerConfig cfg =
 					GSON.fromJson(Files.readString(CONFIG_PATH), AutoGreetingServerConfig.class);
-
 			if (cfg == null) {
 				return new AutoGreetingServerConfig();
 			}
-
 			return cfg;
 		} catch (IOException e) {
 			throw new RuntimeException("Failed to load auto-greeting server config", e);

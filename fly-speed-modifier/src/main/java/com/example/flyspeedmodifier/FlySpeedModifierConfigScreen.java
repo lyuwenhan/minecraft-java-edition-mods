@@ -69,7 +69,6 @@ public final class FlySpeedModifierConfigScreen extends OptionsSubScreen {
 		if (upperBound <= lowerBound) {
 			return 0.0D;
 		}
-
 		double clamped = Math.max(lowerBound, Math.min(this.draft.initialSpeed, upperBound));
 		return (clamped - lowerBound) / (upperBound - lowerBound);
 	}

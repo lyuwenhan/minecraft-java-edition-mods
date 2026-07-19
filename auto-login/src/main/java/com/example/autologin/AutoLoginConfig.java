@@ -10,7 +10,6 @@ import java.util.Map;
 import net.fabricmc.loader.api.FabricLoader;
 
 public class AutoLoginConfig {
-
 	public Map<String, Credential> servers = new HashMap<>();
 
 	public static class Credential {
@@ -28,22 +27,17 @@ public class AutoLoginConfig {
 
 	public static AutoLoginConfig load() {
 		Path p = path();
-
 		if (!Files.exists(p)) {
 			return new AutoLoginConfig();
 		}
-
 		try {
 			AutoLoginConfig cfg = GSON.fromJson(Files.readString(p), AutoLoginConfig.class);
-
 			if (cfg == null) {
 				return new AutoLoginConfig();
 			}
-
 			if (cfg.servers == null) {
 				cfg.servers = new HashMap<>();
 			}
-
 			return cfg;
 		} catch (IOException e) {
 			return new AutoLoginConfig();

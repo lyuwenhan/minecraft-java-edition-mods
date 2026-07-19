@@ -34,7 +34,6 @@ public abstract class CarpetFakePlayerCreationMixin {
 		sharedPlayerData$reservedSpawnUuid.remove();
 		SharedProfileManager.CarpetFakeSpawnDecision decision =
 				SharedPlayerDataMod.MANAGER.prepareCarpetFakeSpawn(server, username);
-
 		if (!decision.allowed()) {
 			SharedPlayerDataMod.LOGGER.warn(
 					"Blocked Carpet fake player spawn for '{}' because the Shared Player Data group"
@@ -43,9 +42,7 @@ public abstract class CarpetFakePlayerCreationMixin {
 			cir.setReturnValue(false);
 			return;
 		}
-
 		Optional<UUID> optionalReservedUuid = decision.reservedUuid();
-
 		if (optionalReservedUuid.isPresent()) {
 			sharedPlayerData$reservedSpawnUuid.set(optionalReservedUuid.get());
 		}
@@ -64,17 +61,13 @@ public abstract class CarpetFakePlayerCreationMixin {
 			CallbackInfoReturnable<Boolean> cir) {
 		UUID reservedUuid = sharedPlayerData$reservedSpawnUuid.get();
 		sharedPlayerData$reservedSpawnUuid.remove();
-
 		if (reservedUuid == null) {
 			return;
 		}
-
 		Boolean created = cir.getReturnValue();
-
 		if (Boolean.TRUE.equals(created)) {
 			return;
 		}
-
 		SharedPlayerDataMod.MANAGER.releaseExternalReservation(reservedUuid);
 		SharedPlayerDataMod.LOGGER.warn(
 				"Released Shared Player Data reservation for Carpet fake spawn '{}' ({}) because"

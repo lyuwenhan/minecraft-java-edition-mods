@@ -16,7 +16,6 @@ public final class FlySpeedModifierOptions {
 									Component.translatable("option.fly-speed-modifier.full_range.tooltip")),
 					FlySpeedModifierConfig.DEFAULT_FULL_RANGE,
 					FlySpeedModifierOptions::onFullRangeChanged);
-
 	private static final OptionInstance<Double> MAX_SPEED =
 			new OptionInstance<>(
 					"option.fly-speed-modifier.max_speed",
@@ -30,7 +29,6 @@ public final class FlySpeedModifierOptions {
 							FlySpeedModifierConfig.FULL_RANGE_MAX_SPEED),
 					FlySpeedModifierConfig.DEFAULT_MAX_SPEED,
 					FlySpeedModifierOptions::onMaxSpeedChanged);
-
 	private static final OptionInstance<Double> MIN_SPEED =
 			new OptionInstance<>(
 					"option.fly-speed-modifier.min_speed",
@@ -44,7 +42,6 @@ public final class FlySpeedModifierOptions {
 							FlySpeedModifierConfig.MAX_ALLOWED_MIN_SPEED),
 					FlySpeedModifierConfig.DEFAULT_MIN_SPEED,
 					FlySpeedModifierOptions::onMinSpeedChanged);
-
 	private static final OptionInstance<Double> INITIAL_SPEED =
 			new OptionInstance<>(
 					"option.fly-speed-modifier.initial_speed",
@@ -59,7 +56,6 @@ public final class FlySpeedModifierOptions {
 							FlySpeedModifierConfig.MAX_ALLOWED_INITIAL_SPEED),
 					FlySpeedModifierConfig.DEFAULT_INITIAL_SPEED,
 					FlySpeedModifierOptions::onInitialSpeedChanged);
-
 	private static final OptionInstance<Boolean> RESET_ON_ADJUST =
 			OptionInstance.createBoolean(
 					"option.fly-speed-modifier.reset_on_adjust",
@@ -68,7 +64,6 @@ public final class FlySpeedModifierOptions {
 									Component.translatable("option.fly-speed-modifier.reset_on_adjust.tooltip")),
 					FlySpeedModifierConfig.DEFAULT_RESET_ON_ADJUST,
 					FlySpeedModifierOptions::onResetOnAdjustChanged);
-
 	private static final OptionInstance<Double> SCROLL_STEP =
 			new OptionInstance<>(
 					"option.fly-speed-modifier.scroll_step",
@@ -145,20 +140,17 @@ public final class FlySpeedModifierOptions {
 		if (screen == null) {
 			return;
 		}
-
 		screen.draft().fullRange = value;
 		if (!value) {
 			if (screen.draft().maxSpeed > FlySpeedModifierConfig.STANDARD_MAX_SPEED) {
 				screen.draft().maxSpeed = FlySpeedModifierConfig.DEFAULT_MAX_SPEED;
 				MAX_SPEED.set(screen.draft().maxSpeed);
 			}
-
 			if (screen.draft().initialSpeed > FlySpeedModifierConfig.STANDARD_MAX_SPEED) {
 				screen.draft().initialSpeed = FlySpeedModifierConfig.DEFAULT_INITIAL_SPEED;
 				INITIAL_SPEED.set(screen.draft().initialSpeed);
 			}
 		}
-
 		constrainInitialSpeed(screen);
 		screen.rescaleDynamicSliders();
 	}
@@ -168,7 +160,6 @@ public final class FlySpeedModifierOptions {
 		if (screen == null) {
 			return;
 		}
-
 		screen.draft().maxSpeed = roundToTwoDecimals(value);
 		constrainInitialSpeed(screen);
 		screen.rescaleDynamicSliders();
@@ -179,7 +170,6 @@ public final class FlySpeedModifierOptions {
 		if (screen == null) {
 			return;
 		}
-
 		screen.draft().minSpeed = roundToTwoDecimals(value);
 		constrainInitialSpeed(screen);
 		screen.rescaleDynamicSliders();
@@ -241,13 +231,11 @@ public final class FlySpeedModifierOptions {
 		if (screen == null) {
 			return FlySpeedModifierConfig.DEFAULT_INITIAL_SPEED;
 		}
-
 		double lowerBound = screen.draft().minSpeed;
 		double upperBound = effectiveMaximumSpeed(screen);
 		if (upperBound <= lowerBound) {
 			return roundToTwoDecimals(lowerBound);
 		}
-
 		return roundToTwoDecimals(lowerBound + normalized * (upperBound - lowerBound));
 	}
 
@@ -256,13 +244,11 @@ public final class FlySpeedModifierOptions {
 		if (screen == null) {
 			return 0.0D;
 		}
-
 		double lowerBound = screen.draft().minSpeed;
 		double upperBound = effectiveMaximumSpeed(screen);
 		if (upperBound <= lowerBound) {
 			return 0.0D;
 		}
-
 		double clamped = Math.max(lowerBound, Math.min(speed, upperBound));
 		return (clamped - lowerBound) / (upperBound - lowerBound);
 	}
@@ -285,7 +271,6 @@ public final class FlySpeedModifierOptions {
 		double lowerBound = screen.draft().minSpeed;
 		double upperBound = effectiveMaximumSpeed(screen);
 		double constrained = Math.max(lowerBound, Math.min(screen.draft().initialSpeed, upperBound));
-
 		if (Double.compare(constrained, screen.draft().initialSpeed) != 0) {
 			screen.draft().initialSpeed = roundToTwoDecimals(constrained);
 			INITIAL_SPEED.set(screen.draft().initialSpeed);

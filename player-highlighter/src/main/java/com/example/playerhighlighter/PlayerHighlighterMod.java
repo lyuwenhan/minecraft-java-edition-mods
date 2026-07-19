@@ -16,10 +16,8 @@ import org.lwjgl.glfw.GLFW;
 
 public class PlayerHighlighterMod implements ClientModInitializer {
 	public static final String MOD_ID = "player-highlighter";
-
 	private static final KeyMapping.Category CATEGORY =
 			KeyMapping.Category.register(Identifier.fromNamespaceAndPath(MOD_ID, "general"));
-
 	public static KeyMapping TOGGLE_KEY;
 	public static KeyMapping HOLD_KEY;
 	public static PlayerHighlighterConfig config;
@@ -27,7 +25,6 @@ public class PlayerHighlighterMod implements ClientModInitializer {
 	@Override
 	public void onInitializeClient() {
 		config = PlayerHighlighterConfig.load();
-
 		TOGGLE_KEY =
 				KeyMappingHelper.registerKeyMapping(
 						new KeyMapping(
@@ -35,7 +32,6 @@ public class PlayerHighlighterMod implements ClientModInitializer {
 								InputConstants.Type.KEYSYM,
 								GLFW.GLFW_KEY_I,
 								CATEGORY));
-
 		HOLD_KEY =
 				KeyMappingHelper.registerKeyMapping(
 						new KeyMapping(
@@ -43,27 +39,22 @@ public class PlayerHighlighterMod implements ClientModInitializer {
 								InputConstants.Type.KEYSYM,
 								GLFW.GLFW_KEY_TAB,
 								CATEGORY));
-
 		ClientTickEvents.END_CLIENT_TICK.register(
 				client -> {
 					while (TOGGLE_KEY.consumeClick()) {
 						config.keep = !config.keep;
 						config.save();
-
 						if (client.player != null) {
 							client.player.sendSystemMessage(
 									Component.literal("Keep Player Highlight: " + (config.keep ? "ON" : "OFF")));
 						}
 					}
 				});
-
 		registerCommands();
-
 		HudElementRegistry.attachElementBefore(
 				VanillaHudElements.CHAT,
 				Identifier.fromNamespaceAndPath(MOD_ID, "hud"),
 				(graphics, tickCounter) -> PlayerHighlighterHud.render(graphics));
-
 		HudIconRenderer.register();
 		System.out.println("[PlayerHighlighter] Client initialized");
 	}
@@ -120,11 +111,9 @@ public class PlayerHighlighterMod implements ClientModInitializer {
 		if (config == null) {
 			return false;
 		}
-
 		if (config.keep) {
 			return true;
 		}
-
 		return HOLD_KEY != null && HOLD_KEY.isDown();
 	}
 
@@ -132,11 +121,9 @@ public class PlayerHighlighterMod implements ClientModInitializer {
 		if (config == null) {
 			return true;
 		}
-
 		if (config.informationHud == null) {
 			return true;
 		}
-
 		return config.informationHud;
 	}
 }

@@ -14,7 +14,6 @@ public final class NoHungryConfig {
 	private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 	private static final Path CONFIG_PATH =
 			FabricLoader.getInstance().getConfigDir().resolve("no-hungry.json");
-
 	private boolean enabled = true;
 	private int foodLevel = 18;
 
@@ -24,13 +23,11 @@ public final class NoHungryConfig {
 			config.save();
 			return config;
 		}
-
 		try (Reader reader = Files.newBufferedReader(CONFIG_PATH)) {
 			NoHungryConfig config = GSON.fromJson(reader, NoHungryConfig.class);
 			if (config == null) {
 				config = new NoHungryConfig();
 			}
-
 			config.normalize();
 			config.save();
 			return config;
@@ -45,7 +42,6 @@ public final class NoHungryConfig {
 
 	public void save() {
 		this.normalize();
-
 		try {
 			Files.createDirectories(CONFIG_PATH.getParent());
 			try (Writer writer = Files.newBufferedWriter(CONFIG_PATH)) {
