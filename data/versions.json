@@ -241,9 +241,10 @@
 			"1.1.0",
 			"1.1.1",
 			"1.1.2",
-			"1.1.3"
+			"1.1.3",
+			"1.1.4"
 		],
-		"hasIcon": false,
+		"hasIcon": true,
 		"displayName": "Fly Speed Modifier",
 		"description": "Temporarily adjusts Freecam or player flight speed using a key and the mouse wheel.",
 		"link": {}
