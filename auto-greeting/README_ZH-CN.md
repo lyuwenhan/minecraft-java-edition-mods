@@ -159,8 +159,8 @@
 - Fabric Loader 0.19.2+
 - Fabric API 0.150.0+
 - Java 25
-- Cloth config 21.11.153（可选）
-- Modmenu 17.0.0-beta.2（可选）
+- Cloth config（可选）
+- Modmenu（可选）
 
 ## License
 
