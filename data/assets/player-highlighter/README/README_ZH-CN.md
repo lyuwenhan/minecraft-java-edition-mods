@@ -36,9 +36,9 @@
 
 满足以下任意条件时，高亮功能会被激活：
 
-- 按住高亮按键 
+- 按住高亮按键
   默认按键：**TAB**
-- 启用保持模式 
+- 启用保持模式
   默认切换按键：**I**
 
 高亮激活时：
@@ -91,8 +91,6 @@ Player867 ↑ 11m ❤ 20.0 (123, 64, -456)
 - `/playerhighlighter hud off` 隐藏玩家信息 HUD
 - `/playerhighlighter hud toggle` 在显示和隐藏之间切换
 - `/playerhighlighter hud status` 显示当前 HUD 状态
-
-```
 
 ## 目标图标
 

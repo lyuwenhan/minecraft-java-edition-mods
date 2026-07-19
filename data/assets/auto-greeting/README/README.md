@@ -17,8 +17,8 @@ A Fabric mod that automatically sends greeting messages when **you** or **other 
 
 ## Command Overview
 
-  - `/autogreet self ...`
-  - `/autogreet other ...`
+- `/autogreet self ...`
+- `/autogreet other ...`
 
 Notes:
 

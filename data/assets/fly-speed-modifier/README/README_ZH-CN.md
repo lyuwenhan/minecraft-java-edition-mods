@@ -58,7 +58,6 @@
 - Fabric Loader 0.19.2+
 - Fabric API 0.150.0+
 - Java 25
-- Freecam（可选）
 - Mod Menu 18.0.0-beta.1（可选）
 
 ## License

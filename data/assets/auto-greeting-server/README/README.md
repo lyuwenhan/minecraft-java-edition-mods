@@ -18,7 +18,7 @@ The mod supports both plain chat messages and commands.
 
 ## Command Overview
 
-  - `/servergreet ...`
+- `/servergreet ...`
 
 Notes:
 
