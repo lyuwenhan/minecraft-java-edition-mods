@@ -131,6 +131,6 @@ No Hungry disabled.
 
 ---
 
-## 许可证
+## License
 
 MIT

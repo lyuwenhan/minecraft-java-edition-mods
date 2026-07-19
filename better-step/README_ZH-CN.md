@@ -47,6 +47,6 @@
 - Fabric API 0.150.0+
 - Java 25
 
-## 许可证
+## License
 
 MIT

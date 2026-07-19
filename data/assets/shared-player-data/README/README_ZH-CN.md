@@ -107,6 +107,6 @@ config/shared-player-data.json
 
 ---
 
-## 许可证
+## License
 
 MIT

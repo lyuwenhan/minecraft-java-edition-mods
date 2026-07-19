@@ -57,6 +57,6 @@ Client Flying 允许玩家在未穿戴鞘翅时，于生存模式和冒险模式
 
 ---
 
-## 许可证
+## License
 
 MIT

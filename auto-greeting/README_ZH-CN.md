@@ -162,6 +162,6 @@
 - Cloth config 21.11.153（可选）
 - Modmenu 17.0.0-beta.2（可选）
 
-## 许可证
+## License
 
 MIT
