@@ -4,7 +4,7 @@
 
 # Player Highlighter
 
-A lightweight **client-side Fabric mod** that improves player awareness by combining glowing outlines, on-screen target icons, and a nearby-player information HUD.
+A lightweight **client-side Fabric mod** that improves player awareness with glowing outlines, on-screen target icons, and a nearby-player information HUD.
 
 ## Overview
 
@@ -56,7 +56,7 @@ Example:
 Player867 ↑ 11m ❤ 20.0 (123, 64, -456)
 ```
 
-Field description:
+Field descriptions:
 
 - `Player867` — Player name
 - `↑` — Direction relative to the current camera facing
@@ -94,7 +94,7 @@ Command behavior:
 
 While highlighting is active, a small target icon is rendered over each visible player.
 
-Icons are only displayed when the player:
+Icons are displayed only when the player:
 
 - Is in front of the camera
 - Can be projected onto the current screen

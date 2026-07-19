@@ -8,7 +8,7 @@ A lightweight **client-side Fabric mod** that adds three prebuilt administrator 
 
 ## Overview
 
-Best Armor adds four generated items to the operator-only creative tab:
+Best Armor adds four dynamically generated items to the operator-only creative tab:
 
 - Yellow Shulker Box
 - Orange Shulker Box
@@ -17,7 +17,7 @@ Best Armor adds four generated items to the operator-only creative tab:
 
 The three shulker boxes contain different equipment presets:
 
-- The yellow shulker box contains high-end equipment based primarily on enchantment levels obtainable through normal Survival gameplay.
+- The yellow shulker box contains high-end equipment based primarily on enchantment levels obtainable in normal Survival gameplay.
 - The orange shulker box keeps a mostly vanilla-looking equipment profile while adding normally incompatible enchantments, extreme protection levels, unbreakable items, special boots, and a shield that blocks all registered damage types.
 - The red shulker box contains full-power administrator equipment with extreme enchantments, custom combat attributes, increased attack range, fall-damage immunity boots, and other non-Survival item components.
 
@@ -475,7 +475,7 @@ The fall-damage multiplier removes normal fall damage while the boots are equipp
 
 The Red Shulker Box contains 26 full-power administrator items.
 
-Its equipment uses extreme enchantments, custom attributes, extended interaction range, unbreakable components, and other item data that cannot normally be created through standard Survival gameplay.
+Its equipment uses extreme enchantments, custom attributes, extended interaction range, unbreakable components, and other item data that cannot normally be created in standard Survival gameplay.
 
 #### Melee Weapons
 
@@ -763,7 +763,7 @@ It is internally based on a netherite sword but uses the diamond sword item mode
 
 The sword uses the `fell_out_of_world` damage type.
 
-This is the same damage type associated with void damage rather than normal melee damage.
+This is the damage type associated with void damage rather than normal melee damage.
 
 ### Attributes
 
@@ -787,13 +787,13 @@ The sword also receives the same all-damage blocking component used by the admin
 - Takes no durability damage while blocking
 - Applies a very high damage-reduction value
 
-Actual server behavior remains subject to server-side item validation and combat authority.
+Actual behavior remains subject to server-side item validation and combat authority.
 
 ## Glideplate Compatibility
 
 Each shulker box includes a specially configured netherite chestplate with Elytra functionality.
 
-The chestplate receives:
+The chestplate includes:
 
 - `glideplate_has_elytra` custom data
 - `gliding` custom data
@@ -807,7 +807,7 @@ These components allow the item to behave as a gliding chestplate without regist
 
 The generated chestplate uses compatibility data associated with [Glideplate](https://modrinth.com/mod/glideplate).
 
-Installing Glideplate may improve related item naming, models, and visual presentation, but Best Armor generates the item stacks directly.
+Installing Glideplate may improve the related item names, models, and visual presentation, but Best Armor generates the item stacks directly.
 
 ## Creative Tab Behavior
 
@@ -871,7 +871,7 @@ The mod does not:
 - No server installation is required for the mod itself to load
 - Server authority still controls inventory and combat behavior
 - Servers may validate, alter, reject, or remove generated item stacks
-- Unsupported enchantment combinations may not behave consistently on every server
+- Unsupported enchantment combinations may behave inconsistently across servers
 - Custom attributes and data components may be rejected by server-side validation
 - The Void Sword and administrator equipment can severely disrupt normal gameplay
 - Use these items only in private worlds or on servers where administrator equipment is explicitly allowed

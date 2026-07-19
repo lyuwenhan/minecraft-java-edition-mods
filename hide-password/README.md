@@ -4,14 +4,14 @@
 
 # Hide Password
 
-Client-side Fabric mod that hides sensitive command parameters (e.g. /login, /register) in the chat input.
+A client-side Fabric mod that hides sensitive command parameters (e.g. /login, /register) in the chat input.
 
 ## Features
 
-- Masks passwords with fixed-length stars (********) — no length/structure disclosure
+- Masks passwords with fixed-length stars (********), avoiding length or structure disclosure
 - **Does NOT** modify actual command sent to server
 - Client-only
-- Toggle on/off via **F8** key
+- Toggle on or off with the **F8** key
 
 ## Supported Commands
 

@@ -4,17 +4,17 @@
 
 # Auto Greeting - Server
 
-A Fabric mod that automatically sends greeting messages when a player joins the server
+A server-side Fabric mod that automatically sends preset greeting messages when a player joins the server.
 
-The mod supports both plain chat messages and commands.
+The mod supports both plain chat messages as well as commands.
 
 ## Features
 
 - Supports multiple messages
-- Supports plain chat messages and commands
+- Supports plain chat messages as well as commands
 - Supports blacklist / whitelist rules for player names
 - Supports placeholders
-- Automatically sends messages when a player joins the server
+- Automatically sends preset messages when a player joins the server
 
 ## Command Overview
 
@@ -42,7 +42,7 @@ or
 /servergreet blacklist list
 ```
 
-## Server Side Commands
+## Server-Side Commands
 
 ### Status
 
@@ -57,9 +57,9 @@ Controls whether auto greeting is **enabled** or **disabled**.
 
 ### Message
 
-Controls what the mod sends.
+Controls the messages sent by the mod.
 
-You can use placeholders.
+Placeholders are supported.
 
 ```text
 /servergreet message add <message>
@@ -107,9 +107,9 @@ You can use placeholders.
 
 ## Message Behavior
 
-If a message **does** start with `/`, it is executed as a command.
+If a message starts with `/`, it is executed as a command.
 
-If a message does **not** start with `/`, it is sent as a normal chat message.
+If a message does not start with `/`, it is sent as a normal chat message.
 
 ## Filtering
 
@@ -122,7 +122,7 @@ If a message does **not** start with `/`, it is sent as a normal chat message.
 - `startWith`
 - `endWith`
 
-These rules are used to decide whether a joining player's name should trigger greeting logic.
+These rules determine whether the name of a joining player should trigger greeting logic.
 
 ### Filtering behavior
 
@@ -135,12 +135,12 @@ These rules are used to decide whether a joining player's name should trigger gr
 
 - `index` is optional and 1-based
 - `add <message> <index>` inserts before the existing item at that position
-- If `index` is omitted or out of range, the message is appended
+- If `index` is omitted or outside the valid range, the message is appended
 - `remove <index>` removes the specified item
 - `remove` without an index removes the last item
 - `remove all` clears the message list
 - `clear confirm` clears the entire blacklist or whitelist rule set
-- Numeric values are formatted with up to 3 decimal places, with trailing zeros removed
+- Numeric values are formatted with up to 3 decimal places, and trailing zeros are removed
 
 ## Supported Versions
 

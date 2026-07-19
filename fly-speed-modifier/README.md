@@ -4,16 +4,16 @@
 
 # Fly Speed Modifier
 
-A client-side Fabric mod that temporarily multiplies Freecam and player fly speed while you hold a key and scroll the mouse wheel.
+A client-side Fabric mod that temporarily adjusts Freecam and player flight speed while you hold a key and scroll the mouse wheel.
 
 ## Features
 
 - Supports Freecam speed multiplier adjustment
-- Supports normal / direct player flight speed multiplier adjustment
-- Hold the adjustment key and scroll the mouse wheel to change the multiplier
+- Supports normal and direct player flight speed multiplier adjustment
+- Hold the adjustment key and scroll the mouse wheel to adjust the multiplier
 - Supports a configurable minimum, maximum, default multiplier, and scroll step
-- Supports an optional reset when adjustment starts
-- Full Range mode changes the available maximum from `20x` to `100x`
+- Supports optionally resetting the multiplier when adjustment starts
+- Full Range mode raises the available maximum from `20x` to `100x`
 - The Default Speed range updates immediately when Minimum Speed or Maximum Speed changes
 - If Default Speed falls outside the current minimum and maximum range, it is moved to the nearest valid boundary
 - Uses non-linear mouse-wheel multiplier adjustment

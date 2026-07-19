@@ -4,7 +4,7 @@
 
 # Auto Login
 
-Client-side Fabric mod that automatically logs you into authentication-based Minecraft servers (e.g. EasyAuth, AuthMe) using a locally encrypted password.
+A client-side Fabric mod that automatically logs you into authentication-based Minecraft servers (e.g. EasyAuth, AuthMe) using a locally encrypted password.
 
 This mod runs entirely on the client and does **not** modify any server behavior.
 
@@ -13,8 +13,8 @@ This mod runs entirely on the client and does **not** modify any server behavior
 - Automatically sends `/login <password>` after joining a server
 - Password is stored **locally and encrypted** (AES-GCM with random device key)
 - No server-side plugin or mod required
-- Client-only, safe for multiplayer servers
-- Manual trigger via command for testing or fallback
+- Client-only and suitable for multiplayer servers
+- Manual command trigger for testing or fallback use
 
 ## Commands
 
@@ -33,8 +33,8 @@ This mod runs entirely on the client and does **not** modify any server behavior
 /autologin login
 ```
 
-- Executes login attempt right now
-- Useful for testing or manual retry
+- Runs a login attempt immediately
+- Useful for testing or manual retries
 
 ### Enable / disable
 
@@ -58,7 +58,7 @@ This mod runs entirely on the client and does **not** modify any server behavior
 2. When you join a server:
   - The mod waits until the client is fully initialized
   - Then sends the login command directly to the server
-3. The password is **never sent anywhere else** and is not logged
+3. The password is **never sent anywhere else** and is never logged
 
 The mod does **not** intercept packets, modify UI, or hook into server authentication logic.
 

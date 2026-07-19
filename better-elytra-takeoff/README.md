@@ -4,18 +4,18 @@
 
 # Better Elytra Takeoff
 
-A Fabric server-side / single-player mod that lets players start elytra gliding from the ground with a firework rocket.
+A Fabric server-side and single-player mod that lets players start elytra gliding from the ground with a firework rocket.
 
 ## Features
 
 - Use a firework rocket to start gliding from the ground
-- Immediately applies the firework boost after takeoff
-- Works on dedicated servers and single-player worlds
-- No commands or config required
+- Applies the firework boost immediately after takeoff
+- Works on dedicated servers and in single-player worlds
+- No commands or configuration required
 
 ## Behavior
 
-When a player uses a firework rocket, the mod cancels the normal use if the takeoff conditions are met, starts elytra gliding, and spawns the boost rocket.
+When a player uses a firework rocket, the mod cancels the normal use action if the takeoff conditions are met, starts elytra gliding, and spawns the boost rocket.
 
 Takeoff requires:
 
@@ -28,7 +28,7 @@ Takeoff requires:
 Aim rule:
 
 - If targeting a block, the player must look horizontally or upward
-- If not targeting a block, any look direction can trigger takeoff
+- If no block is targeted, any look direction can trigger takeoff
 
 ## Supported Versions
 

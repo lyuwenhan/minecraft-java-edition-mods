@@ -4,7 +4,7 @@
 
 # Infinity Fireworks
 
-Fabric mod for Minecraft that lets firework rockets be used without consuming the item stack.
+A Fabric mod for Minecraft that lets firework rockets be used without consuming the item stack.
 
 ## Features
 
@@ -21,11 +21,11 @@ Fabric mod for Minecraft that lets firework rockets be used without consuming th
 Use a firework rocket -> rocket launches -> item count stays the same
 ```
 
-Field description:
+Field descriptions:
 
-- `Use a firework rocket` - Right-click a block or boost while gliding
-- `rocket launches` - Vanilla firework behavior still happens
-- `item count stays the same` - The stack is not decremented
+- `Use a firework rocket` - Right-click a block, or boost while gliding
+- `rocket launches` - Vanilla firework behavior still occurs
+- `item count stays the same` - The item stack is not decremented
 
 ## Behavior
 
