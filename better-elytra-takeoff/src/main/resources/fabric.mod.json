@@ -3,7 +3,7 @@
 	"id": "better-elytra-takeoff",
 	"version": "${version}",
 	"name": "Better Elytra Takeoff",
-	"description": "Starts Elytra gliding immediately while using fireworks",
+	"description": "Starts Elytra gliding immediately while using fireworks.",
 	"authors": [
 		"Wenhan"
 	],
