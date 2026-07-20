@@ -151,7 +151,15 @@ const dirs = fs.readdirSync(root).filter(d => !excluded.includes(d) && fs.exists
 			console.error(err.stack)
 		}
 	}
-	versions = Object.fromEntries(Object.entries(versions).sort(([keyA], [keyB]) => keyA.localeCompare(keyB, "en")));
+	versions = Object.fromEntries(Object.entries(versions).sort(([keyA], [keyB]) => {
+		if (keyA === "data") {
+			return -1
+		}
+		if (keyB === "data") {
+			return 1
+		}
+		return keyA.localeCompare(keyB, "en")
+	}));
 	fs.writeFileSync(versionsPath, JSON.stringify(versions, null, "\t") + "\n", "utf8");
 	if (hasError) {
 		process.exit(1)
