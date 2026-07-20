@@ -73,7 +73,8 @@
 		"description": "Adds generated equipment shulker boxes to the operator creative tab.",
 		"link": {
 			"Modrinth": "https://modrinth.com/mod/best-armor",
-			"Curseforge": "https://www.curseforge.com/minecraft/mc-mods/best-armor"
+			"Curseforge": "https://www.curseforge.com/minecraft/mc-mods/best-armor",
+			"Planet Minecraft": "https://www.planetminecraft.com/mod/best-armor-6993857"
 		}
 	},
 	"better-elytra-takeoff": {
@@ -170,7 +171,8 @@
 		"description": "Temporarily adjusts Freecam or player flight speed using a key and the mouse wheel.",
 		"link": {
 			"Modrinth": "https://modrinth.com/mod/fly-speed-modifier",
-			"Curseforge": "https://www.curseforge.com/minecraft/mc-mods/fly-speed-modifier"
+			"Curseforge": "https://www.curseforge.com/minecraft/mc-mods/fly-speed-modifier",
+			"Planet Minecraft": "https://www.planetminecraft.com/mod/fly-speed-modifier"
 		}
 	},
 	"glideplate": {
@@ -282,7 +284,8 @@
 		"description": "Shares vanilla player profile data among configured UUID groups.",
 		"link": {
 			"Modrinth": "https://modrinth.com/mod/shared-player-data",
-			"Curseforge": "https://www.curseforge.com/minecraft/mc-mods/shared-player-data"
+			"Curseforge": "https://www.curseforge.com/minecraft/mc-mods/shared-player-data",
+			"Planet Minecraft": "https://www.planetminecraft.com/mod/shared-player-data-6993864"
 		}
 	}
 }
