@@ -36,7 +36,7 @@
 		"link": {
 			"Modrinth": "https://modrinth.com/mod/auto-greeting-server",
 			"Curseforge": "https://www.curseforge.com/minecraft/mc-mods/auto-greeting-server",
-			"Planet Minecraft": "https://www.planetminecraft.com/mod/auto-greeting-server/"
+			"Planet Minecraft": "https://www.planetminecraft.com/mod/auto-greeting-server"
 		}
 	},
 	"auto-login": {
@@ -55,7 +55,7 @@
 		"link": {
 			"Modrinth": "https://modrinth.com/mod/autologinmod",
 			"Curseforge": "https://www.curseforge.com/minecraft/mc-mods/auto-login",
-			"Planet Minecraft": "https://www.planetminecraft.com/mod/auto-login/"
+			"Planet Minecraft": "https://www.planetminecraft.com/mod/auto-login"
 		}
 	},
 	"best-armor": {
@@ -67,7 +67,10 @@
 		"hasIcon": true,
 		"displayName": "Best Armor",
 		"description": "Adds generated equipment shulker boxes to the operator creative tab.",
-		"link": {}
+		"link": {
+			"Modrinth": "https://modrinth.com/mod/best-armor",
+			"Curseforge": "https://www.curseforge.com/minecraft/mc-mods/best-armor"
+		}
 	},
 	"better-elytra-takeoff": {
 		"versions": [
@@ -85,7 +88,7 @@
 		"link": {
 			"Modrinth": "https://modrinth.com/mod/better-elytra-takeoff",
 			"Curseforge": "https://www.curseforge.com/minecraft/mc-mods/better-elytra-takeoff",
-			"Planet Minecraft": "https://www.planetminecraft.com/mod/better-elytra-takeoff/"
+			"Planet Minecraft": "https://www.planetminecraft.com/mod/better-elytra-takeoff"
 		}
 	},
 	"better-step": {
@@ -96,7 +99,11 @@
 		"hasIcon": true,
 		"displayName": "Better Step",
 		"description": "Improves player stepping by removing the vanilla ground restriction for stepping up and adding controlled stepping down.",
-		"link": {}
+		"link": {
+			"Modrinth": "https://modrinth.com/mod/better-step",
+			"Curseforge": "https://www.curseforge.com/minecraft/mc-mods/better-step",
+			"Planet Minecraft": "https://www.planetminecraft.com/mod/better-step"
+		}
 	},
 	"client-flying": {
 		"versions": [
@@ -128,7 +135,7 @@
 		"link": {
 			"Modrinth": "https://modrinth.com/mod/creeper-no-break",
 			"Curseforge": "https://www.curseforge.com/minecraft/mc-mods/creeper-no-break",
-			"Planet Minecraft": "https://www.planetminecraft.com/mod/creeper-no-break/"
+			"Planet Minecraft": "https://www.planetminecraft.com/mod/creeper-no-break"
 		}
 	},
 	"data": {
@@ -145,7 +152,10 @@
 		"hasIcon": true,
 		"displayName": "Fly Speed Modifier",
 		"description": "Temporarily adjusts Freecam or player flight speed using a key and the mouse wheel.",
-		"link": {}
+		"link": {
+			"Modrinth": "https://modrinth.com/mod/fly-speed-modifier",
+			"Curseforge": "https://www.curseforge.com/minecraft/mc-mods/fly-speed-modifier"
+		}
 	},
 	"glideplate": {
 		"versions": [
@@ -161,7 +171,7 @@
 		"link": {
 			"Modrinth": "https://modrinth.com/mod/glideplate",
 			"Curseforge": "https://www.curseforge.com/minecraft/mc-mods/glideplate",
-			"Planet Minecraft": "https://www.planetminecraft.com/mod/glideplate/"
+			"Planet Minecraft": "https://www.planetminecraft.com/mod/glideplate"
 		}
 	},
 	"hide-password": {
@@ -184,7 +194,7 @@
 		"link": {
 			"Modrinth": "https://modrinth.com/mod/hide-password",
 			"Curseforge": "https://www.curseforge.com/minecraft/mc-mods/hide-password",
-			"Planet Minecraft": "https://www.planetminecraft.com/mod/hide-password/"
+			"Planet Minecraft": "https://www.planetminecraft.com/mod/hide-password"
 		}
 	},
 	"infinity-fireworks": {
@@ -202,7 +212,7 @@
 		"link": {
 			"Modrinth": "https://modrinth.com/mod/infinity-fireworks",
 			"Curseforge": "https://www.curseforge.com/minecraft/mc-mods/infinity-fireworks",
-			"Planet Minecraft": "https://www.planetminecraft.com/mod/infinity-fireworks/"
+			"Planet Minecraft": "https://www.planetminecraft.com/mod/infinity-fireworks"
 		}
 	},
 	"no-hungry": {
@@ -217,7 +227,7 @@
 		"link": {
 			"Modrinth": "https://modrinth.com/mod/no-hungry",
 			"Curseforge": "https://www.curseforge.com/minecraft/mc-mods/no-hungry",
-			"Planet Minecraft": "https://www.planetminecraft.com/mod/no-hungry/"
+			"Planet Minecraft": "https://www.planetminecraft.com/mod/no-hungry"
 		}
 	},
 	"player-highlighter": {
@@ -242,7 +252,7 @@
 		"link": {
 			"Modrinth": "https://modrinth.com/mod/player-highlighter-mod",
 			"Curseforge": "https://www.curseforge.com/minecraft/mc-mods/playerhighlighter",
-			"Planet Minecraft": "https://www.planetminecraft.com/mod/player-highlighter/"
+			"Planet Minecraft": "https://www.planetminecraft.com/mod/player-highlighter"
 		}
 	},
 	"shared-player-data": {
@@ -255,8 +265,7 @@
 		"description": "Shares vanilla player profile data among configured UUID groups.",
 		"link": {
 			"Modrinth": "https://modrinth.com/mod/shared-player-data",
-			"Curseforge": "https://www.curseforge.com/minecraft/mc-mods/shared-player-data",
-			"Planet Minecraft": "https://www.planetminecraft.com/mod/shared-player-data/"
+			"Curseforge": "https://www.curseforge.com/minecraft/mc-mods/shared-player-data"
 		}
 	}
 }
