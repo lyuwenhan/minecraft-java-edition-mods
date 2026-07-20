@@ -148,7 +148,11 @@
 		"hasIcon": true,
 		"displayName": "Double Jump",
 		"description": "Adds configurable client-side multiple jumping.",
-		"link": {}
+		"link": {
+			"Modrinth": "https://modrinth.com/mod/better-double-jump",
+			"Curseforge": "https://www.curseforge.com/minecraft/mc-mods/doublejumpmod",
+			"Planet Minecraft": "https://www.planetminecraft.com/mod/double-jump-6993259/"
+		}
 	},
 	"fly-speed-modifier": {
 		"versions": [
