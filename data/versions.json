@@ -1,4 +1,7 @@
 {
+	"data": {
+		"ext": "jar"
+	},
 	"auto-greeting": {
 		"versions": [
 			"1.0.0",
@@ -137,9 +140,6 @@
 			"Curseforge": "https://www.curseforge.com/minecraft/mc-mods/creeper-no-break",
 			"Planet Minecraft": "https://www.planetminecraft.com/mod/creeper-no-break"
 		}
-	},
-	"data": {
-		"ext": "jar"
 	},
 	"fly-speed-modifier": {
 		"versions": [
