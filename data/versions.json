@@ -141,6 +141,15 @@
 			"Planet Minecraft": "https://www.planetminecraft.com/mod/creeper-no-break"
 		}
 	},
+	"double-jump": {
+		"versions": [
+			"1.1.0"
+		],
+		"hasIcon": true,
+		"displayName": "Double Jump",
+		"description": "Adds configurable client-side multiple jumping.",
+		"link": {}
+	},
 	"fly-speed-modifier": {
 		"versions": [
 			"1.1.0",
