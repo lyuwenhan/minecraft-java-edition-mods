@@ -1,0 +1,11 @@
+{
+	"required": true,
+	"package": "com.example.doublejump.mixin",
+	"compatibilityLevel": "JAVA_25",
+	"client": [
+		"LivingEntityMixin"
+	],
+	"injectors": {
+		"defaultRequire": 1
+	}
+}

@@ -1,0 +1,10 @@
+{
+	"title.double-jump.config": "Double Jump Settings",
+	"option.double-jump.enabled": "Enabled",
+	"option.double-jump.enabled.tooltip": "Enables or disables additional jumps.",
+	"option.double-jump.jump_count": "Jump Count",
+	"option.double-jump.jump_count.tooltip": "Sets the total number of jumps available before landing. The slider supports 2 to 10.",
+	"option.double-jump.jump_count_input": "Custom Jump Count",
+	"option.double-jump.infinite_jumps": "Infinite Jumps",
+	"option.double-jump.infinite_jumps.tooltip": "Allows unlimited jumps while airborne."
+}

@@ -1,0 +1,10 @@
+{
+	"title.double-jump.config": "多段跳设置",
+	"option.double-jump.enabled": "启用",
+	"option.double-jump.enabled.tooltip": "启用或禁用额外跳跃。",
+	"option.double-jump.jump_count": "跳跃数量",
+	"option.double-jump.jump_count.tooltip": "设置落地前可执行的总跳跃次数。滑块范围为 2 到 10。",
+	"option.double-jump.jump_count_input": "自定义跳跃数量",
+	"option.double-jump.infinite_jumps": "无限跳跃",
+	"option.double-jump.infinite_jumps.tooltip": "允许玩家在空中无限次跳跃。"
+}
