@@ -16,10 +16,15 @@ public abstract class LivingEntityMixin {
 
 	@Unique private boolean doubleJump$pendingAirJump;
 
+	@Unique private boolean doubleJump$pendingGroundJump;
+
+	@Unique private int doubleJump$cooldownTicksRemaining;
+
 	@Inject(method = "aiStep", at = @At("HEAD"))
 	private void doubleJump$beginAiStep(CallbackInfo callbackInfo) {
 		LivingEntity entity = (LivingEntity) (Object) this;
 		doubleJump$pendingAirJump = false;
+		doubleJump$pendingGroundJump = false;
 
 		if (!(entity instanceof LocalPlayer)) {
 			return;
@@ -27,6 +32,12 @@ public abstract class LivingEntityMixin {
 
 		if (entity.onGround()) {
 			doubleJump$airJumpsPerformed = 0;
+			doubleJump$cooldownTicksRemaining = 0;
+			return;
+		}
+
+		if (doubleJump$cooldownTicksRemaining > 0) {
+			doubleJump$cooldownTicksRemaining--;
 		}
 	}
 
@@ -40,6 +51,10 @@ public abstract class LivingEntityMixin {
 	private boolean doubleJump$allowConfiguredAirJump(LivingEntity entity) {
 		boolean onGround = entity.onGround();
 		if (onGround) {
+			if (entity instanceof LocalPlayer && DoubleJumpConfig.enabled()) {
+				doubleJump$pendingGroundJump = true;
+			}
+
 			return true;
 		}
 
@@ -66,12 +81,17 @@ public abstract class LivingEntityMixin {
 							value = "INVOKE",
 							target = "Lnet/minecraft/world/entity/LivingEntity;jumpFromGround()V",
 							shift = At.Shift.AFTER))
-	private void doubleJump$recordAirJump(CallbackInfo callbackInfo) {
-		if (!doubleJump$pendingAirJump) {
-			return;
+	private void doubleJump$recordJump(CallbackInfo callbackInfo) {
+		if (doubleJump$pendingAirJump) {
+			doubleJump$airJumpsPerformed++;
 		}
 
-		doubleJump$airJumpsPerformed++;
+		if ((doubleJump$pendingGroundJump || doubleJump$pendingAirJump)
+				&& DoubleJumpConfig.cooldownEnabled()) {
+			doubleJump$cooldownTicksRemaining = DoubleJumpConfig.cooldownTicks();
+		}
+
+		doubleJump$pendingGroundJump = false;
 		doubleJump$pendingAirJump = false;
 	}
 
@@ -90,6 +110,10 @@ public abstract class LivingEntityMixin {
 		}
 
 		if (player.getAbilities().flying) {
+			return false;
+		}
+
+		if (DoubleJumpConfig.cooldownEnabled() && doubleJump$cooldownTicksRemaining > 0) {
 			return false;
 		}
 

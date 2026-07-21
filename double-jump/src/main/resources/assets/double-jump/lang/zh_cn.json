@@ -6,5 +6,8 @@
 	"option.double-jump.jump_count.tooltip": "设置落地前可执行的总跳跃次数。滑块范围为 2 到 10。",
 	"option.double-jump.jump_count_input": "自定义跳跃数量",
 	"option.double-jump.infinite_jumps": "无限跳跃",
-	"option.double-jump.infinite_jumps.tooltip": "允许玩家在空中无限次跳跃。"
+	"option.double-jump.infinite_jumps.tooltip": "允许玩家在空中无限次跳跃。",
+	"option.double-jump.cooldown_enabled": "启用冷却",
+	"option.double-jump.cooldown_enabled.tooltip": "限制两次额外空中跳跃之间必须间隔指定的游戏刻。",
+	"option.double-jump.cooldown_ticks": "冷却时长（tick）"
 }

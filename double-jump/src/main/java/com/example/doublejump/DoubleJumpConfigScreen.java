@@ -11,10 +11,12 @@ public final class DoubleJumpConfigScreen extends OptionsSubScreen {
 	private final DoubleJumpConfig.Values draft;
 
 	private EditBox jumpCountInput;
+	private EditBox cooldownTicksInput;
 	private boolean saved;
 	private boolean synchronizingInput;
 	private boolean synchronizingSlider;
 	private String lastValidInput;
+	private String lastValidCooldownInput;
 
 	public DoubleJumpConfigScreen(Screen parent) {
 		super(
@@ -82,6 +84,20 @@ public final class DoubleJumpConfigScreen extends OptionsSubScreen {
 		AbstractWidget jumpCountWidget = DoubleJumpOptions.jumpCount().createButton(this.options);
 
 		this.list.addSmall(jumpCountWidget, this.jumpCountInput);
+
+		AbstractWidget cooldownEnabledWidget =
+				DoubleJumpOptions.cooldownEnabled().createButton(this.options);
+
+		this.cooldownTicksInput =
+				new EditBox(
+						this.font, 0, 0, 150, 20, Component.translatable("option.double-jump.cooldown_ticks"));
+
+		this.cooldownTicksInput.setMaxLength(10);
+		this.lastValidCooldownInput = Integer.toString(this.draft.cooldownTicks);
+		this.cooldownTicksInput.setValue(this.lastValidCooldownInput);
+		this.cooldownTicksInput.setResponder(this::onCooldownInputChanged);
+
+		this.list.addSmall(cooldownEnabledWidget, this.cooldownTicksInput);
 	}
 
 	private void onInputChanged(String value) {
@@ -116,6 +132,43 @@ public final class DoubleJumpConfigScreen extends OptionsSubScreen {
 		} catch (NumberFormatException ignored) {
 			this.restoreLastValidInput();
 		}
+	}
+
+	private void onCooldownInputChanged(String value) {
+		if (value.isEmpty()) {
+			return;
+		}
+
+		for (int index = 0; index < value.length(); index++) {
+			char currentCharacter = value.charAt(index);
+
+			if (!Character.isDigit(currentCharacter)) {
+				this.restoreLastValidCooldownInput();
+				return;
+			}
+		}
+
+		try {
+			int parsedValue = Integer.parseInt(value);
+
+			this.lastValidCooldownInput = value;
+
+			if (parsedValue < DoubleJumpConfig.MIN_COOLDOWN_TICKS) {
+				return;
+			}
+
+			this.draft.cooldownTicks = parsedValue;
+		} catch (NumberFormatException ignored) {
+			this.restoreLastValidCooldownInput();
+		}
+	}
+
+	private void restoreLastValidCooldownInput() {
+		if (this.cooldownTicksInput == null) {
+			return;
+		}
+
+		this.cooldownTicksInput.setValue(this.lastValidCooldownInput);
 	}
 
 	private void restoreLastValidInput() {
@@ -156,6 +209,21 @@ public final class DoubleJumpConfigScreen extends OptionsSubScreen {
 
 					if (parsedValue >= DoubleJumpConfig.MIN_JUMP_COUNT) {
 						this.draft.jumpCount = parsedValue;
+					}
+				} catch (NumberFormatException ignored) {
+				}
+			}
+		}
+
+		if (this.cooldownTicksInput != null) {
+			String value = this.cooldownTicksInput.getValue();
+
+			if (!value.isEmpty()) {
+				try {
+					int parsedValue = Integer.parseInt(value);
+
+					if (parsedValue >= DoubleJumpConfig.MIN_COOLDOWN_TICKS) {
+						this.draft.cooldownTicks = parsedValue;
 					}
 				} catch (NumberFormatException ignored) {
 				}

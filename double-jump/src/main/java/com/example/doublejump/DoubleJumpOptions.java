@@ -26,6 +26,14 @@ public final class DoubleJumpOptions {
 					DoubleJumpConfig.DEFAULT_JUMP_COUNT,
 					DoubleJumpOptions::onJumpCountChanged);
 
+	private static final OptionInstance<Boolean> COOLDOWN_ENABLED =
+			OptionInstance.createBoolean(
+					"option.double-jump.cooldown_enabled",
+					value ->
+							Tooltip.create(Component.translatable("option.double-jump.cooldown_enabled.tooltip")),
+					DoubleJumpConfig.DEFAULT_COOLDOWN_ENABLED,
+					DoubleJumpOptions::onCooldownEnabledChanged);
+
 	private static final OptionInstance<Boolean> INFINITE_JUMPS =
 			OptionInstance.createBoolean(
 					"option.double-jump.infinite_jumps",
@@ -37,7 +45,7 @@ public final class DoubleJumpOptions {
 	private DoubleJumpOptions() {}
 
 	public static OptionInstance<?>[] all() {
-		return new OptionInstance<?>[] {enabled(), infiniteJumps(), jumpCount()};
+		return new OptionInstance<?>[] {enabled(), infiniteJumps(), jumpCount(), cooldownEnabled()};
 	}
 
 	public static OptionInstance<Boolean> enabled() {
@@ -54,6 +62,14 @@ public final class DoubleJumpOptions {
 			screen.setSliderValueSilently(clampToSlider(screen.draft().jumpCount));
 		}
 		return JUMP_COUNT;
+	}
+
+	public static OptionInstance<Boolean> cooldownEnabled() {
+		DoubleJumpConfigScreen screen = activeScreen();
+		if (screen != null) {
+			COOLDOWN_ENABLED.set(screen.draft().cooldownEnabled);
+		}
+		return COOLDOWN_ENABLED;
 	}
 
 	public static OptionInstance<Boolean> infiniteJumps() {
@@ -82,6 +98,13 @@ public final class DoubleJumpOptions {
 		}
 		screen.draft().jumpCount = value;
 		screen.syncInputFromSlider(value);
+	}
+
+	private static void onCooldownEnabledChanged(Boolean value) {
+		DoubleJumpConfigScreen screen = activeScreen();
+		if (screen != null) {
+			screen.draft().cooldownEnabled = value;
+		}
 	}
 
 	private static void onInfiniteJumpsChanged(Boolean value) {

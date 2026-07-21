@@ -6,5 +6,8 @@
 	"option.double-jump.jump_count.tooltip": "Sets the total number of jumps available before landing. The slider supports 2 to 10.",
 	"option.double-jump.jump_count_input": "Custom Jump Count",
 	"option.double-jump.infinite_jumps": "Infinite Jumps",
-	"option.double-jump.infinite_jumps.tooltip": "Allows unlimited jumps while airborne."
+	"option.double-jump.infinite_jumps.tooltip": "Allows unlimited jumps while airborne.",
+	"option.double-jump.cooldown_enabled": "Cooldown",
+	"option.double-jump.cooldown_enabled.tooltip": "Requires the configured number of ticks between additional airborne jumps.",
+	"option.double-jump.cooldown_ticks": "Cooldown Ticks"
 }
