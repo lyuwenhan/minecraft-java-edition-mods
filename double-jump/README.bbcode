@@ -5,10 +5,14 @@
 [*]Set the total jump count from 2 to 10 with a slider[/*]
 [*]Enter a custom jump count above 10[/*]
 [*]Enable unlimited airborne jumps[/*]
+[*]Enable or disable jump cooldown[/*]
+[*]Configure the cooldown duration in ticks[/*]
+[*]Apply the cooldown after the first ground jump and every airborne jump[/*]
 [*]Configure through a vanilla-style settings screen[/*]
 [*]Optional Mod Menu integration[/*]
-[/list][h2]Usage[/h2]Press the normal jump key again while airborne to perform another jump. Landing resets the available jump count.
-Because this mod is client-side only, remote servers may correct or reject modified movement.
+[/list][h2]Usage[/h2]Press the normal jump key to jump.
+When multiple jumping is enabled, press the jump key again while airborne to perform another jump. Landing resets the available jump count.
+When jump cooldown is enabled, the cooldown starts immediately after the first ground jump. Additional airborne jumps are only available after the configured cooldown has expired. Every successful airborne jump starts the cooldown again.
 [h2]Supported Versions[/h2][list]
 [*]Minecraft 26.1.2[/*]
 [*]Fabric Loader 0.19.2+[/*]
