@@ -10,7 +10,6 @@
 [*]Full Range mode raises the available maximum from [b]20x[/b] to [b]100x[/b][/*]
 [*]Uses non-linear mouse-wheel multiplier adjustment[/*]
 [*]Uses Left Alt as the default adjustment key[/*]
-[*]Supports optional Mod Menu integration[/*]
 [/list][h2]Usage[/h2][list]
 [*]Enter a supported movement state, such as Creative Flight, Freecam, or a supported movement mode with [b]Apply to Other Movement[/b] enabled.[/*]
 [*]Hold Left Alt.[/*]
@@ -30,7 +29,7 @@ Its available range is always limited to the current Minimum Speed and Maximum S
 [*]Enabled: pressing the adjustment key resets the multiplier to Default Speed[/*]
 [*]Disabled: pressing the adjustment key keeps the previous multiplier[/*]
 [/list][h3]Multiplier Step[/h3]Controls how quickly the multiplier changes for each mouse-wheel unit.
-[h3]Apply to Other Movement[/h3][h2]Other Movement[/h2]The [b]Apply to Other Movement[/b] option is disabled by default.
+[h3]Apply to Other Movement[/h3]The [b]Apply to Other Movement[/b] option is disabled by default.
 When enabled, the current multiplier is also applied to supported client-controlled movement, including:
 [list]
 [*]Walking, sprinting, sneaking, and normal horizontal movement[/*]
@@ -44,15 +43,12 @@ When enabled, the current multiplier is also applied to supported client-control
 [/list]The option does not intentionally modify:
 [list]
 [*]Normal player jump velocity[/*]
-[*]Sprint-jump impulse[/*]
 [*]Horse jump strength[/*]
-[*]Camel dash impulse[/*]
 [*]Knockback, explosions, or collision impulses[/*]
 [*]Boat turning speed[/*]
 [*]Minecart movement[/*]
 [*]Powder-snow upward movement[/*]
-[/list]Elytra movement is implemented by multiplying the actual movement displacement passed to the vanilla movement call. This avoids feeding the multiplier back into the vanilla Elytra velocity calculation. Because all three axes are multiplied, Elytra descent and climb distance are also affected.
-[h2]Multiplayer Warning[/h2]This is a client-side movement modification. Remote servers may correct, reject, or flag modified movement. Using high multipliers can cause desynchronization, anti-cheat violations, disconnections, or bans. Use it on multiplayer servers only when the server rules explicitly allow it. The mod author is not responsible for penalties caused by its use.
+[/list][h2]Multiplayer Warning[/h2]This is a client-side movement modification. Remote servers may correct, reject, or flag modified movement. Using high multipliers can cause desynchronization, anti-cheat violations, disconnections, or bans. Use it on multiplayer servers only when the server rules explicitly allow it. The mod author is not responsible for penalties caused by its use.
 High Elytra multipliers can move the player across very large distances in a single tick. Use conservative values, especially while using fireworks or approaching unloaded chunks, terrain, or the world border.
 [h2]Supported Versions[/h2][list]
 [*]Minecraft 26.1.2[/*]
@@ -60,5 +56,4 @@ High Elytra multipliers can move the player across very large distances in a sin
 [*]Fabric API 0.150.0+[/*]
 [*]Java 25[/*]
 [*]Mod Menu (Optional)[/*]
-[*]Freecam (Optional)[/*]
 [/list][h2]License[/h2]MIT

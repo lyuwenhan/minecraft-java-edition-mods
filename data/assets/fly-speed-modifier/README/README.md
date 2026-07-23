@@ -17,7 +17,6 @@ A client-side Fabric mod that lets you hold a key and scroll the mouse wheel to 
 - Full Range mode raises the available maximum from `20x` to `100x`
 - Uses non-linear mouse-wheel multiplier adjustment
 - Uses Left Alt as the default adjustment key
-- Supports optional Mod Menu integration
 
 ## Usage
 
@@ -62,8 +61,6 @@ Controls how quickly the multiplier changes for each mouse-wheel unit.
 
 ### Apply to Other Movement
 
-## Other Movement
-
 The **Apply to Other Movement** option is disabled by default.
 
 When enabled, the current multiplier is also applied to supported client-controlled movement, including:
@@ -80,16 +77,11 @@ When enabled, the current multiplier is also applied to supported client-control
 The option does not intentionally modify:
 
 - Normal player jump velocity
-- Sprint-jump impulse
 - Horse jump strength
-- Camel dash impulse
 - Knockback, explosions, or collision impulses
 - Boat turning speed
 - Minecart movement
 - Powder-snow upward movement
-
-Elytra movement is implemented by multiplying the actual movement displacement passed to the vanilla movement call. This avoids feeding the multiplier back into the vanilla Elytra velocity calculation. Because all three axes are multiplied, Elytra descent and climb distance are also affected.
-
 
 ## Multiplayer Warning
 
@@ -104,7 +96,6 @@ High Elytra multipliers can move the player across very large distances in a sin
 - Fabric API 0.150.0+
 - Java 25
 - Mod Menu (Optional)
-- Freecam (Optional)
 
 ## License
 
