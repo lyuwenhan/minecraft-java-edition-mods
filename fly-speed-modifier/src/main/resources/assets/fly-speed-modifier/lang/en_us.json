@@ -14,5 +14,8 @@
 	"option.fly-speed-modifier.reset_on_adjust": "Reset Before Adjustment",
 	"option.fly-speed-modifier.reset_on_adjust.tooltip": "When enabled, pressing the adjustment key resets the multiplier to the configured default value. When disabled, the previous multiplier is preserved.",
 	"option.fly-speed-modifier.scroll_step": "Multiplier Step",
-	"option.fly-speed-modifier.scroll_step.tooltip": "Controls how many non-linear multiplier adjustment operations are applied per mouse-wheel unit."
+	"option.fly-speed-modifier.scroll_step.tooltip": "Controls how many non-linear multiplier adjustment operations are applied per mouse-wheel unit.",
+	"option.fly-speed-modifier.apply_to_other_movement": "Apply to Other Movement",
+	"option.fly-speed-modifier.apply_to_other_movement.tooltip": "Also applies the current multiplier to client-controlled movement such as walking, sprinting, swimming, climbing, airborne horizontal movement, and steerable mounts. Jump velocity and natural falling speed are not modified.",
+	"message.fly-speed-modifier.speed_multiplier": "Speed multiplier: %sx"
 }

@@ -79,11 +79,22 @@ public final class FlySpeedModifierOptions {
 					FlySpeedModifierConfig.DEFAULT_SCROLL_STEP,
 					FlySpeedModifierOptions::onScrollStepChanged);
 
+
+	private static final OptionInstance<Boolean> APPLY_TO_OTHER_MOVEMENT =
+			OptionInstance.createBoolean(
+					"option.fly-speed-modifier.apply_to_other_movement",
+					value ->
+							Tooltip.create(
+									Component.translatable(
+											"option.fly-speed-modifier.apply_to_other_movement.tooltip")),
+					FlySpeedModifierConfig.DEFAULT_APPLY_TO_OTHER_MOVEMENT,
+					FlySpeedModifierOptions::onApplyToOtherMovementChanged);
+
 	private FlySpeedModifierOptions() {}
 
 	public static OptionInstance<?>[] all() {
 		return new OptionInstance<?>[] {
-			fullRange(), maxSpeed(), minSpeed(), initialSpeed(), resetOnAdjust(), scrollStep()
+			fullRange(), maxSpeed(), minSpeed(), initialSpeed(), resetOnAdjust(), scrollStep(), applyToOtherMovement()
 		};
 	}
 
@@ -125,6 +136,14 @@ public final class FlySpeedModifierOptions {
 			RESET_ON_ADJUST.set(screen.draft().resetOnAdjust);
 		}
 		return RESET_ON_ADJUST;
+	}
+
+	public static OptionInstance<Boolean> applyToOtherMovement() {
+		FlySpeedModifierConfigScreen screen = activeScreen();
+		if (screen != null) {
+			APPLY_TO_OTHER_MOVEMENT.set(screen.draft().applyToOtherMovement);
+		}
+		return APPLY_TO_OTHER_MOVEMENT;
 	}
 
 	public static OptionInstance<Double> scrollStep() {
@@ -186,6 +205,13 @@ public final class FlySpeedModifierOptions {
 		FlySpeedModifierConfigScreen screen = activeScreen();
 		if (screen != null) {
 			screen.draft().resetOnAdjust = value;
+		}
+	}
+
+	private static void onApplyToOtherMovementChanged(Boolean value) {
+		FlySpeedModifierConfigScreen screen = activeScreen();
+		if (screen != null) {
+			screen.draft().applyToOtherMovement = value;
 		}
 	}
 

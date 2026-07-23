@@ -12,7 +12,8 @@ public final class FreecamSpeedController {
 	private enum SpeedTarget {
 		NONE,
 		FREECAM,
-		DIRECT_FLIGHT
+		DIRECT_FLIGHT,
+		OTHER_MOVEMENT
 	}
 
 	private static KeyMapping adjustSpeedKey;
@@ -66,7 +67,7 @@ public final class FreecamSpeedController {
 		if (activeTarget == SpeedTarget.DIRECT_FLIGHT) {
 			applyDirectFlyingSpeed(client);
 		}
-		showMultiplierOverlay(activeTarget, temporaryMultiplier);
+		showMultiplierOverlay(temporaryMultiplier);
 		return true;
 	}
 
@@ -75,6 +76,19 @@ public final class FreecamSpeedController {
 			return originalSpeed;
 		}
 		return originalSpeed * temporaryMultiplier;
+	}
+
+	public static boolean shouldModifyOtherMovement() {
+		Minecraft client = Minecraft.getInstance();
+		return FlySpeedModifierConfig.applyToOtherMovement()
+				&& hasTemporaryMultiplier
+				&& client.player != null
+				&& !isFreecamEnabled()
+				&& !client.player.getAbilities().flying;
+	}
+
+	public static double otherMovementMultiplier() {
+		return clampMultiplier(temporaryMultiplier);
 	}
 
 	public static float applyFreecamCreativeFlyingSpeed(float originalFlyingSpeed) {
@@ -94,6 +108,11 @@ public final class FreecamSpeedController {
 		}
 		if (isDirectFlyingActive(client)) {
 			return SpeedTarget.DIRECT_FLIGHT;
+		}
+		if (FlySpeedModifierConfig.applyToOtherMovement()
+				&& client != null
+				&& client.player != null) {
+			return SpeedTarget.OTHER_MOVEMENT;
 		}
 		return SpeedTarget.NONE;
 	}
@@ -158,7 +177,7 @@ public final class FreecamSpeedController {
 		if (activeTarget == SpeedTarget.DIRECT_FLIGHT) {
 			applyDirectFlyingSpeed(client);
 		}
-		showMultiplierOverlay(activeTarget, temporaryMultiplier);
+		showMultiplierOverlay(temporaryMultiplier);
 	}
 
 	private static void resetTemporaryMultiplierSilently() {
@@ -288,14 +307,17 @@ public final class FreecamSpeedController {
 		return value;
 	}
 
-	private static void showMultiplierOverlay(SpeedTarget target, double multiplier) {
+	private static void showMultiplierOverlay(double multiplier) {
 		Minecraft client = Minecraft.getInstance();
 		if (client.player == null) {
 			return;
 		}
-		String label =
-				target == SpeedTarget.FREECAM ? "Freecam speed multiplier" : "Flight speed multiplier";
-		String text = String.format(Locale.ROOT, "%s: %.2fx", label, multiplier);
-		client.player.sendOverlayMessage(Component.literal(text));
+		String formattedMultiplier = String.format(Locale.ROOT, "%.2f", multiplier);
+		client.player.sendOverlayMessage(
+				Component.translatable(
+						"message.fly-speed-modifier.speed_multiplier",
+						formattedMultiplier
+				)
+		);
 	}
 }

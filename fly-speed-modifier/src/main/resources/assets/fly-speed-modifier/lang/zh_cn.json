@@ -14,5 +14,8 @@
 	"option.fly-speed-modifier.reset_on_adjust": "调整前重置",
 	"option.fly-speed-modifier.reset_on_adjust.tooltip": "启用后，每次按下调整键都会先重置为配置的默认倍数；禁用后会保留上一次调整后的倍数。",
 	"option.fly-speed-modifier.scroll_step": "滚轮倍数步长",
-	"option.fly-speed-modifier.scroll_step.tooltip": "控制每一个鼠标滚轮单位执行多少次非线性倍数调整操作。"
+	"option.fly-speed-modifier.scroll_step.tooltip": "控制每一个鼠标滚轮单位执行多少次非线性倍数调整操作。",
+	"option.fly-speed-modifier.apply_to_other_movement": "应用于其他移动",
+	"option.fly-speed-modifier.apply_to_other_movement.tooltip": "同时将当前倍数应用于客户端主导的其他移动，例如行走、疾跑、游泳、攀爬、非飞行状态下的空中水平移动以及可操控坐骑。不会修改跳跃速度和自然下落速度。",
+	"message.fly-speed-modifier.speed_multiplier": "速度倍数：%s倍"
 }
