@@ -117,7 +117,11 @@
 		"hasIcon": true,
 		"displayName": "Boat Utils",
 		"description": "Client-side boat camera and movement utilities.",
-		"link": {}
+		"link": {
+			"Modrinth": "https://modrinth.com/mod/boat-util",
+			"Curseforge": "https://www.curseforge.com/minecraft/mc-mods/boat-utils",
+			"Planet Minecraft": "https://www.planetminecraft.com/mod/boat-utils"
+		}
 	},
 	"client-flying": {
 		"versions": [
