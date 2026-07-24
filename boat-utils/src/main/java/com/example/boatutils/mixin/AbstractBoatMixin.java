@@ -1,6 +1,7 @@
 package com.example.boatutils.mixin;
 
 import com.example.boatutils.BoatUtilsConfig;
+import com.example.boatutils.FlySpeedModifierIntegration;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
@@ -74,8 +75,9 @@ public abstract class AbstractBoatMixin {
 		float yawRadians = self.getYRot() * Mth.DEG_TO_RAD;
 		float sinYaw = Mth.sin(yawRadians);
 		float cosYaw = Mth.cos(yawRadians);
-		double accelerationX = (-sinYaw * forwardInput - cosYaw * strafeInput) * 0.04D;
-		double accelerationZ = (cosYaw * forwardInput - sinYaw * strafeInput) * 0.04D;
+		double acceleration = FlySpeedModifierIntegration.applyOtherMovementMultiplier(0.04D);
+		double accelerationX = (-sinYaw * forwardInput - cosYaw * strafeInput) * acceleration;
+		double accelerationZ = (cosYaw * forwardInput - sinYaw * strafeInput) * acceleration;
 		Vec3 movement = self.getDeltaMovement();
 		self.setDeltaMovement(movement.add(accelerationX, 0.0D, accelerationZ));
 		((AbstractBoatAccessor) self).boatUtils$setDeltaRotation(0.0F);

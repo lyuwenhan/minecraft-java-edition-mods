@@ -23,17 +23,11 @@ public abstract class EntityMixin {
 	@Redirect(
 			method = "collide",
 			at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;onGround()Z"))
-	private boolean boatUtils$allowBoatStepInWater(Entity entity) {
-		if (entity.onGround()) {
-			return true;
-		}
+	private boolean boatUtils$allowBoatStepWithoutGroundCheck(Entity entity) {
 		if (!(entity instanceof AbstractBoat)) {
-			return false;
-		}
-		if (BoatUtilsConfig.boatStepHeight() <= 0.0F) {
-			return false;
+			return entity.onGround();
 		}
 
-		return entity.isInWater();
+		return BoatUtilsConfig.boatStepHeight() > 0.0F;
 	}
 }
