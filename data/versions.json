@@ -110,6 +110,15 @@
 			"Planet Minecraft": "https://www.planetminecraft.com/mod/better-step"
 		}
 	},
+	"boat-utils": {
+		"versions": [
+			"1.1.0"
+		],
+		"hasIcon": true,
+		"displayName": "Boat Utils",
+		"description": "Client-side boat camera and movement utilities.",
+		"link": {}
+	},
 	"client-flying": {
 		"versions": [
 			"1.0.0",
