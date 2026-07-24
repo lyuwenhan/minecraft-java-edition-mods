@@ -1,0 +1,14 @@
+{
+	"title.boat-utils.config": "船只优化设置",
+	"option.boat-utils.unrestricted_view_rotation": "解除视角限制",
+	"option.boat-utils.unrestricted_view_rotation.tooltip": "移除原版乘船时的 180 度水平视角限制，使视角可以完整旋转一周。",
+	"option.boat-utils.view_direction_lock_enabled": "跟随视角",
+	"option.boat-utils.view_direction_lock_enabled.tooltip": "使船只始终跟随视角方向。左右移动键改为水平侧移，不再用于船只转向。",
+	"option.boat-utils.blue_ice_speed_everywhere": "速度提升修复",
+	"option.boat-utils.blue_ice_speed_everywhere.tooltip": "使船只无论在地面、液体中、水下还是空中，始终使用蓝冰的速度。",
+	"option.boat-utils.prevent_sinking": "防止下沉",
+	"option.boat-utils.prevent_sinking.tooltip": "船只位于水下时，将上浮速度固定为每秒 2.4 格。",
+	"option.boat-utils.boat_step_height": "船只步高",
+	"option.boat-utils.boat_step_height.tooltip": "设置船只移动时可直接跨越的最大高度，范围为 0.0 到 10.0 格。",
+	"option.boat-utils.boat_step_height.value": "船只步高：%s"
+}

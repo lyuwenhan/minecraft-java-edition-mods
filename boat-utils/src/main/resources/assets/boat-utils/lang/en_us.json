@@ -1,0 +1,14 @@
+{
+	"title.boat-utils.config": "Boat Utils Settings",
+	"option.boat-utils.unrestricted_view_rotation": "Unlock View Rotation",
+	"option.boat-utils.unrestricted_view_rotation.tooltip": "Removes the vanilla 180-degree yaw restriction, allowing the camera to rotate freely in a full circle.",
+	"option.boat-utils.view_direction_lock_enabled": "Follow View",
+	"option.boat-utils.view_direction_lock_enabled.tooltip": "Makes the boat follow the view direction. Left and right movement keys strafe horizontally instead of turning the boat.",
+	"option.boat-utils.blue_ice_speed_everywhere": "Increase Boat Speed",
+	"option.boat-utils.blue_ice_speed_everywhere.tooltip": "Makes the boat use blue ice friction at all times.",
+	"option.boat-utils.prevent_sinking": "Prevent Sinking",
+	"option.boat-utils.prevent_sinking.tooltip": "While the boat is underwater, sets an upward speed to prevent it from sinking.",
+	"option.boat-utils.boat_step_height": "Boat Step Height",
+	"option.boat-utils.boat_step_height.tooltip": "Sets the maximum height the boat can step up while moving. Range: 0.0 to 10.0 blocks.",
+	"option.boat-utils.boat_step_height.value": "Boat Step Height: %s"
+}
