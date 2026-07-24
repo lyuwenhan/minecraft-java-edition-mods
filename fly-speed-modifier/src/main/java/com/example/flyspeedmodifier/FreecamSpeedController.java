@@ -109,9 +109,7 @@ public final class FreecamSpeedController {
 		if (isDirectFlyingActive(client)) {
 			return SpeedTarget.DIRECT_FLIGHT;
 		}
-		if (FlySpeedModifierConfig.applyToOtherMovement()
-				&& client != null
-				&& client.player != null) {
+		if (FlySpeedModifierConfig.applyToOtherMovement() && client != null && client.player != null) {
 			return SpeedTarget.OTHER_MOVEMENT;
 		}
 		return SpeedTarget.NONE;
@@ -314,10 +312,6 @@ public final class FreecamSpeedController {
 		}
 		String formattedMultiplier = String.format(Locale.ROOT, "%.2f", multiplier);
 		client.player.sendOverlayMessage(
-				Component.translatable(
-						"message.fly-speed-modifier.speed_multiplier",
-						formattedMultiplier
-				)
-		);
+				Component.translatable("message.fly-speed-modifier.speed_multiplier", formattedMultiplier));
 	}
 }

@@ -79,7 +79,6 @@ public final class FlySpeedModifierOptions {
 					FlySpeedModifierConfig.DEFAULT_SCROLL_STEP,
 					FlySpeedModifierOptions::onScrollStepChanged);
 
-
 	private static final OptionInstance<Boolean> APPLY_TO_OTHER_MOVEMENT =
 			OptionInstance.createBoolean(
 					"option.fly-speed-modifier.apply_to_other_movement",
@@ -94,7 +93,13 @@ public final class FlySpeedModifierOptions {
 
 	public static OptionInstance<?>[] all() {
 		return new OptionInstance<?>[] {
-			fullRange(), maxSpeed(), minSpeed(), initialSpeed(), resetOnAdjust(), scrollStep(), applyToOtherMovement()
+			fullRange(),
+			maxSpeed(),
+			minSpeed(),
+			initialSpeed(),
+			resetOnAdjust(),
+			scrollStep(),
+			applyToOtherMovement()
 		};
 	}
 

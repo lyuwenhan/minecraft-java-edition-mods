@@ -15,14 +15,13 @@ import org.spongepowered.asm.mixin.injection.At;
 public abstract class ElytraMovementSpeedMixin {
 	@WrapOperation(
 			method = "travelFallFlying",
-			at = @At(
-					value = "INVOKE",
-					target = "Lnet/minecraft/world/entity/LivingEntity;move(Lnet/minecraft/world/entity/MoverType;Lnet/minecraft/world/phys/Vec3;)V"))
+			at =
+					@At(
+							value = "INVOKE",
+							target =
+									"Lnet/minecraft/world/entity/LivingEntity;move(Lnet/minecraft/world/entity/MoverType;Lnet/minecraft/world/phys/Vec3;)V"))
 	private void flySpeedModifier$scaleElytraHorizontalDisplacement(
-			LivingEntity instance,
-			MoverType moverType,
-			Vec3 movement,
-			Operation<Void> original) {
+			LivingEntity instance, MoverType moverType, Vec3 movement, Operation<Void> original) {
 		if (!flySpeedModifier$isLocalPlayer(instance)) {
 			original.call(instance, moverType, movement);
 			return;
@@ -34,10 +33,8 @@ public abstract class ElytraMovementSpeedMixin {
 		}
 
 		double multiplier = FreecamSpeedController.otherMovementMultiplier();
-		Vec3 scaledMovement = new Vec3(
-				movement.x * multiplier,
-				movement.y * multiplier,
-				movement.z * multiplier);
+		Vec3 scaledMovement =
+				new Vec3(movement.x * multiplier, movement.y * multiplier, movement.z * multiplier);
 		original.call(instance, moverType, scaledMovement);
 	}
 
