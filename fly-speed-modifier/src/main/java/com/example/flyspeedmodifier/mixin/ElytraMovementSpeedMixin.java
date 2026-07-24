@@ -33,8 +33,7 @@ public abstract class ElytraMovementSpeedMixin {
 		}
 
 		double multiplier = FreecamSpeedController.otherMovementMultiplier();
-		Vec3 scaledMovement =
-				new Vec3(movement.x * multiplier, movement.y * multiplier, movement.z * multiplier);
+		Vec3 scaledMovement = new Vec3(movement.x * multiplier, movement.y, movement.z * multiplier);
 		original.call(instance, moverType, scaledMovement);
 	}
 
