@@ -112,7 +112,8 @@
 	"boat-utils": {
 		"versions": [
 			"1.1.0",
-			"1.1.1"
+			"1.1.1",
+			"1.1.2"
 		],
 		"hasIcon": true,
 		"displayName": "Boat Utils",
