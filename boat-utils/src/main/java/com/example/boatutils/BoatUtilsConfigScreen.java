@@ -1,12 +1,13 @@
 package com.example.boatutils;
 
-import java.util.Locale;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.OptionInstance;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.options.OptionsSubScreen;
 import net.minecraft.network.chat.Component;
+
+import java.util.Locale;
 
 public final class BoatUtilsConfigScreen extends OptionsSubScreen {
 	private final BoatUtilsConfig.Values draft;
@@ -17,10 +18,14 @@ public final class BoatUtilsConfigScreen extends OptionsSubScreen {
 	private final OptionInstance<Boolean> blueIceSpeedEverywhere;
 	private final OptionInstance<Boolean> preventSinking;
 	private final OptionInstance<Integer> boatStepHeight;
+	private final OptionInstance<Boolean> handbrakeEnabled;
+	private final OptionInstance<Boolean> handbrakeBoostEnabled;
 
 	public BoatUtilsConfigScreen(Screen parent) {
 		super(
-				parent, Minecraft.getInstance().options, Component.translatable("title.boat-utils.config"));
+				parent,
+				Minecraft.getInstance().options,
+				Component.translatable("title.boat-utils.config"));
 		this.draft = BoatUtilsConfig.get();
 
 		this.unrestrictedViewRotation =
@@ -28,10 +33,10 @@ public final class BoatUtilsConfigScreen extends OptionsSubScreen {
 						"option.boat-utils.unrestricted_view_rotation",
 						value ->
 								Tooltip.create(
-										Component.translatable("option.boat-utils.unrestricted_view_rotation.tooltip")),
+										Component.translatable(
+												"option.boat-utils.unrestricted_view_rotation.tooltip")),
 						this.draft.unrestrictedViewRotation,
 						value -> this.draft.unrestrictedViewRotation = value);
-
 		this.viewDirectionLockEnabled =
 				OptionInstance.createBoolean(
 						"option.boat-utils.view_direction_lock_enabled",
@@ -41,30 +46,49 @@ public final class BoatUtilsConfigScreen extends OptionsSubScreen {
 												"option.boat-utils.view_direction_lock_enabled.tooltip")),
 						this.draft.viewDirectionLockEnabled,
 						value -> this.draft.viewDirectionLockEnabled = value);
-
 		this.blueIceSpeedEverywhere =
 				OptionInstance.createBoolean(
 						"option.boat-utils.blue_ice_speed_everywhere",
 						value ->
 								Tooltip.create(
-										Component.translatable("option.boat-utils.blue_ice_speed_everywhere.tooltip")),
+										Component.translatable(
+												"option.boat-utils.blue_ice_speed_everywhere.tooltip")),
 						this.draft.blueIceSpeedEverywhere,
 						value -> this.draft.blueIceSpeedEverywhere = value);
-
 		this.preventSinking =
 				OptionInstance.createBoolean(
 						"option.boat-utils.prevent_sinking",
 						value ->
-								Tooltip.create(Component.translatable("option.boat-utils.prevent_sinking.tooltip")),
+								Tooltip.create(
+										Component.translatable(
+												"option.boat-utils.prevent_sinking.tooltip")),
 						this.draft.preventSinking,
 						value -> this.draft.preventSinking = value);
-
+		this.handbrakeEnabled =
+				OptionInstance.createBoolean(
+						"option.boat-utils.handbrake_enabled",
+						value ->
+								Tooltip.create(
+										Component.translatable(
+												"option.boat-utils.handbrake_enabled.tooltip")),
+						this.draft.handbrakeEnabled,
+						value -> this.draft.handbrakeEnabled = value);
+		this.handbrakeBoostEnabled =
+				OptionInstance.createBoolean(
+						"option.boat-utils.handbrake_boost_enabled",
+						value ->
+								Tooltip.create(
+										Component.translatable(
+												"option.boat-utils.handbrake_boost_enabled.tooltip")),
+						this.draft.handbrakeBoostEnabled,
+						value -> this.draft.handbrakeBoostEnabled = value);
 		this.boatStepHeight =
 				new OptionInstance<>(
 						"option.boat-utils.boat_step_height",
 						value ->
 								Tooltip.create(
-										Component.translatable("option.boat-utils.boat_step_height.tooltip")),
+										Component.translatable(
+												"option.boat-utils.boat_step_height.tooltip")),
 						(optionText, value) ->
 								Component.translatable(
 										"option.boat-utils.boat_step_height.value",
@@ -85,7 +109,10 @@ public final class BoatUtilsConfigScreen extends OptionsSubScreen {
 				this.viewDirectionLockEnabled,
 				this.blueIceSpeedEverywhere,
 				this.preventSinking,
-				this.boatStepHeight);
+				this.handbrakeEnabled,
+				this.handbrakeBoostEnabled);
+
+		this.list.addSmall(this.boatStepHeight);
 	}
 
 	@Override

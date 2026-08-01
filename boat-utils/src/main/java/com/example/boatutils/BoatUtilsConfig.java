@@ -2,12 +2,14 @@ package com.example.boatutils;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+
+import net.fabricmc.loader.api.FabricLoader;
+
 import java.io.IOException;
 import java.io.Reader;
 import java.io.Writer;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import net.fabricmc.loader.api.FabricLoader;
 
 public final class BoatUtilsConfig {
 	private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
@@ -73,6 +75,14 @@ public final class BoatUtilsConfig {
 		return current.boatStepHeight;
 	}
 
+	public static synchronized boolean handbrakeEnabled() {
+		return current.handbrakeEnabled;
+	}
+
+	public static synchronized boolean handbrakeBoostEnabled() {
+		return current.handbrakeBoostEnabled;
+	}
+
 	private static Values sanitize(Values values) {
 		if (values == null) {
 			return Values.defaults();
@@ -80,7 +90,8 @@ public final class BoatUtilsConfig {
 
 		Values sanitized = values.copy();
 		sanitized.boatStepHeight =
-				Math.round(Math.max(0.0F, Math.min(10.0F, sanitized.boatStepHeight)) * 10.0F) / 10.0F;
+				Math.round(Math.max(0.0F, Math.min(10.0F, sanitized.boatStepHeight)) * 10.0F)
+						/ 10.0F;
 		return sanitized;
 	}
 
@@ -90,6 +101,8 @@ public final class BoatUtilsConfig {
 		public boolean blueIceSpeedEverywhere;
 		public boolean preventSinking;
 		public float boatStepHeight;
+		public boolean handbrakeEnabled;
+		public boolean handbrakeBoostEnabled;
 
 		public static Values defaults() {
 			Values values = new Values();
@@ -98,6 +111,8 @@ public final class BoatUtilsConfig {
 			values.blueIceSpeedEverywhere = false;
 			values.preventSinking = false;
 			values.boatStepHeight = 0.0F;
+			values.handbrakeEnabled = false;
+			values.handbrakeBoostEnabled = false;
 			return values;
 		}
 
@@ -108,6 +123,8 @@ public final class BoatUtilsConfig {
 			copy.blueIceSpeedEverywhere = this.blueIceSpeedEverywhere;
 			copy.preventSinking = this.preventSinking;
 			copy.boatStepHeight = this.boatStepHeight;
+			copy.handbrakeEnabled = this.handbrakeEnabled;
+			copy.handbrakeBoostEnabled = this.handbrakeBoostEnabled;
 			return copy;
 		}
 	}

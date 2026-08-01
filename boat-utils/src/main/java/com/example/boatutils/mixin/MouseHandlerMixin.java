@@ -1,10 +1,12 @@
 package com.example.boatutils.mixin;
 
 import com.example.boatutils.BoatUtilsConfig;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.MouseHandler;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.vehicle.boat.AbstractBoat;
+
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -23,7 +25,10 @@ public abstract class MouseHandlerMixin {
 
 	@ModifyArg(
 			method = "turnPlayer",
-			at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/LocalPlayer;turn(DD)V"),
+			at =
+					@At(
+							value = "INVOKE",
+							target = "Lnet/minecraft/client/player/LocalPlayer;turn(DD)V"),
 			index = 0)
 	private double boatUtils$trackHorizontalViewRotation(double horizontalRotation) {
 		Minecraft client = Minecraft.getInstance();

@@ -10,5 +10,9 @@
 	"option.boat-utils.prevent_sinking.tooltip": "While the boat is underwater, sets an upward speed to prevent it from sinking.",
 	"option.boat-utils.boat_step_height": "Boat Step Height",
 	"option.boat-utils.boat_step_height.tooltip": "Sets the maximum height the boat can step up while moving. Range: 0.0 to 10.0 blocks.",
-	"option.boat-utils.boat_step_height.value": "Boat Step Height: %s"
+	"option.boat-utils.boat_step_height.value": "Boat Step Height: %s",
+	"option.boat-utils.handbrake_enabled": "Enable Handbrake",
+	"option.boat-utils.handbrake_enabled.tooltip": "While controlling a boat, holding the jump key applies the handbrake.",
+	"option.boat-utils.handbrake_boost_enabled": "Enable Release Boost",
+	"option.boat-utils.handbrake_boost_enabled.tooltip": "If enabled, after releasing the handbrake, adds a boost based on how long the handbrake was held."
 }

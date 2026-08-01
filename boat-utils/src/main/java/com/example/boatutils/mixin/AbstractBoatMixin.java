@@ -1,12 +1,15 @@
 package com.example.boatutils.mixin;
 
 import com.example.boatutils.BoatUtilsConfig;
+import com.example.boatutils.BoatUtilsMod;
 import com.example.boatutils.FlySpeedModifierIntegration;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.vehicle.boat.AbstractBoat;
 import net.minecraft.world.phys.Vec3;
+
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -80,11 +83,20 @@ public abstract class AbstractBoatMixin {
 		double accelerationZ = (cosYaw * forwardInput - sinYaw * strafeInput) * acceleration;
 		Vec3 movement = self.getDeltaMovement();
 		self.setDeltaMovement(movement.add(accelerationX, 0.0D, accelerationZ));
+		BoatUtilsMod.applyHandbrakeAfterThrust(self);
 		((AbstractBoatAccessor) self).boatUtils$setDeltaRotation(0.0F);
 		self.setPaddleState(
 				this.inputUp || this.inputDown || this.inputLeft || this.inputRight,
 				this.inputUp || this.inputDown || this.inputLeft || this.inputRight);
 		callbackInfo.cancel();
+	}
+
+	@Inject(method = "controlBoat", at = @At("TAIL"))
+	private void boatUtils$applyHandbrakeAfterVanillaThrust(CallbackInfo callbackInfo) {
+		if (BoatUtilsConfig.viewDirectionLockEnabled()) {
+			return;
+		}
+		BoatUtilsMod.applyHandbrakeAfterThrust((AbstractBoat) (Object) this);
 	}
 
 	@Inject(method = "clampRotation", at = @At("HEAD"), cancellable = true)

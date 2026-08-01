@@ -1,8 +1,9 @@
 package com.example.boatutils;
 
+import net.fabricmc.loader.api.FabricLoader;
+
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import net.fabricmc.loader.api.FabricLoader;
 
 public final class FlySpeedModifierIntegration {
 	private static final String MOD_ID = "fly-speed-modifier";

@@ -10,5 +10,9 @@
 	"option.boat-utils.prevent_sinking.tooltip": "船只位于水下时，将上浮速度固定为每秒 2.4 格。",
 	"option.boat-utils.boat_step_height": "船只步高",
 	"option.boat-utils.boat_step_height.tooltip": "设置船只移动时可直接跨越的最大高度，范围为 0.0 到 10.0 格。",
-	"option.boat-utils.boat_step_height.value": "船只步高：%s"
+	"option.boat-utils.boat_step_height.value": "船只步高：%s",
+	"option.boat-utils.handbrake_enabled": "启用手刹",
+	"option.boat-utils.handbrake_enabled.tooltip": "驾驶船只时，按住跳跃键设置一个减速。",
+	"option.boat-utils.handbrake_boost_enabled": "启用松开加速",
+	"option.boat-utils.handbrake_boost_enabled.tooltip": "若启用，松开手刹后，会根据手刹按住的时长增加一个推力。"
 }
