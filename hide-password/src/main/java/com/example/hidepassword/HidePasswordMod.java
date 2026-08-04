@@ -5,9 +5,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.brigadier.Command;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
+
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommands;
@@ -18,9 +16,14 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
+
 import org.lwjgl.glfw.GLFW;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 public class HidePasswordMod implements ClientModInitializer {
 	public static final String MOD_ID = "hide-password";
@@ -45,7 +48,10 @@ public class HidePasswordMod implements ClientModInitializer {
 		toggleKey =
 				KeyMappingHelper.registerKeyMapping(
 						new KeyMapping(
-								"key.hidepassword.toggle", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_F8, CATEGORY));
+								"key.hidepassword.toggle",
+								InputConstants.Type.KEYSYM,
+								GLFW.GLFW_KEY_F8,
+								CATEGORY));
 		ClientTickEvents.END_CLIENT_TICK.register(
 				client -> {
 					while (toggleKey.consumeClick()) {
@@ -54,7 +60,9 @@ public class HidePasswordMod implements ClientModInitializer {
 						LOGGER.info("HidePassword enabled={}", CONFIG.enabled);
 						if (client.player != null) {
 							client.player.sendSystemMessage(
-									Component.literal("HidePassword " + (CONFIG.enabled ? "Enabled" : "Disabled")));
+									Component.literal(
+											"HidePassword "
+													+ (CONFIG.enabled ? "Enabled" : "Disabled")));
 						}
 					}
 				});
@@ -94,34 +102,70 @@ public class HidePasswordMod implements ClientModInitializer {
 										.executes(context -> sendStatus(context.getSource()))
 										.then(
 												ClientCommands.literal("status")
-														.executes(context -> sendStatus(context.getSource())))
+														.executes(
+																context ->
+																		sendStatus(
+																				context
+																						.getSource())))
 										.then(
 												ClientCommands.literal("toggle")
-														.executes(context -> setEnabled(context.getSource(), !CONFIG.enabled)))
+														.executes(
+																context ->
+																		setEnabled(
+																				context.getSource(),
+																				!CONFIG.enabled)))
 										.then(
 												ClientCommands.literal("on")
-														.executes(context -> setEnabled(context.getSource(), true)))
+														.executes(
+																context ->
+																		setEnabled(
+																				context.getSource(),
+																				true)))
 										.then(
 												ClientCommands.literal("off")
-														.executes(context -> setEnabled(context.getSource(), false)))
+														.executes(
+																context ->
+																		setEnabled(
+																				context.getSource(),
+																				false)))
 										.then(
 												ClientCommands.literal("hide-length")
-														.executes(context -> sendHideLengthStatus(context.getSource()))
+														.executes(
+																context ->
+																		sendHideLengthStatus(
+																				context
+																						.getSource()))
 														.then(
 																ClientCommands.literal("status")
-																		.executes(context -> sendHideLengthStatus(context.getSource())))
+																		.executes(
+																				context ->
+																						sendHideLengthStatus(
+																								context
+																										.getSource())))
 														.then(
 																ClientCommands.literal("toggle")
 																		.executes(
 																				context ->
-																						setHideLength(context.getSource(), !CONFIG.hideLength)))
+																						setHideLength(
+																								context
+																										.getSource(),
+																								!CONFIG.hideLength)))
 														.then(
 																ClientCommands.literal("on")
-																		.executes(context -> setHideLength(context.getSource(), true)))
+																		.executes(
+																				context ->
+																						setHideLength(
+																								context
+																										.getSource(),
+																								true)))
 														.then(
 																ClientCommands.literal("off")
 																		.executes(
-																				context -> setHideLength(context.getSource(), false))))));
+																				context ->
+																						setHideLength(
+																								context
+																										.getSource(),
+																								false))))));
 	}
 
 	private static int setEnabled(FabricClientCommandSource source, boolean enabled) {
@@ -144,7 +188,8 @@ public class HidePasswordMod implements ClientModInitializer {
 		saveConfig();
 		source.sendFeedback(
 				Component.literal(
-						"HidePassword hide length " + (CONFIG.hideLength ? "Enabled" : "Disabled")));
+						"HidePassword hide length "
+								+ (CONFIG.hideLength ? "Enabled" : "Disabled")));
 		LOGGER.info("HidePassword hideLength={}", CONFIG.hideLength);
 		return Command.SINGLE_SUCCESS;
 	}
@@ -152,7 +197,8 @@ public class HidePasswordMod implements ClientModInitializer {
 	private static int sendHideLengthStatus(FabricClientCommandSource source) {
 		source.sendFeedback(
 				Component.literal(
-						"HidePassword hide length is " + (CONFIG.hideLength ? "Enabled" : "Disabled")));
+						"HidePassword hide length is "
+								+ (CONFIG.hideLength ? "Enabled" : "Disabled")));
 		return Command.SINGLE_SUCCESS;
 	}
 }
