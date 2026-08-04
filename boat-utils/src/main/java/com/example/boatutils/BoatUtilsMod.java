@@ -92,7 +92,13 @@ public final class BoatUtilsMod implements ClientModInitializer {
 	private static void applyFixedHandbrake(AbstractBoat boat) {
 		Vec3 movement = boat.getDeltaMovement();
 		double speed = Math.sqrt(movement.x * movement.x + movement.z * movement.z);
-		double newSpeed = Math.max(speed * 0.99D - 0.06D, 0.0D);
+		double slowdownMultiplier =
+				0.99D
+						/ Math.max(
+								FlySpeedModifierIntegration.applyOtherMovementMultiplier(1.0D),
+								1.0D);
+		double slowdownAmount = FlySpeedModifierIntegration.applyOtherMovementMultiplier(0.06D);
+		double newSpeed = Math.max(speed * slowdownMultiplier - slowdownAmount, 0.0D);
 
 		if (speed <= 1.0E-12D || newSpeed == 0.0D) {
 			boat.setDeltaMovement(0.0D, movement.y, 0.0D);
@@ -105,7 +111,9 @@ public final class BoatUtilsMod implements ClientModInitializer {
 
 	private static void applyReleaseBoost(AbstractBoat boat, int time) {
 		Vec3 movement = boat.getDeltaMovement();
-		double boost = 1.27 * Math.atan(0.9D * time);
+		double boost =
+				FlySpeedModifierIntegration.applyOtherMovementMultiplier(
+						1.27D * Math.atan(0.9D * time));
 
 		float yawRadians = boat.getYRot() * Mth.DEG_TO_RAD;
 		double forwardX = -Mth.sin(yawRadians);
