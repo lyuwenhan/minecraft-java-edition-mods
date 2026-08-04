@@ -289,6 +289,15 @@
 			"Planet Minecraft": "https://www.planetminecraft.com/mod/player-highlighter"
 		}
 	},
+	"server-manager": {
+		"versions": [
+			"0.0.1"
+		],
+		"hasIcon": true,
+		"displayName": "Server Manager",
+		"description": "Web server manager for Fabric dedicated servers.",
+		"link": {}
+	},
 	"shared-player-data": {
 		"versions": [
 			"1.1.0",
