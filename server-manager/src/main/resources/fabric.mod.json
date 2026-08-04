@@ -1,0 +1,25 @@
+{
+	"schemaVersion": 1,
+	"id": "server_manager",
+	"version": "${version}",
+	"name": "Server Manager",
+	"description": "Web server manager for Fabric dedicated servers.",
+	"authors": [
+		"Wenhan"
+	],
+	"environment": "server",
+	"entrypoints": {
+		"main": [
+			"com.example.servermanager.ServerManagerMod"
+		]
+	},
+	"depends": {
+		"fabricloader": ">=0.19.2",
+		"fabric-api": "*",
+		"minecraft": "26.1.2",
+		"java": ">=25"
+	},
+	"mixins": [
+		"server-manager.mixins.json"
+	]
+}

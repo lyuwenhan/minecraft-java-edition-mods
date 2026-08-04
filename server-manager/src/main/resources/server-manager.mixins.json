@@ -1,0 +1,11 @@
+{
+	"required": true,
+	"package": "com.example.servermanager.mixin",
+	"compatibilityLevel": "JAVA_25",
+	"mixins": [
+		"MinecraftServerGameRuleMixin"
+	],
+	"injectors": {
+		"defaultRequire": 1
+	}
+}

@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width,initial-scale=1">
+		<title>Server Manager</title>
+		<link rel="stylesheet" href="lib/xterm.min.css" />
+		<link rel="stylesheet" href="lib/main.css" />
+		<link rel="icon" href="data:,">
+	</head>
+
+	<body>
+		<div id="login">
+			<h1>Server Manager</h1>
+			<h2>Login</h2>
+			<form id="login-form">
+				<label><span>Username: </span><input type="text" id="username" name="username" autocomplete="username"></label><br><br>
+				<label><span>Password: </span><input type="password" id="password" name="password" autocomplete="current-password" placeholder="Password"></label><br><br>
+				<button type="submit">Login</button><br><br>
+			</form>
+		</div>
+		<div id="operation-panel">
+			<div id="operation-left">
+				<ul>
+					<li>
+						<h2>Server Manager</h2>
+					</li>
+					<li><a id="to-dashboard" href="#dashboard">Dashboard</a></li>
+					<li><a id="to-players" href="#players">Players</a></li>
+					<li><a id="to-logs" href="#logs">Logs</a></li>
+					<li><a id="to-command" href="#command">Command</a></li>
+					<li><a id="to-gamerule" href="#gamerule">Gamerule</a></li>
+					<li><a id="to-carpet-rule" href="#carpet-rule">Carpet Rule</a></li>
+				</ul>
+			</div>
+			<div id="operation-right">
+				<div id="dashboard">
+					<ul id="stats" class="stats"></ul>
+					<ul id="world-stats" class="stats"></ul>
+					<ul id="resource-stats" class="stats"></ul>
+					<div id="world-entity-actions">
+						<button id="kill-all-players" type="button">Kill All Players</button>
+						<button id="clear-all-entities" type="button">Clear All Entities</button>
+						<button id="clear-falling-blocks" type="button">Clear Falling Blocks</button>
+						<button id="clear-enemies" type="button">Clear Enemies</button>
+						<button id="clear-projectiles" type="button">Clear Projectiles</button>
+						<button id="clear-item-entities" type="button">Clear Item Entities</button>
+					</div>
+					<span><button id="stop-server" type="button">Stop server</button></span>
+				</div>
+				<div id="players">
+					<div id="player-count">Online Players: 0</div>
+					<span><span>Whitelist: </span><button id="toggle-whitelist" type="button">Loading...</button></span>
+					<div id="access-lists">
+						<div class="access-list-table">
+							<table>
+								<caption>Whitelist</caption>
+								<thead>
+									<tr>
+										<th>UUID</th>
+										<th>Name</th>
+										<th>Operation</th>
+									</tr>
+								</thead>
+								<tbody id="whitelist-entries"></tbody>
+							</table>
+						</div>
+						<div class="access-list-table">
+							<table>
+								<caption>Blacklist</caption>
+								<thead>
+									<tr>
+										<th>UUID</th>
+										<th>Name</th>
+										<th>Operation</th>
+									</tr>
+								</thead>
+								<tbody id="blacklist-entries"></tbody>
+							</table>
+						</div>
+						<div class="access-list-table">
+							<table>
+								<caption>OPs</caption>
+								<thead>
+									<tr>
+										<th>UUID</th>
+										<th>Name</th>
+										<th>Operation</th>
+									</tr>
+								</thead>
+								<tbody id="ops-entries"></tbody>
+							</table>
+						</div>
+					</div>
+					<div id="player-actions-table">
+						<table>
+							<caption>Player Operations</caption>
+							<thead>
+								<tr>
+									<th>UUID</th>
+									<th>Name</th>
+									<th>Operations</th>
+								</tr>
+							</thead>
+							<tbody id="player-actions"></tbody>
+						</table>
+					</div>
+					<div id="players-table">
+						<table>
+							<caption>Players</caption>
+							<thead>
+								<tr>
+									<th>Name</th>
+									<th>Status</th>
+									<th>Dimension</th>
+									<th>Position</th>
+									<th>Health</th>
+									<th>Hunger</th>
+									<th>Level</th>
+									<th>Gamemode</th>
+									<th>Ping</th>
+								</tr>
+							</thead>
+							<tbody id="player-entries"></tbody>
+						</table>
+					</div>
+				</div>
+				<div id="logs">
+					<div id="logs-terminal"></div>
+				</div>
+				<div id="command"><textarea id="command-input" type="text" placeholder="Enter command here..." autocomplete="off" spellcheck="false"></textarea>
+					<div id="command-feedback"></div>
+				</div>
+				<div id="gamerule" class="rules"></div>
+				<div id="carpet-rule" class="rules"></div>
+			</div>
+		</div><span id="message"></span> <svg id="full" class="full" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 13 13">
+			<path fill="#aaa7" d="M 0 0 L 0 13 L 13 13 L 13 0" />
+			<path fill="white" d="M 3 3 l 3 0 l 0 1 l -2 0 l 0 2 l -1 0 M 7 3 l 3 0 l 0 3 l -1 0 l 0 -2 l -2 0 M 3 7 l 1 0 l 0 2 l 2 0 l 0 1 l -3 0 M 9 7 l 1 0 l 0 3 l -3 0 l 0 -1 l 2 0" />
+		</svg> <svg id="unfull" class="full" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 13 13">
+			<path fill="#aaa7" d="M 0 0 L 0 13 L 13 13 L 13 0" />
+			<path fill="white" d="M 7 7 l 3 0 l 0 1 l -2 0 l 0 2 l -1 0 M 3 7 l 3 0 l 0 3 l -1 0 l 0 -2 l -2 0 M 7 3 l 1 0 l 0 2 l 2 0 l 0 1 l -3 0 M 5 3 l 1 0 l 0 3 l -3 0 l 0 -1 l 2 0" />
+		</svg>
+		<script src="lib/xterm.min.js"></script>
+		<script src="lib/xterm-addon-fit.min.js"></script>
+		<script src="lib/main.js"></script>
+	</body>
+
+</html>
