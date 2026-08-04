@@ -292,7 +292,8 @@
 	},
 	"server-manager": {
 		"versions": [
-			"0.0.1"
+			"0.0.1",
+			"0.0.2"
 		],
 		"hasIcon": true,
 		"displayName": "Server Manager",
