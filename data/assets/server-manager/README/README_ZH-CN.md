@@ -106,7 +106,6 @@ Carpet 规则页面采用与游戏规则页面相同的规则管理界面。
 - Fabric Loader 0.19.2+
 - Fabric API 0.150.0+
 - Java 25
-- Carpet (可选)
 
 ## License
 

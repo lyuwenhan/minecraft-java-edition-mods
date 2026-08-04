@@ -106,7 +106,6 @@ If Carpet is installed, rules can be viewed and changed from the web panel.
 - Fabric Loader 0.19.2+
 - Fabric API 0.150.0+
 - Java 25
-- Carpet (Optional)
 
 ## License
 
