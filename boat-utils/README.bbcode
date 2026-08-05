@@ -1,28 +1,89 @@
-[h1]Languages[/h1][url=https://lyuwenhan.github.io/extensions/minecraft-java/data/assets/boat-utils/README/README.html]EN/English[/url] | [url=https://lyuwenhan.github.io/extensions/minecraft-java/data/assets/boat-utils/README/README_ZH-CN.html]ZH-CN/简体中文[/url]
+[h1]Languages[/h1][url=https://lyuwenhan.github.io/extensions/minecraft-java/data/assets/boat-utils/README/README.html]EN/English[/url]|[url=https://lyuwenhan.github.io/extensions/minecraft-java/data/assets/boat-utils/README/README_ZH-CN.html]ZH-CN/简体中文[/url]
 [h1]Boat Utils[/h1]A client-side Fabric mod that adds configurable boat camera and movement utilities.
 [h2]Features[/h2][list]
 [*]Unlocks the vanilla boat camera rotation limit[/*]
 [*]Makes the boat immediately follow the view direction[/*]
 [*]Changes the left and right movement keys from turning to horizontal strafing while Follow View is enabled[/*]
+[*]Provides four configurable boat direction hotkeys[/*]
+[*]Snaps the boat to cardinal or 45-degree directions[/*]
+[*]Centers the boat within its current block when using the Up, Left, or Right direction hotkeys[/*]
+[*]Clears the boat's movement and steering inertia after using a direction hotkey[/*]
 [*]Makes the boat use blue ice friction[/*]
 [*]Prevents underwater sinking with a fixed upward speed of 2.4 blocks per second[/*]
 [*]Allows underwater boarding and prevents forced dismounting while Prevent Sinking is enabled[/*]
 [*]Provides configurable boat step height[/*]
+[*]Provides a handbrake with an optional release boost[/*]
+[/list][h2]Configuration[/h2]The configuration screen is available through Mod Menu.
+The following options are provided:
+[list]
+[*]Unlock View Rotation[/*]
+[*]Follow View[/*]
+[*]Enable Direction Hotkeys[/*]
+[*]Include 45-Degree Directions[/*]
+[*]Increase Boat Speed[/*]
+[*]Prevent Sinking[/*]
+[*]Enable Handbrake[/*]
+[*]Enable Release Boost[/*]
+[*]Boat Step Height[/*]
 [/list][h3]Unlock View Rotation[/h3]Removes the vanilla 180-degree horizontal view restriction while riding a boat, allowing the camera to rotate freely in a full circle.
 [h3]Follow View[/h3]Makes the boat immediately face the direction controlled by the mouse.
 While enabled:
 [list]
-[*]Forward and backward move relative to the current view direction[/*]
-[*]Left and right strafe horizontally instead of rotating the boat[/*]
+[*]Forward and backward movement is relative to the current view direction[/*]
+[*]Left and right movement keys strafe horizontally instead of rotating the boat[/*]
 [/list]When disabled, the boat uses the vanilla steering controls.
-[h3]Increase Boat Speed[/h3]Makes the boat use the blue ice friction value
-[h3]Prevent Sinking[/h3]While the boat is underwater, its gives a vertical speed
+[h3]Direction Hotkeys[/h3]Provides four boat direction shortcuts. They work while the local player is controlling a boat and no menu or other screen is open.
+The default key bindings are:
+[table]
+[tbody]
+[tr]
+[th]Key[/th]
+[th]Action[/th]
+[/tr]
+[tr]
+[td]Up Arrow[/td]
+[td]Snap to the nearest allowed direction[/td]
+[/tr]
+[tr]
+[td]Down Arrow[/td]
+[td]Turn exactly 180 degrees to the rear[/td]
+[/tr]
+[tr]
+[td]Left Arrow[/td]
+[td]Turn left to the next allowed direction[/td]
+[/tr]
+[tr]
+[td]Right Arrow[/td]
+[td]Turn right to the next allowed direction[/td]
+[/tr]
+[/tbody]
+[/table]
+The key bindings can be changed from the Minecraft Controls screen under the [b]Boat Direction Hotkeys[/b] category.
+After any direction hotkey is executed, the mod:
+[list]
+[*]Clears the boat's horizontal and vertical velocity[/*]
+[*]Clears the boat's steering rotation inertia[/*]
+[*]Clears the current handbrake charge state[/*]
+[/list]The Up, Left, and Right actions also center the boat's X and Z position within its current block.
+The Down action changes only the direction and does not center the boat.
+[h4]Allowed Directions[/h4]The *Include 45-Degree Directions- option controls which directions are considered valid:
+[list]
+[*]Enabled: every multiple of 45 degrees is allowed, providing eight directions[/*]
+[*]Disabled: only the four cardinal directions are allowed, using 90-degree intervals[/*]
+[/list]The option is enabled by default.
+[h3]Increase Boat Speed[/h3]Makes the boat use the blue ice friction value at all times.
+[h3]Prevent Sinking[/h3]While the boat is underwater, the mod sets a fixed upward speed of 2.4 blocks per second.
 While this option is enabled, the mod also:
 [list]
-[*]Prevents the vanilla underwater forced dismount timer from ejecting passengers[/*]
+[*]Prevents the vanilla underwater forced-dismount timer from ejecting passengers[/*]
 [*]Allows players to board a boat while it is underwater[/*]
 [/list]These riding changes are controlled by the server. They are expected to work in singleplayer, but a remote server may reject or correct them.
-[h3]Boat Step Height[/h3]Controls the maximum height the boat can step up from 0 to 10 while moving.
+[h3]Boat Step Height[/h3]Controls the maximum height that a boat can step up while moving.
+The available range is from 0.0 to 10.0 blocks.
+[h3]Handbrake[/h3]When *Enable Handbrake- is enabled, hold the jump key while controlling a boat to apply the handbrake.
+The handbrake gradually reduces the boat's horizontal movement while preserving its vertical movement.
+[h4]Release Boost[/h4]When *Enable Release Boost- is also enabled, releasing the handbrake applies a forward boost based on how long the handbrake was held.
+Using any direction hotkey clears the accumulated handbrake state without applying its release boost.
 [h2]Multiplayer Warning[/h2]This mod changes client-controlled boat movement. A server may correct, reject, or flag the resulting movement.
 Use the mod only where server rules permit it. The mod author is not responsible for warnings, kicks, bans, or other penalties caused by its use.
 [h2]Supported Versions[/h2][list]
