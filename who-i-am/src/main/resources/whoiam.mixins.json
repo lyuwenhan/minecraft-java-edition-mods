@@ -1,0 +1,12 @@
+{
+	"required": true,
+	"package": "com.example.whoiam.mixin",
+	"compatibilityLevel": "JAVA_25",
+	"client": [
+		"LivingEntityRendererMixin",
+		"MinecraftTitleMixin"
+	],
+	"injectors": {
+		"defaultRequire": 1
+	}
+}

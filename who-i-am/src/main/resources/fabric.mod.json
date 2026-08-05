@@ -1,0 +1,25 @@
+{
+	"schemaVersion": 1,
+	"id": "who-i-am",
+	"version": "${version}",
+	"name": "Who I Am",
+	"description": "Shows the local player's name tag in third-person or free-camera views, appends the player name to the window title, and provides the /i command.",
+	"authors": [
+		"Wenhan"
+	],
+	"environment": "client",
+	"entrypoints": {
+		"client": [
+			"com.example.whoiam.WhoIAmClientMod"
+		]
+	},
+	"mixins": [
+		"whoiam.mixins.json"
+	],
+	"depends": {
+		"fabricloader": ">=0.19.2",
+		"fabric-api": "*",
+		"minecraft": "26.1.2",
+		"java": ">=25"
+	}
+}
