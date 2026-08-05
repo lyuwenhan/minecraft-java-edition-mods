@@ -193,6 +193,15 @@
 			"Planet Minecraft": "https://www.planetminecraft.com/mod/fly-speed-modifier"
 		}
 	},
+	"forward-lock": {
+		"versions": [
+			"1.1.0"
+		],
+		"hasIcon": true,
+		"displayName": "Forward Lock",
+		"description": "Double-tap forward to lock forward movement and sprinting until forward, backward, or crouch is pressed.",
+		"link": {}
+	},
 	"glideplate": {
 		"versions": [
 			"1.0.0",
