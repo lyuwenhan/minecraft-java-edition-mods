@@ -1,0 +1,25 @@
+{
+	"schemaVersion": 1,
+	"id": "forward-lock",
+	"version": "${version}",
+	"name": "Forward Lock",
+	"description": "Double-tap forward to lock forward movement and sprinting until forward, backward, or crouch is pressed.",
+	"authors": [
+		"Wenhan"
+	],
+	"environment": "client",
+	"entrypoints": {
+		"client": [
+			"com.example.forwardlock.ForwardLockClient"
+		]
+	},
+	"mixins": [
+		"forward-lock.client.mixins.json"
+	],
+	"depends": {
+		"fabricloader": ">=0.19.2",
+		"fabric-api": "*",
+		"minecraft": "26.1.2",
+		"java": ">=25"
+	}
+}

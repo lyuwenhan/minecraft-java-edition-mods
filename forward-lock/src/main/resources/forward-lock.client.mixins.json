@@ -1,0 +1,14 @@
+{
+	"required": true,
+	"package": "com.example.forwardlock.mixin",
+	"compatibilityLevel": "JAVA_25",
+	"client": [
+		"EntityMixin",
+		"KeyMappingAccessor",
+		"KeyMappingMixin",
+		"PlayerInvoker"
+	],
+	"injectors": {
+		"defaultRequire": 1
+	}
+}
