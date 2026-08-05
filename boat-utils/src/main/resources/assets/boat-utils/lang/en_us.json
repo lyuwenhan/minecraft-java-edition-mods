@@ -4,6 +4,10 @@
 	"option.boat-utils.unrestricted_view_rotation.tooltip": "Removes the vanilla 180-degree yaw restriction, allowing the camera to rotate freely in a full circle.",
 	"option.boat-utils.view_direction_lock_enabled": "Follow View",
 	"option.boat-utils.view_direction_lock_enabled.tooltip": "Makes the boat follow the view direction. Left and right movement keys strafe horizontally instead of turning the boat.",
+	"option.boat-utils.direction_hotkeys_enabled": "Direction Hotkeys",
+	"option.boat-utils.direction_hotkeys_enabled.tooltip": "Enables the four boat direction shortcuts. Up snaps to the nearest allowed direction, Down turns around, and Left or Right turns to the next allowed direction on that side.",
+	"option.boat-utils.direction_hotkeys_use_45_degree_angles": "Diagonal Directions",
+	"option.boat-utils.direction_hotkeys_use_45_degree_angles.tooltip": "When enabled, allowed directions are every multiple of 45 degrees. When disabled, only the four cardinal directions are allowed.",
 	"option.boat-utils.blue_ice_speed_everywhere": "Increase Boat Speed",
 	"option.boat-utils.blue_ice_speed_everywhere.tooltip": "Makes the boat use blue ice friction at all times.",
 	"option.boat-utils.prevent_sinking": "Prevent Sinking",
@@ -14,5 +18,10 @@
 	"option.boat-utils.handbrake_enabled": "Enable Handbrake",
 	"option.boat-utils.handbrake_enabled.tooltip": "While controlling a boat, holding the jump key applies the handbrake.",
 	"option.boat-utils.handbrake_boost_enabled": "Enable Release Boost",
-	"option.boat-utils.handbrake_boost_enabled.tooltip": "If enabled, after releasing the handbrake, adds a boost based on how long the handbrake was held."
+	"option.boat-utils.handbrake_boost_enabled.tooltip": "If enabled, after releasing the handbrake, adds a boost based on how long the handbrake was held.",
+	"key.category.boat-utils.direction_hotkeys": "Boat Direction Hotkeys",
+	"key.boat-utils.snap_to_nearest_direction": "Snap to Nearest Direction",
+	"key.boat-utils.turn_back": "Turn to Rear",
+	"key.boat-utils.turn_left_to_direction": "Turn Left to Allowed Direction",
+	"key.boat-utils.turn_right_to_direction": "Turn Right to Allowed Direction"
 }

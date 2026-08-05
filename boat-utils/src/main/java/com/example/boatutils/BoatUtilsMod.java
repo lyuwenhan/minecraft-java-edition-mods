@@ -18,9 +18,11 @@ public final class BoatUtilsMod implements ClientModInitializer {
 	@Override
 	public void onInitializeClient() {
 		BoatUtilsConfig.load();
+		BoatDirectionHotkeys.initialize();
 		ClientTickEvents.START_CLIENT_TICK.register(BoatUtilsMod::applyFollowView);
 		ClientTickEvents.END_CLIENT_TICK.register(BoatUtilsMod::applyFollowView);
 		ClientTickEvents.END_CLIENT_TICK.register(BoatUtilsMod::clearInvalidHandbrakeState);
+		ClientTickEvents.END_CLIENT_TICK.register(BoatDirectionHotkeys::handleClientTick);
 	}
 
 	private static void applyFollowView(Minecraft client) {
@@ -120,6 +122,12 @@ public final class BoatUtilsMod implements ClientModInitializer {
 		double forwardZ = Mth.cos(yawRadians);
 		boat.setDeltaMovement(
 				movement.x + forwardX * boost, movement.y, movement.z + forwardZ * boost);
+	}
+
+	public static void clearHandbrakeStateFor(AbstractBoat boat) {
+		if (handbrakeBoat == boat) {
+			resetHandbrakeState();
+		}
 	}
 
 	private static void resetHandbrakeState() {

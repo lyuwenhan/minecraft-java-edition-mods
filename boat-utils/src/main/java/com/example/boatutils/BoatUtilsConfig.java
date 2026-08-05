@@ -2,6 +2,8 @@ package com.example.boatutils;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 import net.fabricmc.loader.api.FabricLoader;
 
@@ -27,7 +29,11 @@ public final class BoatUtilsConfig {
 		}
 
 		try (Reader reader = Files.newBufferedReader(CONFIG_PATH)) {
-			Values loaded = GSON.fromJson(reader, Values.class);
+			JsonObject root = JsonParser.parseReader(reader).getAsJsonObject();
+			Values loaded = GSON.fromJson(root, Values.class);
+			if (!root.has("directionHotkeysUse45DegreeAngles")) {
+				loaded.directionHotkeysUse45DegreeAngles = true;
+			}
 			current = sanitize(loaded);
 		} catch (IOException | RuntimeException ignored) {
 			current = Values.defaults();
@@ -61,6 +67,14 @@ public final class BoatUtilsConfig {
 
 	public static synchronized boolean viewDirectionLockEnabled() {
 		return current.viewDirectionLockEnabled;
+	}
+
+	public static synchronized boolean directionHotkeysEnabled() {
+		return current.directionHotkeysEnabled;
+	}
+
+	public static synchronized boolean directionHotkeysUse45DegreeAngles() {
+		return current.directionHotkeysUse45DegreeAngles;
 	}
 
 	public static synchronized boolean blueIceSpeedEverywhere() {
@@ -98,6 +112,8 @@ public final class BoatUtilsConfig {
 	public static final class Values {
 		public boolean unrestrictedViewRotation;
 		public boolean viewDirectionLockEnabled;
+		public boolean directionHotkeysEnabled;
+		public boolean directionHotkeysUse45DegreeAngles;
 		public boolean blueIceSpeedEverywhere;
 		public boolean preventSinking;
 		public float boatStepHeight;
@@ -108,6 +124,8 @@ public final class BoatUtilsConfig {
 			Values values = new Values();
 			values.unrestrictedViewRotation = false;
 			values.viewDirectionLockEnabled = false;
+			values.directionHotkeysEnabled = false;
+			values.directionHotkeysUse45DegreeAngles = true;
 			values.blueIceSpeedEverywhere = false;
 			values.preventSinking = false;
 			values.boatStepHeight = 0.0F;
@@ -120,6 +138,8 @@ public final class BoatUtilsConfig {
 			Values copy = new Values();
 			copy.unrestrictedViewRotation = this.unrestrictedViewRotation;
 			copy.viewDirectionLockEnabled = this.viewDirectionLockEnabled;
+			copy.directionHotkeysEnabled = this.directionHotkeysEnabled;
+			copy.directionHotkeysUse45DegreeAngles = this.directionHotkeysUse45DegreeAngles;
 			copy.blueIceSpeedEverywhere = this.blueIceSpeedEverywhere;
 			copy.preventSinking = this.preventSinking;
 			copy.boatStepHeight = this.boatStepHeight;

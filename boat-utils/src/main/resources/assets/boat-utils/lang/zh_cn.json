@@ -4,6 +4,10 @@
 	"option.boat-utils.unrestricted_view_rotation.tooltip": "移除原版乘船时的 180 度水平视角限制，使视角可以完整旋转一周。",
 	"option.boat-utils.view_direction_lock_enabled": "跟随视角",
 	"option.boat-utils.view_direction_lock_enabled.tooltip": "使船只始终跟随视角方向。左右移动键改为水平侧移，不再用于船只转向。",
+	"option.boat-utils.direction_hotkeys_enabled": "方向快捷键",
+	"option.boat-utils.direction_hotkeys_enabled.tooltip": "启用四个船只方向快捷键：上键吸附到最近的合法方向，下键转向正后方，左键或右键转到对应一侧的下一个合法方向。",
+	"option.boat-utils.direction_hotkeys_use_45_degree_angles": "锁定到对角线方向",
+	"option.boat-utils.direction_hotkeys_use_45_degree_angles.tooltip": "启用时，合法方向为所有 45 度倍数；关闭时，仅使用东、南、西、北四个正方向。",
 	"option.boat-utils.blue_ice_speed_everywhere": "速度提升修复",
 	"option.boat-utils.blue_ice_speed_everywhere.tooltip": "使船只无论在地面、液体中、水下还是空中，始终使用蓝冰的速度。",
 	"option.boat-utils.prevent_sinking": "防止下沉",
@@ -14,5 +18,10 @@
 	"option.boat-utils.handbrake_enabled": "启用手刹",
 	"option.boat-utils.handbrake_enabled.tooltip": "驾驶船只时，按住跳跃键设置一个减速。",
 	"option.boat-utils.handbrake_boost_enabled": "启用松开加速",
-	"option.boat-utils.handbrake_boost_enabled.tooltip": "若启用，松开手刹后，会根据手刹按住的时长增加一个推力。"
+	"option.boat-utils.handbrake_boost_enabled.tooltip": "若启用，松开手刹后，会根据手刹按住的时长增加一个推力。",
+	"key.category.boat-utils.direction_hotkeys": "船只方向快捷键",
+	"key.boat-utils.snap_to_nearest_direction": "固定到最近的合法方向",
+	"key.boat-utils.turn_back": "转到正后方",
+	"key.boat-utils.turn_left_to_direction": "向左转到合法方向",
+	"key.boat-utils.turn_right_to_direction": "向右转到合法方向"
 }

@@ -15,6 +15,8 @@ public final class BoatUtilsConfigScreen extends OptionsSubScreen {
 
 	private final OptionInstance<Boolean> unrestrictedViewRotation;
 	private final OptionInstance<Boolean> viewDirectionLockEnabled;
+	private final OptionInstance<Boolean> directionHotkeysEnabled;
+	private final OptionInstance<Boolean> directionHotkeysUse45DegreeAngles;
 	private final OptionInstance<Boolean> blueIceSpeedEverywhere;
 	private final OptionInstance<Boolean> preventSinking;
 	private final OptionInstance<Integer> boatStepHeight;
@@ -46,6 +48,24 @@ public final class BoatUtilsConfigScreen extends OptionsSubScreen {
 												"option.boat-utils.view_direction_lock_enabled.tooltip")),
 						this.draft.viewDirectionLockEnabled,
 						value -> this.draft.viewDirectionLockEnabled = value);
+		this.directionHotkeysEnabled =
+				OptionInstance.createBoolean(
+						"option.boat-utils.direction_hotkeys_enabled",
+						value ->
+								Tooltip.create(
+										Component.translatable(
+												"option.boat-utils.direction_hotkeys_enabled.tooltip")),
+						this.draft.directionHotkeysEnabled,
+						value -> this.draft.directionHotkeysEnabled = value);
+		this.directionHotkeysUse45DegreeAngles =
+				OptionInstance.createBoolean(
+						"option.boat-utils.direction_hotkeys_use_45_degree_angles",
+						value ->
+								Tooltip.create(
+										Component.translatable(
+												"option.boat-utils.direction_hotkeys_use_45_degree_angles.tooltip")),
+						this.draft.directionHotkeysUse45DegreeAngles,
+						value -> this.draft.directionHotkeysUse45DegreeAngles = value);
 		this.blueIceSpeedEverywhere =
 				OptionInstance.createBoolean(
 						"option.boat-utils.blue_ice_speed_everywhere",
@@ -107,6 +127,8 @@ public final class BoatUtilsConfigScreen extends OptionsSubScreen {
 		this.list.addSmall(
 				this.unrestrictedViewRotation,
 				this.viewDirectionLockEnabled,
+				this.directionHotkeysEnabled,
+				this.directionHotkeysUse45DegreeAngles,
 				this.blueIceSpeedEverywhere,
 				this.preventSinking,
 				this.handbrakeEnabled,
