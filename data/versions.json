@@ -328,5 +328,14 @@
 			"Curseforge": "https://www.curseforge.com/minecraft/mc-mods/shared-player-data",
 			"Planet Minecraft": "https://www.planetminecraft.com/mod/shared-player-data-6993864"
 		}
+	},
+	"who-i-am": {
+		"versions": [
+			"1.1.0"
+		],
+		"hasIcon": true,
+		"displayName": "Who I Am",
+		"description": "Shows the local player's name tag in third-person or free-camera views, appends the player name to the window title, and provides the /i command.",
+		"link": {}
 	}
 }
