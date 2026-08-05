@@ -10,7 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public final class ServerManagerMod implements ModInitializer {
-	public static final String MOD_ID = "server_manager";
+	public static final String MOD_ID = "server-manager";
 	public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 	private static WebServer webServer;
 	private static BackendService backend;

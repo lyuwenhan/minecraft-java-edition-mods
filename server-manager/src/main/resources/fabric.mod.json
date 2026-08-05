@@ -1,6 +1,6 @@
 {
 	"schemaVersion": 1,
-	"id": "server_manager",
+	"id": "server-manager",
 	"version": "${version}",
 	"name": "Server Manager",
 	"description": "Web server manager for Fabric dedicated servers.",
