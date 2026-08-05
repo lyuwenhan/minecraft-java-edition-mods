@@ -309,7 +309,9 @@
 		"hasIcon": true,
 		"displayName": "Server Manager",
 		"description": "Web server manager for Fabric dedicated servers.",
-		"link": {}
+		"link": {
+			"Curseforge": "https://www.curseforge.com/minecraft/mc-mods/server-manager"
+		}
 	},
 	"shared-player-data": {
 		"versions": [
