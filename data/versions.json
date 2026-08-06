@@ -201,6 +201,7 @@
 		"displayName": "Forward Lock",
 		"description": "Double-tap forward to lock forward movement and sprinting until forward, backward, or crouch is pressed.",
 		"link": {
+			"Curseforge": "https://www.curseforge.com/minecraft/mc-mods/forward-lock",
 			"Planet Minecraft": "https://www.planetminecraft.com/mod/forward-lock"
 		}
 	},
@@ -340,6 +341,7 @@
 		"displayName": "Who I Am",
 		"description": "Shows the local player's name tag in third-person or free-camera views, appends the player name to the window title, and provides the /i command.",
 		"link": {
+			"Curseforge": "https://www.curseforge.com/minecraft/mc-mods/who-i-am",
 			"Planet Minecraft": "https://www.planetminecraft.com/mod/who-i-am-6997434"
 		}
 	}
