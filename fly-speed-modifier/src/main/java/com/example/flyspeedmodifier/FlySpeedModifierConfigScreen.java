@@ -1,6 +1,7 @@
 package com.example.flyspeedmodifier;
 
 import com.example.flyspeedmodifier.mixin.AbstractSliderButtonAccessor;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.OptionInstance;
 import net.minecraft.client.gui.components.AbstractSliderButton;
@@ -46,7 +47,8 @@ public final class FlySpeedModifierConfigScreen extends OptionsSubScreen {
 	private void resetSliderWidget(OptionInstance<Double> option, double normalizedValue) {
 		var widget = this.list.findOption(option);
 		if (widget instanceof AbstractSliderButton slider) {
-			((AbstractSliderButtonAccessor) slider).flySpeedModifier$invokeSetValue(normalizedValue);
+			((AbstractSliderButtonAccessor) slider)
+					.flySpeedModifier$invokeSetValue(normalizedValue);
 		}
 	}
 

@@ -1,10 +1,11 @@
 package com.example.flyspeedmodifier;
 
-import java.util.Locale;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
+
+import java.util.Locale;
 
 public final class FreecamSpeedController {
 	private static final String FREECAM_MOD_ID = "freecam";
@@ -27,6 +28,15 @@ public final class FreecamSpeedController {
 
 	public static void setAdjustSpeedKey(KeyMapping keyMapping) {
 		adjustSpeedKey = keyMapping;
+	}
+
+	public static void onJoinWorld() {
+		temporaryMultiplier = clampMultiplier(FlySpeedModifierConfig.initialSpeed());
+		hasTemporaryMultiplier = false;
+		wasAdjustSpeedKeyDown = false;
+
+		hasDirectOriginalFlyingSpeed = false;
+		directOriginalFlyingSpeed = 0.0F;
 	}
 
 	public static void onEndClientTick(Minecraft client) {
@@ -109,7 +119,9 @@ public final class FreecamSpeedController {
 		if (isDirectFlyingActive(client)) {
 			return SpeedTarget.DIRECT_FLIGHT;
 		}
-		if (FlySpeedModifierConfig.applyToOtherMovement() && client != null && client.player != null) {
+		if (FlySpeedModifierConfig.applyToOtherMovement()
+				&& client != null
+				&& client.player != null) {
 			return SpeedTarget.OTHER_MOVEMENT;
 		}
 		return SpeedTarget.NONE;
@@ -127,8 +139,7 @@ public final class FreecamSpeedController {
 		if (!hasDirectOriginalFlyingSpeed) {
 			return;
 		}
-		client
-				.player
+		client.player
 				.getAbilities()
 				.setFlyingSpeed((float) (directOriginalFlyingSpeed * temporaryMultiplier));
 	}
@@ -214,7 +225,10 @@ public final class FreecamSpeedController {
 		}
 		boolean increase = scrollAmount > 0.0D;
 		for (int i = 0; i < operationCount; i++) {
-			result = increase ? increaseOneSignificantStep(result) : decreaseOneSignificantStep(result);
+			result =
+					increase
+							? increaseOneSignificantStep(result)
+							: decreaseOneSignificantStep(result);
 			result = clampMultiplier(result);
 		}
 		return clampMultiplier(alignToHundredthTowardChangeDirection(result, increase));
@@ -239,7 +253,9 @@ public final class FreecamSpeedController {
 	}
 
 	private static boolean wouldBorrowToLowerMagnitude(double originalValue, double nextValue) {
-		if (!Double.isFinite(originalValue) || !Double.isFinite(nextValue) || originalValue <= 0.0D) {
+		if (!Double.isFinite(originalValue)
+				|| !Double.isFinite(nextValue)
+				|| originalValue <= 0.0D) {
 			return false;
 		}
 		double highestPlace = highestSignificantPlace(originalValue);
@@ -312,6 +328,7 @@ public final class FreecamSpeedController {
 		}
 		String formattedMultiplier = String.format(Locale.ROOT, "%.2f", multiplier);
 		client.player.sendOverlayMessage(
-				Component.translatable("message.fly-speed-modifier.speed_multiplier", formattedMultiplier));
+				Component.translatable(
+						"message.fly-speed-modifier.speed_multiplier", formattedMultiplier));
 	}
 }

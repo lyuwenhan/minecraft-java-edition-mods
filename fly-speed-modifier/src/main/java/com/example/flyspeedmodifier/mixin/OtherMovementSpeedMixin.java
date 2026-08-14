@@ -1,9 +1,11 @@
 package com.example.flyspeedmodifier.mixin;
 
 import com.example.flyspeedmodifier.FreecamSpeedController;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
@@ -63,7 +65,8 @@ public abstract class OtherMovementSpeedMixin {
 			at =
 					@At(
 							value = "INVOKE",
-							target = "Lnet/minecraft/world/phys/Vec3;add(DDD)Lnet/minecraft/world/phys/Vec3;"),
+							target =
+									"Lnet/minecraft/world/phys/Vec3;add(DDD)Lnet/minecraft/world/phys/Vec3;"),
 			index = 1)
 	private double flySpeedModifier$multiplyLiquidUpwardInput(double originalMovement) {
 		return flySpeedModifier$multiplyVerticalInput(originalMovement);
@@ -74,7 +77,8 @@ public abstract class OtherMovementSpeedMixin {
 			at =
 					@At(
 							value = "INVOKE",
-							target = "Lnet/minecraft/world/phys/Vec3;add(DDD)Lnet/minecraft/world/phys/Vec3;"),
+							target =
+									"Lnet/minecraft/world/phys/Vec3;add(DDD)Lnet/minecraft/world/phys/Vec3;"),
 			index = 1)
 	private double flySpeedModifier$multiplyWaterDownwardInput(double originalMovement) {
 		return flySpeedModifier$multiplyVerticalInput(originalMovement);

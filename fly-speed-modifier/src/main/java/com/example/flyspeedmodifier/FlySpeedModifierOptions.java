@@ -1,6 +1,7 @@
 package com.example.flyspeedmodifier;
 
 import com.mojang.serialization.Codec;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.OptionInstance;
 import net.minecraft.client.OptionInstance.UnitDouble;
@@ -13,17 +14,21 @@ public final class FlySpeedModifierOptions {
 					"option.fly-speed-modifier.full_range",
 					value ->
 							Tooltip.create(
-									Component.translatable("option.fly-speed-modifier.full_range.tooltip")),
+									Component.translatable(
+											"option.fly-speed-modifier.full_range.tooltip")),
 					FlySpeedModifierConfig.DEFAULT_FULL_RANGE,
 					FlySpeedModifierOptions::onFullRangeChanged);
 	private static final OptionInstance<Double> MAX_SPEED =
 			new OptionInstance<>(
 					"option.fly-speed-modifier.max_speed",
 					value ->
-							Tooltip.create(Component.translatable("option.fly-speed-modifier.max_speed.tooltip")),
+							Tooltip.create(
+									Component.translatable(
+											"option.fly-speed-modifier.max_speed.tooltip")),
 					FlySpeedModifierOptions::speedText,
 					UnitDouble.INSTANCE.xmap(
-							FlySpeedModifierOptions::toMaxSpeed, FlySpeedModifierOptions::fromMaxSpeed),
+							FlySpeedModifierOptions::toMaxSpeed,
+							FlySpeedModifierOptions::fromMaxSpeed),
 					Codec.doubleRange(
 							FlySpeedModifierConfig.MIN_ALLOWED_MAX_SPEED,
 							FlySpeedModifierConfig.FULL_RANGE_MAX_SPEED),
@@ -33,10 +38,13 @@ public final class FlySpeedModifierOptions {
 			new OptionInstance<>(
 					"option.fly-speed-modifier.min_speed",
 					value ->
-							Tooltip.create(Component.translatable("option.fly-speed-modifier.min_speed.tooltip")),
+							Tooltip.create(
+									Component.translatable(
+											"option.fly-speed-modifier.min_speed.tooltip")),
 					FlySpeedModifierOptions::speedText,
 					UnitDouble.INSTANCE.xmap(
-							FlySpeedModifierOptions::toMinSpeed, FlySpeedModifierOptions::fromMinSpeed),
+							FlySpeedModifierOptions::toMinSpeed,
+							FlySpeedModifierOptions::fromMinSpeed),
 					Codec.doubleRange(
 							FlySpeedModifierConfig.MIN_ALLOWED_MIN_SPEED,
 							FlySpeedModifierConfig.MAX_ALLOWED_MIN_SPEED),
@@ -47,10 +55,12 @@ public final class FlySpeedModifierOptions {
 					"option.fly-speed-modifier.initial_speed",
 					value ->
 							Tooltip.create(
-									Component.translatable("option.fly-speed-modifier.initial_speed.tooltip")),
+									Component.translatable(
+											"option.fly-speed-modifier.initial_speed.tooltip")),
 					FlySpeedModifierOptions::speedText,
 					UnitDouble.INSTANCE.xmap(
-							FlySpeedModifierOptions::toInitialSpeed, FlySpeedModifierOptions::fromInitialSpeed),
+							FlySpeedModifierOptions::toInitialSpeed,
+							FlySpeedModifierOptions::fromInitialSpeed),
 					Codec.doubleRange(
 							FlySpeedModifierConfig.MIN_ALLOWED_INITIAL_SPEED,
 							FlySpeedModifierConfig.MAX_ALLOWED_INITIAL_SPEED),
@@ -61,7 +71,8 @@ public final class FlySpeedModifierOptions {
 					"option.fly-speed-modifier.reset_on_adjust",
 					value ->
 							Tooltip.create(
-									Component.translatable("option.fly-speed-modifier.reset_on_adjust.tooltip")),
+									Component.translatable(
+											"option.fly-speed-modifier.reset_on_adjust.tooltip")),
 					FlySpeedModifierConfig.DEFAULT_RESET_ON_ADJUST,
 					FlySpeedModifierOptions::onResetOnAdjustChanged);
 	private static final OptionInstance<Double> SCROLL_STEP =
@@ -69,10 +80,12 @@ public final class FlySpeedModifierOptions {
 					"option.fly-speed-modifier.scroll_step",
 					value ->
 							Tooltip.create(
-									Component.translatable("option.fly-speed-modifier.scroll_step.tooltip")),
+									Component.translatable(
+											"option.fly-speed-modifier.scroll_step.tooltip")),
 					FlySpeedModifierOptions::scrollStepText,
 					UnitDouble.INSTANCE.xmap(
-							FlySpeedModifierOptions::toScrollStep, FlySpeedModifierOptions::fromScrollStep),
+							FlySpeedModifierOptions::toScrollStep,
+							FlySpeedModifierOptions::fromScrollStep),
 					Codec.doubleRange(
 							FlySpeedModifierConfig.MIN_ALLOWED_SCROLL_STEP,
 							FlySpeedModifierConfig.MAX_ALLOWED_SCROLL_STEP),
@@ -288,7 +301,8 @@ public final class FlySpeedModifierOptions {
 		double range =
 				FlySpeedModifierConfig.MAX_ALLOWED_SCROLL_STEP
 						- FlySpeedModifierConfig.MIN_ALLOWED_SCROLL_STEP;
-		return roundToOneDecimal(FlySpeedModifierConfig.MIN_ALLOWED_SCROLL_STEP + normalized * range);
+		return roundToOneDecimal(
+				FlySpeedModifierConfig.MIN_ALLOWED_SCROLL_STEP + normalized * range);
 	}
 
 	private static double fromScrollStep(double step) {
@@ -301,7 +315,8 @@ public final class FlySpeedModifierOptions {
 	private static void constrainInitialSpeed(FlySpeedModifierConfigScreen screen) {
 		double lowerBound = screen.draft().minSpeed;
 		double upperBound = effectiveMaximumSpeed(screen);
-		double constrained = Math.max(lowerBound, Math.min(screen.draft().initialSpeed, upperBound));
+		double constrained =
+				Math.max(lowerBound, Math.min(screen.draft().initialSpeed, upperBound));
 		if (Double.compare(constrained, screen.draft().initialSpeed) != 0) {
 			screen.draft().initialSpeed = roundToTwoDecimals(constrained);
 			INITIAL_SPEED.set(screen.draft().initialSpeed);

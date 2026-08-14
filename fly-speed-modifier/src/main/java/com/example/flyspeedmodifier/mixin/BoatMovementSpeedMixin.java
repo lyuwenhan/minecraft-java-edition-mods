@@ -1,9 +1,11 @@
 package com.example.flyspeedmodifier.mixin;
 
 import com.example.flyspeedmodifier.FreecamSpeedController;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.vehicle.boat.AbstractBoat;
+
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyArgs;
@@ -16,7 +18,8 @@ public abstract class BoatMovementSpeedMixin {
 			at =
 					@At(
 							value = "INVOKE",
-							target = "Lnet/minecraft/world/phys/Vec3;add(DDD)Lnet/minecraft/world/phys/Vec3;"))
+							target =
+									"Lnet/minecraft/world/phys/Vec3;add(DDD)Lnet/minecraft/world/phys/Vec3;"))
 	private void flySpeedModifier$multiplyBoatPropulsion(Args args) {
 		if (!flySpeedModifier$isControlledByLocalPlayer()) {
 			return;
