@@ -1,0 +1,28 @@
+{
+	"schemaVersion": 1,
+	"id": "flight-disabler",
+	"version": "${version}",
+	"name": "Flight Disabler",
+	"description": "Disables creative flight and elytra fall flying.",
+	"authors": [
+		"Wenhan"
+	],
+	"environment": "client",
+	"entrypoints": {
+		"client": [
+			"com.example.flightdisabler.FlightDisablerMod"
+		]
+	},
+	"mixins": [
+		"flight-disabler.mixins.json"
+	],
+	"depends": {
+		"fabricloader": ">=0.19.2",
+		"fabric-api": "*",
+		"minecraft": "26.1.2",
+		"java": ">=25"
+	},
+	"suggests": {
+		"modmenu": "*"
+	}
+}
