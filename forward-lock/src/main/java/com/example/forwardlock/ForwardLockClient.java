@@ -37,11 +37,12 @@ public final class ForwardLockClient implements ClientModInitializer {
 		boolean forwardDown = rawDown(client.options.keyUp);
 		boolean backwardDown = rawDown(client.options.keyDown);
 		boolean crouchDown = rawDown(client.options.keyShift);
+		boolean sprintDown = rawDown(client.options.keySprint);
 
 		// GUI key presses must not activate or cancel the lock. The raw states are
 		// still synchronized so a key held while closing a screen is not treated as
 		// a fresh press.
-		CONTROLLER.update(forwardDown, backwardDown, crouchDown, client.screen == null);
+		CONTROLLER.update(forwardDown, backwardDown, crouchDown, sprintDown, client.screen == null);
 
 		if (shouldKeepSprinting(player)) {
 			player.setSprinting(true);

@@ -12,7 +12,11 @@ final class ForwardLockController {
 	private long firstForwardPressTick = Long.MIN_VALUE;
 
 	void update(
-			boolean forwardDown, boolean backwardDown, boolean crouchDown, boolean processPresses) {
+			boolean forwardDown,
+			boolean backwardDown,
+			boolean crouchDown,
+			boolean sprintDown,
+			boolean processPresses) {
 		boolean forwardPressed = forwardDown && !previousForwardDown;
 		boolean backwardPressed = backwardDown && !previousBackwardDown;
 		boolean crouchPressed = crouchDown && !previousCrouchDown;
@@ -39,7 +43,8 @@ final class ForwardLockController {
 		if (backwardPressed || crouchPressed) {
 			firstForwardPressTick = Long.MIN_VALUE;
 		} else if (forwardPressed) {
-			if (firstForwardPressTick != Long.MIN_VALUE
+			if (sprintDown
+					&& firstForwardPressTick != Long.MIN_VALUE
 					&& tick - firstForwardPressTick <= DOUBLE_TAP_WINDOW_TICKS) {
 				locked = true;
 				firstForwardPressTick = Long.MIN_VALUE;
