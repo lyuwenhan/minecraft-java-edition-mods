@@ -143,9 +143,8 @@ public final class BoatUtilsConfigScreen extends OptionsSubScreen {
 				this.preventSinking,
 				this.handbrakeEnabled,
 				this.handbrakeBoostEnabled,
-				this.lateralFrictionEnabled);
-
-		this.list.addSmall(this.boatStepHeight);
+				this.lateralFrictionEnabled,
+				this.boatStepHeight);
 	}
 
 	@Override
