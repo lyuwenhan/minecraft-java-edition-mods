@@ -1,10 +1,12 @@
-# Languages（语言）
+# Languages (语言)
 
 [EN/English](https://lyuwenhan.github.io/extensions/minecraft-java/data/assets/boat-utils/README/README.html) | [ZH-CN/简体中文](https://lyuwenhan.github.io/extensions/minecraft-java/data/assets/boat-utils/README/README_ZH-CN.html)
 
-# Boat Utils（船只实用工具）
+# Boat Utils (船只实用工具)
 
 一个客户端 Fabric 模组，为船只提供可配置的视角与移动功能。
+
+**注意: 本项目与 [OpenBoatUtils](https://modrinth.com/mod/openboatutils) 没有任何关联。如果你要找的是该项目，请确认你访问的是[正确的项目页面](https://modrinth.com/mod/openboatutils)。**
 
 ## 功能
 

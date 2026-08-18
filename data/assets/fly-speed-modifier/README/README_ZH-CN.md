@@ -95,7 +95,7 @@
 - Fabric Loader 0.19.2+
 - Fabric API 0.150.0+
 - Java 25
-- Mod Menu（可选）
+- Mod Menu (可选)
 
 ## License
 
