@@ -76,9 +76,9 @@
 |:-:|:-:|
 | `@player` | 玩家名称 |
 | `@UUID` | UUID |
-| `@X` | X 坐标（最多保留 3 位小数） |
-| `@Y` | Y 坐标（最多保留 3 位小数） |
-| `@Z` | Z 坐标（最多保留 3 位小数） |
+| `@X` | X 坐标 (最多保留 3 位小数) |
+| `@Y` | Y 坐标 (最多保留 3 位小数) |
+| `@Z` | Z 坐标 (最多保留 3 位小数) |
 | `@health` | 当前生命值 |
 | `@level` | 当前经验等级 |
 
@@ -159,8 +159,8 @@
 - Fabric Loader 0.19.2+
 - Fabric API 0.150.0+
 - Java 25
-- Cloth config（可选）
-- Modmenu（可选）
+- Cloth config (可选)
+- Modmenu (可选)
 
 ## License
 

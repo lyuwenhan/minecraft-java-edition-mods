@@ -6,6 +6,8 @@
 
 A client-side Fabric mod that adds configurable boat camera and movement utilities.
 
+**This project is completely unrelated to [OpenBoatUtils](https://modrinth.com/mod/openboatutils). If you were looking for that project, please make sure you are visiting the [correct project](https://modrinth.com/mod/openboatutils).**
+
 ## Features
 
 - Unlocks the vanilla boat camera rotation limit

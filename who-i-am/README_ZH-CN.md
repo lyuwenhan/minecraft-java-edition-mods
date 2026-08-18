@@ -2,7 +2,7 @@
 
 [EN/English](https://lyuwenhan.github.io/extensions/minecraft-java/data/assets/who-i-am/README/README.html) | [ZH-CN/简体中文](https://lyuwenhan.github.io/extensions/minecraft-java/data/assets/who-i-am/README/README_ZH-CN.html)
 
-# Who I Am（我是谁）
+# Who I Am (我是谁)
 
 一个客户端 Fabric 模组，用于在 Minecraft 通常隐藏自身玩家名称的位置显示自己的名称。
 
