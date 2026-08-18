@@ -12,7 +12,7 @@ This mod runs entirely on the client and does **not** modify any server behavior
 
 ## Features
 
-- Double-tap the configured forward key to enable forward lock
+- Double-tap the configured forward key while holding the sprint key to enable forward lock
 - Press the configured forward, backward, or crouch key to disable the lock
 - Works with normal movement, swimming, and vehicle controls
 - Automatically maintains sprinting while the lock is active
@@ -23,7 +23,7 @@ This mod runs entirely on the client and does **not** modify any server behavior
 
 ### Enable forward lock
 
-Quickly press the configured forward key twice.
+Quickly press the configured forward key twice, while holding the sprint key.
 
 After activation, the mod continuously supplies forward input without requiring the key to remain held.
 
