@@ -34,6 +34,9 @@ public final class BoatUtilsConfig {
 			if (!root.has("directionHotkeysUse45DegreeAngles")) {
 				loaded.directionHotkeysUse45DegreeAngles = true;
 			}
+			if (!root.has("lateralFrictionEnabled")) {
+				loaded.lateralFrictionEnabled = false;
+			}
 			current = sanitize(loaded);
 		} catch (IOException | RuntimeException ignored) {
 			current = Values.defaults();
@@ -97,6 +100,10 @@ public final class BoatUtilsConfig {
 		return current.handbrakeBoostEnabled;
 	}
 
+	public static synchronized boolean lateralFrictionEnabled() {
+		return current.lateralFrictionEnabled;
+	}
+
 	private static Values sanitize(Values values) {
 		if (values == null) {
 			return Values.defaults();
@@ -119,6 +126,7 @@ public final class BoatUtilsConfig {
 		public float boatStepHeight;
 		public boolean handbrakeEnabled;
 		public boolean handbrakeBoostEnabled;
+		public boolean lateralFrictionEnabled;
 
 		public static Values defaults() {
 			Values values = new Values();
@@ -131,6 +139,7 @@ public final class BoatUtilsConfig {
 			values.boatStepHeight = 0.0F;
 			values.handbrakeEnabled = false;
 			values.handbrakeBoostEnabled = false;
+			values.lateralFrictionEnabled = false;
 			return values;
 		}
 
@@ -145,6 +154,7 @@ public final class BoatUtilsConfig {
 			copy.boatStepHeight = this.boatStepHeight;
 			copy.handbrakeEnabled = this.handbrakeEnabled;
 			copy.handbrakeBoostEnabled = this.handbrakeBoostEnabled;
+			copy.lateralFrictionEnabled = this.lateralFrictionEnabled;
 			return copy;
 		}
 	}

@@ -21,6 +21,7 @@ public final class BoatUtilsMod implements ClientModInitializer {
 		BoatDirectionHotkeys.initialize();
 		ClientTickEvents.START_CLIENT_TICK.register(BoatUtilsMod::applyFollowView);
 		ClientTickEvents.END_CLIENT_TICK.register(BoatUtilsMod::applyFollowView);
+		ClientTickEvents.END_CLIENT_TICK.register(BoatUtilsMod::applyLateralFriction);
 		ClientTickEvents.END_CLIENT_TICK.register(BoatUtilsMod::clearInvalidHandbrakeState);
 		ClientTickEvents.END_CLIENT_TICK.register(BoatDirectionHotkeys::handleClientTick);
 	}
@@ -45,6 +46,38 @@ public final class BoatUtilsMod implements ClientModInitializer {
 		float viewYaw = client.player.getYRot();
 		boat.setYRot(viewYaw);
 		boat.setYBodyRot(viewYaw);
+	}
+
+	private static void applyLateralFriction(Minecraft client) {
+		if (!BoatUtilsConfig.lateralFrictionEnabled() || client.player == null) {
+			return;
+		}
+
+		Entity vehicle = client.player.getVehicle();
+		if (!(vehicle instanceof AbstractBoat boat)
+				|| boat.getControllingPassenger() != client.player) {
+			return;
+		}
+
+		Vec3 movement = boat.getDeltaMovement();
+		float yawRadians = boat.getYRot() * Mth.DEG_TO_RAD;
+		double sinYaw = Mth.sin(yawRadians);
+		double cosYaw = Mth.cos(yawRadians);
+
+		double forwardX = -sinYaw;
+		double forwardZ = cosYaw;
+		double rightX = -cosYaw;
+		double rightZ = -sinYaw;
+
+		double forwardSpeed = movement.x * forwardX + movement.z * forwardZ;
+		double lateralSpeed = movement.x * rightX + movement.z * rightZ;
+		double lateralMagnitude = Math.max(Math.abs(lateralSpeed) * 0.96D - 0.01D, 0.0D);
+		double newLateralSpeed = Math.copySign(lateralMagnitude, lateralSpeed);
+
+		boat.setDeltaMovement(
+				forwardX * forwardSpeed + rightX * newLateralSpeed,
+				movement.y,
+				forwardZ * forwardSpeed + rightZ * newLateralSpeed);
 	}
 
 	public static void applyHandbrakeAfterThrust(AbstractBoat boat) {
@@ -135,10 +168,7 @@ public final class BoatUtilsMod implements ClientModInitializer {
 
 		double t = time - 2.0D;
 
-		double maxBoost = 2D;
-		double growthRate = 0.02D;
-
-		return maxBoost * (1.0D - Math.exp(-growthRate * t));
+		return 2 * (1.0D - Math.exp(-0.02 * t));
 	}
 
 	public static void clearHandbrakeStateFor(AbstractBoat boat) {

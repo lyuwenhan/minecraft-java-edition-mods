@@ -23,5 +23,7 @@
 	"key.boat-utils.snap_to_nearest_direction": "Snap to Nearest Direction",
 	"key.boat-utils.turn_back": "Turn to Rear",
 	"key.boat-utils.turn_left_to_direction": "Turn Left to Allowed Direction",
-	"key.boat-utils.turn_right_to_direction": "Turn Right to Allowed Direction"
+	"key.boat-utils.turn_right_to_direction": "Turn Right to Allowed Direction",
+	"option.boat-utils.lateral_friction_enabled": "Enable Lateral Friction",
+	"option.boat-utils.lateral_friction_enabled.tooltip": "Applies additional friction to lateral boat movement."
 }

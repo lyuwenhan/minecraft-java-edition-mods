@@ -18,6 +18,7 @@ A client-side Fabric mod that adds configurable boat camera and movement utiliti
 - Centers the boat within its current block when using the Up, Left, or Right direction hotkeys
 - Clears the boat's movement and steering inertia after using a direction hotkey
 - Makes the boat use blue ice friction
+- Provides optional lateral friction to reduce sideways boat movement
 - Prevents underwater sinking with a fixed upward speed of 2.4 blocks per second
 - Allows underwater boarding and prevents forced dismounting while Prevent Sinking is enabled
 - Provides configurable boat step height
@@ -34,6 +35,7 @@ The following options are provided:
 - Enable Direction Hotkeys
 - Include 45-Degree Directions
 - Increase Boat Speed
+- Enable Lateral Friction
 - Prevent Sinking
 - Enable Handbrake
 - Enable Release Boost
@@ -91,6 +93,10 @@ The option is enabled by default.
 ### Increase Boat Speed
 
 Makes the boat use the blue ice friction value at all times.
+
+### Lateral Friction
+
+When **Enable Lateral Friction** is enabled, the mod applies additional friction to sideways boat movement while preserving forward and backward movement.
 
 ### Prevent Sinking
 

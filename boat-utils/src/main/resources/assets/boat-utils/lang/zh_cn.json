@@ -23,5 +23,7 @@
 	"key.boat-utils.snap_to_nearest_direction": "固定到最近的合法方向",
 	"key.boat-utils.turn_back": "转到正后方",
 	"key.boat-utils.turn_left_to_direction": "向左转到合法方向",
-	"key.boat-utils.turn_right_to_direction": "向右转到合法方向"
+	"key.boat-utils.turn_right_to_direction": "向右转到合法方向",
+	"option.boat-utils.lateral_friction_enabled": "启用横向摩擦力",
+	"option.boat-utils.lateral_friction_enabled.tooltip": "为船只的横向移动施加额外摩擦力。"
 }

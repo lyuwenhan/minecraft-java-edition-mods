@@ -22,6 +22,7 @@ public final class BoatUtilsConfigScreen extends OptionsSubScreen {
 	private final OptionInstance<Integer> boatStepHeight;
 	private final OptionInstance<Boolean> handbrakeEnabled;
 	private final OptionInstance<Boolean> handbrakeBoostEnabled;
+	private final OptionInstance<Boolean> lateralFrictionEnabled;
 
 	public BoatUtilsConfigScreen(Screen parent) {
 		super(
@@ -102,6 +103,15 @@ public final class BoatUtilsConfigScreen extends OptionsSubScreen {
 												"option.boat-utils.handbrake_boost_enabled.tooltip")),
 						this.draft.handbrakeBoostEnabled,
 						value -> this.draft.handbrakeBoostEnabled = value);
+		this.lateralFrictionEnabled =
+				OptionInstance.createBoolean(
+						"option.boat-utils.lateral_friction_enabled",
+						value ->
+								Tooltip.create(
+										Component.translatable(
+												"option.boat-utils.lateral_friction_enabled.tooltip")),
+						this.draft.lateralFrictionEnabled,
+						value -> this.draft.lateralFrictionEnabled = value);
 		this.boatStepHeight =
 				new OptionInstance<>(
 						"option.boat-utils.boat_step_height",
@@ -132,7 +142,8 @@ public final class BoatUtilsConfigScreen extends OptionsSubScreen {
 				this.blueIceSpeedEverywhere,
 				this.preventSinking,
 				this.handbrakeEnabled,
-				this.handbrakeBoostEnabled);
+				this.handbrakeBoostEnabled,
+				this.lateralFrictionEnabled);
 
 		this.list.addSmall(this.boatStepHeight);
 	}
