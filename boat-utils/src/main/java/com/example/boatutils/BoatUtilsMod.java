@@ -70,7 +70,10 @@ public final class BoatUtilsMod implements ClientModInitializer {
 			return;
 		}
 
-		if (handbrakeWasDown && BoatUtilsConfig.handbrakeBoostEnabled() && handbrakeTicks > 0) {
+		if (handbrakeWasDown
+				&& BoatUtilsConfig.handbrakeBoostEnabled()
+				&& handbrakeTicks > 0
+				&& client.options.keyUp.isDown()) {
 			applyReleaseBoost(boat, handbrakeTicks);
 		}
 		resetHandbrakeState();
@@ -113,15 +116,29 @@ public final class BoatUtilsMod implements ClientModInitializer {
 
 	private static void applyReleaseBoost(AbstractBoat boat, int time) {
 		Vec3 movement = boat.getDeltaMovement();
+
 		double boost =
-				FlySpeedModifierIntegration.applyOtherMovementMultiplier(
-						1.27D * Math.atan(0.9D * time));
+				FlySpeedModifierIntegration.applyOtherMovementMultiplier(calculateDriftBoost(time));
 
 		float yawRadians = boat.getYRot() * Mth.DEG_TO_RAD;
 		double forwardX = -Mth.sin(yawRadians);
 		double forwardZ = Mth.cos(yawRadians);
+
 		boat.setDeltaMovement(
 				movement.x + forwardX * boost, movement.y, movement.z + forwardZ * boost);
+	}
+
+	private static double calculateDriftBoost(int time) {
+		if (time < 2) {
+			return 0.0D;
+		}
+
+		double t = time - 2.0D;
+
+		double maxBoost = 2D;
+		double growthRate = 0.02D;
+
+		return maxBoost * (1.0D - Math.exp(-growthRate * t));
 	}
 
 	public static void clearHandbrakeStateFor(AbstractBoat boat) {

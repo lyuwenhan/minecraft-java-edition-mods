@@ -79,7 +79,7 @@ The Down action changes only the direction and does not center the boat.
 
 #### Allowed Directions
 
-The **Include 45-Degree Directions*- option controls which directions are considered valid:
+The **Include 45-Degree Directions** option controls which directions are considered valid:
 
 - Enabled: every multiple of 45 degrees is allowed, providing eight directions
 - Disabled: only the four cardinal directions are allowed, using 90-degree intervals
@@ -109,15 +109,15 @@ The available range is from 0.0 to 10.0 blocks.
 
 ### Handbrake
 
-When **Enable Handbrake*- is enabled, hold the jump key while controlling a boat to apply the handbrake.
+When **Enable Handbrake** is enabled, hold the jump key while controlling a boat to apply the handbrake.
 
 The handbrake gradually reduces the boat's horizontal movement while preserving its vertical movement.
 
 #### Release Boost
 
-When **Enable Release Boost*- is also enabled, releasing the handbrake applies a forward boost based on how long the handbrake was held.
+When **Enable Release Boost** is also enabled, releasing the handbrake while holding the forward movement key applies a forward boost based on how long the handbrake was held.
 
-Using any direction hotkey clears the accumulated handbrake state without applying its release boost.
+Longer handbrake holds produce a stronger boost, up to a maximum boost speed.
 
 ## Multiplayer Warning
 

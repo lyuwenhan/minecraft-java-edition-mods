@@ -17,7 +17,7 @@
 	"option.boat-utils.boat_step_height.value": "船只步高：%s",
 	"option.boat-utils.handbrake_enabled": "启用手刹",
 	"option.boat-utils.handbrake_enabled.tooltip": "驾驶船只时，按住跳跃键设置一个减速。",
-	"option.boat-utils.handbrake_boost_enabled": "启用松开加速",
+	"option.boat-utils.handbrake_boost_enabled": "启用弹射起步",
 	"option.boat-utils.handbrake_boost_enabled.tooltip": "若启用，松开手刹后，会根据手刹按住的时长增加一个推力。",
 	"key.category.boat-utils.direction_hotkeys": "船只方向快捷键",
 	"key.boat-utils.snap_to_nearest_direction": "固定到最近的合法方向",
