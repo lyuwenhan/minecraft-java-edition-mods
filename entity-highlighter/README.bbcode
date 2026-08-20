@@ -1,0 +1,52 @@
+[h1]Languages[/h1][url=https://lyuwenhan.github.io/extensions/minecraft-java/data/assets/entity-highlighter/README/README.html]EN/English[/url] | [url=https://lyuwenhan.github.io/extensions/minecraft-java/data/assets/entity-highlighter/README/README_ZH-CN.html]ZH-CN/简体中文[/url]
+[h1]Entity Highlighter[/h1]A lightweight [b]client-side Fabric mod[/b] that highlights selected entities with configurable glowing outlines.
+[h2]Overview[/h2]Entity Highlighter makes selected entities easier to locate without requiring any server-side installation.
+Entities can be selected in two ways:
+[list]
+[*]By exact entity type ID[/*]
+[*]By preset group[/*]
+[/list]Each rule can use its own six-digit RGB outline color.
+[h2]Commands[/h2]Rules are managed with the client command:
+[code]/entityhighlighter add type <entityid> [color]
+/entityhighlighter add group <groupname> [color]
+/entityhighlighter remove type <entityid> [color]
+/entityhighlighter remove group <groupname> [color]
+/entityhighlighter status
+/entityhighlighter purge confirm[/code]
+Command behavior:
+[list]
+[*][b]/entityhighlighter add type <entityid> [color][/b] adds or updates an exact entity type rule[/*]
+[*][b]/entityhighlighter add group <groupname> [color][/b] adds or updates a preset group rule[/*]
+[*][b]/entityhighlighter remove type <entityid> [color][/b] removes the matching entity type rule[/*]
+[*][b]/entityhighlighter remove group <groupname> [color][/b] removes the matching group rule[/*]
+[*][b]/entityhighlighter status[/b] lists all configured type rules and group rules[/*]
+[*][b]/entityhighlighter purge confirm[/b] removes all configured rules[/*]
+[/list]The [b]color[/b] argument is optional when adding a rule. If omitted, the default color is white.
+Colors must contain exactly six hexadecimal digits in [b]RRGGBB[/b] form.
+Valid examples:
+[code]FF0000
+00FF7F
+abcdef[/code]
+[h2]Preset Groups[/h2]The following preset groups are available:
+[list]
+[*][b]animal[/b] — entities in the [b]CREATURE[/b], [b]AMBIENT[/b], [b]AXOLOTLS[/b], [b]UNDERGROUND_WATER_CREATURE[/b], [b]WATER_AMBIENT[/b], or [b]WATER_CREATURE[/b] categories[/*]
+[*][b]monster[/b] — entities in the [b]MONSTER[/b] category[/*]
+[*][b]everything[/b] — every entity[/*]
+[/list]Example:
+[code]/entityhighlighter add group animal FF0000[/code]
+This highlights matching animals with a red outline.
+[h2]Status[/h2]The current rules can be displayed with:
+[code]/entityhighlighter status[/code]
+Example output:
+[code]Entity Highlighter status: 1 type rule(s), 2 group rule(s)
+Type rules:
+  minecraft:pig 00FF00
+Group rules:
+  animal FF0000
+  monster FFFFFF[/code]
+[h2]Supported Versions[/h2][list]
+[*]Minecraft 26.1.2[/*]
+[*]Fabric Loader 0.19.2+[/*]
+[*]Fabric API 0.150.0+[/*]
+[*]Java 25[/*]
+[/list][h2]License[/h2]MIT

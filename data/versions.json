@@ -174,6 +174,15 @@
 			"Planet Minecraft": "https://www.planetminecraft.com/mod/double-jump-6993259"
 		}
 	},
+	"entity-highlighter": {
+		"versions": [
+			"1.1.0"
+		],
+		"hasIcon": false,
+		"displayName": "Entity Highlighter",
+		"description": "Client-side entity highlighting with configurable entity types, preset groups, and outline colors.",
+		"link": {}
+	},
 	"flight-disabler": {
 		"versions": [
 			"1.1.0",
