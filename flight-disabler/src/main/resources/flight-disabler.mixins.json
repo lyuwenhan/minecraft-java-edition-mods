@@ -2,13 +2,12 @@
 	"required": true,
 	"package": "com.example.flightdisabler.mixin",
 	"compatibilityLevel": "JAVA_25",
-	"mixins": [
+	"client": [
 		"ConnectionMixin",
 		"LivingEntityFallFlyingMixin",
 		"LocalPlayerFlyingMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1
-	},
-	"client": []
+	}
 }
