@@ -176,7 +176,8 @@
 	},
 	"flight-disabler": {
 		"versions": [
-			"1.1.0"
+			"1.1.0",
+			"1.1.1"
 		],
 		"hasIcon": true,
 		"displayName": "Flight Disabler",
