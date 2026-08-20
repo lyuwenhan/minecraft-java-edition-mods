@@ -5,7 +5,6 @@ import com.mojang.blaze3d.platform.InputConstants;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper;
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientPacketListener;
@@ -31,9 +30,6 @@ public final class FlightDisablerMod implements ClientModInitializer {
 						new KeyMapping(
 								KEY_TOGGLE, InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_B, CATEGORY));
 		ClientTickEvents.END_CLIENT_TICK.register(FlightDisablerMod::onEndClientTick);
-		ClientPlayConnectionEvents.JOIN.register(
-				(handler, sender, client) -> disableFlight(client));
-		ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> disableFlight(client));
 	}
 
 	public static boolean isEnabled() {
@@ -42,7 +38,6 @@ public final class FlightDisablerMod implements ClientModInitializer {
 
 	private static void onEndClientTick(Minecraft client) {
 		handleToggleKey(client);
-		disableFlight(client);
 	}
 
 	private static void handleToggleKey(Minecraft client) {
@@ -68,7 +63,6 @@ public final class FlightDisablerMod implements ClientModInitializer {
 		}
 
 		client.player.getAbilities().flying = false;
-		client.player.getAbilities().mayfly = false;
 
 		if (client.player.isFallFlying()) {
 			sendMovementResetPacket(client);
