@@ -1,0 +1,25 @@
+{
+	"schemaVersion": 1,
+	"id": "entity-highlighter",
+	"version": "${version}",
+	"name": "Entity Highlighter",
+	"description": "Client-side entity highlighting with configurable entity types, preset groups, and outline colors.",
+	"authors": [
+		"Wenhan"
+	],
+	"environment": "client",
+	"entrypoints": {
+		"client": [
+			"com.example.entityhighlighter.EntityHighlighterMod"
+		]
+	},
+	"mixins": [
+		"entityhighlighter.mixins.json"
+	],
+	"depends": {
+		"fabricloader": ">=0.19.2",
+		"fabric-api": "*",
+		"minecraft": "26.1.2",
+		"java": ">=25"
+	}
+}
