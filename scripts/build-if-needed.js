@@ -1,5 +1,6 @@
 const fs = require("fs");
 const path = require("path");
+const crypto = require("crypto");
 const {
 	execSync
 } = require("child_process");
@@ -31,6 +32,7 @@ const defaultStatus = {
 };
 const excluded = [".git", ".github", "data", "node_modules", "scripts", "gradle"];
 const dirs = fs.readdirSync(root).filter(d => !excluded.includes(d) && fs.existsSync(path.join(root, d, "src", "main", "resources", "fabric.mod.json")) && fs.existsSync(path.join(root, d, "build.gradle")));
+const fileSha1 = filePath => crypto.createHash("sha1").update(fs.readFileSync(filePath)).digest("hex");
 (async () => {
 	const {
 		markdownToBBCode
@@ -149,6 +151,29 @@ const dirs = fs.readdirSync(root).filter(d => !excluded.includes(d) && fs.exists
 			hasError = true;
 			console.error(`Failed processing ${dir}: ${err.message}`);
 			console.error(err.stack)
+		}
+	}
+	if (!versions.data || typeof versions.data !== "object" || Array.isArray(versions.data)) {
+		versions.data = {
+			ext: "jar"
+		}
+	}
+	versions.data.sha1 = {};
+	for (const [id, item] of Object.entries(versions)) {
+		if (id === "data") {
+			continue
+		}
+		for (const version of item.versions) {
+			const jarPath = path.join(distDir, `${id}-${version}.jar`);
+			if (!fs.existsSync(jarPath)) {
+				console.warn(`SHA-1 skipped, jar not found: ${jarPath}`);
+				continue
+			}
+			const sha1 = fileSha1(jarPath);
+			versions.data.sha1[sha1] = {
+				id,
+				version
+			}
 		}
 	}
 	versions = Object.fromEntries(Object.entries(versions).sort(([keyA], [keyB]) => {
