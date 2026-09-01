@@ -153,17 +153,21 @@ const fileSha1 = filePath => crypto.createHash("sha1").update(fs.readFileSync(fi
 			console.error(err.stack)
 		}
 	}
-	if (!versions.data || typeof versions.data !== "object" || Array.isArray(versions.data)) {
-		versions.data = {
-			ext: "jar"
-		}
-	}
 	versions.data.sha1 = {};
+	versions.data["newest-version"] = {};
+	const versionPrefixes = Object.keys(versions.data.version).sort((a, b) => b.length - a.length || b.localeCompare(a, "en"));
 	for (const [id, item] of Object.entries(versions)) {
 		if (id === "data") {
 			continue
 		}
 		for (const version of item.versions) {
+			const prefix = versionPrefixes.find(prefix => !prefix || version === prefix || version.startsWith(`${prefix}.`));
+			if (prefix) {
+				if (!versions.data["newest-version"][id]) {
+					versions.data["newest-version"][id] = {}
+				}
+				versions.data["newest-version"][id][versions.data.version[prefix]] = version
+			}
 			const jarPath = path.join(distDir, `${id}-${version}.jar`);
 			if (!fs.existsSync(jarPath)) {
 				console.warn(`SHA-1 skipped, jar not found: ${jarPath}`);
