@@ -178,10 +178,10 @@ const fileSha1 = filePath => crypto.createHash("sha1").update(fs.readFileSync(fi
 	}
 	versions = Object.fromEntries(Object.entries(versions).sort(([keyA], [keyB]) => {
 		if (keyA === "data") {
-			return -1
+			return 1
 		}
 		if (keyB === "data") {
-			return 1
+			return -1
 		}
 		return keyA.localeCompare(keyB, "en")
 	}));
