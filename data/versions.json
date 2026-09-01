@@ -1,4 +1,374 @@
 {
+	"auto-greeting": {
+		"versions": [
+			"1.0.0",
+			"1.0.1",
+			"1.0.2",
+			"1.0.3",
+			"1.0.4",
+			"1.0.5",
+			"1.0.6",
+			"1.0.7",
+			"1.1.0",
+			"1.1.1",
+			"1.1.2",
+			"1.1.3"
+		],
+		"hasIcon": true,
+		"displayName": "Auto Greeting",
+		"description": "Automatically sends greeting messages based on configured conditions.",
+		"link": {
+			"Modrinth": "https://modrinth.com/mod/auto-greeting",
+			"Curseforge": "https://www.curseforge.com/minecraft/mc-mods/auto-greeting",
+			"Planet Minecraft": "https://www.planetminecraft.com/mod/auto-greeting"
+		}
+	},
+	"auto-greeting-server": {
+		"versions": [
+			"1.0.0",
+			"1.0.1",
+			"1.1.0",
+			"1.1.1"
+		],
+		"hasIcon": true,
+		"displayName": "Auto Greeting - Server",
+		"description": "Automatically sends greeting messages to players based on configured conditions.",
+		"link": {
+			"Modrinth": "https://modrinth.com/mod/auto-greeting-server",
+			"Curseforge": "https://www.curseforge.com/minecraft/mc-mods/auto-greeting-server",
+			"Planet Minecraft": "https://www.planetminecraft.com/mod/auto-greeting-server"
+		}
+	},
+	"auto-login": {
+		"versions": [
+			"1.0.0",
+			"1.0.1",
+			"1.0.2",
+			"1.0.3",
+			"1.1.0",
+			"1.1.1",
+			"1.1.2"
+		],
+		"hasIcon": true,
+		"displayName": "Auto Login",
+		"description": "Automatically logs in to authentication servers using a locally encrypted password.",
+		"link": {
+			"Modrinth": "https://modrinth.com/mod/autologinmod",
+			"Curseforge": "https://www.curseforge.com/minecraft/mc-mods/auto-login",
+			"Planet Minecraft": "https://www.planetminecraft.com/mod/auto-login"
+		}
+	},
+	"best-armor": {
+		"versions": [
+			"1.1.0",
+			"1.1.1",
+			"1.1.2",
+			"1.1.3"
+		],
+		"hasIcon": true,
+		"displayName": "Best Armor",
+		"description": "Adds generated equipment shulker boxes to the operator creative tab.",
+		"link": {
+			"Modrinth": "https://modrinth.com/mod/best-armor",
+			"Curseforge": "https://www.curseforge.com/minecraft/mc-mods/best-armor",
+			"Planet Minecraft": "https://www.planetminecraft.com/mod/best-armor-6993857"
+		}
+	},
+	"better-elytra-takeoff": {
+		"versions": [
+			"1.0.0",
+			"1.0.1",
+			"1.1.0",
+			"1.1.1",
+			"1.1.2",
+			"1.1.3",
+			"1.1.4"
+		],
+		"hasIcon": true,
+		"displayName": "Better Elytra Takeoff",
+		"description": "Starts Elytra gliding immediately while using fireworks.",
+		"link": {
+			"Modrinth": "https://modrinth.com/mod/better-elytra-takeoff",
+			"Curseforge": "https://www.curseforge.com/minecraft/mc-mods/better-elytra-takeoff",
+			"Planet Minecraft": "https://www.planetminecraft.com/mod/better-elytra-takeoff"
+		}
+	},
+	"better-step": {
+		"versions": [
+			"1.1.0",
+			"1.1.1"
+		],
+		"hasIcon": true,
+		"displayName": "Better Step",
+		"description": "Improves player stepping by removing the vanilla ground restriction for stepping up and adding controlled stepping down.",
+		"link": {
+			"Curseforge": "https://www.curseforge.com/minecraft/mc-mods/better-step",
+			"Planet Minecraft": "https://www.planetminecraft.com/mod/better-step"
+		}
+	},
+	"boat-utils": {
+		"versions": [
+			"1.1.0",
+			"1.1.1",
+			"1.1.2",
+			"1.1.3",
+			"1.1.4",
+			"1.1.5",
+			"1.1.6"
+		],
+		"hasIcon": true,
+		"displayName": "Boat Utils",
+		"description": "Client-side boat camera and movement utilities.",
+		"link": {
+			"Curseforge": "https://www.curseforge.com/minecraft/mc-mods/boat-utils",
+			"Planet Minecraft": "https://www.planetminecraft.com/mod/boat-utils"
+		}
+	},
+	"client-flying": {
+		"versions": [
+			"1.0.0",
+			"1.0.1",
+			"1.0.2",
+			"1.0.3",
+			"1.1.0",
+			"1.1.1",
+			"1.1.2",
+			"1.1.3",
+			"1.1.4",
+			"1.1.5",
+			"1.1.6",
+			"1.1.7"
+		],
+		"hasIcon": true,
+		"displayName": "Client Flying",
+		"description": "Enables flight in Survival and Adventure modes without OP permissions.",
+		"link": {}
+	},
+	"creeper-no-break": {
+		"versions": [
+			"1.1.0",
+			"1.1.1"
+		],
+		"hasIcon": true,
+		"displayName": "Creeper No Break",
+		"description": "Prevents creeper explosions from destroying blocks.",
+		"link": {
+			"Modrinth": "https://modrinth.com/mod/creeper-no-break",
+			"Curseforge": "https://www.curseforge.com/minecraft/mc-mods/creeper-no-break",
+			"Planet Minecraft": "https://www.planetminecraft.com/mod/creeper-no-break"
+		}
+	},
+	"double-jump": {
+		"versions": [
+			"1.1.0",
+			"1.1.1"
+		],
+		"hasIcon": true,
+		"displayName": "Double Jump",
+		"description": "Adds configurable client-side multiple jumping.",
+		"link": {
+			"Curseforge": "https://www.curseforge.com/minecraft/mc-mods/better-double-jump",
+			"Planet Minecraft": "https://www.planetminecraft.com/mod/double-jump-6993259"
+		}
+	},
+	"entity-highlighter": {
+		"versions": [
+			"1.1.0"
+		],
+		"hasIcon": false,
+		"displayName": "Entity Highlighter",
+		"description": "Client-side entity highlighting with configurable entity types, preset groups, and outline colors.",
+		"link": {}
+	},
+	"flight-disabler": {
+		"versions": [
+			"1.1.0",
+			"1.1.1"
+		],
+		"hasIcon": true,
+		"displayName": "Flight Disabler",
+		"description": "Disables creative flight and elytra fall flying.",
+		"link": {
+			"Curseforge": "https://www.curseforge.com/minecraft/mc-mods/flight-disabler",
+			"Planet Minecraft": "https://www.planetminecraft.com/mod/flight-disabler"
+		}
+	},
+	"fly-speed-modifier": {
+		"versions": [
+			"1.1.0",
+			"1.1.1",
+			"1.1.2",
+			"1.1.3",
+			"1.1.4",
+			"1.1.5",
+			"1.1.6",
+			"1.1.7",
+			"1.1.8",
+			"1.1.9"
+		],
+		"hasIcon": true,
+		"displayName": "Fly Speed Modifier",
+		"description": "Temporarily adjusts Freecam or player flight speed using a key and the mouse wheel.",
+		"link": {
+			"Modrinth": "https://modrinth.com/mod/fly-speed-modifier",
+			"Curseforge": "https://www.curseforge.com/minecraft/mc-mods/fly-speed-modifier",
+			"Planet Minecraft": "https://www.planetminecraft.com/mod/fly-speed-modifier"
+		}
+	},
+	"forward-lock": {
+		"versions": [
+			"1.1.0",
+			"1.1.1"
+		],
+		"hasIcon": true,
+		"displayName": "Forward Lock",
+		"description": "Double-tap forward to lock forward movement and sprinting until forward, backward, or crouch is pressed.",
+		"link": {
+			"Curseforge": "https://www.curseforge.com/minecraft/mc-mods/forward-lock",
+			"Planet Minecraft": "https://www.planetminecraft.com/mod/forward-lock"
+		}
+	},
+	"glideplate": {
+		"versions": [
+			"1.0.0",
+			"1.0.1",
+			"1.1.0",
+			"1.1.1",
+			"1.1.2"
+		],
+		"hasIcon": true,
+		"displayName": "Glideplate",
+		"description": "Allows chestplates and Elytra to be combined in an anvil without XP costs or prior-work penalties.",
+		"link": {
+			"Modrinth": "https://modrinth.com/mod/glideplate",
+			"Curseforge": "https://www.curseforge.com/minecraft/mc-mods/glideplate",
+			"Planet Minecraft": "https://www.planetminecraft.com/mod/glideplate"
+		}
+	},
+	"hide-password": {
+		"versions": [
+			"1.0.0",
+			"1.0.1",
+			"1.0.2",
+			"1.0.3",
+			"1.0.4",
+			"1.0.5",
+			"1.0.6",
+			"1.1.0",
+			"1.1.1",
+			"1.1.2",
+			"1.1.3",
+			"1.1.4"
+		],
+		"hasIcon": true,
+		"displayName": "Hide Password",
+		"description": "Hides password arguments entered in chat commands.",
+		"link": {
+			"Modrinth": "https://modrinth.com/mod/hide-password",
+			"Curseforge": "https://www.curseforge.com/minecraft/mc-mods/hide-password",
+			"Planet Minecraft": "https://www.planetminecraft.com/mod/hide-password"
+		}
+	},
+	"infinity-fireworks": {
+		"versions": [
+			"1.0.0",
+			"1.0.1",
+			"1.1.0",
+			"1.1.1",
+			"1.1.2",
+			"1.1.3"
+		],
+		"hasIcon": true,
+		"displayName": "Infinity Fireworks",
+		"description": "Prevents firework rockets from being consumed when used.",
+		"link": {
+			"Modrinth": "https://modrinth.com/mod/infinity-fireworks",
+			"Curseforge": "https://www.curseforge.com/minecraft/mc-mods/infinity-fireworks",
+			"Planet Minecraft": "https://www.planetminecraft.com/mod/infinity-fireworks"
+		}
+	},
+	"no-hungry": {
+		"versions": [
+			"1.1.0",
+			"1.1.1",
+			"1.1.2"
+		],
+		"hasIcon": true,
+		"displayName": "No Hungry",
+		"description": "Prevents player hunger and saturation from falling below configurable minimum levels.",
+		"link": {
+			"Modrinth": "https://modrinth.com/mod/no-hungry",
+			"Curseforge": "https://www.curseforge.com/minecraft/mc-mods/no-hungry",
+			"Planet Minecraft": "https://www.planetminecraft.com/mod/no-hungry"
+		}
+	},
+	"player-highlighter": {
+		"versions": [
+			"1.0.0",
+			"1.0.1",
+			"1.0.2",
+			"1.0.3",
+			"1.0.4",
+			"1.0.5",
+			"1.0.6",
+			"1.0.7",
+			"1.0.8",
+			"1.1.0",
+			"1.1.1",
+			"1.1.2",
+			"1.1.3"
+		],
+		"hasIcon": true,
+		"displayName": "Player Highlighter",
+		"description": "Highlights players with a glowing outline and a HUD target icon.",
+		"link": {
+			"Modrinth": "https://modrinth.com/mod/player-highlighter-mod",
+			"Curseforge": "https://www.curseforge.com/minecraft/mc-mods/playerhighlighter",
+			"Planet Minecraft": "https://www.planetminecraft.com/mod/player-highlighter"
+		}
+	},
+	"server-manager": {
+		"versions": [
+			"0.0.1",
+			"0.0.2",
+			"0.0.3",
+			"1.1.0"
+		],
+		"hasIcon": true,
+		"displayName": "Server Manager",
+		"description": "Web server manager for Fabric dedicated servers.",
+		"link": {
+			"Curseforge": "https://www.curseforge.com/minecraft/mc-mods/server-manager",
+			"Planet Minecraft": "https://www.planetminecraft.com/mod/server-manager-7011113"
+		}
+	},
+	"shared-player-data": {
+		"versions": [
+			"1.1.0",
+			"1.1.1",
+			"1.1.2"
+		],
+		"hasIcon": true,
+		"displayName": "Shared Player Data",
+		"description": "Shares vanilla player profile data among configured UUID groups.",
+		"link": {
+			"Modrinth": "https://modrinth.com/mod/shared-player-data",
+			"Curseforge": "https://www.curseforge.com/minecraft/mc-mods/shared-player-data",
+			"Planet Minecraft": "https://www.planetminecraft.com/mod/shared-player-data-6993864"
+		}
+	},
+	"who-i-am": {
+		"versions": [
+			"1.1.0"
+		],
+		"hasIcon": true,
+		"displayName": "Who I Am",
+		"description": "Shows the local player's name tag in third-person or free-camera views, appends the player name to the window title, and provides the /i command.",
+		"link": {
+			"Curseforge": "https://www.curseforge.com/minecraft/mc-mods/who-i-am",
+			"Planet Minecraft": "https://www.planetminecraft.com/mod/who-i-am-6997434"
+		}
+	},
 	"data": {
 		"ext": "jar",
 		"version": {
@@ -490,376 +860,6 @@
 				"id": "who-i-am",
 				"version": "1.1.0"
 			}
-		}
-	},
-	"auto-greeting": {
-		"versions": [
-			"1.0.0",
-			"1.0.1",
-			"1.0.2",
-			"1.0.3",
-			"1.0.4",
-			"1.0.5",
-			"1.0.6",
-			"1.0.7",
-			"1.1.0",
-			"1.1.1",
-			"1.1.2",
-			"1.1.3"
-		],
-		"hasIcon": true,
-		"displayName": "Auto Greeting",
-		"description": "Automatically sends greeting messages based on configured conditions.",
-		"link": {
-			"Modrinth": "https://modrinth.com/mod/auto-greeting",
-			"Curseforge": "https://www.curseforge.com/minecraft/mc-mods/auto-greeting",
-			"Planet Minecraft": "https://www.planetminecraft.com/mod/auto-greeting"
-		}
-	},
-	"auto-greeting-server": {
-		"versions": [
-			"1.0.0",
-			"1.0.1",
-			"1.1.0",
-			"1.1.1"
-		],
-		"hasIcon": true,
-		"displayName": "Auto Greeting - Server",
-		"description": "Automatically sends greeting messages to players based on configured conditions.",
-		"link": {
-			"Modrinth": "https://modrinth.com/mod/auto-greeting-server",
-			"Curseforge": "https://www.curseforge.com/minecraft/mc-mods/auto-greeting-server",
-			"Planet Minecraft": "https://www.planetminecraft.com/mod/auto-greeting-server"
-		}
-	},
-	"auto-login": {
-		"versions": [
-			"1.0.0",
-			"1.0.1",
-			"1.0.2",
-			"1.0.3",
-			"1.1.0",
-			"1.1.1",
-			"1.1.2"
-		],
-		"hasIcon": true,
-		"displayName": "Auto Login",
-		"description": "Automatically logs in to authentication servers using a locally encrypted password.",
-		"link": {
-			"Modrinth": "https://modrinth.com/mod/autologinmod",
-			"Curseforge": "https://www.curseforge.com/minecraft/mc-mods/auto-login",
-			"Planet Minecraft": "https://www.planetminecraft.com/mod/auto-login"
-		}
-	},
-	"best-armor": {
-		"versions": [
-			"1.1.0",
-			"1.1.1",
-			"1.1.2",
-			"1.1.3"
-		],
-		"hasIcon": true,
-		"displayName": "Best Armor",
-		"description": "Adds generated equipment shulker boxes to the operator creative tab.",
-		"link": {
-			"Modrinth": "https://modrinth.com/mod/best-armor",
-			"Curseforge": "https://www.curseforge.com/minecraft/mc-mods/best-armor",
-			"Planet Minecraft": "https://www.planetminecraft.com/mod/best-armor-6993857"
-		}
-	},
-	"better-elytra-takeoff": {
-		"versions": [
-			"1.0.0",
-			"1.0.1",
-			"1.1.0",
-			"1.1.1",
-			"1.1.2",
-			"1.1.3",
-			"1.1.4"
-		],
-		"hasIcon": true,
-		"displayName": "Better Elytra Takeoff",
-		"description": "Starts Elytra gliding immediately while using fireworks.",
-		"link": {
-			"Modrinth": "https://modrinth.com/mod/better-elytra-takeoff",
-			"Curseforge": "https://www.curseforge.com/minecraft/mc-mods/better-elytra-takeoff",
-			"Planet Minecraft": "https://www.planetminecraft.com/mod/better-elytra-takeoff"
-		}
-	},
-	"better-step": {
-		"versions": [
-			"1.1.0",
-			"1.1.1"
-		],
-		"hasIcon": true,
-		"displayName": "Better Step",
-		"description": "Improves player stepping by removing the vanilla ground restriction for stepping up and adding controlled stepping down.",
-		"link": {
-			"Curseforge": "https://www.curseforge.com/minecraft/mc-mods/better-step",
-			"Planet Minecraft": "https://www.planetminecraft.com/mod/better-step"
-		}
-	},
-	"boat-utils": {
-		"versions": [
-			"1.1.0",
-			"1.1.1",
-			"1.1.2",
-			"1.1.3",
-			"1.1.4",
-			"1.1.5",
-			"1.1.6"
-		],
-		"hasIcon": true,
-		"displayName": "Boat Utils",
-		"description": "Client-side boat camera and movement utilities.",
-		"link": {
-			"Curseforge": "https://www.curseforge.com/minecraft/mc-mods/boat-utils",
-			"Planet Minecraft": "https://www.planetminecraft.com/mod/boat-utils"
-		}
-	},
-	"client-flying": {
-		"versions": [
-			"1.0.0",
-			"1.0.1",
-			"1.0.2",
-			"1.0.3",
-			"1.1.0",
-			"1.1.1",
-			"1.1.2",
-			"1.1.3",
-			"1.1.4",
-			"1.1.5",
-			"1.1.6",
-			"1.1.7"
-		],
-		"hasIcon": true,
-		"displayName": "Client Flying",
-		"description": "Enables flight in Survival and Adventure modes without OP permissions.",
-		"link": {}
-	},
-	"creeper-no-break": {
-		"versions": [
-			"1.1.0",
-			"1.1.1"
-		],
-		"hasIcon": true,
-		"displayName": "Creeper No Break",
-		"description": "Prevents creeper explosions from destroying blocks.",
-		"link": {
-			"Modrinth": "https://modrinth.com/mod/creeper-no-break",
-			"Curseforge": "https://www.curseforge.com/minecraft/mc-mods/creeper-no-break",
-			"Planet Minecraft": "https://www.planetminecraft.com/mod/creeper-no-break"
-		}
-	},
-	"double-jump": {
-		"versions": [
-			"1.1.0",
-			"1.1.1"
-		],
-		"hasIcon": true,
-		"displayName": "Double Jump",
-		"description": "Adds configurable client-side multiple jumping.",
-		"link": {
-			"Curseforge": "https://www.curseforge.com/minecraft/mc-mods/better-double-jump",
-			"Planet Minecraft": "https://www.planetminecraft.com/mod/double-jump-6993259"
-		}
-	},
-	"entity-highlighter": {
-		"versions": [
-			"1.1.0"
-		],
-		"hasIcon": false,
-		"displayName": "Entity Highlighter",
-		"description": "Client-side entity highlighting with configurable entity types, preset groups, and outline colors.",
-		"link": {}
-	},
-	"flight-disabler": {
-		"versions": [
-			"1.1.0",
-			"1.1.1"
-		],
-		"hasIcon": true,
-		"displayName": "Flight Disabler",
-		"description": "Disables creative flight and elytra fall flying.",
-		"link": {
-			"Curseforge": "https://www.curseforge.com/minecraft/mc-mods/flight-disabler",
-			"Planet Minecraft": "https://www.planetminecraft.com/mod/flight-disabler"
-		}
-	},
-	"fly-speed-modifier": {
-		"versions": [
-			"1.1.0",
-			"1.1.1",
-			"1.1.2",
-			"1.1.3",
-			"1.1.4",
-			"1.1.5",
-			"1.1.6",
-			"1.1.7",
-			"1.1.8",
-			"1.1.9"
-		],
-		"hasIcon": true,
-		"displayName": "Fly Speed Modifier",
-		"description": "Temporarily adjusts Freecam or player flight speed using a key and the mouse wheel.",
-		"link": {
-			"Modrinth": "https://modrinth.com/mod/fly-speed-modifier",
-			"Curseforge": "https://www.curseforge.com/minecraft/mc-mods/fly-speed-modifier",
-			"Planet Minecraft": "https://www.planetminecraft.com/mod/fly-speed-modifier"
-		}
-	},
-	"forward-lock": {
-		"versions": [
-			"1.1.0",
-			"1.1.1"
-		],
-		"hasIcon": true,
-		"displayName": "Forward Lock",
-		"description": "Double-tap forward to lock forward movement and sprinting until forward, backward, or crouch is pressed.",
-		"link": {
-			"Curseforge": "https://www.curseforge.com/minecraft/mc-mods/forward-lock",
-			"Planet Minecraft": "https://www.planetminecraft.com/mod/forward-lock"
-		}
-	},
-	"glideplate": {
-		"versions": [
-			"1.0.0",
-			"1.0.1",
-			"1.1.0",
-			"1.1.1",
-			"1.1.2"
-		],
-		"hasIcon": true,
-		"displayName": "Glideplate",
-		"description": "Allows chestplates and Elytra to be combined in an anvil without XP costs or prior-work penalties.",
-		"link": {
-			"Modrinth": "https://modrinth.com/mod/glideplate",
-			"Curseforge": "https://www.curseforge.com/minecraft/mc-mods/glideplate",
-			"Planet Minecraft": "https://www.planetminecraft.com/mod/glideplate"
-		}
-	},
-	"hide-password": {
-		"versions": [
-			"1.0.0",
-			"1.0.1",
-			"1.0.2",
-			"1.0.3",
-			"1.0.4",
-			"1.0.5",
-			"1.0.6",
-			"1.1.0",
-			"1.1.1",
-			"1.1.2",
-			"1.1.3",
-			"1.1.4"
-		],
-		"hasIcon": true,
-		"displayName": "Hide Password",
-		"description": "Hides password arguments entered in chat commands.",
-		"link": {
-			"Modrinth": "https://modrinth.com/mod/hide-password",
-			"Curseforge": "https://www.curseforge.com/minecraft/mc-mods/hide-password",
-			"Planet Minecraft": "https://www.planetminecraft.com/mod/hide-password"
-		}
-	},
-	"infinity-fireworks": {
-		"versions": [
-			"1.0.0",
-			"1.0.1",
-			"1.1.0",
-			"1.1.1",
-			"1.1.2",
-			"1.1.3"
-		],
-		"hasIcon": true,
-		"displayName": "Infinity Fireworks",
-		"description": "Prevents firework rockets from being consumed when used.",
-		"link": {
-			"Modrinth": "https://modrinth.com/mod/infinity-fireworks",
-			"Curseforge": "https://www.curseforge.com/minecraft/mc-mods/infinity-fireworks",
-			"Planet Minecraft": "https://www.planetminecraft.com/mod/infinity-fireworks"
-		}
-	},
-	"no-hungry": {
-		"versions": [
-			"1.1.0",
-			"1.1.1",
-			"1.1.2"
-		],
-		"hasIcon": true,
-		"displayName": "No Hungry",
-		"description": "Prevents player hunger and saturation from falling below configurable minimum levels.",
-		"link": {
-			"Modrinth": "https://modrinth.com/mod/no-hungry",
-			"Curseforge": "https://www.curseforge.com/minecraft/mc-mods/no-hungry",
-			"Planet Minecraft": "https://www.planetminecraft.com/mod/no-hungry"
-		}
-	},
-	"player-highlighter": {
-		"versions": [
-			"1.0.0",
-			"1.0.1",
-			"1.0.2",
-			"1.0.3",
-			"1.0.4",
-			"1.0.5",
-			"1.0.6",
-			"1.0.7",
-			"1.0.8",
-			"1.1.0",
-			"1.1.1",
-			"1.1.2",
-			"1.1.3"
-		],
-		"hasIcon": true,
-		"displayName": "Player Highlighter",
-		"description": "Highlights players with a glowing outline and a HUD target icon.",
-		"link": {
-			"Modrinth": "https://modrinth.com/mod/player-highlighter-mod",
-			"Curseforge": "https://www.curseforge.com/minecraft/mc-mods/playerhighlighter",
-			"Planet Minecraft": "https://www.planetminecraft.com/mod/player-highlighter"
-		}
-	},
-	"server-manager": {
-		"versions": [
-			"0.0.1",
-			"0.0.2",
-			"0.0.3",
-			"1.1.0"
-		],
-		"hasIcon": true,
-		"displayName": "Server Manager",
-		"description": "Web server manager for Fabric dedicated servers.",
-		"link": {
-			"Curseforge": "https://www.curseforge.com/minecraft/mc-mods/server-manager",
-			"Planet Minecraft": "https://www.planetminecraft.com/mod/server-manager-7011113"
-		}
-	},
-	"shared-player-data": {
-		"versions": [
-			"1.1.0",
-			"1.1.1",
-			"1.1.2"
-		],
-		"hasIcon": true,
-		"displayName": "Shared Player Data",
-		"description": "Shares vanilla player profile data among configured UUID groups.",
-		"link": {
-			"Modrinth": "https://modrinth.com/mod/shared-player-data",
-			"Curseforge": "https://www.curseforge.com/minecraft/mc-mods/shared-player-data",
-			"Planet Minecraft": "https://www.planetminecraft.com/mod/shared-player-data-6993864"
-		}
-	},
-	"who-i-am": {
-		"versions": [
-			"1.1.0"
-		],
-		"hasIcon": true,
-		"displayName": "Who I Am",
-		"description": "Shows the local player's name tag in third-person or free-camera views, appends the player name to the window title, and provides the /i command.",
-		"link": {
-			"Curseforge": "https://www.curseforge.com/minecraft/mc-mods/who-i-am",
-			"Planet Minecraft": "https://www.planetminecraft.com/mod/who-i-am-6997434"
 		}
 	}
 }
