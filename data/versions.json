@@ -4,6 +4,492 @@
 		"version": {
 			"1.0": "1.21.11",
 			"1.1": "26.1.2"
+		},
+		"sha1": {
+			"67fd1c0a584b707e4d81e13e00412f6c1231d18b": {
+				"id": "auto-greeting",
+				"version": "1.0.0"
+			},
+			"38abe71deaad27dc33267460d51b77bf95ef3f8f": {
+				"id": "auto-greeting",
+				"version": "1.0.1"
+			},
+			"76b7354a73726c69ec2e8ee6081b07fcce3533c5": {
+				"id": "auto-greeting",
+				"version": "1.0.2"
+			},
+			"eae1c4f54b07d0d8a291056e09f6d13dd54478ae": {
+				"id": "auto-greeting",
+				"version": "1.0.3"
+			},
+			"4eb7367ae978df9dc55c971bb74a025d0f25f815": {
+				"id": "auto-greeting",
+				"version": "1.0.4"
+			},
+			"f4f0d1fef2546053b685beed53c007702e5d3d54": {
+				"id": "auto-greeting",
+				"version": "1.0.5"
+			},
+			"5efebc2517014a180106063fd17f0568253a79bc": {
+				"id": "auto-greeting",
+				"version": "1.0.6"
+			},
+			"af44e64d654e6009dc974df94a74c5b66ed9a61c": {
+				"id": "auto-greeting",
+				"version": "1.0.7"
+			},
+			"bafce435336ac1a406d813cc315f05828a94e6d0": {
+				"id": "auto-greeting",
+				"version": "1.1.0"
+			},
+			"baa5449a223c0720074dd1ca64fa2c97cf22ba7e": {
+				"id": "auto-greeting",
+				"version": "1.1.1"
+			},
+			"185ef1616a8734cb480926c2d6bcaedfb3a80061": {
+				"id": "auto-greeting",
+				"version": "1.1.2"
+			},
+			"ce9cb7e46d65bccc8b7bf3d9270f1b3cc9459a0a": {
+				"id": "auto-greeting",
+				"version": "1.1.3"
+			},
+			"6eb977b1ce536d20b8b8d34438715046dfc09ff7": {
+				"id": "auto-greeting-server",
+				"version": "1.0.0"
+			},
+			"aa510c04a8c9e19795c0bc2f865649e488b81ecf": {
+				"id": "auto-greeting-server",
+				"version": "1.0.1"
+			},
+			"b1560740a0ba35c6cc2adbf5f5e8bfbc1ac867d2": {
+				"id": "auto-greeting-server",
+				"version": "1.1.0"
+			},
+			"86dfd508dc5f97fc4818ecb62c67cdc8312c301d": {
+				"id": "auto-greeting-server",
+				"version": "1.1.1"
+			},
+			"85f00617393597dd8ad14cc2698bd81dbcfa5046": {
+				"id": "auto-login",
+				"version": "1.0.0"
+			},
+			"0487ac64271e5fe8d0f10f303b5a7cb39c3de099": {
+				"id": "auto-login",
+				"version": "1.0.1"
+			},
+			"ca229260dcffc7d1670aa6d551df56ccb2d3c4eb": {
+				"id": "auto-login",
+				"version": "1.0.2"
+			},
+			"671a411de9cfaca49adefd59de14260bb8e5de8b": {
+				"id": "auto-login",
+				"version": "1.0.3"
+			},
+			"6d74bca5a4e3db3f63cdab6b83f7ab2692b06f08": {
+				"id": "auto-login",
+				"version": "1.1.0"
+			},
+			"3bb99809a6323e1c85f4d174e944ae01f63fa773": {
+				"id": "auto-login",
+				"version": "1.1.1"
+			},
+			"bca2f9af3938252c53bc6c3cb3173138f2d8c84c": {
+				"id": "auto-login",
+				"version": "1.1.2"
+			},
+			"d42f7d2933de96af85ffa480a47ecb9f9530dbe9": {
+				"id": "best-armor",
+				"version": "1.1.0"
+			},
+			"6e6ea6d1d18ddb45aa18f93c2eb5c441e8622b9d": {
+				"id": "best-armor",
+				"version": "1.1.1"
+			},
+			"fcd36dc9fe7d28ed8b6de74f21f949246e939257": {
+				"id": "best-armor",
+				"version": "1.1.2"
+			},
+			"d296006cbcf1800b99d2f28e89024b2449f52618": {
+				"id": "best-armor",
+				"version": "1.1.3"
+			},
+			"902dd9636b88e09eaaf667624e1d4af0ca3efc15": {
+				"id": "better-elytra-takeoff",
+				"version": "1.0.0"
+			},
+			"52865d416061db557f81ab9f43a4d647ddd4fa3c": {
+				"id": "better-elytra-takeoff",
+				"version": "1.0.1"
+			},
+			"3ddf01a2a33dbe1b26e973483b8f8362356ad038": {
+				"id": "better-elytra-takeoff",
+				"version": "1.1.0"
+			},
+			"4f9cd351e106b964c117233c2bab4c5ec573b9af": {
+				"id": "better-elytra-takeoff",
+				"version": "1.1.1"
+			},
+			"2dd4ad0fe2d40a4cdc399f028a5734842d309bb4": {
+				"id": "better-elytra-takeoff",
+				"version": "1.1.2"
+			},
+			"b5bc17858704d1224afedd7749f008e07abc5123": {
+				"id": "better-elytra-takeoff",
+				"version": "1.1.3"
+			},
+			"b8d68c5e4768069093018c880e3f41d002d8053b": {
+				"id": "better-elytra-takeoff",
+				"version": "1.1.4"
+			},
+			"a825647aa2d59f7581a76d15230708977a651663": {
+				"id": "better-step",
+				"version": "1.1.0"
+			},
+			"5abf7027fd283435a32271497541ec303cfcc868": {
+				"id": "better-step",
+				"version": "1.1.1"
+			},
+			"06f638db37b9d6908958b72599997e5aa45e8042": {
+				"id": "boat-utils",
+				"version": "1.1.0"
+			},
+			"2a2d4fab66e0ae9c776834685bba49c02c60974e": {
+				"id": "boat-utils",
+				"version": "1.1.1"
+			},
+			"bd00f593011858323fa664f301fd201a0529946e": {
+				"id": "boat-utils",
+				"version": "1.1.2"
+			},
+			"3230e034fb84124f4d439341b52dffa16ffdbb3f": {
+				"id": "boat-utils",
+				"version": "1.1.3"
+			},
+			"0fd1271d6e734e6d3a8db127ddf692596f8fbba7": {
+				"id": "boat-utils",
+				"version": "1.1.4"
+			},
+			"5684b6a548efe73b63bc341fd48bac2dc4a2e7ec": {
+				"id": "boat-utils",
+				"version": "1.1.5"
+			},
+			"aa275692f99c8183f3a05b552872f554cee0b138": {
+				"id": "boat-utils",
+				"version": "1.1.6"
+			},
+			"0bf7c7c079e902a3a6e0e745430c766ecac88d85": {
+				"id": "client-flying",
+				"version": "1.0.0"
+			},
+			"c8cf298dd534e441b1041d283708a84393f514de": {
+				"id": "client-flying",
+				"version": "1.0.1"
+			},
+			"9f909e45ff3f91349f9b97f2859535889995cc1f": {
+				"id": "client-flying",
+				"version": "1.0.2"
+			},
+			"73dd3ab5af5fddaa3e9488d79a5ae80e548b65c2": {
+				"id": "client-flying",
+				"version": "1.0.3"
+			},
+			"d7e19bc217d6787a881182115e73776d071e7267": {
+				"id": "client-flying",
+				"version": "1.1.0"
+			},
+			"fa4c72bca7b1a6f433f05aaaac1d358f6a56a3a0": {
+				"id": "client-flying",
+				"version": "1.1.1"
+			},
+			"e762162df01981e84e8c3ecf1808cc40d3b81683": {
+				"id": "client-flying",
+				"version": "1.1.2"
+			},
+			"6bc604952685eb6adc9d789a021a4f5221054ac1": {
+				"id": "client-flying",
+				"version": "1.1.3"
+			},
+			"03228a03ed8591c78519466050735abbcd0cc668": {
+				"id": "client-flying",
+				"version": "1.1.4"
+			},
+			"febf9bcd3d2670d12145099e732988f1b7aaf9ac": {
+				"id": "client-flying",
+				"version": "1.1.5"
+			},
+			"4e976147a155c8cb7f34035860c5f4069b498cc9": {
+				"id": "client-flying",
+				"version": "1.1.6"
+			},
+			"246c63907071ae0483287a9bc456629166645c82": {
+				"id": "client-flying",
+				"version": "1.1.7"
+			},
+			"abf4ea1444a7592351abb2bd0238939e200896f8": {
+				"id": "creeper-no-break",
+				"version": "1.1.0"
+			},
+			"cf2633952cb7ffcb383f9386a188243ac5a9877b": {
+				"id": "creeper-no-break",
+				"version": "1.1.1"
+			},
+			"e2fd2b4a2d87f4eee35fd040be4b96c986d113e5": {
+				"id": "double-jump",
+				"version": "1.1.0"
+			},
+			"b57523a9f53084721b74bbbcb126e5de38b4acae": {
+				"id": "double-jump",
+				"version": "1.1.1"
+			},
+			"0fc493b050d22f856cf11d493b6438c5ca41228d": {
+				"id": "entity-highlighter",
+				"version": "1.1.0"
+			},
+			"de7c4f54f8de2a14a87f9538f02d2e767e2cb8f5": {
+				"id": "flight-disabler",
+				"version": "1.1.0"
+			},
+			"85950fdc4eb23f7811c031f707ba5a4cde9ffc6a": {
+				"id": "flight-disabler",
+				"version": "1.1.1"
+			},
+			"5b161aebcc842b8d1595eeacfc3a71a72e185710": {
+				"id": "fly-speed-modifier",
+				"version": "1.1.0"
+			},
+			"1f98f14c1ace8d651839796be8732aee3e809f31": {
+				"id": "fly-speed-modifier",
+				"version": "1.1.1"
+			},
+			"ef02a50473ca21c724aaacdeb309188d9caf7cb6": {
+				"id": "fly-speed-modifier",
+				"version": "1.1.2"
+			},
+			"68a569920850335b078aa1e986ca6e0ac6543762": {
+				"id": "fly-speed-modifier",
+				"version": "1.1.3"
+			},
+			"23f2fc494642a3d605ec58ca5852b9eac35d8751": {
+				"id": "fly-speed-modifier",
+				"version": "1.1.4"
+			},
+			"9ab1b8b43991fe311aa2e0ebd24fe397aece2423": {
+				"id": "fly-speed-modifier",
+				"version": "1.1.5"
+			},
+			"8beba72f7a7f64e0be1e84cf1383dbcaef3fe0ab": {
+				"id": "fly-speed-modifier",
+				"version": "1.1.6"
+			},
+			"acceda2843d7be078832961de8d4b476470b5288": {
+				"id": "fly-speed-modifier",
+				"version": "1.1.7"
+			},
+			"4751fba389ae6b77e00ba96ea5f96ff15351d6a7": {
+				"id": "fly-speed-modifier",
+				"version": "1.1.8"
+			},
+			"cf7c694a04a620147c2a52865da6247e7d7330cc": {
+				"id": "fly-speed-modifier",
+				"version": "1.1.9"
+			},
+			"04532433cdcb001b3e7b5e6ad71f26d8079016f4": {
+				"id": "forward-lock",
+				"version": "1.1.0"
+			},
+			"9872421e1405a94e3da605929e31f441b32a38d0": {
+				"id": "forward-lock",
+				"version": "1.1.1"
+			},
+			"c9d807b968cecc3e85181db29dfc6cf7d1362970": {
+				"id": "glideplate",
+				"version": "1.0.0"
+			},
+			"384e38b3256d707f76d8d2eb59caf879eb1dbfd5": {
+				"id": "glideplate",
+				"version": "1.0.1"
+			},
+			"0899c88e38e463611010f5ad8ba573d8e1386d8f": {
+				"id": "glideplate",
+				"version": "1.1.0"
+			},
+			"8b1b481744be2671671f0540d14ef1570b1461f6": {
+				"id": "glideplate",
+				"version": "1.1.1"
+			},
+			"cf9d1e3cbd1aca0928dd37e66ef43c64999645c2": {
+				"id": "glideplate",
+				"version": "1.1.2"
+			},
+			"f65bdd6678ce17a73d225f9084390d0228a4994c": {
+				"id": "hide-password",
+				"version": "1.0.0"
+			},
+			"a43ea1532861b170fecb2abd1503f2301f143641": {
+				"id": "hide-password",
+				"version": "1.0.1"
+			},
+			"dc726e1ff66836e30743d091d8f855e528fb1f62": {
+				"id": "hide-password",
+				"version": "1.0.2"
+			},
+			"82ecd97ec3cec9346e3579ad8370985851d9882d": {
+				"id": "hide-password",
+				"version": "1.0.3"
+			},
+			"d42a798b8f0c01127a54986a9b3cab086e206839": {
+				"id": "hide-password",
+				"version": "1.0.4"
+			},
+			"f328b219bbdc1eb5d0e6d3073872952c59eda8ab": {
+				"id": "hide-password",
+				"version": "1.0.5"
+			},
+			"f0635c318d608a9afff3c07572e1ae3a3d384df4": {
+				"id": "hide-password",
+				"version": "1.0.6"
+			},
+			"65cab02ebcd193195ec343979fa0d6ed1e2542e1": {
+				"id": "hide-password",
+				"version": "1.1.0"
+			},
+			"684b08dbb4c6d62ed386b377115e300ca528c674": {
+				"id": "hide-password",
+				"version": "1.1.1"
+			},
+			"4c23303804493d71d2473f410b7bc32933c67c81": {
+				"id": "hide-password",
+				"version": "1.1.2"
+			},
+			"e54b11d8d31f0929b63b602088cbec061e53d743": {
+				"id": "hide-password",
+				"version": "1.1.3"
+			},
+			"21f1b66ae65bb9724556122d7c00114e588b2fa5": {
+				"id": "hide-password",
+				"version": "1.1.4"
+			},
+			"6bc22146468654328db530c9a22dd620303399d3": {
+				"id": "infinity-fireworks",
+				"version": "1.0.0"
+			},
+			"278401a2aac85a3b4de4092f6778be512f57966d": {
+				"id": "infinity-fireworks",
+				"version": "1.0.1"
+			},
+			"d5a4c749e71ec6d07567de1e1877d326d7d6da47": {
+				"id": "infinity-fireworks",
+				"version": "1.1.0"
+			},
+			"03215e17e82779cc59c34982230c77c9547cf9d6": {
+				"id": "infinity-fireworks",
+				"version": "1.1.1"
+			},
+			"d018b94ff1cab13e7d5673988d9f9444bb2f5559": {
+				"id": "infinity-fireworks",
+				"version": "1.1.2"
+			},
+			"2402c79a3502a3a84008bb473309a420fa38a3f6": {
+				"id": "infinity-fireworks",
+				"version": "1.1.3"
+			},
+			"c12527ff6a56fbcf5d05bbc58cecf460c90f1721": {
+				"id": "no-hungry",
+				"version": "1.1.0"
+			},
+			"260e9e4d9d671fe0b901f30669f05b575e1a6789": {
+				"id": "no-hungry",
+				"version": "1.1.1"
+			},
+			"45c06d266c07a97347609afa159b6f041e1c186f": {
+				"id": "no-hungry",
+				"version": "1.1.2"
+			},
+			"696bb720c882ffb2b1562e091faceae3c4c88748": {
+				"id": "player-highlighter",
+				"version": "1.0.0"
+			},
+			"e27a3a5f8c82aa8bffd224fe364225683d3e4898": {
+				"id": "player-highlighter",
+				"version": "1.0.1"
+			},
+			"4630933316a1ae7bbcdc3ffb8222e76d68fad6cf": {
+				"id": "player-highlighter",
+				"version": "1.0.2"
+			},
+			"9f2247da469f09b673ae26a908031190170e887d": {
+				"id": "player-highlighter",
+				"version": "1.0.3"
+			},
+			"c1a3e2f78934f372151e14bd01e973a1854f47c1": {
+				"id": "player-highlighter",
+				"version": "1.0.4"
+			},
+			"cf388814b4813bf1ad955b915d40ffa402baf192": {
+				"id": "player-highlighter",
+				"version": "1.0.5"
+			},
+			"ae70d55b739b3e1734d0fd68360442604d6d0f00": {
+				"id": "player-highlighter",
+				"version": "1.0.6"
+			},
+			"1b66284d6574f1a32e51c662dcda82024d2780de": {
+				"id": "player-highlighter",
+				"version": "1.0.7"
+			},
+			"e3c306b1eda9fa03fc1157de2c3fc527ed247504": {
+				"id": "player-highlighter",
+				"version": "1.0.8"
+			},
+			"ca1ead992508246468e9242ced11d1a633134c53": {
+				"id": "player-highlighter",
+				"version": "1.1.0"
+			},
+			"3b4ba8696620aaf1759e949ea3eeb92db91e3418": {
+				"id": "player-highlighter",
+				"version": "1.1.1"
+			},
+			"23753ee458ffd0b10a191d1febafa8d372d4f9d3": {
+				"id": "player-highlighter",
+				"version": "1.1.2"
+			},
+			"5799b06f1107de8de14527e7deb96ad057da65db": {
+				"id": "player-highlighter",
+				"version": "1.1.3"
+			},
+			"1461e5c810799e57baceeaacdd14944578e82c6c": {
+				"id": "server-manager",
+				"version": "0.0.1"
+			},
+			"7dd231f5fb463a8e61d09fcb4cd41b3f08ae4f7c": {
+				"id": "server-manager",
+				"version": "0.0.2"
+			},
+			"c0cfef91e46d4a0d00ba0636e967fc3c607eb14c": {
+				"id": "server-manager",
+				"version": "0.0.3"
+			},
+			"adb1af2503ce759566bf071e103f7cad9ca91aba": {
+				"id": "server-manager",
+				"version": "1.1.0"
+			},
+			"584688a16678f173102ba1b210e5cdca9009112d": {
+				"id": "shared-player-data",
+				"version": "1.1.0"
+			},
+			"a6fb92bb1927b0682f437ddf13af1d9e5980c36f": {
+				"id": "shared-player-data",
+				"version": "1.1.1"
+			},
+			"af4048a8c7fe47cfe8c1dba43d6cddae803624c4": {
+				"id": "shared-player-data",
+				"version": "1.1.2"
+			},
+			"e9373af234358247e937b3153ae516e6beb46690": {
+				"id": "who-i-am",
+				"version": "1.1.0"
+			}
 		}
 	},
 	"auto-greeting": {
@@ -338,7 +824,8 @@
 		"versions": [
 			"0.0.1",
 			"0.0.2",
-			"0.0.3"
+			"0.0.3",
+			"1.1.0"
 		],
 		"hasIcon": true,
 		"displayName": "Server Manager",
