@@ -1,0 +1,21 @@
+{
+	"schemaVersion": 1,
+	"id": "dabr-server-config-override",
+	"version": "${version}",
+	"name": "DABR Server Config Override",
+	"description": "Overrides Do a Barrel Roll gameplay enforcement for forceEnabled and allowThrusting without altering the server settings UI.",
+	"authors": [
+		"Wenhan"
+	],
+	"environment": "client",
+	"mixins": [
+		"dabr-server-config-override.mixins.json"
+	],
+	"depends": {
+		"fabricloader": ">=0.19.2",
+		"fabric-api": "*",
+		"minecraft": "26.1.2",
+		"java": ">=25",
+		"do_a_barrel_roll": "*"
+	}
+}
