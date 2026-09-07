@@ -159,6 +159,15 @@
 			"Planet Minecraft": "https://www.planetminecraft.com/mod/creeper-no-break"
 		}
 	},
+	"dabr-server-config-override": {
+		"versions": [
+			"1.0.0"
+		],
+		"hasIcon": true,
+		"displayName": "DABR Server Config Override",
+		"description": "Overrides Do a Barrel Roll gameplay enforcement for forceEnabled and allowThrusting without altering the server settings UI.",
+		"link": {}
+	},
 	"double-jump": {
 		"versions": [
 			"1.1.0",
@@ -864,6 +873,10 @@
 			"e9373af234358247e937b3153ae516e6beb46690": {
 				"id": "who-i-am",
 				"version": "1.1.0"
+			},
+			"597becbbbbc392be33e4c56e6a8bbc2c39197ced": {
+				"id": "dabr-server-config-override",
+				"version": "1.0.0"
 			}
 		},
 		"newest-version": {
@@ -941,6 +954,9 @@
 			},
 			"who-i-am": {
 				"26.1.2": "1.1.0"
+			},
+			"dabr-server-config-override": {
+				"1.21.11": "1.0.0"
 			}
 		}
 	}
