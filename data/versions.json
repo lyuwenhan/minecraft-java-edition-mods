@@ -618,6 +618,10 @@
 				"id": "creeper-no-break",
 				"version": "1.1.1"
 			},
+			"597becbbbbc392be33e4c56e6a8bbc2c39197ced": {
+				"id": "dabr-server-config-override",
+				"version": "1.1.0"
+			},
 			"e2fd2b4a2d87f4eee35fd040be4b96c986d113e5": {
 				"id": "double-jump",
 				"version": "1.1.0"
@@ -873,10 +877,6 @@
 			"e9373af234358247e937b3153ae516e6beb46690": {
 				"id": "who-i-am",
 				"version": "1.1.0"
-			},
-			"597becbbbbc392be33e4c56e6a8bbc2c39197ced": {
-				"id": "dabr-server-config-override",
-				"version": "1.0.0"
 			}
 		},
 		"newest-version": {
@@ -911,6 +911,9 @@
 			},
 			"creeper-no-break": {
 				"26.1.2": "1.1.1"
+			},
+			"dabr-server-config-override": {
+				"26.1.2": "1.1.0"
 			},
 			"double-jump": {
 				"26.1.2": "1.1.1"
@@ -954,9 +957,6 @@
 			},
 			"who-i-am": {
 				"26.1.2": "1.1.0"
-			},
-			"dabr-server-config-override": {
-				"1.21.11": "1.0.0"
 			}
 		}
 	}
