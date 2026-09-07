@@ -161,7 +161,7 @@
 	},
 	"dabr-server-config-override": {
 		"versions": [
-			"1.0.0"
+			"1.1.0"
 		],
 		"hasIcon": true,
 		"displayName": "DABR Server Config Override",
