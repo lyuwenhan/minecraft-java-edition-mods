@@ -18,6 +18,7 @@ const nextStepPath = path.join(root, "next_steps.md");
 const targetNextStepPath = path.join(dataDir, "next_steps.md");
 fs.copyFileSync(nextStepPath, targetNextStepPath);
 const versionsPath = path.join(dataDir, "versions.json");
+const mappingsPath = path.join(dataDir, "mappings.json");
 let versions = {};
 if (fs.existsSync(versionsPath)) {
 	try {
@@ -153,43 +154,50 @@ const fileSha1 = filePath => crypto.createHash("sha1").update(fs.readFileSync(fi
 			console.error(err.stack)
 		}
 	}
-	versions.data.sha1 = {};
-	versions.data["newest-version"] = {};
-	const versionPrefixes = Object.keys(versions.data.version).sort((a, b) => b.length - a.length || b.localeCompare(a, "en"));
+	versions = Object.fromEntries(Object.entries(versions).sort(([keyA], [keyB]) => {
+		if (keyA === "data") {
+			return -1
+		}
+		if (keyB === "data") {
+			return 1
+		}
+		return keyA.localeCompare(keyB, "en")
+	}));
+	fs.writeFileSync(versionsPath, JSON.stringify(versions, null, "\t") + "\n", "utf8");
+	const mappings = {
+		version: JSON.parse(fs.readFileSync(mappingsPath, "utf8")).version,
+		mods: {},
+		sha1: {}
+	};
+	const versionPrefixes = Object.keys(mappings.version).sort((a, b) => b.length - a.length || b.localeCompare(a, "en"));
 	for (const [id, item] of Object.entries(versions)) {
 		if (id === "data") {
 			continue
 		}
+		mappings.mods[id] = {
+			hasIcon: item.hasIcon,
+			displayName: item.displayName,
+			description: item.description,
+			versions: {}
+		};
 		for (const version of item.versions) {
-			const prefix = versionPrefixes.find(prefix => !prefix || version === prefix || version.startsWith(`${prefix}.`));
-			if (prefix) {
-				if (!versions.data["newest-version"][id]) {
-					versions.data["newest-version"][id] = {}
-				}
-				versions.data["newest-version"][id][versions.data.version[prefix]] = version
-			}
 			const jarPath = path.join(distDir, `${id}-${version}.jar`);
 			if (!fs.existsSync(jarPath)) {
-				console.warn(`SHA-1 skipped, jar not found: ${jarPath}`);
+				console.warn(`Mod ${item.displayName} v${version} skipped, jar not found: ${jarPath}`);
 				continue
 			}
+			const prefix = versionPrefixes.find(prefix => !prefix || version === prefix || version.startsWith(`${prefix}.`));
+			if (prefix) {
+				mappings.mods[id].versions[mappings.version[prefix]] = version
+			}
 			const sha1 = fileSha1(jarPath);
-			versions.data.sha1[sha1] = {
+			mappings.sha1[sha1] = {
 				id,
 				version
 			}
 		}
 	}
-	versions = Object.fromEntries(Object.entries(versions).sort(([keyA], [keyB]) => {
-		if (keyA === "data") {
-			return 1
-		}
-		if (keyB === "data") {
-			return -1
-		}
-		return keyA.localeCompare(keyB, "en")
-	}));
-	fs.writeFileSync(versionsPath, JSON.stringify(versions, null, "\t") + "\n", "utf8");
+	fs.writeFileSync(mappingsPath, JSON.stringify(mappings, null, "\t") + "\n", "utf8");
 	if (hasError) {
 		process.exit(1)
 	}
