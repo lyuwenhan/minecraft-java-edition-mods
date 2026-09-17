@@ -8,11 +8,11 @@
 - auto-greeting-server
 - auto-login
 - better-elytra-takeoff
+- better-step
 
 ### Incomplete
 
 - best-armor
-- better-step
 - boat-utils
 - client-flying
 - creeper-no-break

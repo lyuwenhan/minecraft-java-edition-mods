@@ -32,6 +32,9 @@ public abstract class EntityStepDownMixin {
 	private void betterstep$stepDownAfterVanillaMove(
 			MoverType type, Vec3 movement, CallbackInfo ci) {
 		Entity self = (Entity) (Object) this;
+		if (self.isSwimming()) {
+			return;
+		}
 		if (!this.betterstep$shouldTryStepDown(self, movement)) {
 			return;
 		}
