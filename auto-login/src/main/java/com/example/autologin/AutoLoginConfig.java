@@ -2,12 +2,14 @@ package com.example.autologin;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+
+import net.fabricmc.loader.api.FabricLoader;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
-import net.fabricmc.loader.api.FabricLoader;
 
 public class AutoLoginConfig {
 	public Map<String, Credential> servers = new HashMap<>();

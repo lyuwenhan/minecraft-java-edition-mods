@@ -6,12 +6,14 @@ import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.builder.RequiredArgumentBuilder;
-import java.util.List;
+
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.minecraft.network.chat.Component;
+
+import java.util.List;
 
 public class AutoGreetingClientMod implements ClientModInitializer {
 	public static long joinWorldAt = 0L;
@@ -40,13 +42,20 @@ public class AutoGreetingClientMod implements ClientModInitializer {
 							String msg = StringArgumentType.getString(ctx, pattern);
 							if (!isType1 && list.contains(msg)) {
 								ctx.getSource()
-										.sendFeedback(Component.literal(title + ": \"" + msg + "\" already exists."));
+										.sendFeedback(
+												Component.literal(
+														title
+																+ ": \""
+																+ msg
+																+ "\" already exists."));
 								return 1;
 							}
 							list.add(msg);
 							CONFIG.save();
 							ctx.getSource()
-									.sendFeedback(Component.literal(title + ": appended \"" + msg + "\"."));
+									.sendFeedback(
+											Component.literal(
+													title + ": appended \"" + msg + "\"."));
 							return 1;
 						});
 		if (isType1) {
@@ -55,23 +64,38 @@ public class AutoGreetingClientMod implements ClientModInitializer {
 							argument("index", IntegerArgumentType.integer(1))
 									.executes(
 											ctx -> {
-												String msg = StringArgumentType.getString(ctx, pattern);
-												int index = IntegerArgumentType.getInteger(ctx, "index");
+												String msg =
+														StringArgumentType.getString(ctx, pattern);
+												int index =
+														IntegerArgumentType.getInteger(
+																ctx, "index");
 												if (!isType1 && list.contains(msg)) {
 													ctx.getSource()
 															.sendFeedback(
 																	Component.literal(
-																			title + ": \"" + msg + "\" already" + " exists."));
+																			title
+																					+ ": \""
+																					+ msg
+																					+ "\" already"
+																					+ " exists."));
 													return 1;
 												}
 												boolean isAppend = index > list.size();
-												int pos = Math.max(0, Math.min(index - 1, list.size()));
+												int pos =
+														Math.max(
+																0,
+																Math.min(index - 1, list.size()));
 												list.add(pos, msg);
 												CONFIG.save();
 												if (isAppend) {
 													ctx.getSource()
 															.sendFeedback(
-																	Component.literal(title + ": appended" + " \"" + msg + "\"."));
+																	Component.literal(
+																			title
+																					+ ": appended"
+																					+ " \""
+																					+ msg
+																					+ "\"."));
 												} else {
 													ctx.getSource()
 															.sendFeedback(
@@ -95,32 +119,49 @@ public class AutoGreetingClientMod implements ClientModInitializer {
 								.executes(
 										ctx -> {
 											if (list.isEmpty()) {
-												ctx.getSource().sendFeedback(Component.literal(title + " is empty."));
+												ctx.getSource()
+														.sendFeedback(
+																Component.literal(
+																		title + " is empty."));
 												return 1;
 											}
 											list.remove(list.size() - 1);
 											CONFIG.save();
 											ctx.getSource()
-													.sendFeedback(Component.literal(title + ": removed last" + " item."));
+													.sendFeedback(
+															Component.literal(
+																	title
+																			+ ": removed last"
+																			+ " item."));
 											return 1;
 										})
 								.then(
 										argument("index", IntegerArgumentType.integer(1))
 												.executes(
 														ctx -> {
-															int index = IntegerArgumentType.getInteger(ctx, "index");
+															int index =
+																	IntegerArgumentType.getInteger(
+																			ctx, "index");
 															if (index < 1 || index > list.size()) {
 																ctx.getSource()
 																		.sendFeedback(
 																				Component.literal(
-																						title + ": index" + " out of" + " range."));
+																						title
+																								+ ": index"
+																								+ " out of"
+																								+ " range."));
 																return 1;
 															}
 															list.remove(index - 1);
 															CONFIG.save();
 															ctx.getSource()
 																	.sendFeedback(
-																			Component.literal(title + ": removed" + " #" + index + "."));
+																			Component.literal(
+																					title
+																							+ ": removed"
+																							+ " #"
+																							+ index
+																							+ "."));
 															return 1;
 														}))
 								.then(
@@ -130,7 +171,10 @@ public class AutoGreetingClientMod implements ClientModInitializer {
 															if (list.isEmpty()) {
 																ctx.getSource()
 																		.sendFeedback(
-																				Component.literal(title + " is already" + " empty."));
+																				Component.literal(
+																						title
+																								+ " is already"
+																								+ " empty."));
 																return 1;
 															}
 															list.clear();
@@ -138,7 +182,10 @@ public class AutoGreetingClientMod implements ClientModInitializer {
 															ctx.getSource()
 																	.sendFeedback(
 																			Component.literal(
-																					title + ": all" + " entries" + " cleared."));
+																					title
+																							+ ": all"
+																							+ " entries"
+																							+ " cleared."));
 															return 1;
 														})))
 				.then(
@@ -174,59 +221,74 @@ public class AutoGreetingClientMod implements ClientModInitializer {
 																			ctx -> {
 																				ctx.getSource()
 																						.sendFeedback(
-																								Component.literal(
-																										"Auto greeting"
-																												+ " "
-																												+ (CONFIG.selfEnabled
-																														? "enabled"
-																														: "disabled")
-																												+ "."));
+																								Component
+																										.literal(
+																												"Auto greeting"
+																													+ " "
+																														+ (CONFIG.selfEnabled
+																																? "enabled"
+																																: "disabled")
+																														+ "."));
 																				return 1;
 																			})
 																	.then(
 																			literal("enable")
 																					.executes(
 																							ctx -> {
-																								CONFIG.selfEnabled = true;
-																								CONFIG.save();
+																								CONFIG.selfEnabled =
+																										true;
+																								CONFIG
+																										.save();
 																								ctx.getSource()
 																										.sendFeedback(
-																												Component.literal(
-																														"Auto greeting" + " enabled."));
+																												Component
+																														.literal(
+																																"Auto greeting"
+																																	+ " enabled."));
 																								return 1;
 																							}))
 																	.then(
 																			literal("disable")
 																					.executes(
 																							ctx -> {
-																								CONFIG.selfEnabled = false;
-																								CONFIG.save();
+																								CONFIG.selfEnabled =
+																										false;
+																								CONFIG
+																										.save();
 																								ctx.getSource()
 																										.sendFeedback(
-																												Component.literal(
-																														"Auto greeting" + " disabled."));
+																												Component
+																														.literal(
+																																"Auto greeting"
+																																	+ " disabled."));
 																								return 1;
 																							}))
 																	.then(
 																			literal("toggle")
 																					.executes(
 																							ctx -> {
-																								CONFIG.selfEnabled = !CONFIG.selfEnabled;
-																								CONFIG.save();
+																								CONFIG.selfEnabled =
+																										!CONFIG.selfEnabled;
+																								CONFIG
+																										.save();
 																								ctx.getSource()
 																										.sendFeedback(
-																												Component.literal(
-																														"Auto greeting"
-																																+ " is "
-																																+ (CONFIG.selfEnabled
-																																		? "enabled"
-																																		: "disabled")
-																																+ "."));
+																												Component
+																														.literal(
+																																"Auto greeting"
+																																	+ " is "
+																																		+ (CONFIG.selfEnabled
+																																				? "enabled"
+																																				: "disabled")
+																																		+ "."));
 																								return 1;
 																							})))
 													.then(
 															buildStringListNode(
-																	"message", "Auto greeting", CONFIG.selfGreetings, true)))
+																	"message",
+																	"Auto greeting",
+																	CONFIG.selfGreetings,
+																	true)))
 									.then(
 											literal("other")
 													.then(
@@ -235,58 +297,73 @@ public class AutoGreetingClientMod implements ClientModInitializer {
 																			ctx -> {
 																				ctx.getSource()
 																						.sendFeedback(
-																								Component.literal(
-																										"Auto greeting"
-																												+ " "
-																												+ (CONFIG.otherEnabled
-																														? "enabled"
-																														: "disabled")));
+																								Component
+																										.literal(
+																												"Auto greeting"
+																													+ " "
+																														+ (CONFIG.otherEnabled
+																																? "enabled"
+																																: "disabled")));
 																				return 1;
 																			})
 																	.then(
 																			literal("enable")
 																					.executes(
 																							ctx -> {
-																								CONFIG.otherEnabled = true;
-																								CONFIG.save();
+																								CONFIG.otherEnabled =
+																										true;
+																								CONFIG
+																										.save();
 																								ctx.getSource()
 																										.sendFeedback(
-																												Component.literal(
-																														"Auto greeting" + " enabled."));
+																												Component
+																														.literal(
+																																"Auto greeting"
+																																	+ " enabled."));
 																								return 1;
 																							}))
 																	.then(
 																			literal("disable")
 																					.executes(
 																							ctx -> {
-																								CONFIG.otherEnabled = false;
-																								CONFIG.save();
+																								CONFIG.otherEnabled =
+																										false;
+																								CONFIG
+																										.save();
 																								ctx.getSource()
 																										.sendFeedback(
-																												Component.literal(
-																														"Auto greeting" + " disabled."));
+																												Component
+																														.literal(
+																																"Auto greeting"
+																																	+ " disabled."));
 																								return 1;
 																							}))
 																	.then(
 																			literal("toggle")
 																					.executes(
 																							ctx -> {
-																								CONFIG.otherEnabled = !CONFIG.otherEnabled;
-																								CONFIG.save();
+																								CONFIG.otherEnabled =
+																										!CONFIG.otherEnabled;
+																								CONFIG
+																										.save();
 																								ctx.getSource()
 																										.sendFeedback(
-																												Component.literal(
-																														"Auto greeting"
-																																+ " "
-																																+ (CONFIG.otherEnabled
-																																		? "enabled"
-																																		: "disabled")
-																																+ "."));
+																												Component
+																														.literal(
+																																"Auto greeting"
+																																	+ " "
+																																		+ (CONFIG.otherEnabled
+																																				? "enabled"
+																																				: "disabled")
+																																		+ "."));
 																								return 1;
 																							})))
 													.then(
 															buildStringListNode(
-																	"message", "Auto greeting", CONFIG.otherGreetings, true))
+																	"message",
+																	"Auto greeting",
+																	CONFIG.otherGreetings,
+																	true))
 													.then(
 															literal("blacklist")
 																	.then(
@@ -294,48 +371,80 @@ public class AutoGreetingClientMod implements ClientModInitializer {
 																					.then(
 																							buildStringListNode(
 																									"equal",
-																									"Blacklist" + " (Name" + " Equal)",
-																									CONFIG.otherBlacklist.equal,
+																									"Blacklist"
+																										+ " (Name"
+																										+ " Equal)",
+																									CONFIG.otherBlacklist
+																											.equal,
 																									false))
 																					.then(
 																							buildStringListNode(
 																									"contain",
-																									"Blacklist" + " (Name" + " Contain)",
-																									CONFIG.otherBlacklist.contain,
+																									"Blacklist"
+																										+ " (Name"
+																										+ " Contain)",
+																									CONFIG.otherBlacklist
+																											.contain,
 																									false))
 																					.then(
 																							buildStringListNode(
 																									"startWith",
-																									"Blacklist" + " (Name" + " Starts" + " with)",
-																									CONFIG.otherBlacklist.startWith,
+																									"Blacklist"
+																										+ " (Name"
+																										+ " Starts"
+																										+ " with)",
+																									CONFIG.otherBlacklist
+																											.startWith,
 																									false))
 																					.then(
 																							buildStringListNode(
 																									"endWith",
-																									"Blacklist" + " (Name" + " Ends" + " with)",
-																									CONFIG.otherBlacklist.endWith,
+																									"Blacklist"
+																										+ " (Name"
+																										+ " Ends"
+																										+ " with)",
+																									CONFIG.otherBlacklist
+																											.endWith,
 																									false))
 																					.then(
-																							literal("list")
+																							literal(
+																											"list")
 																									.executes(
 																											ctx -> {
 																												sendList(
-																														ctx.getSource(),
-																														"Match" + " (Name" + " Equal)",
-																														CONFIG.otherBlacklist.equal);
+																														ctx
+																																.getSource(),
+																														"Match"
+																															+ " (Name"
+																															+ " Equal)",
+																														CONFIG.otherBlacklist
+																																.equal);
 																												sendList(
-																														ctx.getSource(),
-																														"Match" + " (Name" + " Contain)",
-																														CONFIG.otherBlacklist.contain);
+																														ctx
+																																.getSource(),
+																														"Match"
+																															+ " (Name"
+																															+ " Contain)",
+																														CONFIG.otherBlacklist
+																																.contain);
 																												sendList(
-																														ctx.getSource(),
-																														"Match" + " (Name" + " Starts"
-																																+ " with)",
-																														CONFIG.otherBlacklist.startWith);
+																														ctx
+																																.getSource(),
+																														"Match"
+																															+ " (Name"
+																															+ " Starts"
+																															+ " with)",
+																														CONFIG.otherBlacklist
+																																.startWith);
 																												sendList(
-																														ctx.getSource(),
-																														"Match" + " (Name" + " Ends" + " with)",
-																														CONFIG.otherBlacklist.endWith);
+																														ctx
+																																.getSource(),
+																														"Match"
+																															+ " (Name"
+																															+ " Ends"
+																															+ " with)",
+																														CONFIG.otherBlacklist
+																																.endWith);
 																												return 1;
 																											})))
 																	.then(
@@ -343,49 +452,80 @@ public class AutoGreetingClientMod implements ClientModInitializer {
 																					.then(
 																							buildStringListNode(
 																									"equal",
-																									"Except" + " (Name" + " Equal)",
-																									CONFIG.otherBlacklistExcept.equal,
+																									"Except"
+																										+ " (Name"
+																										+ " Equal)",
+																									CONFIG.otherBlacklistExcept
+																											.equal,
 																									false))
 																					.then(
 																							buildStringListNode(
 																									"contain",
-																									"Except" + " (Name" + " Contain)",
-																									CONFIG.otherBlacklistExcept.contain,
+																									"Except"
+																										+ " (Name"
+																										+ " Contain)",
+																									CONFIG.otherBlacklistExcept
+																											.contain,
 																									false))
 																					.then(
 																							buildStringListNode(
 																									"startWith",
-																									"Except" + " (Name" + " Starts" + " with)",
-																									CONFIG.otherBlacklistExcept.startWith,
+																									"Except"
+																										+ " (Name"
+																										+ " Starts"
+																										+ " with)",
+																									CONFIG.otherBlacklistExcept
+																											.startWith,
 																									false))
 																					.then(
 																							buildStringListNode(
 																									"endWith",
-																									"Except" + " (Name" + " Ends" + " with)",
-																									CONFIG.otherBlacklistExcept.endWith,
+																									"Except"
+																										+ " (Name"
+																										+ " Ends"
+																										+ " with)",
+																									CONFIG.otherBlacklistExcept
+																											.endWith,
 																									false))
 																					.then(
-																							literal("list")
+																							literal(
+																											"list")
 																									.executes(
 																											ctx -> {
 																												sendList(
-																														ctx.getSource(),
-																														"Except" + " (Name" + " Equal)",
-																														CONFIG.otherBlacklistExcept.equal);
+																														ctx
+																																.getSource(),
+																														"Except"
+																															+ " (Name"
+																															+ " Equal)",
+																														CONFIG.otherBlacklistExcept
+																																.equal);
 																												sendList(
-																														ctx.getSource(),
-																														"Except" + " (Name" + " Contain)",
-																														CONFIG.otherBlacklistExcept.contain);
+																														ctx
+																																.getSource(),
+																														"Except"
+																															+ " (Name"
+																															+ " Contain)",
+																														CONFIG.otherBlacklistExcept
+																																.contain);
 																												sendList(
-																														ctx.getSource(),
-																														"Except" + " (Name" + " Starts"
-																																+ " with)",
-																														CONFIG.otherBlacklistExcept.startWith);
+																														ctx
+																																.getSource(),
+																														"Except"
+																															+ " (Name"
+																															+ " Starts"
+																															+ " with)",
+																														CONFIG.otherBlacklistExcept
+																																.startWith);
 																												sendList(
-																														ctx.getSource(),
-																														"Except" + " (Name" + " Ends"
-																																+ " with)",
-																														CONFIG.otherBlacklistExcept.endWith);
+																														ctx
+																																.getSource(),
+																														"Except"
+																															+ " (Name"
+																															+ " Ends"
+																															+ " with)",
+																														CONFIG.otherBlacklistExcept
+																																.endWith);
 																												return 1;
 																											})))
 																	.then(
@@ -393,52 +533,96 @@ public class AutoGreetingClientMod implements ClientModInitializer {
 																					.executes(
 																							ctx -> {
 																								sendList(
-																										ctx.getSource(),
-																										"Match" + " (Name" + " Equal)",
-																										CONFIG.otherBlacklist.equal);
+																										ctx
+																												.getSource(),
+																										"Match"
+																											+ " (Name"
+																											+ " Equal)",
+																										CONFIG.otherBlacklist
+																												.equal);
 																								sendList(
-																										ctx.getSource(),
-																										"Match" + " (Name" + " Contain)",
-																										CONFIG.otherBlacklist.contain);
+																										ctx
+																												.getSource(),
+																										"Match"
+																											+ " (Name"
+																											+ " Contain)",
+																										CONFIG.otherBlacklist
+																												.contain);
 																								sendList(
-																										ctx.getSource(),
-																										"Match" + " (Name" + " Starts" + " with)",
-																										CONFIG.otherBlacklist.startWith);
+																										ctx
+																												.getSource(),
+																										"Match"
+																											+ " (Name"
+																											+ " Starts"
+																											+ " with)",
+																										CONFIG.otherBlacklist
+																												.startWith);
 																								sendList(
-																										ctx.getSource(),
-																										"Match" + " (Name" + " Ends" + " with)",
-																										CONFIG.otherBlacklist.endWith);
+																										ctx
+																												.getSource(),
+																										"Match"
+																											+ " (Name"
+																											+ " Ends"
+																											+ " with)",
+																										CONFIG.otherBlacklist
+																												.endWith);
 																								sendList(
-																										ctx.getSource(),
-																										"Except" + " (Name" + " Equal)",
-																										CONFIG.otherBlacklistExcept.equal);
+																										ctx
+																												.getSource(),
+																										"Except"
+																											+ " (Name"
+																											+ " Equal)",
+																										CONFIG.otherBlacklistExcept
+																												.equal);
 																								sendList(
-																										ctx.getSource(),
-																										"Except" + " (Name" + " Contain)",
-																										CONFIG.otherBlacklistExcept.contain);
+																										ctx
+																												.getSource(),
+																										"Except"
+																											+ " (Name"
+																											+ " Contain)",
+																										CONFIG.otherBlacklistExcept
+																												.contain);
 																								sendList(
-																										ctx.getSource(),
-																										"Except" + " (Name" + " Starts" + " with)",
-																										CONFIG.otherBlacklistExcept.startWith);
+																										ctx
+																												.getSource(),
+																										"Except"
+																											+ " (Name"
+																											+ " Starts"
+																											+ " with)",
+																										CONFIG.otherBlacklistExcept
+																												.startWith);
 																								sendList(
-																										ctx.getSource(),
-																										"Except" + " (Name" + " Ends" + " with)",
-																										CONFIG.otherBlacklistExcept.endWith);
+																										ctx
+																												.getSource(),
+																										"Except"
+																											+ " (Name"
+																											+ " Ends"
+																											+ " with)",
+																										CONFIG.otherBlacklistExcept
+																												.endWith);
 																								return 1;
 																							}))
 																	.then(
 																			literal("clear")
 																					.then(
-																							literal("confirm")
+																							literal(
+																											"confirm")
 																									.executes(
 																											ctx -> {
-																												CONFIG.otherBlacklist.clear();
-																												CONFIG.otherBlacklistExcept.clear();
-																												CONFIG.save();
+																												CONFIG
+																														.otherBlacklist
+																														.clear();
+																												CONFIG
+																														.otherBlacklistExcept
+																														.clear();
+																												CONFIG
+																														.save();
 																												ctx.getSource()
 																														.sendFeedback(
-																																Component.literal(
-																																		"Blacklist" + " cleared."));
+																																Component
+																																		.literal(
+																																				"Blacklist"
+																																					+ " cleared."));
 																												return 1;
 																											}))))
 													.then(
@@ -448,53 +632,80 @@ public class AutoGreetingClientMod implements ClientModInitializer {
 																					.then(
 																							buildStringListNode(
 																									"equal",
-																									"Whitelist" + " (Name" + " Equal)",
-																									CONFIG.otherWhitelist.equal,
+																									"Whitelist"
+																										+ " (Name"
+																										+ " Equal)",
+																									CONFIG.otherWhitelist
+																											.equal,
 																									false))
 																					.then(
 																							buildStringListNode(
 																									"contain",
-																									"Whitelist" + " (Name" + " Contain)",
-																									CONFIG.otherWhitelist.contain,
+																									"Whitelist"
+																										+ " (Name"
+																										+ " Contain)",
+																									CONFIG.otherWhitelist
+																											.contain,
 																									false))
 																					.then(
 																							buildStringListNode(
 																									"startWith",
-																									"Whitelist" + " (Name" + " Starts" + " with)",
-																									CONFIG.otherWhitelist.startWith,
+																									"Whitelist"
+																										+ " (Name"
+																										+ " Starts"
+																										+ " with)",
+																									CONFIG.otherWhitelist
+																											.startWith,
 																									false))
 																					.then(
 																							buildStringListNode(
 																									"endWith",
-																									"Whitelist" + " (Name" + " Ends" + " with)",
-																									CONFIG.otherWhitelist.endWith,
+																									"Whitelist"
+																										+ " (Name"
+																										+ " Ends"
+																										+ " with)",
+																									CONFIG.otherWhitelist
+																											.endWith,
 																									false))
 																					.then(
-																							literal("list")
+																							literal(
+																											"list")
 																									.executes(
 																											ctx -> {
 																												sendList(
-																														ctx.getSource(),
-																														"Whitelist" + " (Name" + " Equal)",
-																														CONFIG.otherWhitelist.equal);
-																												sendList(
-																														ctx.getSource(),
-																														"Whitelist" + " (Name" + " Contain)",
-																														CONFIG.otherWhitelist.contain);
-																												sendList(
-																														ctx.getSource(),
+																														ctx
+																																.getSource(),
 																														"Whitelist"
-																																+ " (Name"
-																																+ " Starts"
-																																+ " with)",
-																														CONFIG.otherWhitelist.startWith);
+																															+ " (Name"
+																															+ " Equal)",
+																														CONFIG.otherWhitelist
+																																.equal);
 																												sendList(
-																														ctx.getSource(),
+																														ctx
+																																.getSource(),
 																														"Whitelist"
-																																+ " (Name"
-																																+ " Ends"
-																																+ " with)",
-																														CONFIG.otherWhitelist.endWith);
+																															+ " (Name"
+																															+ " Contain)",
+																														CONFIG.otherWhitelist
+																																.contain);
+																												sendList(
+																														ctx
+																																.getSource(),
+																														"Whitelist"
+																															+ " (Name"
+																															+ " Starts"
+																															+ " with)",
+																														CONFIG.otherWhitelist
+																																.startWith);
+																												sendList(
+																														ctx
+																																.getSource(),
+																														"Whitelist"
+																															+ " (Name"
+																															+ " Ends"
+																															+ " with)",
+																														CONFIG.otherWhitelist
+																																.endWith);
 																												return 1;
 																											})))
 																	.then(
@@ -502,49 +713,80 @@ public class AutoGreetingClientMod implements ClientModInitializer {
 																					.then(
 																							buildStringListNode(
 																									"equal",
-																									"Except" + " (Name" + " Equal)",
-																									CONFIG.otherWhitelistExcept.equal,
+																									"Except"
+																										+ " (Name"
+																										+ " Equal)",
+																									CONFIG.otherWhitelistExcept
+																											.equal,
 																									false))
 																					.then(
 																							buildStringListNode(
 																									"contain",
-																									"Except" + " (Name" + " Contain)",
-																									CONFIG.otherWhitelistExcept.contain,
+																									"Except"
+																										+ " (Name"
+																										+ " Contain)",
+																									CONFIG.otherWhitelistExcept
+																											.contain,
 																									false))
 																					.then(
 																							buildStringListNode(
 																									"startWith",
-																									"Except" + " (Name" + " Starts" + " with)",
-																									CONFIG.otherWhitelistExcept.startWith,
+																									"Except"
+																										+ " (Name"
+																										+ " Starts"
+																										+ " with)",
+																									CONFIG.otherWhitelistExcept
+																											.startWith,
 																									false))
 																					.then(
 																							buildStringListNode(
 																									"endWith",
-																									"Except" + " (Name" + " Ends" + " with)",
-																									CONFIG.otherWhitelistExcept.endWith,
+																									"Except"
+																										+ " (Name"
+																										+ " Ends"
+																										+ " with)",
+																									CONFIG.otherWhitelistExcept
+																											.endWith,
 																									false))
 																					.then(
-																							literal("list")
+																							literal(
+																											"list")
 																									.executes(
 																											ctx -> {
 																												sendList(
-																														ctx.getSource(),
-																														"Except" + " (Name" + " Equal)",
-																														CONFIG.otherWhitelistExcept.equal);
+																														ctx
+																																.getSource(),
+																														"Except"
+																															+ " (Name"
+																															+ " Equal)",
+																														CONFIG.otherWhitelistExcept
+																																.equal);
 																												sendList(
-																														ctx.getSource(),
-																														"Except" + " (Name" + " Contain)",
-																														CONFIG.otherWhitelistExcept.contain);
+																														ctx
+																																.getSource(),
+																														"Except"
+																															+ " (Name"
+																															+ " Contain)",
+																														CONFIG.otherWhitelistExcept
+																																.contain);
 																												sendList(
-																														ctx.getSource(),
-																														"Except" + " (Name" + " Starts"
-																																+ " with)",
-																														CONFIG.otherWhitelistExcept.startWith);
+																														ctx
+																																.getSource(),
+																														"Except"
+																															+ " (Name"
+																															+ " Starts"
+																															+ " with)",
+																														CONFIG.otherWhitelistExcept
+																																.startWith);
 																												sendList(
-																														ctx.getSource(),
-																														"Except" + " (Name" + " Ends"
-																																+ " with)",
-																														CONFIG.otherWhitelistExcept.endWith);
+																														ctx
+																																.getSource(),
+																														"Except"
+																															+ " (Name"
+																															+ " Ends"
+																															+ " with)",
+																														CONFIG.otherWhitelistExcept
+																																.endWith);
 																												return 1;
 																											})))
 																	.then(
@@ -552,52 +794,96 @@ public class AutoGreetingClientMod implements ClientModInitializer {
 																					.executes(
 																							ctx -> {
 																								sendList(
-																										ctx.getSource(),
-																										"Whitelist" + " (Name" + " Equal)",
-																										CONFIG.otherWhitelist.equal);
+																										ctx
+																												.getSource(),
+																										"Whitelist"
+																											+ " (Name"
+																											+ " Equal)",
+																										CONFIG.otherWhitelist
+																												.equal);
 																								sendList(
-																										ctx.getSource(),
-																										"Whitelist" + " (Name" + " Contain)",
-																										CONFIG.otherWhitelist.contain);
+																										ctx
+																												.getSource(),
+																										"Whitelist"
+																											+ " (Name"
+																											+ " Contain)",
+																										CONFIG.otherWhitelist
+																												.contain);
 																								sendList(
-																										ctx.getSource(),
-																										"Whitelist" + " (Name" + " Starts" + " with)",
-																										CONFIG.otherWhitelist.startWith);
+																										ctx
+																												.getSource(),
+																										"Whitelist"
+																											+ " (Name"
+																											+ " Starts"
+																											+ " with)",
+																										CONFIG.otherWhitelist
+																												.startWith);
 																								sendList(
-																										ctx.getSource(),
-																										"Whitelist" + " (Name" + " Ends" + " with)",
-																										CONFIG.otherWhitelist.endWith);
+																										ctx
+																												.getSource(),
+																										"Whitelist"
+																											+ " (Name"
+																											+ " Ends"
+																											+ " with)",
+																										CONFIG.otherWhitelist
+																												.endWith);
 																								sendList(
-																										ctx.getSource(),
-																										"Except" + " (Name" + " Equal)",
-																										CONFIG.otherWhitelistExcept.equal);
+																										ctx
+																												.getSource(),
+																										"Except"
+																											+ " (Name"
+																											+ " Equal)",
+																										CONFIG.otherWhitelistExcept
+																												.equal);
 																								sendList(
-																										ctx.getSource(),
-																										"Except" + " (Name" + " Contain)",
-																										CONFIG.otherWhitelistExcept.contain);
+																										ctx
+																												.getSource(),
+																										"Except"
+																											+ " (Name"
+																											+ " Contain)",
+																										CONFIG.otherWhitelistExcept
+																												.contain);
 																								sendList(
-																										ctx.getSource(),
-																										"Except" + " (Name" + " Starts" + " with)",
-																										CONFIG.otherWhitelistExcept.startWith);
+																										ctx
+																												.getSource(),
+																										"Except"
+																											+ " (Name"
+																											+ " Starts"
+																											+ " with)",
+																										CONFIG.otherWhitelistExcept
+																												.startWith);
 																								sendList(
-																										ctx.getSource(),
-																										"Except" + " (Name" + " Ends" + " with)",
-																										CONFIG.otherWhitelistExcept.endWith);
+																										ctx
+																												.getSource(),
+																										"Except"
+																											+ " (Name"
+																											+ " Ends"
+																											+ " with)",
+																										CONFIG.otherWhitelistExcept
+																												.endWith);
 																								return 1;
 																							}))
 																	.then(
 																			literal("clear")
 																					.then(
-																							literal("confirm")
+																							literal(
+																											"confirm")
 																									.executes(
 																											ctx -> {
-																												CONFIG.otherWhitelist.clear();
-																												CONFIG.otherWhitelistExcept.clear();
-																												CONFIG.save();
+																												CONFIG
+																														.otherWhitelist
+																														.clear();
+																												CONFIG
+																														.otherWhitelistExcept
+																														.clear();
+																												CONFIG
+																														.save();
 																												ctx.getSource()
 																														.sendFeedback(
-																																Component.literal(
-																																		"Whitelist" + " cleared."));
+																																Component
+																																		.literal(
+																																				"Whitelist"
+																																					+ " cleared."));
 																												return 1;
 																											}))))));
 				});

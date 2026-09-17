@@ -88,9 +88,9 @@ Group rules:
 
 ## Supported Versions
 
-- Minecraft 26.1.2
-- Fabric Loader 0.19.2+
-- Fabric API 0.150.0+
+- Minecraft 26.3
+- Fabric Loader 0.19.5+
+- Fabric API 0.160.5+
 - Java 25
 
 ## License

@@ -1,6 +1,7 @@
 package com.example.clientflying;
 
 import com.mojang.blaze3d.platform.InputConstants;
+
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper;
@@ -16,6 +17,7 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.GameType;
+
 import org.lwjgl.glfw.GLFW;
 
 public class ClientFlyingMod implements ClientModInitializer {
@@ -94,7 +96,8 @@ public class ClientFlyingMod implements ClientModInitializer {
 		try {
 			connection.send(
 					new ServerboundPlayerCommandPacket(
-							client.player, ServerboundPlayerCommandPacket.Action.START_FALL_FLYING));
+							client.player,
+							ServerboundPlayerCommandPacket.Action.START_FALL_FLYING));
 		} finally {
 			sendingInternalStartFallFlyingPacket = false;
 		}
@@ -106,7 +109,8 @@ public class ClientFlyingMod implements ClientModInitializer {
 		config = ClientFlyingConfig.load();
 		toggleKey =
 				KeyMappingHelper.registerKeyMapping(
-						new KeyMapping(KEY_TOGGLE, InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_V, category));
+						new KeyMapping(
+								KEY_TOGGLE, InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_V, category));
 		ClientPlayConnectionEvents.JOIN.register(
 				(handler, sender, client) -> {
 					resetState();
@@ -150,7 +154,8 @@ public class ClientFlyingMod implements ClientModInitializer {
 							} else if (inAir
 									&& wearingGlider
 									&& (shouldStartGliding
-											|| (client.player.isFallFlying() && !client.player.getAbilities().flying))) {
+											|| (client.player.isFallFlying()
+													&& !client.player.getAbilities().flying))) {
 								client.player.getAbilities().flying = false;
 								if (shouldStartGliding) {
 									notFlyingTicks = 0;
@@ -158,7 +163,9 @@ public class ClientFlyingMod implements ClientModInitializer {
 									sendInternalStartFallFlyingPacket(client, connection);
 								}
 							} else {
-								if (!lastFlying && client.player.getAbilities().flying && lastFallFlying) {
+								if (!lastFlying
+										&& client.player.getAbilities().flying
+										&& lastFallFlying) {
 									notFlyingTicks = 10;
 									client.player.stopFallFlying();
 								}

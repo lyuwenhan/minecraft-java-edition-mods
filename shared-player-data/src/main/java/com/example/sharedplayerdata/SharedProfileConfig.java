@@ -7,6 +7,12 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonParser;
+
+import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.server.players.NameAndId;
+
+import org.slf4j.Logger;
+
 import java.io.IOException;
 import java.io.Reader;
 import java.io.Writer;
@@ -26,9 +32,6 @@ import java.util.OptionalInt;
 import java.util.Set;
 import java.util.UUID;
 import java.util.regex.Pattern;
-import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.server.players.NameAndId;
-import org.slf4j.Logger;
 
 public final class SharedProfileConfig {
 	private static final Gson GSON =
@@ -71,7 +74,8 @@ public final class SharedProfileConfig {
 			Files.createDirectories(path.getParent());
 			writeDefault(path);
 			logger.warn(
-					"Created default Shared Player Data config at {}. Edit groups before using the" + " mod.",
+					"Created default Shared Player Data config at {}. Edit groups before using the"
+							+ " mod.",
 					path);
 		}
 		try (Reader reader = Files.newBufferedReader(path, StandardCharsets.UTF_8)) {
@@ -224,10 +228,14 @@ public final class SharedProfileConfig {
 				updatedGroups);
 	}
 
-	public SharedProfileConfig withPlayerAddedToGroup(int groupNumber, UUID uuid) throws IOException {
+	public SharedProfileConfig withPlayerAddedToGroup(int groupNumber, UUID uuid)
+			throws IOException {
 		Group targetGroup =
 				groupByNumber(groupNumber)
-						.orElseThrow(() -> new IOException("Playerbind group does not exist: " + groupNumber));
+						.orElseThrow(
+								() ->
+										new IOException(
+												"Playerbind group does not exist: " + groupNumber));
 		Optional<Group> optionalExistingGroup = groupFor(uuid);
 		if (optionalExistingGroup.isPresent()) {
 			Group existingGroup = optionalExistingGroup.get();
@@ -236,7 +244,8 @@ public final class SharedProfileConfig {
 			}
 		}
 		Set<UUID> mergedMembers = new LinkedHashSet<>(targetGroup.members());
-		optionalExistingGroup.ifPresent(existingGroup -> mergedMembers.addAll(existingGroup.members()));
+		optionalExistingGroup.ifPresent(
+				existingGroup -> mergedMembers.addAll(existingGroup.members()));
 		mergedMembers.add(uuid);
 		List<Group> updatedGroups = new ArrayList<>();
 		for (Group group : groups) {
@@ -263,7 +272,10 @@ public final class SharedProfileConfig {
 	public SharedProfileConfig withGroupRemoved(int groupNumber) throws IOException {
 		Group removedGroup =
 				groupByNumber(groupNumber)
-						.orElseThrow(() -> new IOException("Playerbind group does not exist: " + groupNumber));
+						.orElseThrow(
+								() ->
+										new IOException(
+												"Playerbind group does not exist: " + groupNumber));
 		List<Group> updatedGroups = new ArrayList<>();
 		for (Group group : groups) {
 			if (group.id().equals(removedGroup.id())) {
@@ -284,7 +296,10 @@ public final class SharedProfileConfig {
 			throws IOException {
 		Group targetGroup =
 				groupByNumber(groupNumber)
-						.orElseThrow(() -> new IOException("Playerbind group does not exist: " + groupNumber));
+						.orElseThrow(
+								() ->
+										new IOException(
+												"Playerbind group does not exist: " + groupNumber));
 		if (!targetGroup.members().contains(uuid)) {
 			throw new IOException("UUID " + uuid + " is not in playerbind group " + groupNumber);
 		}
@@ -317,7 +332,8 @@ public final class SharedProfileConfig {
 				return this;
 			}
 		}
-		String mergedGroupId = chooseMergedGroupId(optionalFirstGroup, optionalSecondGroup, firstUuid);
+		String mergedGroupId =
+				chooseMergedGroupId(optionalFirstGroup, optionalSecondGroup, firstUuid);
 		Set<UUID> mergedMembers = new LinkedHashSet<>();
 		optionalFirstGroup.ifPresent(group -> mergedMembers.addAll(group.members()));
 		optionalSecondGroup.ifPresent(group -> mergedMembers.addAll(group.members()));
@@ -349,14 +365,16 @@ public final class SharedProfileConfig {
 
 	public static void validateGroupId(String id) throws IOException {
 		if (!SAFE_GROUP_ID.matcher(id).matches()) {
-			throw new IOException("Invalid group id: " + id + ". Allowed characters: A-Z a-z 0-9 . _ -");
+			throw new IOException(
+					"Invalid group id: " + id + ". Allowed characters: A-Z a-z 0-9 . _ -");
 		}
 	}
 
 	private JsonObject toJsonObject() {
 		JsonObject root = new JsonObject();
 		root.addProperty("rejectReasonKey", rejectReasonKey);
-		root.addProperty("backupRealPlayerFilesBeforeOverwrite", backupRealPlayerFilesBeforeOverwrite);
+		root.addProperty(
+				"backupRealPlayerFilesBeforeOverwrite", backupRealPlayerFilesBeforeOverwrite);
 		root.addProperty("syncRealUuidFilesOnSave", syncRealUuidFilesOnSave);
 		JsonObject knownNamesObject = new JsonObject();
 		for (Map.Entry<UUID, String> entry : knownNames.entrySet()) {
@@ -379,7 +397,9 @@ public final class SharedProfileConfig {
 	}
 
 	private String chooseMergedGroupId(
-			Optional<Group> optionalFirstGroup, Optional<Group> optionalSecondGroup, UUID firstUuid) {
+			Optional<Group> optionalFirstGroup,
+			Optional<Group> optionalSecondGroup,
+			UUID firstUuid) {
 		if (optionalFirstGroup.isPresent()) {
 			return optionalFirstGroup.get().id();
 		}
@@ -441,14 +461,16 @@ public final class SharedProfileConfig {
 			JsonElement nameElement = entry.getValue();
 			if (!nameElement.isJsonPrimitive()) {
 				throw new IOException(
-						"config field 'knownNames' contains a non-string name for UUID: " + entry.getKey());
+						"config field 'knownNames' contains a non-string name for UUID: "
+								+ entry.getKey());
 			}
 			try {
 				UUID uuid = UUID.fromString(entry.getKey());
 				result.put(uuid, nameElement.getAsString());
 			} catch (IllegalArgumentException exception) {
 				throw new IOException(
-						"config field 'knownNames' contains invalid UUID: " + entry.getKey(), exception);
+						"config field 'knownNames' contains invalid UUID: " + entry.getKey(),
+						exception);
 			}
 		}
 		return result;
@@ -488,7 +510,8 @@ public final class SharedProfileConfig {
 				try {
 					members.add(UUID.fromString(uuidText));
 				} catch (IllegalArgumentException exception) {
-					throw new IOException("group '" + id + "' contains invalid UUID: " + uuidText, exception);
+					throw new IOException(
+							"group '" + id + "' contains invalid UUID: " + uuidText, exception);
 				}
 			}
 			if (members.size() < 2) {
