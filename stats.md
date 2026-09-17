@@ -2,10 +2,13 @@
 
 ## Mods
 
-### Incomplete
+### Completed
 
 - auto-greeting
 - auto-greeting-server
+
+### Incomplete
+
 - auto-login
 - best-armor
 - better-elytra-takeoff
@@ -31,10 +34,6 @@
 - shared-player-data
   - Need Carpet
 - who-i-am
-
-### Completed
-
-None.
 
 ## Dependencies
 
