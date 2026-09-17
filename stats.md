@@ -6,12 +6,12 @@
 
 - auto-greeting
 - auto-greeting-server
+- auto-login
+- better-elytra-takeoff
 
 ### Incomplete
 
-- auto-login
 - best-armor
-- better-elytra-takeoff
 - better-step
 - boat-utils
 - client-flying
