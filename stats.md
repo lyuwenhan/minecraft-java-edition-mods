@@ -5,7 +5,6 @@
 ### Incomplete
 
 - auto-greeting
-  - Need Cloth config
 - auto-greeting-server
 - auto-login
 - best-armor
@@ -42,8 +41,8 @@ None.
 | Dependency | 26.3 Available |
 | :-: | :-: |
 | Mod Menu | Yes |
-| Cloth Config | No |
+| Cloth Config | Yes |
 | Carpet | No |
 | DABR | No |
 | Cicada | No |
-| YACL | No |
+| YACL | Yes |
