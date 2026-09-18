@@ -14,9 +14,6 @@ fs.mkdirSync(distDir, {
 fs.mkdirSync(assetsDir, {
 	recursive: true
 });
-const nextStepPath = path.join(root, "next_steps.md");
-const targetNextStepPath = path.join(dataDir, "next_steps.md");
-fs.copyFileSync(nextStepPath, targetNextStepPath);
 const versionsPath = path.join(dataDir, "versions.json");
 const mappingsPath = path.join(dataDir, "mappings.json");
 let versions = {};
