@@ -21,6 +21,7 @@
 - forward-lock
 - hide-password
 - no-hungry
+- player-highlighter
 
 ### Incomplete
 
@@ -32,7 +33,6 @@
   - Need YACL
 - flight-disabler
   - Invalid movement packet
-- player-highlighter
 - server-manager
 - shared-player-data
   - Need Carpet

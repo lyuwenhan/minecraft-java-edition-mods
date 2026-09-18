@@ -30,7 +30,7 @@ public class PlayerHighlighterHud {
 		if (camera == null || world == null) {
 			return;
 		}
-		if (client.options.hideGui) {
+		if (client.gui.hud.isHidden()) {
 			return;
 		}
 		int baseX = 8;
