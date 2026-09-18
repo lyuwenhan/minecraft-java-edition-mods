@@ -31,7 +31,6 @@
 - dabr-server-config-override
   - Need DABR
   - Need Cicada
-  - Need YACL
 - flight-disabler
   - Invalid movement packet
 - shared-player-data
@@ -43,7 +42,7 @@
 | :-: | :-: |
 | Mod Menu | Yes |
 | Cloth Config | Yes |
+| YACL | Yes |
 | Carpet | No |
 | DABR | No |
 | Cicada | No |
-| YACL | Yes |
