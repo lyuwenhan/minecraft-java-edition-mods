@@ -20,6 +20,7 @@
 - fly-speed-modifier
 - forward-lock
 - hide-password
+- no-hungry
 
 ### Incomplete
 
@@ -31,7 +32,6 @@
   - Need YACL
 - flight-disabler
   - Invalid movement packet
-- no-hungry
 - player-highlighter
 - server-manager
 - shared-player-data
