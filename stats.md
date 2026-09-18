@@ -13,6 +13,7 @@
 - entity-highlighter
 - glideplate
 - infinity-fireworks
+- who-i-am
 
 ### Incomplete
 
@@ -33,7 +34,6 @@
 - server-manager
 - shared-player-data
   - Need Carpet
-- who-i-am
 
 ## Dependencies
 
