@@ -251,8 +251,7 @@ final class CommandTreeExporter {
 				case "block" -> collectRegistryKeys(server, Registries.BLOCK, values);
 				case "blockEntityType" ->
 						collectRegistryKeys(server, Registries.BLOCK_ENTITY_TYPE, values);
-				case "configuredFeature" ->
-						collectRegistryKeys(server, Registries.CONFIGURED_FEATURE, values);
+				case "configuredFeature" -> collectRegistryKeys(server, Registries.FEATURE, values);
 				case "damageType" -> collectRegistryKeys(server, Registries.DAMAGE_TYPE, values);
 				case "dialog" -> collectRegistryKeys(server, Registries.DIALOG, values);
 				case "dimension" -> collectDimensionKeys(server, values);

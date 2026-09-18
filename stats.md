@@ -22,6 +22,7 @@
 - hide-password
 - no-hungry
 - player-highlighter
+- server-manager
 
 ### Incomplete
 
@@ -33,7 +34,6 @@
   - Need YACL
 - flight-disabler
   - Invalid movement packet
-- server-manager
 - shared-player-data
   - Need Carpet
 
