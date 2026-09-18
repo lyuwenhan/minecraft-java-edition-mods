@@ -9,13 +9,13 @@
 - auto-login
 - better-elytra-takeoff
 - better-step
+- creeper-no-break
 
 ### Incomplete
 
 - best-armor
 - boat-utils
 - client-flying
-- creeper-no-break
 - dabr-server-config-override
   - Need DABR
   - Need Cicada
