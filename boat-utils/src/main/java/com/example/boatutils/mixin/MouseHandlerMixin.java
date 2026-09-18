@@ -62,6 +62,7 @@ public abstract class MouseHandlerMixin {
 
 		float viewYaw = client.player.getYRot();
 		boat.setYRot(viewYaw);
+		boat.yRotO = viewYaw;
 		boat.setYBodyRot(viewYaw);
 	}
 

@@ -15,10 +15,10 @@
 - infinity-fireworks
 - who-i-am
 - best-armor
+- boat-utils
 
 ### Incomplete
 
-- boat-utils
 - client-flying
 - dabr-server-config-override
   - Need DABR

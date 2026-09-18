@@ -100,7 +100,8 @@ public abstract class AbstractBoatMixin {
 	}
 
 	@Inject(method = "clampRotation", at = @At("HEAD"), cancellable = true)
-	private void boatUtils$disableViewRotationLimit(Entity passenger, CallbackInfo callbackInfo) {
+	private void boatUtils$disableViewRotationLimit(
+			Entity passenger, CallbackInfoReturnable<Float> callbackInfo) {
 		Minecraft client = Minecraft.getInstance();
 		if (passenger != client.player) {
 			return;
@@ -112,7 +113,8 @@ public abstract class AbstractBoatMixin {
 		AbstractBoat self = (AbstractBoat) (Object) this;
 		passenger.setYBodyRot(self.getYRot());
 		passenger.setYHeadRot(passenger.getYRot());
-		callbackInfo.cancel();
+
+		callbackInfo.setReturnValue(0.0F);
 	}
 
 	@ModifyVariable(method = "floatBoat", at = @At("STORE"), index = 5)

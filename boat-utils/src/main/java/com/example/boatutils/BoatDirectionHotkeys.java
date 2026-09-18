@@ -1,10 +1,5 @@
 package com.example.boatutils;
 
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_DOWN;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_LEFT;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_RIGHT;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_UP;
-
 import com.example.boatutils.mixin.AbstractBoatAccessor;
 import com.mojang.blaze3d.platform.InputConstants;
 
@@ -47,29 +42,32 @@ public final class BoatDirectionHotkeys {
 				KeyMappingHelper.registerKeyMapping(
 						new KeyMapping(
 								"key.boat-utils.snap_to_nearest_direction",
-								InputConstants.Type.KEYSYM,
-								GLFW_KEY_UP,
+								InputConstants.Type.KEYBOARD,
+								InputConstants.KEY_UP,
 								category));
+
 		turnBack =
 				KeyMappingHelper.registerKeyMapping(
 						new KeyMapping(
 								"key.boat-utils.turn_back",
-								InputConstants.Type.KEYSYM,
-								GLFW_KEY_DOWN,
+								InputConstants.Type.KEYBOARD,
+								InputConstants.KEY_DOWN,
 								category));
+
 		turnLeft =
 				KeyMappingHelper.registerKeyMapping(
 						new KeyMapping(
 								"key.boat-utils.turn_left_to_direction",
-								InputConstants.Type.KEYSYM,
-								GLFW_KEY_LEFT,
+								InputConstants.Type.KEYBOARD,
+								InputConstants.KEY_LEFT,
 								category));
+
 		turnRight =
 				KeyMappingHelper.registerKeyMapping(
 						new KeyMapping(
 								"key.boat-utils.turn_right_to_direction",
-								InputConstants.Type.KEYSYM,
-								GLFW_KEY_RIGHT,
+								InputConstants.Type.KEYBOARD,
+								InputConstants.KEY_RIGHT,
 								category));
 		initialized = true;
 	}
@@ -84,7 +82,7 @@ public final class BoatDirectionHotkeys {
 		boolean turnLeftDown = turnLeft.isDown();
 		boolean turnRightDown = turnRight.isDown();
 
-		if (client.screen == null && BoatUtilsConfig.directionHotkeysEnabled()) {
+		if (client.gui.screen() == null && BoatUtilsConfig.directionHotkeysEnabled()) {
 			AbstractBoat boat = getControlledBoat(client);
 			if (boat != null) {
 				if (snapDown && !snapWasDown) {
