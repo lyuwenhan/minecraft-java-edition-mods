@@ -12,8 +12,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ServerboundMovePlayerPacket;
 import net.minecraft.resources.Identifier;
 
-import org.lwjgl.glfw.GLFW;
-
 public final class FlightDisablerMod implements ClientModInitializer {
 	public static final String MOD_ID = "flight-disabler";
 	private static final String KEY_TOGGLE = "key.flight-disabler.toggle";
@@ -28,7 +26,7 @@ public final class FlightDisablerMod implements ClientModInitializer {
 		toggleKey =
 				KeyMappingHelper.registerKeyMapping(
 						new KeyMapping(
-								KEY_TOGGLE, InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_B, CATEGORY));
+								KEY_TOGGLE, InputConstants.Type.KEYBOARD, InputConstants.KEY_B, CATEGORY));
 		ClientTickEvents.END_CLIENT_TICK.register(FlightDisablerMod::onEndClientTick);
 	}
 

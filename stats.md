@@ -16,6 +16,7 @@
 - who-i-am
 - best-armor
 - boat-utils
+- double-jump
 
 ### Incomplete
 
@@ -24,7 +25,6 @@
   - Need DABR
   - Need Cicada
   - Need YACL
-- double-jump
 - flight-disabler
 - fly-speed-modifier
 - forward-lock

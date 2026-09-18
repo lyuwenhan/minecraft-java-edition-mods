@@ -18,8 +18,6 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.GameType;
 
-import org.lwjgl.glfw.GLFW;
-
 public class ClientFlyingMod implements ClientModInitializer {
 	private static final String MOD_ID = "client-flying";
 	private static final String KEY_TOGGLE = "key.client-flying.toggle";
@@ -110,7 +108,7 @@ public class ClientFlyingMod implements ClientModInitializer {
 		toggleKey =
 				KeyMappingHelper.registerKeyMapping(
 						new KeyMapping(
-								KEY_TOGGLE, InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_V, category));
+								KEY_TOGGLE, InputConstants.Type.KEYBOARD, InputConstants.KEY_V, category));
 		ClientPlayConnectionEvents.JOIN.register(
 				(handler, sender, client) -> {
 					resetState();

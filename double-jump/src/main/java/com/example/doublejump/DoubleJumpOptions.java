@@ -153,7 +153,7 @@ public final class DoubleJumpOptions {
 
 	private static DoubleJumpConfigScreen activeScreen() {
 		Minecraft client = Minecraft.getInstance();
-		if (client.screen instanceof DoubleJumpConfigScreen screen) {
+		if (client.gui.screen() instanceof DoubleJumpConfigScreen screen) {
 			return screen;
 		}
 		return null;

@@ -14,8 +14,6 @@ import net.minecraft.client.KeyMapping;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 
-import org.lwjgl.glfw.GLFW;
-
 public class PlayerHighlighterMod implements ClientModInitializer {
 	public static final String MOD_ID = "player-highlighter";
 	private static final KeyMapping.Category CATEGORY =
@@ -31,15 +29,15 @@ public class PlayerHighlighterMod implements ClientModInitializer {
 				KeyMappingHelper.registerKeyMapping(
 						new KeyMapping(
 								"key.playerhighlighter.toggle",
-								InputConstants.Type.KEYSYM,
-								GLFW.GLFW_KEY_I,
+								InputConstants.Type.KEYBOARD,
+								InputConstants.KEY_I,
 								CATEGORY));
 		HOLD_KEY =
 				KeyMappingHelper.registerKeyMapping(
 						new KeyMapping(
 								"key.playerhighlighter.hold",
-								InputConstants.Type.KEYSYM,
-								GLFW.GLFW_KEY_TAB,
+								InputConstants.Type.KEYBOARD,
+								InputConstants.KEY_TAB,
 								CATEGORY));
 		ClientTickEvents.END_CLIENT_TICK.register(
 				client -> {
