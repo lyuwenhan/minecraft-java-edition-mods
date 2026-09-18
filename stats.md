@@ -18,6 +18,7 @@
 - boat-utils
 - double-jump
 - fly-speed-modifier
+- forward-lock
 
 ### Incomplete
 
@@ -29,7 +30,6 @@
   - Need YACL
 - flight-disabler
   - Invalid movement packet
-- forward-lock
 - hide-password
 - no-hungry
 - player-highlighter
