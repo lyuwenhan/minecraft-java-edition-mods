@@ -19,6 +19,7 @@
 - double-jump
 - fly-speed-modifier
 - forward-lock
+- hide-password
 
 ### Incomplete
 
@@ -30,7 +31,6 @@
   - Need YACL
 - flight-disabler
   - Invalid movement packet
-- hide-password
 - no-hungry
 - player-highlighter
 - server-manager
