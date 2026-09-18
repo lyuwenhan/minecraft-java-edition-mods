@@ -14,10 +14,10 @@
 - glideplate
 - infinity-fireworks
 - who-i-am
+- best-armor
 
 ### Incomplete
 
-- best-armor
 - boat-utils
 - client-flying
 - dabr-server-config-override
