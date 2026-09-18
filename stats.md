@@ -12,6 +12,7 @@
 - creeper-no-break
 - entity-highlighter
 - glideplate
+- infinity-fireworks
 
 ### Incomplete
 
@@ -27,7 +28,6 @@
 - fly-speed-modifier
 - forward-lock
 - hide-password
-- infinity-fireworks
 - no-hungry
 - player-highlighter
 - server-manager
