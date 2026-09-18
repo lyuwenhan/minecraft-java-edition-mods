@@ -7,9 +7,7 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.protocol.game.ServerboundMovePlayerPacket;
 import net.minecraft.resources.Identifier;
 
 public final class FlightDisablerMod implements ClientModInitializer {
@@ -26,7 +24,10 @@ public final class FlightDisablerMod implements ClientModInitializer {
 		toggleKey =
 				KeyMappingHelper.registerKeyMapping(
 						new KeyMapping(
-								KEY_TOGGLE, InputConstants.Type.KEYBOARD, InputConstants.KEY_B, CATEGORY));
+								KEY_TOGGLE,
+								InputConstants.Type.KEYBOARD,
+								InputConstants.KEY_B,
+								CATEGORY));
 		ClientTickEvents.END_CLIENT_TICK.register(FlightDisablerMod::onEndClientTick);
 	}
 
@@ -63,39 +64,7 @@ public final class FlightDisablerMod implements ClientModInitializer {
 		client.player.getAbilities().flying = false;
 
 		if (client.player.isFallFlying()) {
-			sendMovementResetPacket(client);
 			client.player.stopFallFlying();
 		}
-	}
-
-	public static void suppressFallFlyingAttempt() {
-		if (!config.enabled) {
-			return;
-		}
-		Minecraft client = Minecraft.getInstance();
-		disableFlight(client);
-		sendMovementResetPacket(client);
-	}
-
-	private static void sendMovementResetPacket(Minecraft client) {
-		if (client.player == null) {
-			return;
-		}
-		ClientPacketListener connection = client.getConnection();
-		if (connection == null) {
-			return;
-		}
-
-		boolean inAir = !client.player.onGround();
-		int notFlyingTicks = 0;
-		connection.send(
-				new ServerboundMovePlayerPacket.PosRot(
-						client.player.getX(),
-						client.player.getY(),
-						client.player.getZ(),
-						client.player.getYRot(),
-						client.player.getXRot(),
-						(notFlyingTicks == 0) || !inAir,
-						client.player.horizontalCollision));
 	}
 }

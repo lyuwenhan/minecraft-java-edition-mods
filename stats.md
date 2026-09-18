@@ -23,6 +23,7 @@
 - no-hungry
 - player-highlighter
 - server-manager
+- flight-disabler
 
 ### Incomplete
 
@@ -31,8 +32,6 @@
 - dabr-server-config-override
   - Need DABR
   - Need Cicada
-- flight-disabler
-  - Invalid movement packet
 - shared-player-data
   - Need Carpet
 
