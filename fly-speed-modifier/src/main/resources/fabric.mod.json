@@ -17,7 +17,8 @@
 		]
 	},
 	"mixins": [
-		"fly-speed-modifier.mixins.json"
+		"fly-speed-modifier.mixins.json",
+		"fly-speed-modifier-freecam.json"
 	],
 	"depends": {
 		"fabricloader": ">=0.19.5",

@@ -6,7 +6,6 @@
 		"AbstractSliderButtonAccessor",
 		"BoatMovementSpeedMixin",
 		"ElytraMovementSpeedMixin",
-		"FreeCameraSpeedMixin",
 		"MouseHandlerMixin",
 		"OtherMovementSpeedMixin"
 	],

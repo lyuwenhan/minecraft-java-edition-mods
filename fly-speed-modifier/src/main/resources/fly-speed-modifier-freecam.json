@@ -1,0 +1,11 @@
+{
+	"required": false,
+	"package": "com.example.flyspeedmodifier.mixin",
+	"compatibilityLevel": "JAVA_25",
+	"client": [
+		"FreeCameraSpeedMixin"
+	],
+	"injectors": {
+		"defaultRequire": 1
+	}
+}

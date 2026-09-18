@@ -23,7 +23,7 @@ public final class FlySpeedModifierMod implements ClientModInitializer {
 						new KeyMapping(
 								"key.fly-speed-modifier.adjust_speed",
 								InputConstants.Type.KEYBOARD,
-								InputConstants.KEY_LEFT_ALT,
+								InputConstants.KEY_LALT,
 								CATEGORY));
 		FreecamSpeedController.setAdjustSpeedKey(adjustSpeedKey);
 		ClientTickEvents.END_CLIENT_TICK.register(FreecamSpeedController::onEndClientTick);

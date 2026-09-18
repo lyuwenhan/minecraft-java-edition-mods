@@ -17,6 +17,7 @@
 - best-armor
 - boat-utils
 - double-jump
+- fly-speed-modifier
 
 ### Incomplete
 
@@ -28,7 +29,6 @@
   - Need YACL
 - flight-disabler
   - Invalid movement packet
-- fly-speed-modifier
 - forward-lock
 - hide-password
 - no-hungry
