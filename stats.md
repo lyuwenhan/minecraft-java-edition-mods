@@ -10,6 +10,8 @@
 - better-elytra-takeoff
 - better-step
 - creeper-no-break
+- entity-highlighter
+- glideplate
 
 ### Incomplete
 
@@ -21,11 +23,9 @@
   - Need Cicada
   - Need YACL
 - double-jump
-- entity-highlighter
 - flight-disabler
 - fly-speed-modifier
 - forward-lock
-- glideplate
 - hide-password
 - infinity-fireworks
 - no-hungry
