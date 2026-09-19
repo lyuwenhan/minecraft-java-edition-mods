@@ -24,11 +24,10 @@
 - player-highlighter
 - server-manager
 - flight-disabler
+- client-flying
 
 ### Incomplete
 
-- client-flying
-  - Refactoring
 - dabr-server-config-override
   - Need DABR
   - Need Cicada
