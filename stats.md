@@ -28,7 +28,7 @@
 ### Incomplete
 
 - client-flying
-  - Invalid movement packet
+  - Refactoring
 - dabr-server-config-override
   - Need DABR
   - Need Cicada
