@@ -33,7 +33,7 @@
   - Need DABR
   - Need Cicada
 - shared-player-data
-  - Need Carpet
+  - Refactoring
 
 ## Dependencies
 

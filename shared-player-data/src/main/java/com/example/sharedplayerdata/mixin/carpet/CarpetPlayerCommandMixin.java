@@ -36,7 +36,7 @@ public abstract class CarpetPlayerCommandMixin {
 				context.getSource(),
 				"r Player ",
 				"rb " + playerName,
-				"r	is in a Shared Player Data group that is already online");
+				"r  is in a Shared Player Data group that is already online");
 		cir.setReturnValue(0);
 	}
 }
