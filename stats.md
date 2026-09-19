@@ -42,6 +42,6 @@
 | Mod Menu | Yes |
 | Cloth Config | Yes |
 | YACL | Yes |
-| Carpet | No |
+| Carpet | Yes |
 | DABR | No |
 | Cicada | No |
