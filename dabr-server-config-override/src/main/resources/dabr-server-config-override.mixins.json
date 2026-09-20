@@ -5,6 +5,7 @@
 	"client": [
 		"DoABarrelRollClientMixin",
 		"ModConfigMixin",
+		"ModKeybindingsMixin",
 		"YACLImplementationMixin"
 	],
 	"injectors": {
