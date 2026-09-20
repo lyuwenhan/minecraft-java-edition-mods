@@ -28,10 +28,9 @@ public abstract class ModConfigMixin {
 					@At(
 							value = "INVOKE",
 							target =
-									"Lnl/enjarai/doabarrelroll/util/ToastUtil;toasty(Ljava/lang/String;)V",
-							ordinal = 0))
-	private void dabrServerConfigOverride$suppressThrustingDisabledToast(String messageKey) {
-		// Suppress only the thrusting-disabled server toast.
-		// The received server config remains unchanged.
+									"Lnl/enjarai/doabarrelroll/util/ToastUtil;toasty(Ljava/lang/String;)V"))
+	private void dabrServerConfigOverride$suppressIgnoredServerOverrideToasts(String messageKey) {
+		// Both server restrictions handled by this mod are ignored for client gameplay, so neither
+		// warning should claim that the corresponding local setting has been overridden.
 	}
 }
