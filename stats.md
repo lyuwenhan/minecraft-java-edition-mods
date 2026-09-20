@@ -25,9 +25,9 @@
 - server-manager
 - flight-disabler
 - client-flying
+- dabr-server-config-override
 
 ### Incomplete
 
-- dabr-server-config-override
 - shared-player-data
   - Refactoring
