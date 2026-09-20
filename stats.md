@@ -29,18 +29,5 @@
 ### Incomplete
 
 - dabr-server-config-override
-  - Need DABR
-  - Need Cicada
 - shared-player-data
   - Refactoring
-
-## Dependencies
-
-| Dependency | 26.3 Available |
-| :-: | :-: |
-| Mod Menu | Yes |
-| Cloth Config | Yes |
-| YACL | Yes |
-| Carpet | Yes |
-| DABR | No |
-| Cicada | No |
