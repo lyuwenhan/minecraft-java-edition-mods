@@ -39,33 +39,26 @@ public final class SharedProfileConfig {
 	private static final Pattern SAFE_GROUP_ID = Pattern.compile("[A-Za-z0-9._-]+");
 	private static final String CONFIG_FILE_NAME = "shared-player-data.json";
 	private final Path path;
-	private final String rejectReasonKey;
-	private final boolean backupRealPlayerFilesBeforeOverwrite;
-	private final boolean syncRealUuidFilesOnSave;
 	private final Map<UUID, String> knownNames;
 	private final List<Group> groups;
 	private final Map<UUID, Group> groupByUuid;
 
-	private SharedProfileConfig(
-			Path path,
-			String rejectReasonKey,
-			boolean backupRealPlayerFilesBeforeOverwrite,
-			boolean syncRealUuidFilesOnSave,
-			Map<UUID, String> knownNames,
-			List<Group> groups) {
+	private SharedProfileConfig(Path path, Map<UUID, String> knownNames, List<Group> groups) {
 		this.path = path;
-		this.rejectReasonKey = rejectReasonKey;
-		this.backupRealPlayerFilesBeforeOverwrite = backupRealPlayerFilesBeforeOverwrite;
-		this.syncRealUuidFilesOnSave = syncRealUuidFilesOnSave;
-		this.knownNames = Collections.unmodifiableMap(new LinkedHashMap<>(knownNames));
 		this.groups = List.copyOf(groups);
 		this.groupByUuid = buildGroupByUuid(this.groups);
+		Map<UUID, String> boundKnownNames = new LinkedHashMap<>();
+		for (Map.Entry<UUID, String> entry : knownNames.entrySet()) {
+			if (this.groupByUuid.containsKey(entry.getKey())) {
+				boundKnownNames.put(entry.getKey(), entry.getValue());
+			}
+		}
+		this.knownNames = Collections.unmodifiableMap(boundKnownNames);
 	}
 
 	public static SharedProfileConfig empty() {
 		Path path = FabricLoader.getInstance().getConfigDir().resolve(CONFIG_FILE_NAME);
-		return new SharedProfileConfig(
-				path, "multiplayer.disconnect.duplicate_login", true, true, Map.of(), List.of());
+		return new SharedProfileConfig(path, Map.of(), List.of());
 	}
 
 	public static SharedProfileConfig loadOrCreate(Logger logger) throws IOException {
@@ -80,20 +73,11 @@ public final class SharedProfileConfig {
 		}
 		try (Reader reader = Files.newBufferedReader(path, StandardCharsets.UTF_8)) {
 			JsonObject root = JsonParser.parseReader(reader).getAsJsonObject();
-			String rejectReasonKey =
-					getString(root, "rejectReasonKey", "multiplayer.disconnect.duplicate_login");
-			boolean backupRealPlayerFilesBeforeOverwrite =
-					getBoolean(root, "backupRealPlayerFilesBeforeOverwrite", true);
-			boolean syncRealUuidFilesOnSave = getBoolean(root, "syncRealUuidFilesOnSave", true);
 			Map<UUID, String> knownNames = readKnownNames(root);
 			List<Group> groups = readGroups(root, logger);
-			return new SharedProfileConfig(
-					path,
-					rejectReasonKey,
-					backupRealPlayerFilesBeforeOverwrite,
-					syncRealUuidFilesOnSave,
-					knownNames,
-					groups);
+			SharedProfileConfig loadedConfig = new SharedProfileConfig(path, knownNames, groups);
+			loadedConfig.save();
+			return loadedConfig;
 		} catch (IllegalStateException | JsonParseException exception) {
 			throw new IOException("Invalid JSON in " + path, exception);
 		}
@@ -101,18 +85,6 @@ public final class SharedProfileConfig {
 
 	public Path path() {
 		return path;
-	}
-
-	public String rejectReasonKey() {
-		return rejectReasonKey;
-	}
-
-	public boolean backupRealPlayerFilesBeforeOverwrite() {
-		return backupRealPlayerFilesBeforeOverwrite;
-	}
-
-	public boolean syncRealUuidFilesOnSave() {
-		return syncRealUuidFilesOnSave;
 	}
 
 	public Optional<String> knownName(UUID uuid) {
@@ -180,25 +152,25 @@ public final class SharedProfileConfig {
 	}
 
 	public SharedProfileConfig withRememberedName(UUID uuid, String name) {
+		if (!groupByUuid.containsKey(uuid)) {
+			return this;
+		}
 		String previousName = knownNames.get(uuid);
 		if (name.equals(previousName)) {
 			return this;
 		}
 		Map<UUID, String> updatedKnownNames = new LinkedHashMap<>(knownNames);
 		updatedKnownNames.put(uuid, name);
-		return new SharedProfileConfig(
-				path,
-				rejectReasonKey,
-				backupRealPlayerFilesBeforeOverwrite,
-				syncRealUuidFilesOnSave,
-				updatedKnownNames,
-				groups);
+		return new SharedProfileConfig(path, updatedKnownNames, groups);
 	}
 
 	public SharedProfileConfig withRememberedNames(NameAndId... nameAndIds) {
 		Map<UUID, String> updatedKnownNames = new LinkedHashMap<>(knownNames);
 		boolean changed = false;
 		for (NameAndId nameAndId : nameAndIds) {
+			if (!groupByUuid.containsKey(nameAndId.id())) {
+				continue;
+			}
 			String previousName = updatedKnownNames.put(nameAndId.id(), nameAndId.name());
 			if (!nameAndId.name().equals(previousName)) {
 				changed = true;
@@ -207,25 +179,13 @@ public final class SharedProfileConfig {
 		if (!changed) {
 			return this;
 		}
-		return new SharedProfileConfig(
-				path,
-				rejectReasonKey,
-				backupRealPlayerFilesBeforeOverwrite,
-				syncRealUuidFilesOnSave,
-				updatedKnownNames,
-				groups);
+		return new SharedProfileConfig(path, updatedKnownNames, groups);
 	}
 
 	public SharedProfileConfig withCreatedGroup() {
 		List<Group> updatedGroups = new ArrayList<>(groups);
 		updatedGroups.add(new Group(chooseNewGroupId(), Set.of()));
-		return new SharedProfileConfig(
-				path,
-				rejectReasonKey,
-				backupRealPlayerFilesBeforeOverwrite,
-				syncRealUuidFilesOnSave,
-				knownNames,
-				updatedGroups);
+		return new SharedProfileConfig(path, knownNames, updatedGroups);
 	}
 
 	public SharedProfileConfig withPlayerAddedToGroup(int groupNumber, UUID uuid)
@@ -260,13 +220,7 @@ public final class SharedProfileConfig {
 				updatedGroups.add(group);
 			}
 		}
-		return new SharedProfileConfig(
-				path,
-				rejectReasonKey,
-				backupRealPlayerFilesBeforeOverwrite,
-				syncRealUuidFilesOnSave,
-				knownNames,
-				updatedGroups);
+		return new SharedProfileConfig(path, knownNames, updatedGroups);
 	}
 
 	public SharedProfileConfig withGroupRemoved(int groupNumber) throws IOException {
@@ -283,13 +237,7 @@ public final class SharedProfileConfig {
 			}
 			updatedGroups.add(group);
 		}
-		return new SharedProfileConfig(
-				path,
-				rejectReasonKey,
-				backupRealPlayerFilesBeforeOverwrite,
-				syncRealUuidFilesOnSave,
-				knownNames,
-				updatedGroups);
+		return new SharedProfileConfig(path, knownNames, updatedGroups);
 	}
 
 	public SharedProfileConfig withPlayerRemovedFromGroup(int groupNumber, UUID uuid)
@@ -313,13 +261,7 @@ public final class SharedProfileConfig {
 				updatedGroups.add(group);
 			}
 		}
-		return new SharedProfileConfig(
-				path,
-				rejectReasonKey,
-				backupRealPlayerFilesBeforeOverwrite,
-				syncRealUuidFilesOnSave,
-				knownNames,
-				updatedGroups);
+		return new SharedProfileConfig(path, knownNames, updatedGroups);
 	}
 
 	public SharedProfileConfig withBoundPlayers(UUID firstUuid, UUID secondUuid) {
@@ -354,13 +296,7 @@ public final class SharedProfileConfig {
 			updatedGroups.add(group);
 		}
 		updatedGroups.add(new Group(mergedGroupId, mergedMembers));
-		return new SharedProfileConfig(
-				path,
-				rejectReasonKey,
-				backupRealPlayerFilesBeforeOverwrite,
-				syncRealUuidFilesOnSave,
-				knownNames,
-				updatedGroups);
+		return new SharedProfileConfig(path, knownNames, updatedGroups);
 	}
 
 	public static void validateGroupId(String id) throws IOException {
@@ -372,10 +308,6 @@ public final class SharedProfileConfig {
 
 	private JsonObject toJsonObject() {
 		JsonObject root = new JsonObject();
-		root.addProperty("rejectReasonKey", rejectReasonKey);
-		root.addProperty(
-				"backupRealPlayerFilesBeforeOverwrite", backupRealPlayerFilesBeforeOverwrite);
-		root.addProperty("syncRealUuidFilesOnSave", syncRealUuidFilesOnSave);
 		JsonObject knownNamesObject = new JsonObject();
 		for (Map.Entry<UUID, String> entry : knownNames.entrySet()) {
 			knownNamesObject.addProperty(entry.getKey().toString(), entry.getValue());
@@ -437,9 +369,6 @@ public final class SharedProfileConfig {
 
 	private static void writeDefault(Path path) throws IOException {
 		JsonObject root = new JsonObject();
-		root.addProperty("rejectReasonKey", "multiplayer.disconnect.duplicate_login");
-		root.addProperty("backupRealPlayerFilesBeforeOverwrite", true);
-		root.addProperty("syncRealUuidFilesOnSave", true);
 		root.add("knownNames", new JsonObject());
 		root.add("groups", new JsonArray());
 		try (Writer writer = Files.newBufferedWriter(path, StandardCharsets.UTF_8)) {
@@ -551,22 +480,6 @@ public final class SharedProfileConfig {
 			throw new IOException("missing or invalid string field '" + field + "'");
 		}
 		return element.getAsString();
-	}
-
-	private static String getString(JsonObject object, String field, String fallback) {
-		JsonElement element = object.get(field);
-		if (element == null || !element.isJsonPrimitive()) {
-			return fallback;
-		}
-		return element.getAsString();
-	}
-
-	private static boolean getBoolean(JsonObject object, String field, boolean fallback) {
-		JsonElement element = object.get(field);
-		if (element == null || !element.isJsonPrimitive()) {
-			return fallback;
-		}
-		return element.getAsBoolean();
 	}
 
 	public record Group(String id, Set<UUID> members) {

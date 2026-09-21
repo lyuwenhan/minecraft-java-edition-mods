@@ -25,6 +25,7 @@ import java.util.Set;
 import java.util.UUID;
 
 public final class SharedProfileManager {
+	private static final String REJECT_REASON_KEY = "multiplayer.disconnect.duplicate_login";
 	private final Logger logger;
 	private final PlayerDataFileMirror mirror;
 	private final ThreadLocal<ServerLoginPacketListenerImpl> currentLoginListener =
@@ -102,13 +103,13 @@ public final class SharedProfileManager {
 					group.id(),
 					onlinePlayer.nameAndId().name(),
 					onlinePlayer.getUUID());
-			return LoginDecision.rejected(Component.translatable(currentConfig.rejectReasonKey()));
+			return LoginDecision.rejected(Component.translatable(REJECT_REASON_KEY));
 		}
 		for (ServerPlayer fakePlayer : carpetFakePlayersToEvict) {
 			evictCarpetFakePlayerForRealLogin(server, currentConfig, group, fakePlayer, uuid, name);
 		}
 		try {
-			mirror.stageForLogin(server, currentConfig, group, uuid);
+			mirror.stageForLogin(server, group, uuid);
 			synchronized (this) {
 				activeGroupByUuid.put(uuid, group);
 				if (listener != null) {
@@ -161,8 +162,7 @@ public final class SharedProfileManager {
 							group.id(),
 							otherPlayer.nameAndId().name(),
 							otherPlayer.getUUID());
-					player.connection.disconnect(
-							Component.translatable(currentConfig.rejectReasonKey()));
+					player.connection.disconnect(Component.translatable(REJECT_REASON_KEY));
 				}
 				return;
 			}
@@ -179,8 +179,7 @@ public final class SharedProfileManager {
 						player.nameAndId().name(),
 						uuid,
 						group.id());
-				player.connection.disconnect(
-						Component.translatable(currentConfig.rejectReasonKey()));
+				player.connection.disconnect(Component.translatable(REJECT_REASON_KEY));
 			}
 			return;
 		}
@@ -198,8 +197,7 @@ public final class SharedProfileManager {
 						group.id(),
 						player.nameAndId().name(),
 						uuid);
-				otherPlayer.connection.disconnect(
-						Component.translatable(currentConfig.rejectReasonKey()));
+				otherPlayer.connection.disconnect(Component.translatable(REJECT_REASON_KEY));
 			}
 		}
 		synchronized (this) {
@@ -335,8 +333,7 @@ public final class SharedProfileManager {
 							player.getUUID(),
 							groupId,
 							preferredUuid);
-					player.connection.disconnect(
-							Component.translatable(currentConfig.rejectReasonKey()));
+					player.connection.disconnect(Component.translatable(REJECT_REASON_KEY));
 				}
 			}
 		}
@@ -362,6 +359,10 @@ public final class SharedProfileManager {
 
 	public List<String> knownPlayerNames() {
 		return config.knownPlayerNames();
+	}
+
+	public boolean isBound(UUID uuid) {
+		return config.groupFor(uuid).isPresent();
 	}
 
 	public GroupList listGroups() {
@@ -462,11 +463,10 @@ public final class SharedProfileManager {
 		}
 		SharedProfileConfig.Group group = optionalGroup.get();
 		if (!findOnlineGroupPlayers(server, group).isEmpty()) {
-			return CarpetFakeSpawnDecision.rejected(
-					Component.translatable(currentConfig.rejectReasonKey()));
+			return CarpetFakeSpawnDecision.rejected(Component.translatable(REJECT_REASON_KEY));
 		}
 		try {
-			mirror.stageForLogin(server, currentConfig, group, resolvedPlayer.uuid());
+			mirror.stageForLogin(server, group, resolvedPlayer.uuid());
 			synchronized (this) {
 				activeGroupByUuid.put(resolvedPlayer.uuid(), group);
 			}
@@ -507,12 +507,14 @@ public final class SharedProfileManager {
 			throws IOException {
 		UUID uuid = player.getUUID();
 		NameAndId nameAndId = player.nameAndId();
-		SharedProfileConfig currentConfig =
-				config.withRememberedName(nameAndId.id(), nameAndId.name());
+		SharedProfileConfig currentConfig = config;
 		OptionalInt previousGroupNumber = currentConfig.groupNumberFor(uuid);
 		boolean alreadyInRequestedGroup =
 				previousGroupNumber.isPresent() && previousGroupNumber.getAsInt() == groupNumber;
-		SharedProfileConfig updatedConfig = currentConfig.withPlayerAddedToGroup(groupNumber, uuid);
+		SharedProfileConfig updatedConfig =
+				currentConfig
+						.withPlayerAddedToGroup(groupNumber, uuid)
+						.withRememberedName(nameAndId.id(), nameAndId.name());
 		OptionalInt updatedGroupNumber = updatedConfig.groupNumberFor(uuid);
 		SharedProfileConfig.Group updatedGroup =
 				updatedConfig
@@ -587,7 +589,7 @@ public final class SharedProfileManager {
 		boolean addedPlayerIsExecutor =
 				executor != null && executor.getUUID().equals(addedPlayer.getUUID());
 		if (addedPlayerIsExecutor) {
-			mirror.syncFromPlayer(server, currentConfig, group, addedPlayer.getUUID());
+			mirror.syncFromPlayer(server, group, addedPlayer.getUUID());
 			synchronized (this) {
 				activeGroupByUuid.put(addedPlayer.getUUID(), group);
 				joinedUuids.add(addedPlayer.getUUID());
@@ -628,7 +630,7 @@ public final class SharedProfileManager {
 				player.nameAndId().name(),
 				player.getUUID(),
 				reason);
-		player.connection.disconnect(Component.translatable(currentConfig.rejectReasonKey()));
+		player.connection.disconnect(Component.translatable(REJECT_REASON_KEY));
 	}
 
 	public RemoveGroupResult removeGroup(MinecraftServer server, int groupNumber)
@@ -719,8 +721,8 @@ public final class SharedProfileManager {
 			throw new IOException("Cannot bind a player to themselves.");
 		}
 		SharedProfileConfig updatedConfig =
-				config.withRememberedNames(firstNameAndId, secondNameAndId)
-						.withBoundPlayers(firstUuid, secondUuid);
+				config.withBoundPlayers(firstUuid, secondUuid)
+						.withRememberedNames(firstNameAndId, secondNameAndId);
 		SharedProfileConfig.Group mergedGroup = updatedConfig.groupFor(firstUuid).orElseThrow();
 		try {
 			server.getPlayerList().saveAll();
@@ -728,7 +730,7 @@ public final class SharedProfileManager {
 			logger.error("Failed to call PlayerList.saveAll before /playerbind sync.", exception);
 			throw new IOException("Failed to save online players before binding.", exception);
 		}
-		mirror.syncFromPlayer(server, updatedConfig, mergedGroup, firstUuid);
+		mirror.syncFromPlayer(server, mergedGroup, firstUuid);
 		updatedConfig.save();
 		synchronized (this) {
 			this.config = updatedConfig;
@@ -738,7 +740,7 @@ public final class SharedProfileManager {
 			joinedUuids.add(firstUuid);
 		}
 		syncGroupOperatorStatusToCurrentState(server, updatedConfig, mergedGroup);
-		secondPlayer.connection.disconnect(Component.translatable(updatedConfig.rejectReasonKey()));
+		secondPlayer.connection.disconnect(Component.translatable(REJECT_REASON_KEY));
 		logger.info(
 				"Bound {} ({}) and {} ({}) into group '{}'; kicked the second player.",
 				firstName,
@@ -853,7 +855,7 @@ public final class SharedProfileManager {
 				group.id(),
 				incomingName,
 				incomingUuid);
-		fakePlayer.connection.disconnect(Component.translatable(currentConfig.rejectReasonKey()));
+		fakePlayer.connection.disconnect(Component.translatable(REJECT_REASON_KEY));
 	}
 
 	private List<String> memberNames(
@@ -1046,7 +1048,7 @@ public final class SharedProfileManager {
 		}
 		SharedProfileConfig.Group group = optionalGroup.get();
 		try {
-			mirror.syncFromPlayer(server, currentConfig, group, uuid);
+			mirror.syncFromPlayer(server, group, uuid);
 			logger.info("Synced shared profile group '{}' from {}.", group.id(), uuid);
 		} catch (IOException exception) {
 			logger.error(
