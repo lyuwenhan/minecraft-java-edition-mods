@@ -4,7 +4,7 @@
 
 # Server Manager
 
-A Fabric server-side mod that provides a web-based Minecraft server management panel.
+A server-side Fabric mod that provides a web-based Minecraft server management panel.
 
 It allows you to monitor server status, manage online players, view logs, execute commands, edit game rules, and manage Carpet rules when Carpet is installed.
 

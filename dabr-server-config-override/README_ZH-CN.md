@@ -4,7 +4,7 @@
 
 # DABR Server Config Override (DABR 服务端配置覆盖)
 
-一个用于 [Do a Barrel Roll](https://modrinth.com/mod/do-a-barrel-roll) 的客户端 Fabric 模组，用于覆盖服务端 `forceEnabled` 和 `allowThrusting` 设置在客户端上的强制行为，同时保持客户端实际接收到的服务端配置不变。
+一个服务端 Fabric 模组，用于覆盖 [Do a Barrel Roll](https://modrinth.com/mod/do-a-barrel-roll) 服务端 `forceEnabled` 和 `allowThrusting` 设置在客户端上的强制行为。
 
 ## 功能
 

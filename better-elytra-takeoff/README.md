@@ -4,7 +4,7 @@
 
 # Better Elytra Takeoff
 
-A Fabric server-side and single-player mod that lets players start elytra gliding from the ground with a firework rocket.
+A server-side Fabric mod that lets players start elytra gliding from the ground with a firework rocket.
 
 ## Features
 

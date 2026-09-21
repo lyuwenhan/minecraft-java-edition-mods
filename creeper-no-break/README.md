@@ -4,7 +4,7 @@
 
 # Creeper No Break
 
-A Fabric server-side mod that prevents creeper explosions from destroying blocks.
+A server-side Fabric mod that prevents creeper explosions from destroying blocks.
 
 Creepers can still explode, deal damage, and apply knockback, but their explosions will not break terrain or player-built structures.
 

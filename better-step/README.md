@@ -4,7 +4,7 @@
 
 # Better Step
 
-A Fabric server-side and single-player mod that improves player stepping behavior when moving across uneven terrain.
+A client-side Fabric mod that improves player stepping behavior when moving across uneven terrain.
 
 ## Features
 

@@ -4,7 +4,7 @@
 
 # Double Jump
 
-A lightweight client-side Fabric mod that adds configurable multiple jumping.
+A client-side Fabric mod that adds configurable multiple jumping.
 
 ## Features
 

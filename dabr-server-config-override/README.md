@@ -4,7 +4,7 @@
 
 # DABR Server Config Override
 
-A client-side Fabric mod for [Do a Barrel Roll](https://modrinth.com/mod/do-a-barrel-roll) that overrides the client-side enforcement of the server's `forceEnabled` and `allowThrusting` settings while keeping the received server configuration unchanged.
+A client-side Fabric mod for [Do a Barrel Roll](https://modrinth.com/mod/do-a-barrel-roll) that overrides the client-side enforcement of the server's `forceEnabled` and `allowThrusting` settings.
 
 ## Features
 

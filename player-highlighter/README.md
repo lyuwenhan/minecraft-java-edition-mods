@@ -4,7 +4,7 @@
 
 # Player Highlighter
 
-A lightweight **client-side Fabric mod** that improves player awareness with glowing outlines, on-screen target icons, and a nearby-player information HUD.
+A client-side Fabric mod that improves player awareness with glowing outlines, on-screen target icons, and a nearby-player information HUD.
 
 ## Overview
 

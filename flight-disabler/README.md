@@ -4,7 +4,7 @@
 
 # Flight Disabler
 
-A lightweight **client-side Fabric mod** that disables creative flight and Elytra fall flying while operating entirely on the client.
+A client-side Fabric mod that disables creative flight and Elytra fall flying while operating entirely on the client.
 
 ## Overview
 

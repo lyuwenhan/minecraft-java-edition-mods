@@ -4,7 +4,7 @@
 
 # Entity Highlighter
 
-A lightweight **client-side Fabric mod** that highlights selected entities with configurable glowing outlines.
+A client-side Fabric mod that highlights selected entities with configurable glowing outlines.
 
 ## Overview
 

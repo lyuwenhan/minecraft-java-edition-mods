@@ -4,7 +4,7 @@
 
 # Client Flying
 
-A lightweight **client-side Fabric mod** that enables controlled flight in Survival and Adventure modes while avoiding Elytra conflicts and operating entirely on the client.
+A client-side Fabric mod that enables controlled flight in Survival and Adventure modes while avoiding Elytra conflicts and operating entirely on the client.
 
 ## Overview
 

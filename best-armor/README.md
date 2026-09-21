@@ -4,7 +4,7 @@
 
 # Best Armor
 
-A lightweight **client-side Fabric mod** that adds three prebuilt equipment shulker boxes and a Void Sword to the operator creative tab.
+A client-side Fabric mod that adds three prebuilt equipment shulker boxes and a Void Sword to the operator creative tab.
 
 ## Overview
 

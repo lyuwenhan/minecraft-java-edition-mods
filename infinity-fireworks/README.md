@@ -4,7 +4,7 @@
 
 # Infinity Fireworks
 
-A Fabric mod for Minecraft that lets firework rockets be used without consuming the item stack.
+A server-side Fabric mod for Minecraft that lets firework rockets be used without consuming the item stack.
 
 ## Features
 

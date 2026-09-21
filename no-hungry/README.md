@@ -4,7 +4,7 @@
 
 # No Hungry
 
-A lightweight **server-side Fabric mod** that prevents player hunger and saturation from dropping below configured minimum values.
+A server-side Fabric mod that prevents player hunger and saturation from dropping below configured minimum values.
 
 ## Overview
 
