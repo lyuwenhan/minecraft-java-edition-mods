@@ -9,8 +9,6 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.resources.Identifier;
 
-import org.lwjgl.glfw.GLFW;
-
 public final class FlySpeedModifierMod implements ClientModInitializer {
 	public static final String MOD_ID = "fly-speed-modifier";
 	private static final KeyMapping.Category CATEGORY =
@@ -24,8 +22,8 @@ public final class FlySpeedModifierMod implements ClientModInitializer {
 				KeyMappingHelper.registerKeyMapping(
 						new KeyMapping(
 								"key.fly-speed-modifier.adjust_speed",
-								InputConstants.Type.KEYSYM,
-								GLFW.GLFW_KEY_LEFT_ALT,
+								InputConstants.Type.KEYBOARD,
+								InputConstants.KEY_LALT,
 								CATEGORY));
 		FreecamSpeedController.setAdjustSpeedKey(adjustSpeedKey);
 		ClientTickEvents.END_CLIENT_TICK.register(FreecamSpeedController::onEndClientTick);

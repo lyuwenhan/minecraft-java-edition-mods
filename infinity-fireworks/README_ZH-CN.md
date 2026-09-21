@@ -4,7 +4,7 @@
 
 # Infinity Fireworks (无限烟花)
 
-一个适用于 Minecraft 的 Fabric 模组，可让烟花火箭在使用后不消耗物品堆叠数量。
+一个服务端 Fabric 模组，可让烟花火箭在使用后不消耗物品堆叠数量。
 
 ## 功能特性
 
@@ -43,9 +43,9 @@
 
 ## 支持版本
 
-- Minecraft 26.1.2
-- Fabric Loader 0.19.2+
-- Fabric API 0.150.0+
+- Minecraft 26.3
+- Fabric Loader 0.19.5+
+- Fabric API 0.160.5+
 - Java 25
 
 ## License

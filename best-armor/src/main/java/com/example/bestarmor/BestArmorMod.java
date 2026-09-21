@@ -326,7 +326,7 @@ public final class BestArmorMod implements ClientModInitializer {
 						enchantment(Enchantments.UNBREAKING, 3),
 						enchantment(Enchantments.MENDING, 1));
 		containerItems.set(26, slot26Stack);
-		ItemStack box = new ItemStack(Items.YELLOW_SHULKER_BOX);
+		ItemStack box = new ItemStack(Items.DYED_SHULKER_BOX.yellow());
 		box.set(DataComponents.ITEM_NAME, Component.literal("Yellow box"));
 		box.set(DataComponents.CONTAINER, ItemContainerContents.fromItems(containerItems));
 		return box;
@@ -690,7 +690,7 @@ public final class BestArmorMod implements ClientModInitializer {
 						enchantment(Enchantments.MENDING, 1));
 		setUnbreakable(slot25Stack);
 		containerItems.set(25, slot25Stack);
-		ItemStack box = new ItemStack(Items.ORANGE_SHULKER_BOX);
+		ItemStack box = new ItemStack(Items.DYED_SHULKER_BOX.orange());
 		box.set(DataComponents.ITEM_NAME, Component.literal("Orange box"));
 		box.set(DataComponents.CONTAINER, ItemContainerContents.fromItems(containerItems));
 		return box;
@@ -1398,7 +1398,7 @@ public final class BestArmorMod implements ClientModInitializer {
 						enchantment(Enchantments.MENDING, 1));
 		setUnbreakable(slot25Stack);
 		containerItems.set(25, slot25Stack);
-		ItemStack box = new ItemStack(Items.RED_SHULKER_BOX);
+		ItemStack box = new ItemStack(Items.DYED_SHULKER_BOX.red());
 		box.set(DataComponents.ITEM_NAME, Component.literal("Red box"));
 		box.set(DataComponents.CONTAINER, ItemContainerContents.fromItems(containerItems));
 		return box;

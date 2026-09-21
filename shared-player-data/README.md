@@ -4,89 +4,176 @@
 
 # Shared Player Data
 
-A **server-side Fabric mod** that lets selected online players share the same persistent player profile data through explicit administrator binding.
+A server-side Fabric mod that lets selected players share the same persistent player data through administrator-managed groups.
 
-## Overview
+## Command Overview
 
-Shared Player Data lets server administrators bind players together so they use a shared player data profile.
+- `/playerbind list`
+- `/playerbind find <name>`
+- `/playerbind group add <name> [name] ...`
+- `/playerbind group <group> add <name> [name] ...`
 
-After players are bound, they share the same persistent gameplay state, including vanilla player data such as inventory, position, experience, health, statistics, advancements, and related saved profile data.
+Notes:
 
-Only one player from the same bound group may be online at a time. If another player from the same group attempts to join while the shared profile is already in use, the join is rejected with the vanilla duplicate-login message.
-
-## Key Features
-
-- Bind two online players with a simple command
-- Bound players share the same persistent player profile
-- Only one player from the same bound group can be online at once
-- Uses the vanilla duplicate-login disconnect message when a bound profile is already in use
-- Supports online-player name suggestions for commands
-- Automatically saves binding configuration
-- Synchronizes operator status within bound groups
-- Designed for dedicated servers
-- No client-side installation required
+- `<group>` means an existing group number
+- `<name> [name] ...` means one or more player names
 
 ## Commands
 
-```mcfunction
-/playerbind <name1> <name2>
+### List Groups
+
+Lists all existing groups and their members.
+
+```text
+/playerbind list
 ```
 
-### Behavior
+### Find Player
 
-- Both players must be online
-- `<name1>` remains online
-- `<name2>` is bound to the same shared profile group and then disconnected
-- The command requires level 4 permission
-- The command can be used by level 4 operators, the server console, and RCON
+Shows whether a player belongs to a group.
 
-### Restrictions
+```text
+/playerbind find <name>
+```
 
-- The first and second player cannot be the same player
-- A player cannot bind themselves as the second target
+### Create Group
 
-## Operator Synchronization
+Creates a new group and adds one or more online players.
 
-When players are in the same bound group, their operator status is synchronized.
+```text
+/playerbind group add <name> [name] ...
+```
 
-If one member of the group is granted operator status, the other known members of the group will also receive operator status.
+Example:
 
-If one member of the group is removed from the operator list, the other known members of the group will also be removed from the operator list.
+```text
+/playerbind group add Steve Alex
+```
+
+Players being added must:
+
+- Be online
+- Not already belong to another group
+- Not appear more than once in the same command
+
+### List Group Members
+
+Lists all members of an existing group.
+
+```text
+/playerbind group <group> list
+```
+
+Example:
+
+```text
+/playerbind group 2 list
+```
+
+### Add Players
+
+Adds one or more online players to an existing group.
+
+```text
+/playerbind group <group> add <name> [name] ...
+```
+
+Example:
+
+```text
+/playerbind group 2 add Steve Alex
+```
+
+Players being added must:
+
+- Be online
+- Not already belong to another group
+- Not appear more than once in the same command
+
+### Remove Players
+
+Removes one or more players from an existing group.
+
+```text
+/playerbind group <group> remove <name> [name] ...
+```
+
+Example:
+
+```text
+/playerbind group 2 remove Steve Alex
+```
+
+Only players currently belonging to the selected group can be removed.
+
+When a player is removed from a group:
+
+- The player stops sharing data with the group
+- The player's shared player data is reset
+- The player's operator status is removed
+
+### Purge Group
+
+Deletes an existing group.
+
+```text
+/playerbind group <group> purge confirm
+```
+
+Example:
+
+```text
+/playerbind group 2 purge confirm
+```
+
+Purging a group only removes the binding relationship.
+
+It does not reset the former members' player data or operator status.
+
+## Shared Player Data
+
+Players in the same group share persistent gameplay data, including:
+
+- Inventory
+- Position
+- Experience
+- Health
+- Statistics
+- Advancements
+- Other saved player data
+
+Minecraft accounts and authentication identities remain separate.
 
 ## Multiplayer Behavior
 
-- Bound players share one persistent gameplay profile
-- Only one bound player may use the shared profile at a time
-- Other players in the same bound group receive the vanilla duplicate-login disconnect message while the profile is in use
-- Players outside the bound group are unaffected
+Only one normal player from the same group may use the shared profile at the same time.
 
-## Server Safety
+If another member attempts to join while the shared profile is already in use, they are disconnected with Minecraft's vanilla duplicate-login message.
 
-- Server-side only
-- Dedicated-server focused
-- No client mod required
-- Does not require players to install anything
-- Does not change player authentication identity
-- Keeps real player accounts separate while sharing bound gameplay data
-- Prevents simultaneous access to the same shared profile
+Players outside the group are unaffected.
 
-## Configuration
+## Operator Synchronization
 
-The mod stores its configuration in:
+Operator status is synchronized between known members of the same group.
 
-```text
-config/shared-player-data.json
-```
+If one member is granted operator status, the other known members are also granted operator status.
 
-Bindings created through commands are saved automatically.
+If operator status is removed, it is also removed from the other known members.
 
-Manual configuration edits should be made while the server is stopped.
+## Notes
+
+- All `/playerbind` commands require owner-level server permission (Level 4 OP)
+- Players must be online when being added to a group
+- A player can only belong to one group
+- The same player cannot be specified more than once in the same command
+- Removing a player and purging a group have different effects
+- Purging a group does not reset former members' data
 
 ## Supported Versions
 
-- Minecraft 26.1.2
-- Fabric Loader 0.19.2+
-- Fabric API 0.150.0+
+- Minecraft 26.3
+- Fabric Loader 0.19.5+
+- Fabric API 0.160.5+
 - Java 25
 
 ## License

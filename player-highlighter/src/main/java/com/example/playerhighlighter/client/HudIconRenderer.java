@@ -2,7 +2,7 @@ package com.example.playerhighlighter.client;
 
 import com.example.playerhighlighter.GetDirections;
 import com.example.playerhighlighter.PlayerHighlighterMod;
-import java.util.List;
+
 import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.VanillaHudElements;
 import net.minecraft.client.DeltaTracker;
@@ -10,6 +10,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.resources.Identifier;
+
+import java.util.List;
 
 public final class HudIconRenderer {
 	private static final Identifier ICON =
@@ -40,7 +42,8 @@ public final class HudIconRenderer {
 		for (GetDirections.ScreenResult screenResult : results) {
 			int x = Math.round(screenResult.x() - size / 2.0F);
 			int y = Math.round(screenResult.y() - size / 2.0F);
-			graphics.blit(RenderPipelines.GUI_TEXTURED, ICON, x, y, 0.0F, 0.0F, size, size, size, size);
+			graphics.blit(
+					RenderPipelines.GUI_TEXTURED, ICON, x, y, 0.0F, 0.0F, size, size, size, size);
 		}
 	}
 }

@@ -4,7 +4,7 @@
 
 # Glideplate
 
-Glideplate is a Fabric mod that lets players combine a chestplate with an elytra, then gives the resulting item proper Glideplate visuals.
+A server-side and client-side Fabric mod that lets players combine a chestplate with an elytra, then gives the resulting item proper Glideplate visuals.
 
 Place a chestplate in the left anvil slot and an elytra in the right slot. The output keeps the chestplate as armor, adds gliding support, and carries item data that identifies it as a Glideplate.
 
@@ -43,9 +43,9 @@ Install it on the client to see enhanced Glideplate item models and equipped ely
 
 ## Supported Versions
 
-- Minecraft 26.1.2
-- Fabric Loader 0.19.2+
-- Fabric API 0.150.0+
+- Minecraft 26.3
+- Fabric Loader 0.19.5+
+- Fabric API 0.160.5+
 - Java 25
 
 ## License

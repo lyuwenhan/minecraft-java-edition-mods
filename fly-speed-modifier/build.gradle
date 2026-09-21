@@ -3,7 +3,7 @@ plugins {
     id 'maven-publish'
 }
 
-version = "1.1.9"
+version = "${mod_version}"
 group = "com.example"
 
 base {

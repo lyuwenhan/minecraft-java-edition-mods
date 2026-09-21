@@ -5,7 +5,8 @@
 	"client": [
 		"ConnectionMixin",
 		"LivingEntityFallFlyingMixin",
-		"LocalPlayerFlyingMixin"
+		"LocalPlayerFlyingMixin",
+		"PlayerMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1

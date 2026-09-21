@@ -1,8 +1,10 @@
 package com.example.doublejump.mixin;
 
 import com.example.doublejump.DoubleJumpConfig;
+
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.entity.LivingEntity;
+
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;

@@ -4,7 +4,7 @@
 
 # Auto Greeting (自动问候)
 
-一个适用于 Fabric 的模组，可在**你自己**或**其他玩家**加入服务器时自动发送预设问候消息。
+一个客户端 Fabric 模组，可在**你自己**或**其他玩家**加入服务器时自动发送预设问候消息。
 
 ## 功能特性
 
@@ -155,9 +155,9 @@
 
 ## 支持版本
 
-- Minecraft 26.1.2
-- Fabric Loader 0.19.2+
-- Fabric API 0.150.0+
+- Minecraft 26.3
+- Fabric Loader 0.19.5+
+- Fabric API 0.160.5+
 - Java 25
 - Cloth config (可选)
 - Modmenu (可选)

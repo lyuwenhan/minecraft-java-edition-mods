@@ -5,6 +5,7 @@ import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
+
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -28,8 +29,12 @@ public abstract class EntityStepDownMixin {
 	@Inject(
 			method = "move(Lnet/minecraft/world/entity/MoverType;Lnet/minecraft/world/phys/Vec3;)V",
 			at = @At("TAIL"))
-	private void betterstep$stepDownAfterVanillaMove(MoverType type, Vec3 movement, CallbackInfo ci) {
+	private void betterstep$stepDownAfterVanillaMove(
+			MoverType type, Vec3 movement, CallbackInfo ci) {
 		Entity self = (Entity) (Object) this;
+		if (self.isSwimming()) {
+			return;
+		}
 		if (!this.betterstep$shouldTryStepDown(self, movement)) {
 			return;
 		}

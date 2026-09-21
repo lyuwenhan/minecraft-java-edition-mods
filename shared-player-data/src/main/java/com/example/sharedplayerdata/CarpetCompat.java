@@ -1,6 +1,7 @@
 package com.example.sharedplayerdata;
 
 import carpet.patches.EntityPlayerMPFake;
+
 import net.minecraft.server.level.ServerPlayer;
 
 final class CarpetCompat {

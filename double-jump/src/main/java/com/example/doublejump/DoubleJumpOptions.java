@@ -1,6 +1,7 @@
 package com.example.doublejump;
 
 import com.mojang.serialization.Codec;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.OptionInstance;
 import net.minecraft.client.OptionInstance.UnitDouble;
@@ -11,18 +12,25 @@ public final class DoubleJumpOptions {
 	private static final OptionInstance<Boolean> ENABLED =
 			OptionInstance.createBoolean(
 					"option.double-jump.enabled",
-					value -> Tooltip.create(Component.translatable("option.double-jump.enabled.tooltip")),
+					value ->
+							Tooltip.create(
+									Component.translatable("option.double-jump.enabled.tooltip")),
 					DoubleJumpConfig.DEFAULT_ENABLED,
 					DoubleJumpOptions::onEnabledChanged);
 
 	private static final OptionInstance<Integer> JUMP_COUNT =
 			new OptionInstance<>(
 					"option.double-jump.jump_count",
-					value -> Tooltip.create(Component.translatable("option.double-jump.jump_count.tooltip")),
+					value ->
+							Tooltip.create(
+									Component.translatable(
+											"option.double-jump.jump_count.tooltip")),
 					DoubleJumpOptions::jumpCountText,
 					UnitDouble.INSTANCE.xmap(
 							DoubleJumpOptions::toJumpCount, DoubleJumpOptions::fromJumpCount),
-					Codec.intRange(DoubleJumpConfig.MIN_JUMP_COUNT, DoubleJumpConfig.SLIDER_MAX_JUMP_COUNT),
+					Codec.intRange(
+							DoubleJumpConfig.MIN_JUMP_COUNT,
+							DoubleJumpConfig.SLIDER_MAX_JUMP_COUNT),
 					DoubleJumpConfig.DEFAULT_JUMP_COUNT,
 					DoubleJumpOptions::onJumpCountChanged);
 
@@ -30,7 +38,9 @@ public final class DoubleJumpOptions {
 			OptionInstance.createBoolean(
 					"option.double-jump.cooldown_enabled",
 					value ->
-							Tooltip.create(Component.translatable("option.double-jump.cooldown_enabled.tooltip")),
+							Tooltip.create(
+									Component.translatable(
+											"option.double-jump.cooldown_enabled.tooltip")),
 					DoubleJumpConfig.DEFAULT_COOLDOWN_ENABLED,
 					DoubleJumpOptions::onCooldownEnabledChanged);
 
@@ -38,7 +48,9 @@ public final class DoubleJumpOptions {
 			OptionInstance.createBoolean(
 					"option.double-jump.infinite_jumps",
 					value ->
-							Tooltip.create(Component.translatable("option.double-jump.infinite_jumps.tooltip")),
+							Tooltip.create(
+									Component.translatable(
+											"option.double-jump.infinite_jumps.tooltip")),
 					DoubleJumpConfig.DEFAULT_INFINITE_JUMPS,
 					DoubleJumpOptions::onInfiniteJumpsChanged);
 
@@ -116,7 +128,8 @@ public final class DoubleJumpOptions {
 
 	private static int toJumpCount(double normalized) {
 		double range = DoubleJumpConfig.SLIDER_MAX_JUMP_COUNT - DoubleJumpConfig.MIN_JUMP_COUNT;
-		return clampToSlider((int) Math.round(DoubleJumpConfig.MIN_JUMP_COUNT + normalized * range));
+		return clampToSlider(
+				(int) Math.round(DoubleJumpConfig.MIN_JUMP_COUNT + normalized * range));
 	}
 
 	private static double fromJumpCount(int count) {
@@ -140,7 +153,7 @@ public final class DoubleJumpOptions {
 
 	private static DoubleJumpConfigScreen activeScreen() {
 		Minecraft client = Minecraft.getInstance();
-		if (client.screen instanceof DoubleJumpConfigScreen screen) {
+		if (client.gui.screen() instanceof DoubleJumpConfigScreen screen) {
 			return screen;
 		}
 		return null;

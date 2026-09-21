@@ -17,7 +17,6 @@ import net.minecraft.client.KeyMapping;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 
-import org.lwjgl.glfw.GLFW;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -49,8 +48,8 @@ public class HidePasswordMod implements ClientModInitializer {
 				KeyMappingHelper.registerKeyMapping(
 						new KeyMapping(
 								"key.hidepassword.toggle",
-								InputConstants.Type.KEYSYM,
-								GLFW.GLFW_KEY_F8,
+								InputConstants.Type.KEYBOARD,
+								InputConstants.KEY_F8,
 								CATEGORY));
 		ClientTickEvents.END_CLIENT_TICK.register(
 				client -> {

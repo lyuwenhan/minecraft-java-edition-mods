@@ -4,7 +4,7 @@
 
 # Player Highlighter (玩家高亮器)
 
-一个轻量级的 **客户端 Fabric 模组**，通过发光轮廓、屏幕目标图标以及附近玩家信息 HUD，帮助玩家更容易发现并追踪其他玩家。
+一个客户端 Fabric 模组，通过发光轮廓、屏幕目标图标以及附近玩家信息 HUD，帮助玩家更容易发现并追踪其他玩家。
 
 ## 概述
 
@@ -120,9 +120,9 @@ Player867 ↑ 11m ❤ 20.0 (123, 64, -456)
 
 ## 支持版本
 
-- Minecraft 26.1.2
-- Fabric Loader 0.19.2+
-- Fabric API 0.150.0+
+- Minecraft 26.3
+- Fabric Loader 0.19.5+
+- Fabric API 0.160.5+
 - Java 25
 
 ## License

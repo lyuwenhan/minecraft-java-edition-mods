@@ -45,6 +45,7 @@ public final class BoatUtilsMod implements ClientModInitializer {
 
 		float viewYaw = client.player.getYRot();
 		boat.setYRot(viewYaw);
+		boat.yRotO = viewYaw;
 		boat.setYBodyRot(viewYaw);
 	}
 

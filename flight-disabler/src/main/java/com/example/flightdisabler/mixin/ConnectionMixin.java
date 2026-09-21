@@ -28,6 +28,5 @@ public final class ConnectionMixin {
 			return;
 		}
 		ci.cancel();
-		FlightDisablerMod.suppressFallFlyingAttempt();
 	}
 }

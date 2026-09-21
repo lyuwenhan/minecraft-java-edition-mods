@@ -1,6 +1,7 @@
 package com.example.clientflying;
 
 import com.mojang.blaze3d.platform.InputConstants;
+
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper;
@@ -10,42 +11,37 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.protocol.game.ServerboundMovePlayerPacket;
 import net.minecraft.network.protocol.game.ServerboundPlayerCommandPacket;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.GameType;
-import org.lwjgl.glfw.GLFW;
 
 public class ClientFlyingMod implements ClientModInitializer {
 	private static final String MOD_ID = "client-flying";
 	private static final String KEY_TOGGLE = "key.client-flying.toggle";
 	private final KeyMapping.Category category =
 			KeyMapping.Category.register(Identifier.fromNamespaceAndPath(MOD_ID, "client_flying"));
-	private KeyMapping toggleKey;
-	private ClientFlyingConfig config = new ClientFlyingConfig();
-	private boolean first = true;
-	private boolean lastElytra = false;
-	private boolean lastFlying = false;
-	private boolean lastFallFlying = false;
-	private static int notFlyingTicks = 0;
+	private static KeyMapping toggleKey;
+	private static ClientFlyingConfig config = new ClientFlyingConfig();
+	private static boolean lastGlider = false;
+	private static boolean lastFlying = false;
+	private static boolean lastFallFlying = false;
+	private static boolean lastGamemode = false;
+	private static boolean lastEnabled = false;
 	private static int startFallFlyingResendTicks = 0;
-	private static boolean sendingInternalStartFallFlyingPacket = false;
 
 	private void resetState() {
-		first = true;
-		lastElytra = false;
+		lastGlider = false;
 		lastFlying = false;
 		lastFallFlying = false;
-		notFlyingTicks = 0;
+		lastGamemode = false;
+		lastEnabled = false;
 		startFallFlyingResendTicks = 0;
-		sendingInternalStartFallFlyingPacket = false;
 	}
 
 	private void disableClientFlight(Minecraft client) {
 		if (client.player == null || client.gameMode == null) {
-			resetState();
 			return;
 		}
 		GameType gameMode = client.gameMode.getPlayerMode();
@@ -53,7 +49,6 @@ public class ClientFlyingMod implements ClientModInitializer {
 			client.player.getAbilities().flying = false;
 			client.player.getAbilities().mayfly = false;
 		}
-		resetState();
 	}
 
 	private void handleToggleKey(Minecraft client) {
@@ -62,27 +57,35 @@ public class ClientFlyingMod implements ClientModInitializer {
 		}
 		while (toggleKey.consumeClick()) {
 			config.enabled = !config.enabled;
-			if (config.enabled) {
-				resetState();
-			} else {
-				disableClientFlight(client);
-			}
 			config.save();
 			client.player.sendOverlayMessage(
 					Component.literal("Client Flying: " + (config.enabled ? "ON" : "OFF")));
 		}
 	}
 
-	public static boolean isSendingInternalStartFallFlyingPacket() {
-		return sendingInternalStartFallFlyingPacket;
+	public static boolean isEnabled() {
+		return config.enabled && lastGamemode;
 	}
 
-	public static void onClientStartFallFlyingPacket() {
-		if (sendingInternalStartFallFlyingPacket) {
+	public static boolean isFallFlying() {
+		return startFallFlyingResendTicks > 0 || lastFallFlying;
+	}
+
+	public static void startFallFlying() {
+		startFallFlyingResendTicks = 10;
+	}
+
+	private static void startFlying(Minecraft client, boolean wearingGlider, boolean fallFlying) {
+		if (client.player == null) {
 			return;
 		}
-		startFallFlyingResendTicks = 10;
-		notFlyingTicks = 0;
+		if (fallFlying) {
+			return;
+		} else if (wearingGlider) {
+			startFallFlying();
+		} else {
+			client.player.getAbilities().flying = true;
+		}
 	}
 
 	private static void sendInternalStartFallFlyingPacket(
@@ -90,14 +93,9 @@ public class ClientFlyingMod implements ClientModInitializer {
 		if (client.player == null) {
 			return;
 		}
-		sendingInternalStartFallFlyingPacket = true;
-		try {
-			connection.send(
-					new ServerboundPlayerCommandPacket(
-							client.player, ServerboundPlayerCommandPacket.Action.START_FALL_FLYING));
-		} finally {
-			sendingInternalStartFallFlyingPacket = false;
-		}
+		connection.send(
+				new ServerboundPlayerCommandPacket(
+						client.player, ServerboundPlayerCommandPacket.Action.START_FALL_FLYING));
 	}
 
 	@Override
@@ -106,7 +104,11 @@ public class ClientFlyingMod implements ClientModInitializer {
 		config = ClientFlyingConfig.load();
 		toggleKey =
 				KeyMappingHelper.registerKeyMapping(
-						new KeyMapping(KEY_TOGGLE, InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_V, category));
+						new KeyMapping(
+								KEY_TOGGLE,
+								InputConstants.Type.KEYBOARD,
+								InputConstants.KEY_V,
+								category));
 		ClientPlayConnectionEvents.JOIN.register(
 				(handler, sender, client) -> {
 					resetState();
@@ -119,68 +121,70 @@ public class ClientFlyingMod implements ClientModInitializer {
 				});
 		ClientTickEvents.END_CLIENT_TICK.register(
 				client -> {
+					ClientPacketListener connection = client.getConnection();
+					if (connection == null) {
+						return;
+					}
 					if (client.player == null || client.gameMode == null) {
 						return;
 					}
 					handleToggleKey(client);
-					if (!config.enabled) {
-						return;
-					}
 					GameType gameMode = client.gameMode.getPlayerMode();
-					if (gameMode == GameType.SURVIVAL || gameMode == GameType.ADVENTURE) {
-						ItemStack chestStack = client.player.getItemBySlot(EquipmentSlot.CHEST);
-						boolean wearingGlider = chestStack.get(DataComponents.GLIDER) != null;
-						boolean inAir = !client.player.onGround();
-						boolean shouldStartGliding = false;
-						client.player.getAbilities().mayfly = true;
-						if (inAir && (first || wearingGlider != lastElytra)) {
-							client.player.getAbilities().flying = !wearingGlider;
-							shouldStartGliding = wearingGlider;
-						}
-						ClientPacketListener connection = client.getConnection();
-						if (connection != null) {
-							if (startFallFlyingResendTicks > 0) {
-								client.player.getAbilities().flying = false;
-								if (client.player.isFallFlying() || !wearingGlider || !inAir) {
-									startFallFlyingResendTicks = 0;
-								} else {
-									sendInternalStartFallFlyingPacket(client, connection);
-									startFallFlyingResendTicks = startFallFlyingResendTicks - 1;
-								}
-							} else if (inAir
-									&& wearingGlider
-									&& (shouldStartGliding
-											|| (client.player.isFallFlying() && !client.player.getAbilities().flying))) {
-								client.player.getAbilities().flying = false;
-								if (shouldStartGliding) {
-									notFlyingTicks = 0;
-									startFallFlyingResendTicks = 10;
-									sendInternalStartFallFlyingPacket(client, connection);
-								}
-							} else {
-								if (!lastFlying && client.player.getAbilities().flying && lastFallFlying) {
-									notFlyingTicks = 10;
-									client.player.stopFallFlying();
-								}
-								connection.send(
-										new ServerboundMovePlayerPacket.PosRot(
-												client.player.getX(),
-												client.player.getY(),
-												client.player.getZ(),
-												client.player.getYRot(),
-												client.player.getXRot(),
-												(notFlyingTicks == 0) || !inAir,
-												client.player.horizontalCollision));
-								notFlyingTicks = Math.max(0, notFlyingTicks - 1);
+					boolean newGamemode =
+							gameMode == GameType.SURVIVAL || gameMode == GameType.ADVENTURE;
+					boolean enabled = config.enabled;
+					boolean onground = client.player.onGround();
+					ItemStack chestStack = client.player.getItemBySlot(EquipmentSlot.CHEST);
+					boolean wearingGlider = chestStack.get(DataComponents.GLIDER) != null;
+					boolean flying = client.player.getAbilities().flying;
+					boolean fallFlying = client.player.isFallFlying();
+					if (newGamemode) {
+						if (enabled) {
+							client.player.getAbilities().mayfly = true;
+							if (!lastEnabled || !lastGamemode) {
+								startFlying(client, wearingGlider, fallFlying);
+								flying = client.player.getAbilities().flying;
+							}
+							if (lastGlider && !wearingGlider && lastFallFlying) {
+								System.out.println("[ClientFlying] set flying");
+								client.player.stopFallFlying();
+								client.player.getAbilities().flying = flying = true;
+								fallFlying = client.player.isFallFlying();
+							}
+							if (wearingGlider && !lastGlider) {
+								System.out.println("[ClientFlying] set fall flying");
+								client.player.getAbilities().flying = flying = false;
+								startFallFlying();
+							}
+						} else {
+							client.player.getAbilities().mayfly =
+									client.player.getAbilities().flying = false;
+							if (lastEnabled) {
+								startFallFlying();
 							}
 						}
-						lastElytra = wearingGlider;
-						lastFlying = client.player.getAbilities().flying;
-						lastFallFlying = client.player.isFallFlying();
-						first = false;
-					} else {
-						resetState();
+						if (startFallFlyingResendTicks > 0) {
+							if (onground || !wearingGlider) {
+								startFallFlyingResendTicks = 0;
+							} else {
+								System.out.println("[ClientFlying] run fall flying");
+								if (!fallFlying) {
+									sendInternalStartFallFlyingPacket(client, connection);
+								}
+								startFallFlyingResendTicks--;
+							}
+						} else if (flying && !lastFlying) {
+							client.player.stopFallFlying();
+							fallFlying = client.player.isFallFlying();
+						} else if (fallFlying && flying) {
+							client.player.getAbilities().flying = flying = false;
+						}
 					}
+					lastGlider = wearingGlider;
+					lastFlying = client.player.getAbilities().flying;
+					lastFallFlying = client.player.isFallFlying();
+					lastGamemode = newGamemode;
+					lastEnabled = enabled;
 				});
 	}
 }

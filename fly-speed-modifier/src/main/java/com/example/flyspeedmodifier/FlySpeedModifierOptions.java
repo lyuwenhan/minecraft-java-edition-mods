@@ -344,7 +344,7 @@ public final class FlySpeedModifierOptions {
 
 	private static FlySpeedModifierConfigScreen activeScreen() {
 		Minecraft client = Minecraft.getInstance();
-		if (client.screen instanceof FlySpeedModifierConfigScreen screen) {
+		if (client.gui.screen() instanceof FlySpeedModifierConfigScreen screen) {
 			return screen;
 		}
 		return null;

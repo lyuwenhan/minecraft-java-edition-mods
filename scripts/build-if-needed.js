@@ -49,7 +49,7 @@ const fileSha1 = filePath => crypto.createHash("sha1").update(fs.readFileSync(fi
 				console.warn(`${dir}: invalid or missing status.json, using default.`)
 			}
 			if (status.needsUpdate) {
-				const settingPath = path.join(extPath, "build.gradle");
+				const settingPath = path.join(extPath, "gradle.properties");
 				const version = fs.readFileSync(settingPath, "utf8")?.match(/version = "(.+)"/)?.[1];
 				if (!version) {
 					hasError = true;

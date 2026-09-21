@@ -3,7 +3,8 @@
 	"package": "com.example.clientflying.mixin",
 	"compatibilityLevel": "JAVA_25",
 	"client": [
-		"ConnectionMixin"
+		"ConnectionMixin",
+		"LocalPlayerMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1

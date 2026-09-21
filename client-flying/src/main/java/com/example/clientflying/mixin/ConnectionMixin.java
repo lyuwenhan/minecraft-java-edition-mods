@@ -1,27 +1,74 @@
 package com.example.clientflying.mixin;
 
 import com.example.clientflying.ClientFlyingMod;
+
 import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.Packet;
-import net.minecraft.network.protocol.game.ServerboundPlayerCommandPacket;
+import net.minecraft.network.protocol.game.ServerboundMovePlayerPacket;
+
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
 @Mixin(Connection.class)
-public class ConnectionMixin {
-	@Inject(method = "send(Lnet/minecraft/network/protocol/Packet;)V", at = @At("HEAD"))
-	private void clientflying$onSend(Packet<?> packet, CallbackInfo ci) {
-		if (ClientFlyingMod.isSendingInternalStartFallFlyingPacket()) {
-			return;
+public abstract class ConnectionMixin {
+
+	@ModifyVariable(
+			method =
+					"send(Lnet/minecraft/network/protocol/Packet;Lio/netty/channel/ChannelFutureListener;Z)V",
+			at = @At("HEAD"),
+			argsOnly = true,
+			index = 1)
+	private Packet<?> clientflying$replaceOutgoingPacket(Packet<?> packet) {
+		if (!ClientFlyingMod.isEnabled()) {
+			return packet;
 		}
-		if (!(packet instanceof ServerboundPlayerCommandPacket commandPacket)) {
-			return;
+
+		if (ClientFlyingMod.isFallFlying()) {
+			return packet;
 		}
-		if (commandPacket.getAction() != ServerboundPlayerCommandPacket.Action.START_FALL_FLYING) {
-			return;
+
+		if (!(packet instanceof ServerboundMovePlayerPacket movePacket)) {
+			return packet;
 		}
-		ClientFlyingMod.onClientStartFallFlyingPacket();
+
+		return clientflying$copyMovePacketWithOnGroundTrue(movePacket);
+	}
+
+	private static ServerboundMovePlayerPacket clientflying$copyMovePacketWithOnGroundTrue(
+			ServerboundMovePlayerPacket packet) {
+
+		boolean horizontalCollision = packet.horizontalCollision();
+
+		if (packet instanceof ServerboundMovePlayerPacket.Pos) {
+			return new ServerboundMovePlayerPacket.Pos(
+					packet.getX(0.0D),
+					packet.getY(0.0D),
+					packet.getZ(0.0D),
+					true,
+					horizontalCollision);
+		}
+
+		if (packet instanceof ServerboundMovePlayerPacket.PosRot) {
+			return new ServerboundMovePlayerPacket.PosRot(
+					packet.getX(0.0D),
+					packet.getY(0.0D),
+					packet.getZ(0.0D),
+					packet.getYRot(0.0F),
+					packet.getXRot(0.0F),
+					true,
+					horizontalCollision);
+		}
+
+		if (packet instanceof ServerboundMovePlayerPacket.Rot) {
+			return new ServerboundMovePlayerPacket.Rot(
+					packet.getYRot(0.0F), packet.getXRot(0.0F), true, horizontalCollision);
+		}
+
+		if (packet instanceof ServerboundMovePlayerPacket.StatusOnly) {
+			return new ServerboundMovePlayerPacket.StatusOnly(true, horizontalCollision);
+		}
+
+		return packet;
 	}
 }

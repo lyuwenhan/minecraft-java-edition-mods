@@ -1,15 +1,16 @@
 package com.example.autogreetingserver;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
+
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 public class AutoGreetingServerDelay {
 	private static final Map<String, PendingGreeting> pending = new HashMap<>();
@@ -51,7 +52,8 @@ public class AutoGreetingServerDelay {
 							it.remove();
 							continue;
 						}
-						sendConfiguredGreetings(server, p.playerName, p.uuid, p.x, p.y, p.z, p.health, p.level);
+						sendConfiguredGreetings(
+								server, p.playerName, p.uuid, p.x, p.y, p.z, p.health, p.level);
 						it.remove();
 					}
 				});
@@ -90,8 +92,7 @@ public class AutoGreetingServerDelay {
 				CommandSourceStack source = server.createCommandSourceStack();
 				server.getCommands().performPrefixedCommand(source, finalMsg);
 			} else {
-				server
-						.getPlayerList()
+				server.getPlayerList()
 						.broadcastSystemMessage(Component.literal("[Server] " + finalMsg), false);
 			}
 		}

@@ -90,7 +90,12 @@ public final class DoubleJumpConfigScreen extends OptionsSubScreen {
 
 		this.cooldownTicksInput =
 				new EditBox(
-						this.font, 0, 0, 150, 20, Component.translatable("option.double-jump.cooldown_ticks"));
+						this.font,
+						0,
+						0,
+						150,
+						20,
+						Component.translatable("option.double-jump.cooldown_ticks"));
 
 		this.cooldownTicksInput.setMaxLength(10);
 		this.lastValidCooldownInput = Integer.toString(this.draft.cooldownTicks);

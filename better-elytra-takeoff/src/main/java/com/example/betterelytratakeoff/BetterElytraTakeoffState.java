@@ -1,8 +1,5 @@
 package com.example.betterelytratakeoff;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.server.level.ServerLevel;
@@ -12,6 +9,10 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.projectile.FireworkRocketEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 public final class BetterElytraTakeoffState {
 	private static final int FIRST_ROCKET_TICK = 1;
@@ -48,7 +49,8 @@ public final class BetterElytraTakeoffState {
 		player.startFallFlying();
 		if (pending.ticksLeft == FIRST_ROCKET_TICK
 				&& player.level() instanceof ServerLevel serverLevel) {
-			FireworkRocketEntity firework = new FireworkRocketEntity(serverLevel, pending.rocket, player);
+			FireworkRocketEntity firework =
+					new FireworkRocketEntity(serverLevel, pending.rocket, player);
 			serverLevel.addFreshEntity(firework);
 			PENDING_TAKEOFFS.put(player.getUUID(), pending.next());
 			return;

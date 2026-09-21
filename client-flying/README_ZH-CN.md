@@ -4,7 +4,7 @@
 
 # Client Flying (客户端飞行)
 
-一个轻量级的 **客户端 Fabric 模组**，可在生存模式和冒险模式下启用受控飞行，同时避免与鞘翅冲突，并完全运行于客户端。
+一个客户端 Fabric 模组，可在生存模式和冒险模式下启用受控飞行，同时避免与鞘翅冲突，并完全运行于客户端。
 
 ## 概述
 
@@ -40,9 +40,9 @@ Client Flying 允许玩家在未穿戴鞘翅时，在生存模式和冒险模式
 
 ## 支持版本
 
-- Minecraft 26.1.2
-- Fabric Loader 0.19.2+
-- Fabric API 0.150.0+
+- Minecraft 26.3
+- Fabric Loader 0.19.5+
+- Fabric API 0.160.5+
 - Java 25
 
 ## License

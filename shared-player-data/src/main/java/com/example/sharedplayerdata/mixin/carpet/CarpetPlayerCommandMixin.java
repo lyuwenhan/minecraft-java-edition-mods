@@ -1,10 +1,13 @@
 package com.example.sharedplayerdata.mixin.carpet;
 
 import carpet.utils.Messenger;
+
 import com.example.sharedplayerdata.SharedPlayerDataMod;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
+
 import net.minecraft.commands.CommandSourceStack;
+
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -33,7 +36,7 @@ public abstract class CarpetPlayerCommandMixin {
 				context.getSource(),
 				"r Player ",
 				"rb " + playerName,
-				"r	is in a Shared Player Data group that is already online");
+				"r  is in a Shared Player Data group that is already online");
 		cir.setReturnValue(0);
 	}
 }

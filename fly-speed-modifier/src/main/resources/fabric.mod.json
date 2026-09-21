@@ -17,12 +17,13 @@
 		]
 	},
 	"mixins": [
-		"fly-speed-modifier.mixins.json"
+		"fly-speed-modifier.mixins.json",
+		"fly-speed-modifier-freecam.json"
 	],
 	"depends": {
-		"fabricloader": ">=0.19.2",
+		"fabricloader": ">=0.19.5",
 		"fabric-api": "*",
-		"minecraft": "26.1.2",
+		"minecraft": "26.3",
 		"java": ">=25"
 	},
 	"suggests": {
