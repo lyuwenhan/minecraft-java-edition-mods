@@ -4,7 +4,7 @@
 
 # Flight Disabler (禁止飞行)
 
-一个轻量级的 **客户端 Fabric 模组**，用于禁用创造飞行和鞘翅飞行，并完全运行于客户端。
+一个客户端 Fabric 模组，用于禁用创造飞行和鞘翅飞行，并完全运行于客户端。
 
 ## 概述
 
@@ -30,9 +30,9 @@
 
 ## 支持版本
 
-- Minecraft 26.1.2
-- Fabric Loader 0.19.2+
-- Fabric API 0.150.0+
+- Minecraft 26.3
+- Fabric Loader 0.19.5+
+- Fabric API 0.160.5+
 - Java 25
 
 ## License

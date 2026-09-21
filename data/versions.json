@@ -15,7 +15,8 @@
 			"1.1.0",
 			"1.1.1",
 			"1.1.2",
-			"1.1.3"
+			"1.1.3",
+			"1.2.0"
 		],
 		"hasIcon": true,
 		"displayName": "Auto Greeting",
@@ -31,7 +32,8 @@
 			"1.0.0",
 			"1.0.1",
 			"1.1.0",
-			"1.1.1"
+			"1.1.1",
+			"1.2.0"
 		],
 		"hasIcon": true,
 		"displayName": "Auto Greeting - Server",
@@ -50,7 +52,8 @@
 			"1.0.3",
 			"1.1.0",
 			"1.1.1",
-			"1.1.2"
+			"1.1.2",
+			"1.2.0"
 		],
 		"hasIcon": true,
 		"displayName": "Auto Login",
@@ -67,7 +70,8 @@
 			"1.1.1",
 			"1.1.2",
 			"1.1.3",
-			"1.1.4"
+			"1.1.4",
+			"1.2.0"
 		],
 		"hasIcon": true,
 		"displayName": "Best Armor",
@@ -86,7 +90,8 @@
 			"1.1.1",
 			"1.1.2",
 			"1.1.3",
-			"1.1.4"
+			"1.1.4",
+			"1.2.0"
 		],
 		"hasIcon": true,
 		"displayName": "Better Elytra Takeoff",
@@ -100,7 +105,8 @@
 	"better-step": {
 		"versions": [
 			"1.1.0",
-			"1.1.1"
+			"1.1.1",
+			"1.2.0"
 		],
 		"hasIcon": true,
 		"displayName": "Better Step",
@@ -118,7 +124,8 @@
 			"1.1.3",
 			"1.1.4",
 			"1.1.5",
-			"1.1.6"
+			"1.1.6",
+			"1.2.0"
 		],
 		"hasIcon": true,
 		"displayName": "Boat Utils",
@@ -141,7 +148,8 @@
 			"1.1.4",
 			"1.1.5",
 			"1.1.6",
-			"1.1.7"
+			"1.1.7",
+			"1.2.0"
 		],
 		"hasIcon": true,
 		"displayName": "Client Flying",
@@ -151,7 +159,8 @@
 	"creeper-no-break": {
 		"versions": [
 			"1.1.0",
-			"1.1.1"
+			"1.1.1",
+			"1.2.0"
 		],
 		"hasIcon": true,
 		"displayName": "Creeper No Break",
@@ -165,7 +174,8 @@
 	"dabr-server-config-override": {
 		"versions": [
 			"1.1.0",
-			"1.1.1"
+			"1.1.1",
+			"1.2.0"
 		],
 		"hasIcon": true,
 		"displayName": "DABR Server Config Override",
@@ -175,7 +185,8 @@
 	"double-jump": {
 		"versions": [
 			"1.1.0",
-			"1.1.1"
+			"1.1.1",
+			"1.2.0"
 		],
 		"hasIcon": true,
 		"displayName": "Double Jump",
@@ -187,7 +198,8 @@
 	},
 	"entity-highlighter": {
 		"versions": [
-			"1.1.0"
+			"1.1.0",
+			"1.2.0"
 		],
 		"hasIcon": false,
 		"displayName": "Entity Highlighter",
@@ -197,7 +209,8 @@
 	"flight-disabler": {
 		"versions": [
 			"1.1.0",
-			"1.1.1"
+			"1.1.1",
+			"1.2.0"
 		],
 		"hasIcon": true,
 		"displayName": "Flight Disabler",
@@ -218,7 +231,8 @@
 			"1.1.6",
 			"1.1.7",
 			"1.1.8",
-			"1.1.9"
+			"1.1.9",
+			"1.2.0"
 		],
 		"hasIcon": true,
 		"displayName": "Fly Speed Modifier",
@@ -232,7 +246,8 @@
 	"forward-lock": {
 		"versions": [
 			"1.1.0",
-			"1.1.1"
+			"1.1.1",
+			"1.2.0"
 		],
 		"hasIcon": true,
 		"displayName": "Forward Lock",
@@ -248,7 +263,8 @@
 			"1.0.1",
 			"1.1.0",
 			"1.1.1",
-			"1.1.2"
+			"1.1.2",
+			"1.2.0"
 		],
 		"hasIcon": true,
 		"displayName": "Glideplate",
@@ -272,7 +288,8 @@
 			"1.1.1",
 			"1.1.2",
 			"1.1.3",
-			"1.1.4"
+			"1.1.4",
+			"1.2.0"
 		],
 		"hasIcon": true,
 		"displayName": "Hide Password",
@@ -290,7 +307,8 @@
 			"1.1.0",
 			"1.1.1",
 			"1.1.2",
-			"1.1.3"
+			"1.1.3",
+			"1.2.0"
 		],
 		"hasIcon": true,
 		"displayName": "Infinity Fireworks",
@@ -305,7 +323,8 @@
 		"versions": [
 			"1.1.0",
 			"1.1.1",
-			"1.1.2"
+			"1.1.2",
+			"1.2.0"
 		],
 		"hasIcon": true,
 		"displayName": "No Hungry",
@@ -330,7 +349,8 @@
 			"1.1.0",
 			"1.1.1",
 			"1.1.2",
-			"1.1.3"
+			"1.1.3",
+			"1.2.0"
 		],
 		"hasIcon": true,
 		"displayName": "Player Highlighter",
@@ -343,7 +363,8 @@
 	},
 	"server-manager": {
 		"versions": [
-			"1.1.0"
+			"1.1.0",
+			"1.2.0"
 		],
 		"hasIcon": true,
 		"displayName": "Server Manager",
@@ -357,7 +378,8 @@
 		"versions": [
 			"1.1.0",
 			"1.1.1",
-			"1.1.2"
+			"1.1.2",
+			"1.2.0"
 		],
 		"hasIcon": true,
 		"displayName": "Shared Player Data",
@@ -370,7 +392,8 @@
 	},
 	"who-i-am": {
 		"versions": [
-			"1.1.0"
+			"1.1.0",
+			"1.2.0"
 		],
 		"hasIcon": true,
 		"displayName": "Who I Am",

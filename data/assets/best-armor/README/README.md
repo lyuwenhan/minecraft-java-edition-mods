@@ -4,7 +4,7 @@
 
 # Best Armor
 
-A lightweight **client-side Fabric mod** that adds three prebuilt equipment shulker boxes and a Void Sword to the operator creative tab.
+A client-side Fabric mod that adds three prebuilt equipment shulker boxes and a Void Sword to the operator creative tab.
 
 ## Overview
 
@@ -132,9 +132,9 @@ The Void Sword is a standalone full-power weapon added to the operator creative 
 
 ## Supported Versions
 
-- Minecraft 26.1.2
-- Fabric Loader 0.19.2+
-- Fabric API 0.150.0+
+- Minecraft 26.3
+- Fabric Loader 0.19.5+
+- Fabric API 0.160.5+
 - Java 25
 
 ## License

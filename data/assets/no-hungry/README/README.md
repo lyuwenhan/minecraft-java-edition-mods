@@ -4,7 +4,7 @@
 
 # No Hungry
 
-A lightweight **server-side Fabric mod** that prevents player hunger and saturation from dropping below configured minimum values.
+A server-side Fabric mod that prevents player hunger and saturation from dropping below configured minimum values.
 
 ## Overview
 
@@ -114,9 +114,9 @@ No Hungry disabled.
 
 ## Supported Versions
 
-- Minecraft 26.1.2
-- Fabric Loader 0.19.2+
-- Fabric API 0.150.0+
+- Minecraft 26.3
+- Fabric Loader 0.19.5+
+- Fabric API 0.160.5+
 - Java 25
 
 ## License

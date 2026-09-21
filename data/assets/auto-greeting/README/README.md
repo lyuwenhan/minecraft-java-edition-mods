@@ -4,7 +4,7 @@
 
 # Auto Greeting
 
-A Fabric mod that automatically sends preset greeting messages when **you** or **other players** join a server.
+A client-side Fabric mod that automatically sends preset greeting messages when **you** or **other players** join a server.
 
 ## Features
 
@@ -155,9 +155,9 @@ These rules determine whether the name of a joining player should trigger greeti
 
 ## Supported Versions
 
-- Minecraft 26.1.2
-- Fabric Loader 0.19.2+
-- Fabric API 0.150.0+
+- Minecraft 26.3
+- Fabric Loader 0.19.5+
+- Fabric API 0.160.5+
 - Java 25
 - Cloth config (Optional)
 - Modmenu (Optional)

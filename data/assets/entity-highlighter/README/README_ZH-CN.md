@@ -4,7 +4,7 @@
 
 # Entity Highlighter (实体高亮器)
 
-一个轻量级的 **客户端 Fabric 模组**，通过可配置的发光轮廓高亮指定实体。
+一个客户端 Fabric 模组，通过可配置的发光轮廓高亮指定实体。
 
 ## 概述
 
@@ -88,9 +88,9 @@ Group rules:
 
 ## 支持版本
 
-- Minecraft 26.1.2
-- Fabric Loader 0.19.2+
-- Fabric API 0.150.0+
+- Minecraft 26.3
+- Fabric Loader 0.19.5+
+- Fabric API 0.160.5+
 - Java 25
 
 ## License

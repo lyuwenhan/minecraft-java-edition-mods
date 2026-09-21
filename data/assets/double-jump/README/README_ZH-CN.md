@@ -4,7 +4,7 @@
 
 # Double Jump (多段跳)
 
-一个轻量的纯客户端 Fabric 模组，提供可配置的多段跳功能。
+一个客户端 Fabric 模组，提供可配置的多段跳功能。
 
 ## 功能
 
@@ -28,9 +28,9 @@
 
 ## 支持版本
 
-- Minecraft 26.1.2
-- Fabric Loader 0.19.2+
-- Fabric API 0.150.0+
+- Minecraft 26.3
+- Fabric Loader 0.19.5+
+- Fabric API 0.160.5+
 - Java 25
 
 ## License

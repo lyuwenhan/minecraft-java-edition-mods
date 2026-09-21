@@ -4,7 +4,7 @@
 
 # Server Manager (服务器管理器)
 
-一个 Fabric 服务端模组，提供基于网页的我的世界服务器管理面板。
+一个服务端 Fabric 模组，提供基于网页的我的世界服务器管理面板。
 
 你可以通过该面板监控服务器状态、管理在线玩家、查看日志、执行命令、编辑游戏规则，以及在安装 Carpet 后管理 Carpet 规则。
 
@@ -102,9 +102,9 @@ Carpet 规则页面采用与游戏规则页面相同的规则管理界面。
 
 ## 支持版本
 
-- Minecraft 26.1.2
-- Fabric Loader 0.19.2+
-- Fabric API 0.150.0+
+- Minecraft 26.3
+- Fabric Loader 0.19.5+
+- Fabric API 0.160.5+
 - Java 25
 
 ## License

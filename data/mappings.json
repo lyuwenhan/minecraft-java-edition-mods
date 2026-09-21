@@ -11,7 +11,8 @@
 			"description": "Automatically sends greeting messages based on configured conditions.",
 			"versions": {
 				"1.21.11": "1.0.7",
-				"26.1.2": "1.1.3"
+				"26.1.2": "1.1.3",
+				"26.2": "1.2.0"
 			}
 		},
 		"auto-greeting-server": {
@@ -20,7 +21,8 @@
 			"description": "Automatically sends greeting messages to players based on configured conditions.",
 			"versions": {
 				"1.21.11": "1.0.1",
-				"26.1.2": "1.1.1"
+				"26.1.2": "1.1.1",
+				"26.2": "1.2.0"
 			}
 		},
 		"auto-login": {
@@ -29,7 +31,8 @@
 			"description": "Automatically logs in to authentication servers using a locally encrypted password.",
 			"versions": {
 				"1.21.11": "1.0.3",
-				"26.1.2": "1.1.2"
+				"26.1.2": "1.1.2",
+				"26.2": "1.2.0"
 			}
 		},
 		"best-armor": {
@@ -37,7 +40,8 @@
 			"displayName": "Best Armor",
 			"description": "Adds generated equipment shulker boxes to the operator creative tab.",
 			"versions": {
-				"26.1.2": "1.1.4"
+				"26.1.2": "1.1.4",
+				"26.2": "1.2.0"
 			}
 		},
 		"better-elytra-takeoff": {
@@ -46,7 +50,8 @@
 			"description": "Starts Elytra gliding immediately while using fireworks.",
 			"versions": {
 				"1.21.11": "1.0.1",
-				"26.1.2": "1.1.4"
+				"26.1.2": "1.1.4",
+				"26.2": "1.2.0"
 			}
 		},
 		"better-step": {
@@ -54,7 +59,8 @@
 			"displayName": "Better Step",
 			"description": "Improves player stepping by removing the vanilla ground restriction for stepping up and adding controlled stepping down.",
 			"versions": {
-				"26.1.2": "1.1.1"
+				"26.1.2": "1.1.1",
+				"26.2": "1.2.0"
 			}
 		},
 		"boat-utils": {
@@ -62,7 +68,8 @@
 			"displayName": "Boat Utils",
 			"description": "Client-side boat camera and movement utilities.",
 			"versions": {
-				"26.1.2": "1.1.6"
+				"26.1.2": "1.1.6",
+				"26.2": "1.2.0"
 			}
 		},
 		"client-flying": {
@@ -71,7 +78,8 @@
 			"description": "Enables flight in Survival and Adventure modes without OP permissions.",
 			"versions": {
 				"1.21.11": "1.0.3",
-				"26.1.2": "1.1.7"
+				"26.1.2": "1.1.7",
+				"26.2": "1.2.0"
 			}
 		},
 		"creeper-no-break": {
@@ -79,7 +87,8 @@
 			"displayName": "Creeper No Break",
 			"description": "Prevents creeper explosions from destroying blocks.",
 			"versions": {
-				"26.1.2": "1.1.1"
+				"26.1.2": "1.1.1",
+				"26.2": "1.2.0"
 			}
 		},
 		"dabr-server-config-override": {
@@ -87,7 +96,8 @@
 			"displayName": "DABR Server Config Override",
 			"description": "Overrides Do a Barrel Roll gameplay enforcement for forceEnabled and allowThrusting without altering the server settings UI.",
 			"versions": {
-				"26.1.2": "1.1.1"
+				"26.1.2": "1.1.1",
+				"26.2": "1.2.0"
 			}
 		},
 		"double-jump": {
@@ -95,7 +105,8 @@
 			"displayName": "Double Jump",
 			"description": "Adds configurable client-side multiple jumping.",
 			"versions": {
-				"26.1.2": "1.1.1"
+				"26.1.2": "1.1.1",
+				"26.2": "1.2.0"
 			}
 		},
 		"entity-highlighter": {
@@ -103,7 +114,8 @@
 			"displayName": "Entity Highlighter",
 			"description": "Client-side entity highlighting with configurable entity types, preset groups, and outline colors.",
 			"versions": {
-				"26.1.2": "1.1.0"
+				"26.1.2": "1.1.0",
+				"26.2": "1.2.0"
 			}
 		},
 		"flight-disabler": {
@@ -111,7 +123,8 @@
 			"displayName": "Flight Disabler",
 			"description": "Disables creative flight and elytra fall flying.",
 			"versions": {
-				"26.1.2": "1.1.1"
+				"26.1.2": "1.1.1",
+				"26.2": "1.2.0"
 			}
 		},
 		"fly-speed-modifier": {
@@ -119,7 +132,8 @@
 			"displayName": "Fly Speed Modifier",
 			"description": "Temporarily adjusts Freecam or player flight speed using a key and the mouse wheel.",
 			"versions": {
-				"26.1.2": "1.1.9"
+				"26.1.2": "1.1.9",
+				"26.2": "1.2.0"
 			}
 		},
 		"forward-lock": {
@@ -127,7 +141,8 @@
 			"displayName": "Forward Lock",
 			"description": "Double-tap forward to lock forward movement and sprinting until forward, backward, or crouch is pressed.",
 			"versions": {
-				"26.1.2": "1.1.1"
+				"26.1.2": "1.1.1",
+				"26.2": "1.2.0"
 			}
 		},
 		"glideplate": {
@@ -136,7 +151,8 @@
 			"description": "Allows chestplates and Elytra to be combined in an anvil without XP costs or prior-work penalties.",
 			"versions": {
 				"1.21.11": "1.0.1",
-				"26.1.2": "1.1.2"
+				"26.1.2": "1.1.2",
+				"26.2": "1.2.0"
 			}
 		},
 		"hide-password": {
@@ -145,7 +161,8 @@
 			"description": "Hides password arguments entered in chat commands.",
 			"versions": {
 				"1.21.11": "1.0.6",
-				"26.1.2": "1.1.4"
+				"26.1.2": "1.1.4",
+				"26.2": "1.2.0"
 			}
 		},
 		"infinity-fireworks": {
@@ -154,7 +171,8 @@
 			"description": "Prevents firework rockets from being consumed when used.",
 			"versions": {
 				"1.21.11": "1.0.1",
-				"26.1.2": "1.1.3"
+				"26.1.2": "1.1.3",
+				"26.2": "1.2.0"
 			}
 		},
 		"no-hungry": {
@@ -162,7 +180,8 @@
 			"displayName": "No Hungry",
 			"description": "Prevents player hunger and saturation from falling below configurable minimum levels.",
 			"versions": {
-				"26.1.2": "1.1.2"
+				"26.1.2": "1.1.2",
+				"26.2": "1.2.0"
 			}
 		},
 		"player-highlighter": {
@@ -171,7 +190,8 @@
 			"description": "Highlights players with a glowing outline and a HUD target icon.",
 			"versions": {
 				"1.21.11": "1.0.8",
-				"26.1.2": "1.1.3"
+				"26.1.2": "1.1.3",
+				"26.2": "1.2.0"
 			}
 		},
 		"server-manager": {
@@ -179,7 +199,8 @@
 			"displayName": "Server Manager",
 			"description": "Web server manager for Fabric dedicated servers.",
 			"versions": {
-				"26.1.2": "1.1.0"
+				"26.1.2": "1.1.0",
+				"26.2": "1.2.0"
 			}
 		},
 		"shared-player-data": {
@@ -187,7 +208,8 @@
 			"displayName": "Shared Player Data",
 			"description": "Shares vanilla player profile data among configured UUID groups.",
 			"versions": {
-				"26.1.2": "1.1.2"
+				"26.1.2": "1.1.2",
+				"26.2": "1.2.0"
 			}
 		},
 		"who-i-am": {
@@ -195,7 +217,8 @@
 			"displayName": "Who I Am",
 			"description": "Shows the local player's name tag in third-person or free-camera views, appends the player name to the window title, and provides the /i command.",
 			"versions": {
-				"26.1.2": "1.1.0"
+				"26.1.2": "1.1.0",
+				"26.2": "1.2.0"
 			}
 		}
 	},
@@ -248,6 +271,10 @@
 			"id": "auto-greeting",
 			"version": "1.1.3"
 		},
+		"c817a9f2637eb79e3041ebd648594757802a3af3": {
+			"id": "auto-greeting",
+			"version": "1.2.0"
+		},
 		"6eb977b1ce536d20b8b8d34438715046dfc09ff7": {
 			"id": "auto-greeting-server",
 			"version": "1.0.0"
@@ -263,6 +290,10 @@
 		"86dfd508dc5f97fc4818ecb62c67cdc8312c301d": {
 			"id": "auto-greeting-server",
 			"version": "1.1.1"
+		},
+		"ba37beb656222b8304e30552ad31eef960cf05e0": {
+			"id": "auto-greeting-server",
+			"version": "1.2.0"
 		},
 		"85f00617393597dd8ad14cc2698bd81dbcfa5046": {
 			"id": "auto-login",
@@ -292,6 +323,10 @@
 			"id": "auto-login",
 			"version": "1.1.2"
 		},
+		"cfc9466aa9f96da17b9cfce6e7d1b35b38557018": {
+			"id": "auto-login",
+			"version": "1.2.0"
+		},
 		"d42f7d2933de96af85ffa480a47ecb9f9530dbe9": {
 			"id": "best-armor",
 			"version": "1.1.0"
@@ -311,6 +346,10 @@
 		"3dac0e6872c604a79764e7f37ca9349f4caa7922": {
 			"id": "best-armor",
 			"version": "1.1.4"
+		},
+		"f829919fb0db092faf4d84d1dcd2c38feb6b0e91": {
+			"id": "best-armor",
+			"version": "1.2.0"
 		},
 		"902dd9636b88e09eaaf667624e1d4af0ca3efc15": {
 			"id": "better-elytra-takeoff",
@@ -340,6 +379,10 @@
 			"id": "better-elytra-takeoff",
 			"version": "1.1.4"
 		},
+		"487d25f4cb6bf16610a722868738b49c68dadcc3": {
+			"id": "better-elytra-takeoff",
+			"version": "1.2.0"
+		},
 		"a825647aa2d59f7581a76d15230708977a651663": {
 			"id": "better-step",
 			"version": "1.1.0"
@@ -347,6 +390,10 @@
 		"5abf7027fd283435a32271497541ec303cfcc868": {
 			"id": "better-step",
 			"version": "1.1.1"
+		},
+		"38deb96b20f88c56533b59206f57eba3a145526b": {
+			"id": "better-step",
+			"version": "1.2.0"
 		},
 		"06f638db37b9d6908958b72599997e5aa45e8042": {
 			"id": "boat-utils",
@@ -375,6 +422,10 @@
 		"aa275692f99c8183f3a05b552872f554cee0b138": {
 			"id": "boat-utils",
 			"version": "1.1.6"
+		},
+		"64838381cc35507cdd05dea9634b822e093e8798": {
+			"id": "boat-utils",
+			"version": "1.2.0"
 		},
 		"0bf7c7c079e902a3a6e0e745430c766ecac88d85": {
 			"id": "client-flying",
@@ -424,6 +475,10 @@
 			"id": "client-flying",
 			"version": "1.1.7"
 		},
+		"3f477242520283559e08da89c09719549b967e6a": {
+			"id": "client-flying",
+			"version": "1.2.0"
+		},
 		"abf4ea1444a7592351abb2bd0238939e200896f8": {
 			"id": "creeper-no-break",
 			"version": "1.1.0"
@@ -431,6 +486,10 @@
 		"cf2633952cb7ffcb383f9386a188243ac5a9877b": {
 			"id": "creeper-no-break",
 			"version": "1.1.1"
+		},
+		"d8662d6d8fdb45a4b591e1d0ec4e4d96fdd6f8b9": {
+			"id": "creeper-no-break",
+			"version": "1.2.0"
 		},
 		"597becbbbbc392be33e4c56e6a8bbc2c39197ced": {
 			"id": "dabr-server-config-override",
@@ -440,6 +499,10 @@
 			"id": "dabr-server-config-override",
 			"version": "1.1.1"
 		},
+		"0d31614f7cbf0b26040455c8db36db100731cb15": {
+			"id": "dabr-server-config-override",
+			"version": "1.2.0"
+		},
 		"e2fd2b4a2d87f4eee35fd040be4b96c986d113e5": {
 			"id": "double-jump",
 			"version": "1.1.0"
@@ -448,9 +511,17 @@
 			"id": "double-jump",
 			"version": "1.1.1"
 		},
+		"b1282012dc7d34aa2d643101fabba30caa1dd161": {
+			"id": "double-jump",
+			"version": "1.2.0"
+		},
 		"0fc493b050d22f856cf11d493b6438c5ca41228d": {
 			"id": "entity-highlighter",
 			"version": "1.1.0"
+		},
+		"d1d1f22f0af2f9f619d7bb29800e9a9a52bd79d0": {
+			"id": "entity-highlighter",
+			"version": "1.2.0"
 		},
 		"de7c4f54f8de2a14a87f9538f02d2e767e2cb8f5": {
 			"id": "flight-disabler",
@@ -459,6 +530,10 @@
 		"85950fdc4eb23f7811c031f707ba5a4cde9ffc6a": {
 			"id": "flight-disabler",
 			"version": "1.1.1"
+		},
+		"6fc237477dc918f8f85045a587eab8d2d8f8a24a": {
+			"id": "flight-disabler",
+			"version": "1.2.0"
 		},
 		"5b161aebcc842b8d1595eeacfc3a71a72e185710": {
 			"id": "fly-speed-modifier",
@@ -500,6 +575,10 @@
 			"id": "fly-speed-modifier",
 			"version": "1.1.9"
 		},
+		"7bb36cbebcacf4338f7a95ffb7b901fd864d9d49": {
+			"id": "fly-speed-modifier",
+			"version": "1.2.0"
+		},
 		"04532433cdcb001b3e7b5e6ad71f26d8079016f4": {
 			"id": "forward-lock",
 			"version": "1.1.0"
@@ -507,6 +586,10 @@
 		"9872421e1405a94e3da605929e31f441b32a38d0": {
 			"id": "forward-lock",
 			"version": "1.1.1"
+		},
+		"7add15c23bebe6bb080adac2ab5148e6ad144c09": {
+			"id": "forward-lock",
+			"version": "1.2.0"
 		},
 		"c9d807b968cecc3e85181db29dfc6cf7d1362970": {
 			"id": "glideplate",
@@ -527,6 +610,10 @@
 		"cf9d1e3cbd1aca0928dd37e66ef43c64999645c2": {
 			"id": "glideplate",
 			"version": "1.1.2"
+		},
+		"e6ffbf546ad5dc115d50ade2a0d1f16cef1e2ee9": {
+			"id": "glideplate",
+			"version": "1.2.0"
 		},
 		"f65bdd6678ce17a73d225f9084390d0228a4994c": {
 			"id": "hide-password",
@@ -576,6 +663,10 @@
 			"id": "hide-password",
 			"version": "1.1.4"
 		},
+		"cb1bc464d1ddce4e526162bb8821bca29126b07a": {
+			"id": "hide-password",
+			"version": "1.2.0"
+		},
 		"6bc22146468654328db530c9a22dd620303399d3": {
 			"id": "infinity-fireworks",
 			"version": "1.0.0"
@@ -600,6 +691,10 @@
 			"id": "infinity-fireworks",
 			"version": "1.1.3"
 		},
+		"46484c5bd2ba690529d6625e741966ff697954b8": {
+			"id": "infinity-fireworks",
+			"version": "1.2.0"
+		},
 		"c12527ff6a56fbcf5d05bbc58cecf460c90f1721": {
 			"id": "no-hungry",
 			"version": "1.1.0"
@@ -611,6 +706,10 @@
 		"45c06d266c07a97347609afa159b6f041e1c186f": {
 			"id": "no-hungry",
 			"version": "1.1.2"
+		},
+		"73da3d67cc69c8ec12abc41ca45738978091d4fb": {
+			"id": "no-hungry",
+			"version": "1.2.0"
 		},
 		"696bb720c882ffb2b1562e091faceae3c4c88748": {
 			"id": "player-highlighter",
@@ -664,9 +763,17 @@
 			"id": "player-highlighter",
 			"version": "1.1.3"
 		},
+		"f3f25cda8c9646103fa434605d733cb3c6842b96": {
+			"id": "player-highlighter",
+			"version": "1.2.0"
+		},
 		"adb1af2503ce759566bf071e103f7cad9ca91aba": {
 			"id": "server-manager",
 			"version": "1.1.0"
+		},
+		"98d8690f4106639ecc999b862f499501c515bc1a": {
+			"id": "server-manager",
+			"version": "1.2.0"
 		},
 		"584688a16678f173102ba1b210e5cdca9009112d": {
 			"id": "shared-player-data",
@@ -680,9 +787,17 @@
 			"id": "shared-player-data",
 			"version": "1.1.2"
 		},
+		"9e14e4973242e2bc8229791f4daf46e21afaa107": {
+			"id": "shared-player-data",
+			"version": "1.2.0"
+		},
 		"e9373af234358247e937b3153ae516e6beb46690": {
 			"id": "who-i-am",
 			"version": "1.1.0"
+		},
+		"841480588f34fd79a1c47a326e707e446f9aa803": {
+			"id": "who-i-am",
+			"version": "1.2.0"
 		}
 	}
 }

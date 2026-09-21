@@ -4,7 +4,7 @@
 
 # No Hungry (无饥饿)
 
-一个轻量级的 **服务端 Fabric 模组**，用于防止玩家的饥饿值和饱和度低于配置的最低值。
+一个服务端 Fabric 模组，用于防止玩家的饥饿值和饱和度低于配置的最低值。
 
 ## 概述
 
@@ -113,9 +113,9 @@ No Hungry disabled.
 
 ## 支持版本
 
-- Minecraft 26.1.2
-- Fabric Loader 0.19.2+
-- Fabric API 0.150.0+
+- Minecraft 26.3
+- Fabric Loader 0.19.5+
+- Fabric API 0.160.5+
 - Java 25
 
 ## License
