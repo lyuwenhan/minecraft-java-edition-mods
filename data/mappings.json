@@ -86,7 +86,7 @@
 			"displayName": "DABR Server Config Override",
 			"description": "Overrides Do a Barrel Roll gameplay enforcement for forceEnabled and allowThrusting without altering the server settings UI.",
 			"versions": {
-				"26.1.2": "1.1.0"
+				"26.1.2": "1.1.1"
 			}
 		},
 		"double-jump": {
@@ -434,6 +434,10 @@
 		"597becbbbbc392be33e4c56e6a8bbc2c39197ced": {
 			"id": "dabr-server-config-override",
 			"version": "1.1.0"
+		},
+		"13789155811de0f0d2f396d3dc4abd19dda6a1e2": {
+			"id": "dabr-server-config-override",
+			"version": "1.1.1"
 		},
 		"e2fd2b4a2d87f4eee35fd040be4b96c986d113e5": {
 			"id": "double-jump",
