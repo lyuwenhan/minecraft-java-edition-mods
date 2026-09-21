@@ -50,7 +50,7 @@ const fileSha1 = filePath => crypto.createHash("sha1").update(fs.readFileSync(fi
 			}
 			if (status.needsUpdate) {
 				const settingPath = path.join(extPath, "gradle.properties");
-				const version = fs.readFileSync(settingPath, "utf8")?.match(/^mod_version=(.+)$/)?.[1];
+				const version = fs.readFileSync(settingPath, "utf8").match(/^mod_version=(.+)$/m)?.[1];
 				if (!version) {
 					hasError = true;
 					console.warn(`${dir}: Version not found.`);
