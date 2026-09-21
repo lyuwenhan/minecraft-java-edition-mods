@@ -216,6 +216,7 @@
 		"displayName": "Flight Disabler",
 		"description": "Disables creative flight and elytra fall flying.",
 		"link": {
+			"Modrinth": "https://modrinth.com/mod/flight-disabler",
 			"Curseforge": "https://www.curseforge.com/minecraft/mc-mods/flight-disabler",
 			"Planet Minecraft": "https://www.planetminecraft.com/mod/flight-disabler"
 		}
@@ -253,6 +254,7 @@
 		"displayName": "Forward Lock",
 		"description": "Double-tap forward to lock forward movement and sprinting until forward, backward, or crouch is pressed.",
 		"link": {
+			"Modrinth": "https://modrinth.com/mod/forward-lock",
 			"Curseforge": "https://www.curseforge.com/minecraft/mc-mods/forward-lock",
 			"Planet Minecraft": "https://www.planetminecraft.com/mod/forward-lock"
 		}
@@ -370,6 +372,7 @@
 		"displayName": "Server Manager",
 		"description": "Web server manager for Fabric dedicated servers.",
 		"link": {
+			"Modrinth": "https://modrinth.com/mod/server-manage",
 			"Curseforge": "https://www.curseforge.com/minecraft/mc-mods/server-manager",
 			"Planet Minecraft": "https://www.planetminecraft.com/mod/server-manager-7011113"
 		}
@@ -399,6 +402,7 @@
 		"displayName": "Who I Am",
 		"description": "Shows the local player's name tag in third-person or free-camera views, appends the player name to the window title, and provides the /i command.",
 		"link": {
+			"Modrinth": "https://modrinth.com/mod/whoiam",
 			"Curseforge": "https://www.curseforge.com/minecraft/mc-mods/who-i-am",
 			"Planet Minecraft": "https://www.planetminecraft.com/mod/who-i-am-6997434"
 		}
