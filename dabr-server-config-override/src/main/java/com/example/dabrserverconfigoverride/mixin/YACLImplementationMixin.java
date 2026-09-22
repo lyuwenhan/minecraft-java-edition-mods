@@ -41,28 +41,15 @@ public abstract class YACLImplementationMixin {
 	}
 
 	@ModifyArg(
-			method = "lambda$generateConfigScreen$86",
+			method = "generateConfigScreen",
 			at =
 					@At(
 							value = "INVOKE",
 							target =
-									"Lnl/enjarai/doabarrelroll/compat/yacl/YACLImplementation$Dependable;set(Z)V",
+									"Ldev/isxander/yacl3/api/OptionGroup$Builder;collapsed(Z)Ldev/isxander/yacl3/api/OptionGroup$Builder;",
 							ordinal = 0),
 			index = 0)
-	private static boolean dabrServerConfigOverride$keepThrustOptionsEnabled(boolean available) {
-		return true;
-	}
-
-	@ModifyArg(
-			method = "lambda$generateConfigScreen$86",
-			at =
-					@At(
-							value = "INVOKE",
-							target =
-									"Lnl/enjarai/doabarrelroll/compat/yacl/YACLImplementation$Dependable;set(Z)V",
-							ordinal = 1),
-			index = 0)
-	private static boolean dabrServerConfigOverride$keepModToggleEnabled(boolean available) {
-		return true;
+	private static boolean dabrServerConfigOverride$expandThrustGroup(boolean collapsed) {
+		return false;
 	}
 }

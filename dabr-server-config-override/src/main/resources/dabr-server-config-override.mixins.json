@@ -6,7 +6,8 @@
 		"DoABarrelRollClientMixin",
 		"ModConfigMixin",
 		"ModKeybindingsMixin",
-		"YACLImplementationMixin"
+		"YACLImplementationMixin",
+		"YACLDependableMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1
