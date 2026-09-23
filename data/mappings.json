@@ -106,7 +106,7 @@
 			"description": "Adds configurable client-side multiple jumping.",
 			"versions": {
 				"26.1.2": "1.1.1",
-				"26.3": "1.2.0"
+				"26.3": "1.2.1"
 			}
 		},
 		"entity-highlighter": {
@@ -518,6 +518,10 @@
 		"b1282012dc7d34aa2d643101fabba30caa1dd161": {
 			"id": "double-jump",
 			"version": "1.2.0"
+		},
+		"a6ea1db51244b7fcbe81d21548277a12ee4bb80f": {
+			"id": "double-jump",
+			"version": "1.2.1"
 		},
 		"0fc493b050d22f856cf11d493b6438c5ca41228d": {
 			"id": "entity-highlighter",

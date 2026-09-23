@@ -1,5 +1,5 @@
 [h1]Languages[/h1][url=https://lyuwenhan.github.io/extensions/minecraft-java/data/assets/double-jump/README/README.html]EN/English[/url] | [url=https://lyuwenhan.github.io/extensions/minecraft-java/data/assets/double-jump/README/README_ZH-CN.html]ZH-CN/简体中文[/url]
-[h1]Double Jump[/h1]A client-side Fabric mod that adds configurable multiple jumping.
+[h1]Double Jump[/h1]A client-side Fabric mod that adds configurable multiple jumping and Coyote Time.
 [h2]Features[/h2][list]
 [*]Enable or disable the mod[/*]
 [*]Set the total jump count from 2 to 10 with a slider[/*]
@@ -8,10 +8,13 @@
 [*]Enable or disable jump cooldown[/*]
 [*]Configure the cooldown duration in ticks[/*]
 [*]Apply the cooldown after the first ground jump and every airborne jump[/*]
+[*]Configure Coyote Time[/*]
+[*]Jump shortly after walking or falling off an edge without consuming an airborne jump[/*]
 [*]Configure through a vanilla-style settings screen[/*]
 [*]Optional Mod Menu integration[/*]
 [/list][h2]Usage[/h2]Press the normal jump key to jump.
 When multiple jumping is enabled, press the jump key again while airborne to perform another jump. Landing resets the available jump count.
+When Coyote Time is enabled, you can still perform a ground jump for the configured number of ticks after walking or falling off an edge. A Coyote Time jump does not consume an airborne jump. Setting Coyote Time to [b]0[/b] disables this feature.
 When jump cooldown is enabled, the cooldown starts immediately after the first ground jump. Additional airborne jumps are only available after the configured cooldown has expired. Every successful airborne jump starts the cooldown again.
 [h2]Supported Versions[/h2][list]
 [*]Minecraft 26.3[/*]
