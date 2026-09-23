@@ -17,11 +17,15 @@ public final class DoubleJumpConfig {
 	public static final boolean DEFAULT_INFINITE_JUMPS = false;
 	public static final boolean DEFAULT_COOLDOWN_ENABLED = false;
 	public static final int DEFAULT_COOLDOWN_TICKS = 5;
+	public static final int DEFAULT_COYOTE_TIME_TICKS = 0;
 	public static final int MIN_JUMP_COUNT = 2;
 	public static final int SLIDER_MAX_JUMP_COUNT = 10;
 	public static final int MAX_JUMP_COUNT = Integer.MAX_VALUE;
 	public static final int MIN_COOLDOWN_TICKS = 0;
 	public static final int MAX_COOLDOWN_TICKS = Integer.MAX_VALUE;
+	public static final int MIN_COYOTE_TIME_TICKS = 0;
+	public static final int SLIDER_MAX_COYOTE_TIME_TICKS = 40;
+	public static final int MAX_COYOTE_TIME_TICKS = Integer.MAX_VALUE;
 
 	private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 	private static final Path CONFIG_PATH =
@@ -86,6 +90,10 @@ public final class DoubleJumpConfig {
 		return current.cooldownTicks;
 	}
 
+	public static synchronized int coyoteTimeTicks() {
+		return current.coyoteTimeTicks;
+	}
+
 	public static Values sanitize(Values values) {
 		Values sanitized = values == null ? Values.defaults() : values.copy();
 		if (sanitized.jumpCount < MIN_JUMP_COUNT) {
@@ -94,6 +102,10 @@ public final class DoubleJumpConfig {
 
 		if (sanitized.cooldownTicks < MIN_COOLDOWN_TICKS) {
 			sanitized.cooldownTicks = MIN_COOLDOWN_TICKS;
+		}
+
+		if (sanitized.coyoteTimeTicks < MIN_COYOTE_TIME_TICKS) {
+			sanitized.coyoteTimeTicks = MIN_COYOTE_TIME_TICKS;
 		}
 		return sanitized;
 	}
@@ -104,6 +116,7 @@ public final class DoubleJumpConfig {
 		public boolean infiniteJumps = DEFAULT_INFINITE_JUMPS;
 		public boolean cooldownEnabled = DEFAULT_COOLDOWN_ENABLED;
 		public int cooldownTicks = DEFAULT_COOLDOWN_TICKS;
+		public int coyoteTimeTicks = DEFAULT_COYOTE_TIME_TICKS;
 
 		public static Values defaults() {
 			return new Values();
@@ -116,6 +129,7 @@ public final class DoubleJumpConfig {
 			copy.infiniteJumps = this.infiniteJumps;
 			copy.cooldownEnabled = this.cooldownEnabled;
 			copy.cooldownTicks = this.cooldownTicks;
+			copy.coyoteTimeTicks = this.coyoteTimeTicks;
 			return copy;
 		}
 	}

@@ -7,6 +7,9 @@
 	"option.double-jump.jump_count_input": "自定义跳跃数量",
 	"option.double-jump.infinite_jumps": "无限跳跃",
 	"option.double-jump.infinite_jumps.tooltip": "允许玩家在空中无限次跳跃。",
+	"option.double-jump.coyote_time": "郊狼时间",
+	"option.double-jump.coyote_time.tooltip": "从边缘走出或掉落后，仍可在指定 tick 内执行一次地面跳跃。滑块范围为 0 到 40。",
+	"option.double-jump.coyote_time_input": "自定义郊狼时间",
 	"option.double-jump.cooldown_enabled": "启用冷却",
 	"option.double-jump.cooldown_enabled.tooltip": "限制两次额外空中跳跃之间必须间隔指定的游戏刻。",
 	"option.double-jump.cooldown_ticks": "冷却时长（tick）"

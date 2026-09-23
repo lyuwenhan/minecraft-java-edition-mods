@@ -11,11 +11,15 @@ public final class DoubleJumpConfigScreen extends OptionsSubScreen {
 	private final DoubleJumpConfig.Values draft;
 
 	private EditBox jumpCountInput;
+	private EditBox coyoteTimeInput;
 	private EditBox cooldownTicksInput;
 	private boolean saved;
-	private boolean synchronizingInput;
-	private boolean synchronizingSlider;
-	private String lastValidInput;
+	private boolean synchronizingJumpCountInput;
+	private boolean synchronizingJumpCountSlider;
+	private boolean synchronizingCoyoteTimeInput;
+	private boolean synchronizingCoyoteTimeSlider;
+	private String lastValidJumpCountInput;
+	private String lastValidCoyoteTimeInput;
 	private String lastValidCooldownInput;
 
 	public DoubleJumpConfigScreen(Screen parent) {
@@ -35,25 +39,46 @@ public final class DoubleJumpConfigScreen extends OptionsSubScreen {
 		return this.draft;
 	}
 
-	boolean isSynchronizingSlider() {
-		return this.synchronizingSlider;
+	boolean isSynchronizingJumpCountSlider() {
+		return this.synchronizingJumpCountSlider;
 	}
 
-	void setSliderValueSilently(int value) {
-		this.synchronizingSlider = true;
+	boolean isSynchronizingCoyoteTimeSlider() {
+		return this.synchronizingCoyoteTimeSlider;
+	}
+
+	void setJumpCountSliderValueSilently(int value) {
+		this.synchronizingJumpCountSlider = true;
 		DoubleJumpOptions.setJumpCountOption(value);
-		this.synchronizingSlider = false;
+		this.synchronizingJumpCountSlider = false;
 	}
 
-	void syncInputFromSlider(int value) {
+	void setCoyoteTimeSliderValueSilently(int value) {
+		this.synchronizingCoyoteTimeSlider = true;
+		DoubleJumpOptions.setCoyoteTimeOption(value);
+		this.synchronizingCoyoteTimeSlider = false;
+	}
+
+	void syncJumpCountInputFromSlider(int value) {
 		if (this.jumpCountInput == null) {
 			return;
 		}
 
-		this.synchronizingInput = true;
-		this.lastValidInput = Integer.toString(value);
-		this.jumpCountInput.setValue(this.lastValidInput);
-		this.synchronizingInput = false;
+		this.synchronizingJumpCountInput = true;
+		this.lastValidJumpCountInput = Integer.toString(value);
+		this.jumpCountInput.setValue(this.lastValidJumpCountInput);
+		this.synchronizingJumpCountInput = false;
+	}
+
+	void syncCoyoteTimeInputFromSlider(int value) {
+		if (this.coyoteTimeInput == null) {
+			return;
+		}
+
+		this.synchronizingCoyoteTimeInput = true;
+		this.lastValidCoyoteTimeInput = Integer.toString(value);
+		this.coyoteTimeInput.setValue(this.lastValidCoyoteTimeInput);
+		this.synchronizingCoyoteTimeInput = false;
 	}
 
 	@Override
@@ -75,15 +100,29 @@ public final class DoubleJumpConfigScreen extends OptionsSubScreen {
 						Component.translatable("option.double-jump.jump_count_input"));
 
 		this.jumpCountInput.setMaxLength(10);
-
-		this.lastValidInput = Integer.toString(this.draft.jumpCount);
-
-		this.jumpCountInput.setValue(this.lastValidInput);
-		this.jumpCountInput.setResponder(this::onInputChanged);
+		this.lastValidJumpCountInput = Integer.toString(this.draft.jumpCount);
+		this.jumpCountInput.setValue(this.lastValidJumpCountInput);
+		this.jumpCountInput.setResponder(this::onJumpCountInputChanged);
 
 		AbstractWidget jumpCountWidget = DoubleJumpOptions.jumpCount().createButton(this.options);
-
 		this.list.addSmall(jumpCountWidget, this.jumpCountInput);
+
+		this.coyoteTimeInput =
+				new EditBox(
+						this.font,
+						0,
+						0,
+						150,
+						20,
+						Component.translatable("option.double-jump.coyote_time_input"));
+
+		this.coyoteTimeInput.setMaxLength(10);
+		this.lastValidCoyoteTimeInput = Integer.toString(this.draft.coyoteTimeTicks);
+		this.coyoteTimeInput.setValue(this.lastValidCoyoteTimeInput);
+		this.coyoteTimeInput.setResponder(this::onCoyoteTimeInputChanged);
+
+		AbstractWidget coyoteTimeWidget = DoubleJumpOptions.coyoteTime().createButton(this.options);
+		this.list.addSmall(coyoteTimeWidget, this.coyoteTimeInput);
 
 		AbstractWidget cooldownEnabledWidget =
 				DoubleJumpOptions.cooldownEnabled().createButton(this.options);
@@ -105,85 +144,94 @@ public final class DoubleJumpConfigScreen extends OptionsSubScreen {
 		this.list.addSmall(cooldownEnabledWidget, this.cooldownTicksInput);
 	}
 
-	private void onInputChanged(String value) {
-		if (this.synchronizingInput) {
+	private void onJumpCountInputChanged(String value) {
+		if (this.synchronizingJumpCountInput) {
 			return;
 		}
 
-		if (value.isEmpty()) {
+		Integer parsedValue = parseNonNegativeInteger(value, this::restoreLastValidJumpCountInput);
+		if (parsedValue == null) {
 			return;
 		}
 
-		for (int index = 0; index < value.length(); index++) {
-			char currentCharacter = value.charAt(index);
-
-			if (!Character.isDigit(currentCharacter)) {
-				this.restoreLastValidInput();
-				return;
-			}
+		this.lastValidJumpCountInput = value;
+		if (parsedValue < DoubleJumpConfig.MIN_JUMP_COUNT) {
+			return;
 		}
 
-		try {
-			int parsedValue = Integer.parseInt(value);
+		this.draft.jumpCount = parsedValue;
+		this.setJumpCountSliderValueSilently(parsedValue);
+	}
 
-			this.lastValidInput = value;
-
-			if (parsedValue < DoubleJumpConfig.MIN_JUMP_COUNT) {
-				return;
-			}
-
-			this.draft.jumpCount = parsedValue;
-			this.setSliderValueSilently(parsedValue);
-		} catch (NumberFormatException ignored) {
-			this.restoreLastValidInput();
+	private void onCoyoteTimeInputChanged(String value) {
+		if (this.synchronizingCoyoteTimeInput) {
+			return;
 		}
+
+		Integer parsedValue = parseNonNegativeInteger(value, this::restoreLastValidCoyoteTimeInput);
+		if (parsedValue == null) {
+			return;
+		}
+
+		this.lastValidCoyoteTimeInput = value;
+		this.draft.coyoteTimeTicks = parsedValue;
+		this.setCoyoteTimeSliderValueSilently(parsedValue);
 	}
 
 	private void onCooldownInputChanged(String value) {
-		if (value.isEmpty()) {
+		Integer parsedValue = parseNonNegativeInteger(value, this::restoreLastValidCooldownInput);
+		if (parsedValue == null) {
 			return;
 		}
 
-		for (int index = 0; index < value.length(); index++) {
-			char currentCharacter = value.charAt(index);
+		this.lastValidCooldownInput = value;
+		this.draft.cooldownTicks = parsedValue;
+	}
 
-			if (!Character.isDigit(currentCharacter)) {
-				this.restoreLastValidCooldownInput();
-				return;
+	private Integer parseNonNegativeInteger(String value, Runnable restoreAction) {
+		if (value.isEmpty()) {
+			return null;
+		}
+
+		for (int index = 0; index < value.length(); index++) {
+			if (!Character.isDigit(value.charAt(index))) {
+				restoreAction.run();
+				return null;
 			}
 		}
 
 		try {
-			int parsedValue = Integer.parseInt(value);
-
-			this.lastValidCooldownInput = value;
-
-			if (parsedValue < DoubleJumpConfig.MIN_COOLDOWN_TICKS) {
-				return;
-			}
-
-			this.draft.cooldownTicks = parsedValue;
+			return Integer.parseInt(value);
 		} catch (NumberFormatException ignored) {
-			this.restoreLastValidCooldownInput();
+			restoreAction.run();
+			return null;
 		}
 	}
 
 	private void restoreLastValidCooldownInput() {
-		if (this.cooldownTicksInput == null) {
-			return;
+		if (this.cooldownTicksInput != null) {
+			this.cooldownTicksInput.setValue(this.lastValidCooldownInput);
 		}
-
-		this.cooldownTicksInput.setValue(this.lastValidCooldownInput);
 	}
 
-	private void restoreLastValidInput() {
+	private void restoreLastValidJumpCountInput() {
 		if (this.jumpCountInput == null) {
 			return;
 		}
 
-		this.synchronizingInput = true;
-		this.jumpCountInput.setValue(this.lastValidInput);
-		this.synchronizingInput = false;
+		this.synchronizingJumpCountInput = true;
+		this.jumpCountInput.setValue(this.lastValidJumpCountInput);
+		this.synchronizingJumpCountInput = false;
+	}
+
+	private void restoreLastValidCoyoteTimeInput() {
+		if (this.coyoteTimeInput == null) {
+			return;
+		}
+
+		this.synchronizingCoyoteTimeInput = true;
+		this.coyoteTimeInput.setValue(this.lastValidCoyoteTimeInput);
+		this.synchronizingCoyoteTimeInput = false;
 	}
 
 	@Override
@@ -204,37 +252,34 @@ public final class DoubleJumpConfigScreen extends OptionsSubScreen {
 		}
 
 		this.saved = true;
-
-		if (this.jumpCountInput != null) {
-			String value = this.jumpCountInput.getValue();
-
-			if (!value.isEmpty()) {
-				try {
-					int parsedValue = Integer.parseInt(value);
-
-					if (parsedValue >= DoubleJumpConfig.MIN_JUMP_COUNT) {
-						this.draft.jumpCount = parsedValue;
-					}
-				} catch (NumberFormatException ignored) {
-				}
-			}
-		}
-
-		if (this.cooldownTicksInput != null) {
-			String value = this.cooldownTicksInput.getValue();
-
-			if (!value.isEmpty()) {
-				try {
-					int parsedValue = Integer.parseInt(value);
-
-					if (parsedValue >= DoubleJumpConfig.MIN_COOLDOWN_TICKS) {
-						this.draft.cooldownTicks = parsedValue;
-					}
-				} catch (NumberFormatException ignored) {
-				}
-			}
-		}
+		this.applyInputValue(
+				this.jumpCountInput,
+				DoubleJumpConfig.MIN_JUMP_COUNT,
+				value -> this.draft.jumpCount = value);
+		this.applyInputValue(
+				this.coyoteTimeInput,
+				DoubleJumpConfig.MIN_COYOTE_TIME_TICKS,
+				value -> this.draft.coyoteTimeTicks = value);
+		this.applyInputValue(
+				this.cooldownTicksInput,
+				DoubleJumpConfig.MIN_COOLDOWN_TICKS,
+				value -> this.draft.cooldownTicks = value);
 
 		DoubleJumpConfig.set(this.draft);
+	}
+
+	private void applyInputValue(
+			EditBox input, int minimum, java.util.function.IntConsumer setter) {
+		if (input == null || input.getValue().isEmpty()) {
+			return;
+		}
+
+		try {
+			int parsedValue = Integer.parseInt(input.getValue());
+			if (parsedValue >= minimum) {
+				setter.accept(parsedValue);
+			}
+		} catch (NumberFormatException ignored) {
+		}
 	}
 }

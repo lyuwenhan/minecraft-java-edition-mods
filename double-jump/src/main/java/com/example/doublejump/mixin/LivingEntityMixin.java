@@ -15,18 +15,19 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(LivingEntity.class)
 public abstract class LivingEntityMixin {
 	@Unique private int doubleJump$airJumpsPerformed;
-
 	@Unique private boolean doubleJump$pendingAirJump;
-
 	@Unique private boolean doubleJump$pendingGroundJump;
-
+	@Unique private boolean doubleJump$pendingCoyoteJump;
 	@Unique private int doubleJump$cooldownTicksRemaining;
+	@Unique private int doubleJump$coyoteTicksRemaining;
+	@Unique private boolean doubleJump$wasOnGround;
 
 	@Inject(method = "aiStep", at = @At("HEAD"))
 	private void doubleJump$beginAiStep(CallbackInfo callbackInfo) {
 		LivingEntity entity = (LivingEntity) (Object) this;
 		doubleJump$pendingAirJump = false;
 		doubleJump$pendingGroundJump = false;
+		doubleJump$pendingCoyoteJump = false;
 
 		if (!(entity instanceof LocalPlayer)) {
 			return;
@@ -35,7 +36,15 @@ public abstract class LivingEntityMixin {
 		if (entity.onGround()) {
 			doubleJump$airJumpsPerformed = 0;
 			doubleJump$cooldownTicksRemaining = 0;
+			doubleJump$coyoteTicksRemaining = DoubleJumpConfig.coyoteTimeTicks();
+			doubleJump$wasOnGround = true;
 			return;
+		}
+
+		if (doubleJump$wasOnGround) {
+			doubleJump$wasOnGround = false;
+		} else if (doubleJump$coyoteTicksRemaining > 0) {
+			doubleJump$coyoteTicksRemaining--;
 		}
 
 		if (doubleJump$cooldownTicksRemaining > 0) {
@@ -68,6 +77,11 @@ public abstract class LivingEntityMixin {
 			return false;
 		}
 
+		if (doubleJump$canCoyoteJump(player)) {
+			doubleJump$pendingCoyoteJump = true;
+			return true;
+		}
+
 		if (!doubleJump$canAirJump(player)) {
 			return false;
 		}
@@ -84,21 +98,56 @@ public abstract class LivingEntityMixin {
 							target = "Lnet/minecraft/world/entity/LivingEntity;jumpFromGround()V",
 							shift = At.Shift.AFTER))
 	private void doubleJump$recordJump(CallbackInfo callbackInfo) {
+		if (doubleJump$pendingGroundJump) {
+			doubleJump$coyoteTicksRemaining = 0;
+			doubleJump$wasOnGround = false;
+		}
+
+		if (doubleJump$pendingCoyoteJump) {
+			doubleJump$coyoteTicksRemaining = 0;
+		}
+
 		if (doubleJump$pendingAirJump) {
 			doubleJump$airJumpsPerformed++;
 		}
 
-		if ((doubleJump$pendingGroundJump || doubleJump$pendingAirJump)
+		if ((doubleJump$pendingGroundJump
+						|| doubleJump$pendingCoyoteJump
+						|| doubleJump$pendingAirJump)
 				&& DoubleJumpConfig.cooldownEnabled()) {
 			doubleJump$cooldownTicksRemaining = DoubleJumpConfig.cooldownTicks();
 		}
 
 		doubleJump$pendingGroundJump = false;
+		doubleJump$pendingCoyoteJump = false;
 		doubleJump$pendingAirJump = false;
 	}
 
 	@Unique
+	private boolean doubleJump$canCoyoteJump(LocalPlayer player) {
+		if (doubleJump$coyoteTicksRemaining <= 0) {
+			return false;
+		}
+
+		return doubleJump$canPerformConfiguredJump(player);
+	}
+
+	@Unique
 	private boolean doubleJump$canAirJump(LocalPlayer player) {
+		if (!doubleJump$canPerformConfiguredJump(player)) {
+			return false;
+		}
+
+		if (DoubleJumpConfig.infiniteJumps()) {
+			return true;
+		}
+
+		int maximumAirJumps = DoubleJumpConfig.jumpCount() - 1;
+		return doubleJump$airJumpsPerformed < maximumAirJumps;
+	}
+
+	@Unique
+	private boolean doubleJump$canPerformConfiguredJump(LocalPlayer player) {
 		if (player.isPassenger()) {
 			return false;
 		}
@@ -115,15 +164,6 @@ public abstract class LivingEntityMixin {
 			return false;
 		}
 
-		if (DoubleJumpConfig.cooldownEnabled() && doubleJump$cooldownTicksRemaining > 0) {
-			return false;
-		}
-
-		if (DoubleJumpConfig.infiniteJumps()) {
-			return true;
-		}
-
-		int maximumAirJumps = DoubleJumpConfig.jumpCount() - 1;
-		return doubleJump$airJumpsPerformed < maximumAirJumps;
+		return !DoubleJumpConfig.cooldownEnabled() || doubleJump$cooldownTicksRemaining <= 0;
 	}
 }

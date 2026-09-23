@@ -4,7 +4,7 @@
 
 # Double Jump
 
-A client-side Fabric mod that adds configurable multiple jumping.
+A client-side Fabric mod that adds configurable multiple jumping and Coyote Time.
 
 ## Features
 
@@ -15,6 +15,8 @@ A client-side Fabric mod that adds configurable multiple jumping.
 - Enable or disable jump cooldown
 - Configure the cooldown duration in ticks
 - Apply the cooldown after the first ground jump and every airborne jump
+- Configure Coyote Time
+- Jump shortly after walking or falling off an edge without consuming an airborne jump
 - Configure through a vanilla-style settings screen
 - Optional Mod Menu integration
 
@@ -23,6 +25,8 @@ A client-side Fabric mod that adds configurable multiple jumping.
 Press the normal jump key to jump.
 
 When multiple jumping is enabled, press the jump key again while airborne to perform another jump. Landing resets the available jump count.
+
+When Coyote Time is enabled, you can still perform a ground jump for the configured number of ticks after walking or falling off an edge. A Coyote Time jump does not consume an airborne jump. Setting Coyote Time to `0` disables this feature.
 
 When jump cooldown is enabled, the cooldown starts immediately after the first ground jump. Additional airborne jumps are only available after the configured cooldown has expired. Every successful airborne jump starts the cooldown again.
 

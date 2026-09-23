@@ -34,6 +34,22 @@ public final class DoubleJumpOptions {
 					DoubleJumpConfig.DEFAULT_JUMP_COUNT,
 					DoubleJumpOptions::onJumpCountChanged);
 
+	private static final OptionInstance<Integer> COYOTE_TIME =
+			new OptionInstance<>(
+					"option.double-jump.coyote_time",
+					value ->
+							Tooltip.create(
+									Component.translatable(
+											"option.double-jump.coyote_time.tooltip")),
+					DoubleJumpOptions::coyoteTimeText,
+					UnitDouble.INSTANCE.xmap(
+							DoubleJumpOptions::toCoyoteTime, DoubleJumpOptions::fromCoyoteTime),
+					Codec.intRange(
+							DoubleJumpConfig.MIN_COYOTE_TIME_TICKS,
+							DoubleJumpConfig.SLIDER_MAX_COYOTE_TIME_TICKS),
+					DoubleJumpConfig.DEFAULT_COYOTE_TIME_TICKS,
+					DoubleJumpOptions::onCoyoteTimeChanged);
+
 	private static final OptionInstance<Boolean> COOLDOWN_ENABLED =
 			OptionInstance.createBoolean(
 					"option.double-jump.cooldown_enabled",
@@ -57,7 +73,9 @@ public final class DoubleJumpOptions {
 	private DoubleJumpOptions() {}
 
 	public static OptionInstance<?>[] all() {
-		return new OptionInstance<?>[] {enabled(), infiniteJumps(), jumpCount(), cooldownEnabled()};
+		return new OptionInstance<?>[] {
+			enabled(), infiniteJumps(), jumpCount(), coyoteTime(), cooldownEnabled()
+		};
 	}
 
 	public static OptionInstance<Boolean> enabled() {
@@ -71,9 +89,19 @@ public final class DoubleJumpOptions {
 	public static OptionInstance<Integer> jumpCount() {
 		DoubleJumpConfigScreen screen = activeScreen();
 		if (screen != null) {
-			screen.setSliderValueSilently(clampToSlider(screen.draft().jumpCount));
+			screen.setJumpCountSliderValueSilently(
+					clampJumpCountToSlider(screen.draft().jumpCount));
 		}
 		return JUMP_COUNT;
+	}
+
+	public static OptionInstance<Integer> coyoteTime() {
+		DoubleJumpConfigScreen screen = activeScreen();
+		if (screen != null) {
+			screen.setCoyoteTimeSliderValueSilently(
+					clampCoyoteTimeToSlider(screen.draft().coyoteTimeTicks));
+		}
+		return COYOTE_TIME;
 	}
 
 	public static OptionInstance<Boolean> cooldownEnabled() {
@@ -93,7 +121,11 @@ public final class DoubleJumpOptions {
 	}
 
 	static void setJumpCountOption(int value) {
-		JUMP_COUNT.set(clampToSlider(value));
+		JUMP_COUNT.set(clampJumpCountToSlider(value));
+	}
+
+	static void setCoyoteTimeOption(int value) {
+		COYOTE_TIME.set(clampCoyoteTimeToSlider(value));
 	}
 
 	private static void onEnabledChanged(Boolean value) {
@@ -105,11 +137,20 @@ public final class DoubleJumpOptions {
 
 	private static void onJumpCountChanged(Integer value) {
 		DoubleJumpConfigScreen screen = activeScreen();
-		if (screen == null || screen.isSynchronizingSlider()) {
+		if (screen == null || screen.isSynchronizingJumpCountSlider()) {
 			return;
 		}
 		screen.draft().jumpCount = value;
-		screen.syncInputFromSlider(value);
+		screen.syncJumpCountInputFromSlider(value);
+	}
+
+	private static void onCoyoteTimeChanged(Integer value) {
+		DoubleJumpConfigScreen screen = activeScreen();
+		if (screen == null || screen.isSynchronizingCoyoteTimeSlider()) {
+			return;
+		}
+		screen.draft().coyoteTimeTicks = value;
+		screen.syncCoyoteTimeInputFromSlider(value);
 	}
 
 	private static void onCooldownEnabledChanged(Boolean value) {
@@ -128,25 +169,54 @@ public final class DoubleJumpOptions {
 
 	private static int toJumpCount(double normalized) {
 		double range = DoubleJumpConfig.SLIDER_MAX_JUMP_COUNT - DoubleJumpConfig.MIN_JUMP_COUNT;
-		return clampToSlider(
+		return clampJumpCountToSlider(
 				(int) Math.round(DoubleJumpConfig.MIN_JUMP_COUNT + normalized * range));
 	}
 
 	private static double fromJumpCount(int count) {
 		double range = DoubleJumpConfig.SLIDER_MAX_JUMP_COUNT - DoubleJumpConfig.MIN_JUMP_COUNT;
-		return (clampToSlider(count) - DoubleJumpConfig.MIN_JUMP_COUNT) / range;
+		return (clampJumpCountToSlider(count) - DoubleJumpConfig.MIN_JUMP_COUNT) / range;
+	}
+
+	private static int toCoyoteTime(double normalized) {
+		double range =
+				DoubleJumpConfig.SLIDER_MAX_COYOTE_TIME_TICKS
+						- DoubleJumpConfig.MIN_COYOTE_TIME_TICKS;
+		return clampCoyoteTimeToSlider(
+				(int) Math.round(DoubleJumpConfig.MIN_COYOTE_TIME_TICKS + normalized * range));
+	}
+
+	private static double fromCoyoteTime(int ticks) {
+		double range =
+				DoubleJumpConfig.SLIDER_MAX_COYOTE_TIME_TICKS
+						- DoubleJumpConfig.MIN_COYOTE_TIME_TICKS;
+		return (clampCoyoteTimeToSlider(ticks) - DoubleJumpConfig.MIN_COYOTE_TIME_TICKS) / range;
 	}
 
 	private static Component jumpCountText(Component optionText, Integer value) {
 		return Component.literal(optionText.getString() + ": " + value);
 	}
 
-	private static int clampToSlider(int value) {
+	private static Component coyoteTimeText(Component optionText, Integer value) {
+		return Component.literal(optionText.getString() + ": " + value);
+	}
+
+	private static int clampJumpCountToSlider(int value) {
 		if (value < DoubleJumpConfig.MIN_JUMP_COUNT) {
 			return DoubleJumpConfig.MIN_JUMP_COUNT;
 		}
 		if (value > DoubleJumpConfig.SLIDER_MAX_JUMP_COUNT) {
 			return DoubleJumpConfig.SLIDER_MAX_JUMP_COUNT;
+		}
+		return value;
+	}
+
+	private static int clampCoyoteTimeToSlider(int value) {
+		if (value < DoubleJumpConfig.MIN_COYOTE_TIME_TICKS) {
+			return DoubleJumpConfig.MIN_COYOTE_TIME_TICKS;
+		}
+		if (value > DoubleJumpConfig.SLIDER_MAX_COYOTE_TIME_TICKS) {
+			return DoubleJumpConfig.SLIDER_MAX_COYOTE_TIME_TICKS;
 		}
 		return value;
 	}
