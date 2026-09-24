@@ -12,7 +12,7 @@
 			"versions": {
 				"1.21.11": "1.0.7",
 				"26.1.2": "1.1.3",
-				"26.3": "1.2.0"
+				"26.3": "1.2.1"
 			}
 		},
 		"auto-greeting-server": {
@@ -97,7 +97,7 @@
 			"description": "Overrides Do a Barrel Roll gameplay enforcement for forceEnabled and allowThrusting without altering the server settings UI.",
 			"versions": {
 				"26.1.2": "1.1.1",
-				"26.3": "1.2.1"
+				"26.3": "1.2.2"
 			}
 		},
 		"double-jump": {
@@ -106,7 +106,7 @@
 			"description": "Adds configurable client-side multiple jumping.",
 			"versions": {
 				"26.1.2": "1.1.1",
-				"26.3": "1.2.1"
+				"26.3": "1.2.2"
 			}
 		},
 		"entity-highlighter": {
@@ -133,7 +133,7 @@
 			"description": "Temporarily adjusts Freecam or player flight speed using a key and the mouse wheel.",
 			"versions": {
 				"26.1.2": "1.1.9",
-				"26.3": "1.2.0"
+				"26.3": "1.2.1"
 			}
 		},
 		"forward-lock": {
@@ -274,6 +274,10 @@
 		"c817a9f2637eb79e3041ebd648594757802a3af3": {
 			"id": "auto-greeting",
 			"version": "1.2.0"
+		},
+		"1028e08e0b3f4c85af79127a1da03e95b02106bf": {
+			"id": "auto-greeting",
+			"version": "1.2.1"
 		},
 		"6eb977b1ce536d20b8b8d34438715046dfc09ff7": {
 			"id": "auto-greeting-server",
@@ -507,6 +511,10 @@
 			"id": "dabr-server-config-override",
 			"version": "1.2.1"
 		},
+		"438d0013f464521efc55f50d90d404060434d34a": {
+			"id": "dabr-server-config-override",
+			"version": "1.2.2"
+		},
 		"e2fd2b4a2d87f4eee35fd040be4b96c986d113e5": {
 			"id": "double-jump",
 			"version": "1.1.0"
@@ -522,6 +530,10 @@
 		"a6ea1db51244b7fcbe81d21548277a12ee4bb80f": {
 			"id": "double-jump",
 			"version": "1.2.1"
+		},
+		"e5d9aae4a5c15ac0572e8d899b9e8388ebcf0368": {
+			"id": "double-jump",
+			"version": "1.2.2"
 		},
 		"0fc493b050d22f856cf11d493b6438c5ca41228d": {
 			"id": "entity-highlighter",
@@ -586,6 +598,10 @@
 		"7bb36cbebcacf4338f7a95ffb7b901fd864d9d49": {
 			"id": "fly-speed-modifier",
 			"version": "1.2.0"
+		},
+		"b56683425d39b4c937a553739efcfb54146caac2": {
+			"id": "fly-speed-modifier",
+			"version": "1.2.1"
 		},
 		"04532433cdcb001b3e7b5e6ad71f26d8079016f4": {
 			"id": "forward-lock",

@@ -16,7 +16,8 @@
 			"1.1.1",
 			"1.1.2",
 			"1.1.3",
-			"1.2.0"
+			"1.2.0",
+			"1.2.1"
 		],
 		"hasIcon": true,
 		"displayName": "Auto Greeting",
@@ -176,7 +177,8 @@
 			"1.1.0",
 			"1.1.1",
 			"1.2.0",
-			"1.2.1"
+			"1.2.1",
+			"1.2.2"
 		],
 		"hasIcon": true,
 		"displayName": "DABR Server Config Override",
@@ -188,7 +190,8 @@
 			"1.1.0",
 			"1.1.1",
 			"1.2.0",
-			"1.2.1"
+			"1.2.1",
+			"1.2.2"
 		],
 		"hasIcon": true,
 		"displayName": "Double Jump",
@@ -235,7 +238,8 @@
 			"1.1.7",
 			"1.1.8",
 			"1.1.9",
-			"1.2.0"
+			"1.2.0",
+			"1.2.1"
 		],
 		"hasIcon": true,
 		"displayName": "Fly Speed Modifier",
