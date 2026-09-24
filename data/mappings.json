@@ -69,7 +69,7 @@
 			"description": "Client-side boat camera and movement utilities.",
 			"versions": {
 				"26.1.2": "1.1.6",
-				"26.3": "1.2.0"
+				"26.3": "1.2.1"
 			}
 		},
 		"client-flying": {
@@ -430,6 +430,10 @@
 		"64838381cc35507cdd05dea9634b822e093e8798": {
 			"id": "boat-utils",
 			"version": "1.2.0"
+		},
+		"f089346511ec6519547a37afc1f139b8cc42aa17": {
+			"id": "boat-utils",
+			"version": "1.2.1"
 		},
 		"0bf7c7c079e902a3a6e0e745430c766ecac88d85": {
 			"id": "client-flying",
