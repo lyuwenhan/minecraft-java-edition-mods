@@ -1,5 +1,5 @@
 {
-	"key.playerhighlighter.toggle": "Toggle Keep Player Highlight",
-	"key.playerhighlighter.hold": "Hold to Highlight Player",
-	"category.playerhighlighter": "Player Highlighter"
+	"key.player-highlighter.toggle": "Toggle Keep Player Highlight",
+	"key.player-highlighter.hold": "Hold to Highlight Player",
+	"key.category.player-highlighter.general": "Player Highlighter"
 }

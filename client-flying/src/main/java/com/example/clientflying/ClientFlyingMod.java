@@ -19,9 +19,8 @@ import net.minecraft.world.level.GameType;
 
 public class ClientFlyingMod implements ClientModInitializer {
 	private static final String MOD_ID = "client-flying";
-	private static final String KEY_TOGGLE = "key.client-flying.toggle";
 	private final KeyMapping.Category category =
-			KeyMapping.Category.register(Identifier.fromNamespaceAndPath(MOD_ID, "client_flying"));
+			KeyMapping.Category.register(Identifier.fromNamespaceAndPath(MOD_ID, "general"));
 	private static KeyMapping toggleKey;
 	private static ClientFlyingConfig config = new ClientFlyingConfig();
 	private static boolean lastGlider = false;
@@ -105,7 +104,7 @@ public class ClientFlyingMod implements ClientModInitializer {
 		toggleKey =
 				KeyMappingHelper.registerKeyMapping(
 						new KeyMapping(
-								KEY_TOGGLE,
+								"key.client-flying.toggle",
 								InputConstants.Type.KEYBOARD,
 								InputConstants.KEY_V,
 								category));

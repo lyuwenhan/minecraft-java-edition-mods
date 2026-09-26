@@ -28,14 +28,14 @@ public class PlayerHighlighterMod implements ClientModInitializer {
 		TOGGLE_KEY =
 				KeyMappingHelper.registerKeyMapping(
 						new KeyMapping(
-								"key.playerhighlighter.toggle",
+								"key.player-highlighter.toggle",
 								InputConstants.Type.KEYBOARD,
 								InputConstants.KEY_I,
 								CATEGORY));
 		HOLD_KEY =
 				KeyMappingHelper.registerKeyMapping(
 						new KeyMapping(
-								"key.playerhighlighter.hold",
+								"key.player-highlighter.hold",
 								InputConstants.Type.KEYBOARD,
 								InputConstants.KEY_TAB,
 								CATEGORY));
