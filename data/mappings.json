@@ -79,7 +79,7 @@
 			"versions": {
 				"1.21.11": "1.0.3",
 				"26.1.2": "1.1.7",
-				"26.3": "1.2.0"
+				"26.3": "1.2.1"
 			}
 		},
 		"creeper-no-break": {
@@ -191,7 +191,7 @@
 			"versions": {
 				"1.21.11": "1.0.8",
 				"26.1.2": "1.1.3",
-				"26.3": "1.2.0"
+				"26.3": "1.2.1"
 			}
 		},
 		"server-manager": {
@@ -486,6 +486,10 @@
 		"3f477242520283559e08da89c09719549b967e6a": {
 			"id": "client-flying",
 			"version": "1.2.0"
+		},
+		"bea6eefc0d01e043849358ac212ebba8bda51697": {
+			"id": "client-flying",
+			"version": "1.2.1"
 		},
 		"abf4ea1444a7592351abb2bd0238939e200896f8": {
 			"id": "creeper-no-break",
@@ -794,6 +798,10 @@
 		"f3f25cda8c9646103fa434605d733cb3c6842b96": {
 			"id": "player-highlighter",
 			"version": "1.2.0"
+		},
+		"5834bc800a1c929d96512de15f45134c5fdc2a22": {
+			"id": "player-highlighter",
+			"version": "1.2.1"
 		},
 		"adb1af2503ce759566bf071e103f7cad9ca91aba": {
 			"id": "server-manager",
