@@ -1,0 +1,25 @@
+{
+	"schemaVersion": 1,
+	"id": "map-locator",
+	"version": "${version}",
+	"name": "Map Locator",
+	"description": "Shows exact map positions in tooltips and adds held-map markers to the client locator bar.",
+	"authors": [
+		"Wenhan"
+	],
+	"environment": "client",
+	"entrypoints": {
+		"client": [
+			"com.example.maplocator.MapLocatorClient"
+		]
+	},
+	"mixins": [
+		"maplocator.mixins.json"
+	],
+	"depends": {
+		"fabricloader": ">=0.19.5",
+		"fabric-api": "*",
+		"minecraft": "26.3",
+		"java": ">=25"
+	}
+}

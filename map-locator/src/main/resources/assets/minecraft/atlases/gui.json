@@ -1,0 +1,204 @@
+{
+	"sources": [
+		{
+			"type": "minecraft:single",
+			"resource": "minecraft:map/decorations/abandoned_camp",
+			"sprite": "map-locator:hud/locator_bar_dot/abandoned_camp"
+		},
+		{
+			"type": "minecraft:single",
+			"resource": "minecraft:map/decorations/ancient_city",
+			"sprite": "map-locator:hud/locator_bar_dot/ancient_city"
+		},
+		{
+			"type": "minecraft:single",
+			"resource": "minecraft:map/decorations/black_banner",
+			"sprite": "map-locator:hud/locator_bar_dot/black_banner"
+		},
+		{
+			"type": "minecraft:single",
+			"resource": "minecraft:map/decorations/blue_banner",
+			"sprite": "map-locator:hud/locator_bar_dot/blue_banner"
+		},
+		{
+			"type": "minecraft:single",
+			"resource": "minecraft:map/decorations/blue_marker",
+			"sprite": "map-locator:hud/locator_bar_dot/blue_marker"
+		},
+		{
+			"type": "minecraft:single",
+			"resource": "minecraft:map/decorations/brown_banner",
+			"sprite": "map-locator:hud/locator_bar_dot/brown_banner"
+		},
+		{
+			"type": "minecraft:single",
+			"resource": "minecraft:map/decorations/cyan_banner",
+			"sprite": "map-locator:hud/locator_bar_dot/cyan_banner"
+		},
+		{
+			"type": "minecraft:single",
+			"resource": "minecraft:map/decorations/desert_pyramid",
+			"sprite": "map-locator:hud/locator_bar_dot/desert_pyramid"
+		},
+		{
+			"type": "minecraft:single",
+			"resource": "minecraft:map/decorations/desert_village",
+			"sprite": "map-locator:hud/locator_bar_dot/desert_village"
+		},
+		{
+			"type": "minecraft:single",
+			"resource": "minecraft:map/decorations/frame",
+			"sprite": "map-locator:hud/locator_bar_dot/frame"
+		},
+		{
+			"type": "minecraft:single",
+			"resource": "minecraft:map/decorations/gray_banner",
+			"sprite": "map-locator:hud/locator_bar_dot/gray_banner"
+		},
+		{
+			"type": "minecraft:single",
+			"resource": "minecraft:map/decorations/green_banner",
+			"sprite": "map-locator:hud/locator_bar_dot/green_banner"
+		},
+		{
+			"type": "minecraft:single",
+			"resource": "minecraft:map/decorations/jungle_temple",
+			"sprite": "map-locator:hud/locator_bar_dot/jungle_temple"
+		},
+		{
+			"type": "minecraft:single",
+			"resource": "minecraft:map/decorations/light_blue_banner",
+			"sprite": "map-locator:hud/locator_bar_dot/light_blue_banner"
+		},
+		{
+			"type": "minecraft:single",
+			"resource": "minecraft:map/decorations/light_gray_banner",
+			"sprite": "map-locator:hud/locator_bar_dot/light_gray_banner"
+		},
+		{
+			"type": "minecraft:single",
+			"resource": "minecraft:map/decorations/lime_banner",
+			"sprite": "map-locator:hud/locator_bar_dot/lime_banner"
+		},
+		{
+			"type": "minecraft:single",
+			"resource": "minecraft:map/decorations/magenta_banner",
+			"sprite": "map-locator:hud/locator_bar_dot/magenta_banner"
+		},
+		{
+			"type": "minecraft:single",
+			"resource": "minecraft:map/decorations/mineshaft",
+			"sprite": "map-locator:hud/locator_bar_dot/mineshaft"
+		},
+		{
+			"type": "minecraft:single",
+			"resource": "minecraft:map/decorations/ocean_monument",
+			"sprite": "map-locator:hud/locator_bar_dot/ocean_monument"
+		},
+		{
+			"type": "minecraft:single",
+			"resource": "minecraft:map/decorations/orange_banner",
+			"sprite": "map-locator:hud/locator_bar_dot/orange_banner"
+		},
+		{
+			"type": "minecraft:single",
+			"resource": "minecraft:map/decorations/pink_banner",
+			"sprite": "map-locator:hud/locator_bar_dot/pink_banner"
+		},
+		{
+			"type": "minecraft:single",
+			"resource": "minecraft:map/decorations/plains_village",
+			"sprite": "map-locator:hud/locator_bar_dot/plains_village"
+		},
+		{
+			"type": "minecraft:single",
+			"resource": "minecraft:map/decorations/player",
+			"sprite": "map-locator:hud/locator_bar_dot/player"
+		},
+		{
+			"type": "minecraft:single",
+			"resource": "minecraft:map/decorations/player_off_limits",
+			"sprite": "map-locator:hud/locator_bar_dot/player_off_limits"
+		},
+		{
+			"type": "minecraft:single",
+			"resource": "minecraft:map/decorations/player_off_map",
+			"sprite": "map-locator:hud/locator_bar_dot/player_off_map"
+		},
+		{
+			"type": "minecraft:single",
+			"resource": "minecraft:map/decorations/purple_banner",
+			"sprite": "map-locator:hud/locator_bar_dot/purple_banner"
+		},
+		{
+			"type": "minecraft:single",
+			"resource": "minecraft:map/decorations/red_banner",
+			"sprite": "map-locator:hud/locator_bar_dot/red_banner"
+		},
+		{
+			"type": "minecraft:single",
+			"resource": "minecraft:map/decorations/red_marker",
+			"sprite": "map-locator:hud/locator_bar_dot/red_marker"
+		},
+		{
+			"type": "minecraft:single",
+			"resource": "minecraft:map/decorations/red_x",
+			"sprite": "map-locator:hud/locator_bar_dot/red_x"
+		},
+		{
+			"type": "minecraft:single",
+			"resource": "minecraft:map/decorations/savanna_village",
+			"sprite": "map-locator:hud/locator_bar_dot/savanna_village"
+		},
+		{
+			"type": "minecraft:single",
+			"resource": "minecraft:map/decorations/snowy_village",
+			"sprite": "map-locator:hud/locator_bar_dot/snowy_village"
+		},
+		{
+			"type": "minecraft:single",
+			"resource": "minecraft:map/decorations/swamp_hut",
+			"sprite": "map-locator:hud/locator_bar_dot/swamp_hut"
+		},
+		{
+			"type": "minecraft:single",
+			"resource": "minecraft:map/decorations/taiga_village",
+			"sprite": "map-locator:hud/locator_bar_dot/taiga_village"
+		},
+		{
+			"type": "minecraft:single",
+			"resource": "minecraft:map/decorations/target_point",
+			"sprite": "map-locator:hud/locator_bar_dot/target_point"
+		},
+		{
+			"type": "minecraft:single",
+			"resource": "minecraft:map/decorations/target_x",
+			"sprite": "map-locator:hud/locator_bar_dot/target_x"
+		},
+		{
+			"type": "minecraft:single",
+			"resource": "minecraft:map/decorations/trial_chambers",
+			"sprite": "map-locator:hud/locator_bar_dot/trial_chambers"
+		},
+		{
+			"type": "minecraft:single",
+			"resource": "minecraft:map/decorations/warm_ocean_ruins",
+			"sprite": "map-locator:hud/locator_bar_dot/warm_ocean_ruins"
+		},
+		{
+			"type": "minecraft:single",
+			"resource": "minecraft:map/decorations/white_banner",
+			"sprite": "map-locator:hud/locator_bar_dot/white_banner"
+		},
+		{
+			"type": "minecraft:single",
+			"resource": "minecraft:map/decorations/woodland_mansion",
+			"sprite": "map-locator:hud/locator_bar_dot/woodland_mansion"
+		},
+		{
+			"type": "minecraft:single",
+			"resource": "minecraft:map/decorations/yellow_banner",
+			"sprite": "map-locator:hud/locator_bar_dot/yellow_banner"
+		}
+	]
+}
