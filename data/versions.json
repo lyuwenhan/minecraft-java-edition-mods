@@ -329,6 +329,15 @@
 			"Planet Minecraft": "https://www.planetminecraft.com/mod/infinity-fireworks"
 		}
 	},
+	"map-locator": {
+		"versions": [
+			"1.2.0"
+		],
+		"hasIcon": true,
+		"displayName": "Map Locator",
+		"description": "Shows exact map positions in tooltips and adds held-map markers to the client locator bar.",
+		"link": {}
+	},
 	"no-hungry": {
 		"versions": [
 			"1.1.0",

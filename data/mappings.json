@@ -175,6 +175,14 @@
 				"26.3": "1.2.0"
 			}
 		},
+		"map-locator": {
+			"hasIcon": true,
+			"displayName": "Map Locator",
+			"description": "Shows exact map positions in tooltips and adds held-map markers to the client locator bar.",
+			"versions": {
+				"26.3": "1.2.0"
+			}
+		},
 		"no-hungry": {
 			"hasIcon": true,
 			"displayName": "No Hungry",
@@ -725,6 +733,10 @@
 		},
 		"46484c5bd2ba690529d6625e741966ff697954b8": {
 			"id": "infinity-fireworks",
+			"version": "1.2.0"
+		},
+		"9beedbd835db8ca0a85e164bba289507806d43e3": {
+			"id": "map-locator",
 			"version": "1.2.0"
 		},
 		"c12527ff6a56fbcf5d05bbc58cecf460c90f1721": {

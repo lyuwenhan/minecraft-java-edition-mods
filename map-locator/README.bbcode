@@ -1,0 +1,23 @@
+[h1]Languages[/h1][url=https://lyuwenhan.github.io/extensions/minecraft-java/data/assets/map-locator/README/README.html]EN/English[/url] | [url=https://lyuwenhan.github.io/extensions/minecraft-java/data/assets/map-locator/README/README_ZH-CN.html]ZH-CN/简体中文[/url]
+[h1]Map Locator[/h1]A client-side Fabric mod that provides additional map location information, including map center coordinates, map marker coordinates, and locator bar integration while holding a map.
+[h2]Features[/h2][list]
+[*]Displays the map center coordinates in the map item tooltip[/*]
+[*]Displays all map markers with available coordinates in the map item tooltip[/*]
+[*]Registers map markers on the vanilla locator bar while the map is held in the main hand or offhand[/*]
+[/list][h2]Coordinate Format[/h2]Map center:
+[code]Map Center: X ? Z[/code]
+Marker:
+[code]Marker [Marker Name]: X ? Z[/code]
+Example:
+[code]Map Center: 1856 ? -832
+Marker [Woodland Mansion]: 1923 ? -761[/code]
+[h2]Locator Bar[/h2]When a map containing markers with absolute coordinates is held in the main hand or offhand, Map Locator temporarily registers those markers on the vanilla Minecraft locator bar.
+[list]
+[*]Locator points use the marker's actual X/Z world coordinates[/*]
+[*]Markers from both main-hand and offhand maps can be displayed at the same time[/*]
+[/list][h2]Supported Versions[/h2][list]
+[*]Minecraft 26.3[/*]
+[*]Fabric Loader 0.19.5+[/*]
+[*]Fabric API 0.160.5+[/*]
+[*]Java 25[/*]
+[/list][h2]License[/h2]MIT
