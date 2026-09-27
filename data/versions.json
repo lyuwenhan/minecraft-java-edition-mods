@@ -336,7 +336,9 @@
 		"hasIcon": true,
 		"displayName": "Map Locator",
 		"description": "Shows exact map positions in tooltips and adds held-map markers to the client locator bar.",
-		"link": {}
+		"link": {
+			"Planet Minecraft": "https://www.planetminecraft.com/mod/map-locator"
+		}
 	},
 	"no-hungry": {
 		"versions": [
