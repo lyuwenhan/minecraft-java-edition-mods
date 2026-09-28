@@ -337,6 +337,7 @@
 		"displayName": "Map Locator",
 		"description": "Shows exact map positions in tooltips and adds held-map markers to the client locator bar.",
 		"link": {
+			"Curseforge": "https://www.curseforge.com/minecraft/mc-mods/map-locator",
 			"Planet Minecraft": "https://www.planetminecraft.com/mod/map-locator"
 		}
 	},
