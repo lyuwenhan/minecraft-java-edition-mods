@@ -1,6 +1,6 @@
 # Languages (语言)
 
-[EN/English](https://lyuwenhan.github.io/extensions/minecraft-java/data/assets/forward-lock/README/README.html) | [ZH-CN/简体中文](https://lyuwenhan.github.io/extensions/minecraft-java/data/assets/forward-lock/README/README_ZH-CN.html)
+[EN/English](https://lyuwenhan.github.io/extensions/minecraft-java/forward-lock/README/README.html) | [ZH-CN/简体中文](https://lyuwenhan.github.io/extensions/minecraft-java/forward-lock/README/README_ZH-CN.html)
 
 # Forward Lock (前进锁)
 

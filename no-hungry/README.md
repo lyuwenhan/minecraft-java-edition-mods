@@ -1,6 +1,6 @@
 # Languages
 
-[EN/English](https://lyuwenhan.github.io/extensions/minecraft-java/data/assets/no-hungry/README/README.html) | [ZH-CN/简体中文](https://lyuwenhan.github.io/extensions/minecraft-java/data/assets/no-hungry/README/README_ZH-CN.html)
+[EN/English](https://lyuwenhan.github.io/extensions/minecraft-java/no-hungry/README/README.html) | [ZH-CN/简体中文](https://lyuwenhan.github.io/extensions/minecraft-java/no-hungry/README/README_ZH-CN.html)
 
 # No Hungry
 

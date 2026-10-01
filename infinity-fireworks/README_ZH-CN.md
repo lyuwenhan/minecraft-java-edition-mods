@@ -1,6 +1,6 @@
 # Languages (语言)
 
-[EN/English](https://lyuwenhan.github.io/extensions/minecraft-java/data/assets/infinity-fireworks/README/README.html) | [ZH-CN/简体中文](https://lyuwenhan.github.io/extensions/minecraft-java/data/assets/infinity-fireworks/README/README_ZH-CN.html)
+[EN/English](https://lyuwenhan.github.io/extensions/minecraft-java/infinity-fireworks/README/README.html) | [ZH-CN/简体中文](https://lyuwenhan.github.io/extensions/minecraft-java/infinity-fireworks/README/README_ZH-CN.html)
 
 # Infinity Fireworks (无限烟花)
 

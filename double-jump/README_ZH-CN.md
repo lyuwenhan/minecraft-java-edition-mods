@@ -1,6 +1,6 @@
 # Languages (语言)
 
-[EN/English](https://lyuwenhan.github.io/extensions/minecraft-java/data/assets/double-jump/README/README.html) | [ZH-CN/简体中文](https://lyuwenhan.github.io/extensions/minecraft-java/data/assets/double-jump/README/README_ZH-CN.html)
+[EN/English](https://lyuwenhan.github.io/extensions/minecraft-java/double-jump/README/README.html) | [ZH-CN/简体中文](https://lyuwenhan.github.io/extensions/minecraft-java/double-jump/README/README_ZH-CN.html)
 
 # Double Jump (多段跳)
 

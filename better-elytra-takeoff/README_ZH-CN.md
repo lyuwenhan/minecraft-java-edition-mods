@@ -1,6 +1,6 @@
 # Languages (语言)
 
-[EN/English](https://lyuwenhan.github.io/extensions/minecraft-java/data/assets/better-elytra-takeoff/README/README.html) | [ZH-CN/简体中文](https://lyuwenhan.github.io/extensions/minecraft-java/data/assets/better-elytra-takeoff/README/README_ZH-CN.html)
+[EN/English](https://lyuwenhan.github.io/extensions/minecraft-java/better-elytra-takeoff/README/README.html) | [ZH-CN/简体中文](https://lyuwenhan.github.io/extensions/minecraft-java/better-elytra-takeoff/README/README_ZH-CN.html)
 
 # Better Elytra Takeoff (鞘翅助飞)
 

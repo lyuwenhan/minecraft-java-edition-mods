@@ -1,6 +1,6 @@
 # Languages
 
-[EN/English](https://lyuwenhan.github.io/extensions/minecraft-java/data/assets/flight-disabler/README/README.html) | [ZH-CN/简体中文](https://lyuwenhan.github.io/extensions/minecraft-java/data/assets/flight-disabler/README/README_ZH-CN.html)
+[EN/English](https://lyuwenhan.github.io/extensions/minecraft-java/flight-disabler/README/README.html) | [ZH-CN/简体中文](https://lyuwenhan.github.io/extensions/minecraft-java/flight-disabler/README/README_ZH-CN.html)
 
 # Flight Disabler
 
