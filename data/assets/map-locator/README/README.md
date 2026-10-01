@@ -1,6 +1,6 @@
 # Languages
 
-[EN/English](https://lyuwenhan.github.io/extensions/minecraft-java/data/assets/map-locator/README/README.html) | [ZH-CN/简体中文](https://lyuwenhan.github.io/extensions/minecraft-java/data/assets/map-locator/README/README_ZH-CN.html)
+[EN/English](https://lyuwenhan.github.io/extensions/minecraft-java/map-locator/README/README.html) | [ZH-CN/简体中文](https://lyuwenhan.github.io/extensions/minecraft-java/map-locator/README/README_ZH-CN.html)
 
 # Map Locator
 

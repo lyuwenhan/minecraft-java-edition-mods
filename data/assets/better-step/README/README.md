@@ -1,6 +1,6 @@
 # Languages
 
-[EN/English](https://lyuwenhan.github.io/extensions/minecraft-java/data/assets/better-step/README/README.html) | [ZH-CN/简体中文](https://lyuwenhan.github.io/extensions/minecraft-java/data/assets/better-step/README/README_ZH-CN.html)
+[EN/English](https://lyuwenhan.github.io/extensions/minecraft-java/better-step/README/README.html) | [ZH-CN/简体中文](https://lyuwenhan.github.io/extensions/minecraft-java/better-step/README/README_ZH-CN.html)
 
 # Better Step
 
