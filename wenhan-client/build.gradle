@@ -28,6 +28,7 @@ dependencies {
     implementation "net.fabricmc.fabric-api:fabric-api:${fabric_api_version}"
 
     compileOnly "maven.modrinth:modmenu:${modmenu_version}"
+    compileOnly "maven.modrinth:do-a-barrel-roll:${dabr_version}"
     runtimeOnly "maven.modrinth:modmenu:${modmenu_version}"
 }
 

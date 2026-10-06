@@ -24,6 +24,7 @@
 		"boat-utils.mixins.json",
 		"cancel-slowdown.mixins.json",
 		"clientflying.mixins.json",
+		"dabr-server-config-override.mixins.json",
 		"double-jump.mixins.json",
 		"elytra-cancel.mixins.json",
 		"entityhighlighter.mixins.json",

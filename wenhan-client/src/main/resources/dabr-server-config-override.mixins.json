@@ -1,0 +1,16 @@
+{
+	"required": true,
+	"package": "com.example.wenhanclient.dabrserverconfigoverride.mixin",
+	"compatibilityLevel": "JAVA_25",
+	"plugin": "com.example.wenhanclient.dabrserverconfigoverride.DabrServerConfigOverrideMixinPlugin",
+	"client": [
+		"DoABarrelRollClientMixin",
+		"ModConfigMixin",
+		"ModKeybindingsMixin",
+		"YACLImplementationMixin",
+		"YACLDependableMixin"
+	],
+	"injectors": {
+		"defaultRequire": 1
+	}
+}
