@@ -105,7 +105,8 @@
 		},
 		{
 			"type": "minecraft:single",
-			"resource": "wenhan-client:block/structure_void"
+			"resource": "minecraft:item/structure_void",
+			"sprite": "minecraft:block/structure_void"
 		}
 	]
 }
