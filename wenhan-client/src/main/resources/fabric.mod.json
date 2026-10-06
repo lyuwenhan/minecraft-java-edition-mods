@@ -1,0 +1,54 @@
+{
+	"schemaVersion": 1,
+	"id": "wenhan-client",
+	"version": "${version}",
+	"name": "Wenhan Client",
+	"description": "Client-side utility collection.",
+	"authors": [
+		"Wenhan"
+	],
+	"environment": "client",
+	"entrypoints": {
+		"client": [
+			"com.example.wenhanclient.WenhanClientMod"
+		],
+		"modmenu": [
+			"com.example.wenhanclient.client.compat.WenhanClientModMenuIntegration"
+		]
+	},
+	"mixins": [
+		"attack-through-foliage.mixins.json",
+		"better-step.mixins.json",
+		"wenhan-client.mixins.json",
+		"boat-item-visibility.mixins.json",
+		"boat-utils.mixins.json",
+		"clientflying.mixins.json",
+		"double-jump.mixins.json",
+		"entityhighlighter.mixins.json",
+		"flight-disabler.mixins.json",
+		"fly-speed-modifier.mixins.json",
+		"fly-speed-modifier-freecam.json",
+		"forward-lock.client.mixins.json",
+		"hide-realms.mixins.json",
+		"hide-password.mixins.json",
+		"interaction-delay.mixins.json",
+		"maplocator.mixins.json",
+		"no-collision.mixins.json",
+		"no-flight-reset.mixins.json",
+		"no-jump-delay.mixins.json",
+		"no-texture-rotation.mixins.json",
+		"no-texture-rotation-sodium.mixins.json",
+		"numeric-enchantment-levels.mixins.json",
+		"playerhighlighter.mixins.json",
+		"remove-commands-length-limit.mixins.json"
+	],
+	"depends": {
+		"fabricloader": ">=0.19.5",
+		"fabric-api": "*",
+		"minecraft": "26.3",
+		"java": ">=25"
+	},
+	"suggests": {
+		"modmenu": "*"
+	}
+}

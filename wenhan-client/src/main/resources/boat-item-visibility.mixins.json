@@ -1,0 +1,11 @@
+{
+	"required": true,
+	"package": "com.example.wenhanclient.boatitemvisibility.mixin",
+	"compatibilityLevel": "JAVA_25",
+	"client": [
+		"LocalPlayerBoatHandsMixin"
+	],
+	"injectors": {
+		"defaultRequire": 1
+	}
+}

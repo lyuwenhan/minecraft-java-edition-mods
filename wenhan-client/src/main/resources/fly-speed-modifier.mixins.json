@@ -1,0 +1,15 @@
+{
+	"required": true,
+	"package": "com.example.wenhanclient.flyspeedmodifier.mixin",
+	"compatibilityLevel": "JAVA_25",
+	"client": [
+		"AbstractSliderButtonAccessor",
+		"BoatMovementSpeedMixin",
+		"ElytraMovementSpeedMixin",
+		"MouseHandlerMixin",
+		"OtherMovementSpeedMixin"
+	],
+	"injectors": {
+		"defaultRequire": 1
+	}
+}

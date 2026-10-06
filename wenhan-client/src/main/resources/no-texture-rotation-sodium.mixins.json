@@ -1,0 +1,11 @@
+{
+	"required": false,
+	"package": "com.example.wenhanclient.notexturerotation.mixin",
+	"compatibilityLevel": "JAVA_25",
+	"client": [
+		"SodiumBlockRendererMixin"
+	],
+	"injectors": {
+		"defaultRequire": 1
+	}
+}

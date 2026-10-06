@@ -1,0 +1,11 @@
+{
+	"required": true,
+	"package": "com.example.wenhanclient.numericenchantmentlevels.mixin",
+	"compatibilityLevel": "JAVA_25",
+	"mixins": [
+		"EnchantmentMixin"
+	],
+	"injectors": {
+		"defaultRequire": 1
+	}
+}
