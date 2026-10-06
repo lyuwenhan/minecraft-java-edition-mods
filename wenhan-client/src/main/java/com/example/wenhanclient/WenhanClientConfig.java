@@ -4,20 +4,24 @@ import com.example.wenhanclient.attackthroughfoliage.AttackThroughFoliageConfig;
 import com.example.wenhanclient.autologin.AutoLoginConfig;
 import com.example.wenhanclient.betterstep.BetterStepConfig;
 import com.example.wenhanclient.boatutils.BoatUtilsConfig;
+import com.example.wenhanclient.cancelslowdown.CancelSlowdownConfig;
 import com.example.wenhanclient.clientflying.ClientFlyingConfig;
 import com.example.wenhanclient.doublejump.DoubleJumpConfig;
+import com.example.wenhanclient.elytracancel.ElytraCancelConfig;
 import com.example.wenhanclient.entityhighlighter.EntityHighlighterConfig;
 import com.example.wenhanclient.flightdisabler.FlightDisablerConfig;
 import com.example.wenhanclient.flyspeedmodifier.FlySpeedModifierConfig;
 import com.example.wenhanclient.greet.GreetConfig;
-import com.example.wenhanclient.hiderealms.HideRealmsConfig;
 import com.example.wenhanclient.hidepassword.config.HidePasswordConfig;
+import com.example.wenhanclient.hiderealms.HideRealmsConfig;
 import com.example.wenhanclient.interactiondelay.InteractionDelayConfig;
+import com.example.wenhanclient.minecartdirection.MinecartDirectionConfig;
 import com.example.wenhanclient.nocollision.NoCollisionConfig;
 import com.example.wenhanclient.noflightreset.NoFlightResetConfig;
 import com.example.wenhanclient.nojumpdelay.NoJumpDelayConfig;
 import com.example.wenhanclient.notexturerotation.NoTextureRotationConfig;
 import com.example.wenhanclient.playerhighlighter.PlayerHighlighterConfig;
+import com.example.wenhanclient.transparentblocks.TransparentBlocksConfig;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonParseException;
@@ -38,20 +42,25 @@ public class WenhanClientConfig {
 	public AutoLoginConfig autoLogin = new AutoLoginConfig();
 	public BetterStepConfig betterStep = new BetterStepConfig();
 	public BoatUtilsConfig.Values boatUtils = BoatUtilsConfig.Values.defaults();
+	public CancelSlowdownConfig cancelSlowdown = new CancelSlowdownConfig();
 	public ClientFlyingConfig clientFlying = new ClientFlyingConfig();
 	public DoubleJumpConfig.Values doubleJump = DoubleJumpConfig.Values.defaults();
+	public ElytraCancelConfig elytraCancel = new ElytraCancelConfig();
 	public EntityHighlighterConfig entityHighlighter = new EntityHighlighterConfig();
 	public FlightDisablerConfig flightDisabler = new FlightDisablerConfig();
-	public FlySpeedModifierConfig.Values flySpeedModifier = FlySpeedModifierConfig.Values.defaults();
+	public FlySpeedModifierConfig.Values flySpeedModifier =
+			FlySpeedModifierConfig.Values.defaults();
 	public GreetConfig greet = new GreetConfig();
 	public HideRealmsConfig hideRealms = new HideRealmsConfig();
 	public HidePasswordConfig hidePassword = new HidePasswordConfig();
 	public InteractionDelayConfig interactionDelay = new InteractionDelayConfig();
+	public MinecartDirectionConfig minecartDirection = new MinecartDirectionConfig();
 	public NoCollisionConfig noCollision = new NoCollisionConfig();
 	public NoFlightResetConfig noFlightReset = new NoFlightResetConfig();
 	public NoJumpDelayConfig noJumpDelay = new NoJumpDelayConfig();
 	public NoTextureRotationConfig noTextureRotation = new NoTextureRotationConfig();
 	public PlayerHighlighterConfig playerHighlighter = new PlayerHighlighterConfig();
+	public TransparentBlocksConfig transparentBlocks = new TransparentBlocksConfig();
 
 	public static WenhanClientConfig load() {
 		if (!Files.exists(CONFIG_PATH)) {
@@ -105,6 +114,9 @@ public class WenhanClientConfig {
 			boatUtils = BoatUtilsConfig.Values.defaults();
 		}
 		boatUtils = BoatUtilsConfig.sanitize(boatUtils);
+		if (cancelSlowdown == null) {
+			cancelSlowdown = new CancelSlowdownConfig();
+		}
 		if (clientFlying == null) {
 			clientFlying = new ClientFlyingConfig();
 		}
@@ -112,6 +124,9 @@ public class WenhanClientConfig {
 			doubleJump = DoubleJumpConfig.Values.defaults();
 		}
 		doubleJump = DoubleJumpConfig.sanitize(doubleJump);
+		if (elytraCancel == null) {
+			elytraCancel = new ElytraCancelConfig();
+		}
 		if (entityHighlighter == null) {
 			entityHighlighter = new EntityHighlighterConfig();
 		}
@@ -136,6 +151,9 @@ public class WenhanClientConfig {
 		if (interactionDelay == null) {
 			interactionDelay = new InteractionDelayConfig();
 		}
+		if (minecartDirection == null) {
+			minecartDirection = new MinecartDirectionConfig();
+		}
 		if (noCollision == null) {
 			noCollision = new NoCollisionConfig();
 		}
@@ -150,6 +168,9 @@ public class WenhanClientConfig {
 		}
 		if (playerHighlighter == null) {
 			playerHighlighter = new PlayerHighlighterConfig();
+		}
+		if (transparentBlocks == null) {
+			transparentBlocks = new TransparentBlocksConfig();
 		}
 	}
 }

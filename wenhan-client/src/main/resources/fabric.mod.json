@@ -22,8 +22,10 @@
 		"wenhan-client.mixins.json",
 		"boat-item-visibility.mixins.json",
 		"boat-utils.mixins.json",
+		"cancel-slowdown.mixins.json",
 		"clientflying.mixins.json",
 		"double-jump.mixins.json",
+		"elytra-cancel.mixins.json",
 		"entityhighlighter.mixins.json",
 		"flight-disabler.mixins.json",
 		"fly-speed-modifier.mixins.json",
@@ -40,7 +42,8 @@
 		"no-texture-rotation-sodium.mixins.json",
 		"numeric-enchantment-levels.mixins.json",
 		"playerhighlighter.mixins.json",
-		"remove-commands-length-limit.mixins.json"
+		"remove-commands-length-limit.mixins.json",
+		"transparent-blocks.mixins.json"
 	],
 	"depends": {
 		"fabricloader": ">=0.19.5",

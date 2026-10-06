@@ -3,8 +3,6 @@ package com.example.wenhanclient.interactiondelay;
 import com.example.wenhanclient.WenhanClientMod;
 
 public final class InteractionDelaySubMod {
-	private static final int[] MINING_DELAYS = {5, 5, 4, 4, 3, 3, 2, 2};
-	private static final int[] PLACING_DELAYS = {4, 4, 3, 3, 2, 2};
 	private static InteractionDelayConfig config = new InteractionDelayConfig();
 	private static int miningDelayStep;
 	private static int placingDelayStep;
@@ -40,11 +38,15 @@ public final class InteractionDelaySubMod {
 	}
 
 	public static int nextMiningDelay() {
-		return nextDelay(MINING_DELAYS, miningDelayStep++);
+		return nextSteppedDelay(5, miningDelayStep++);
 	}
 
 	public static int nextPlacingDelay() {
-		return nextDelay(PLACING_DELAYS, placingDelayStep++);
+		return nextSteppedDelay(4, placingDelayStep++);
+	}
+
+	private static int nextSteppedDelay(int startDelay, int step) {
+		return Math.max(1, startDelay - step / 2);
 	}
 
 	public static void resetMiningDelay() {
@@ -53,9 +55,5 @@ public final class InteractionDelaySubMod {
 
 	public static void resetPlacingDelay() {
 		placingDelayStep = 0;
-	}
-
-	private static int nextDelay(int[] delays, int step) {
-		return step < delays.length ? delays[step] : 1;
 	}
 }

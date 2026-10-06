@@ -5,8 +5,10 @@ Best Armor
 Better Step
 Boat Item Visibility
 Boat Utils
+Cancel Slowdown
 Client Flying
 Double Jump
+Elytra Cancel
 Entity Highlighter
 Flight Disabler
 Fly Speed Modifier
@@ -25,3 +27,4 @@ No Texture Rotation
 Numeric Enchantment Levels
 Player Highlighter
 Remove Commands Length Limit
+Transparent Blocks

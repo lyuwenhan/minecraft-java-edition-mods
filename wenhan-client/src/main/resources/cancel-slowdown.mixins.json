@@ -1,10 +1,9 @@
 {
 	"required": true,
-	"package": "com.example.wenhanclient.interactiondelay.mixin",
+	"package": "com.example.wenhanclient.cancelslowdown.mixin",
 	"compatibilityLevel": "JAVA_25",
 	"client": [
-		"MinecraftMixin",
-		"MultiPlayerGameModeMixin"
+		"LocalPlayerMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1

@@ -5,9 +5,13 @@ import com.example.wenhanclient.attackthroughfoliage.AttackThroughFoliageSubMod;
 import com.example.wenhanclient.betterstep.BetterStepConfig;
 import com.example.wenhanclient.betterstep.BetterStepSubMod;
 import com.example.wenhanclient.boatutils.BoatUtilsConfig;
+import com.example.wenhanclient.cancelslowdown.CancelSlowdownConfig;
+import com.example.wenhanclient.cancelslowdown.CancelSlowdownSubMod;
 import com.example.wenhanclient.clientflying.ClientFlyingConfig;
 import com.example.wenhanclient.clientflying.ClientFlyingSubMod;
 import com.example.wenhanclient.doublejump.DoubleJumpConfig;
+import com.example.wenhanclient.elytracancel.ElytraCancelConfig;
+import com.example.wenhanclient.elytracancel.ElytraCancelSubMod;
 import com.example.wenhanclient.flightdisabler.FlightDisablerConfig;
 import com.example.wenhanclient.flightdisabler.FlightDisablerSubMod;
 import com.example.wenhanclient.flyspeedmodifier.FlySpeedModifierConfig;
@@ -18,6 +22,8 @@ import com.example.wenhanclient.hiderealms.HideRealmsConfig;
 import com.example.wenhanclient.hiderealms.HideRealmsSubMod;
 import com.example.wenhanclient.interactiondelay.InteractionDelayConfig;
 import com.example.wenhanclient.interactiondelay.InteractionDelaySubMod;
+import com.example.wenhanclient.minecartdirection.MinecartDirectionConfig;
+import com.example.wenhanclient.minecartdirection.MinecartDirectionSubMod;
 import com.example.wenhanclient.nocollision.NoCollisionConfig;
 import com.example.wenhanclient.nocollision.NoCollisionSubMod;
 import com.example.wenhanclient.noflightreset.NoFlightResetConfig;
@@ -28,6 +34,8 @@ import com.example.wenhanclient.notexturerotation.NoTextureRotationConfig;
 import com.example.wenhanclient.notexturerotation.NoTextureRotationSubMod;
 import com.example.wenhanclient.playerhighlighter.PlayerHighlighterConfig;
 import com.example.wenhanclient.playerhighlighter.PlayerHighlighterSubMod;
+import com.example.wenhanclient.transparentblocks.TransparentBlocksConfig;
+import com.example.wenhanclient.transparentblocks.TransparentBlocksSubMod;
 import com.mojang.serialization.Codec;
 
 import net.minecraft.client.Minecraft;
@@ -48,30 +56,36 @@ public final class WenhanClientConfigScreen extends OptionsSubScreen {
 	private final BoatUtilsConfig.Values boatUtilsDraft;
 	private final AttackThroughFoliageConfig attackThroughFoliageDraft;
 	private final BetterStepConfig betterStepDraft;
+	private final CancelSlowdownConfig cancelSlowdownDraft;
 	private final ClientFlyingConfig clientFlyingDraft;
 	private final DoubleJumpConfig.Values doubleJumpDraft;
+	private final ElytraCancelConfig elytraCancelDraft;
 	private final FlightDisablerConfig flightDisablerDraft;
 	private final FlySpeedModifierConfig.Values flySpeedModifierDraft;
 	private final HideRealmsConfig hideRealmsDraft;
 	private final HidePasswordConfig hidePasswordDraft;
 	private final InteractionDelayConfig interactionDelayDraft;
+	private final MinecartDirectionConfig minecartDirectionDraft;
 	private final NoCollisionConfig noCollisionDraft;
 	private final NoFlightResetConfig noFlightResetDraft;
 	private final NoJumpDelayConfig noJumpDelayDraft;
 	private final NoTextureRotationConfig noTextureRotationDraft;
 	private final PlayerHighlighterConfig playerHighlighterDraft;
+	private final TransparentBlocksConfig transparentBlocksDraft;
 	private boolean saved;
 
 	private final OptionInstance<Boolean> attackThroughFoliageEnabled;
 	private final OptionInstance<Boolean> betterStepAirStepUpEnabled;
 	private final OptionInstance<Boolean> betterStepStepDownEnabled;
 	private final OptionInstance<Integer> betterStepStepHeight;
+	private final OptionInstance<Boolean> cancelSlowdownEnabled;
 	private final OptionInstance<Boolean> clientFlyingEnabled;
 	private final OptionInstance<Boolean> doubleJumpEnabled;
 	private final OptionInstance<Boolean> doubleJumpInfiniteJumps;
 	private final OptionInstance<Integer> doubleJumpJumpCount;
 	private final OptionInstance<Integer> doubleJumpCoyoteTime;
 	private final OptionInstance<Boolean> doubleJumpCooldownEnabled;
+	private final OptionInstance<Boolean> elytraCancelEnabled;
 	private final OptionInstance<Boolean> flightDisablerEnabled;
 	private final OptionInstance<Boolean> flySpeedModifierFullRange;
 	private final OptionInstance<Double> flySpeedModifierMaxSpeed;
@@ -85,6 +99,7 @@ public final class WenhanClientConfigScreen extends OptionsSubScreen {
 	private final OptionInstance<Boolean> hidePasswordHideLength;
 	private final OptionInstance<Boolean> interactionDelayMiningDelay;
 	private final OptionInstance<Boolean> interactionDelayPlacingDelay;
+	private final OptionInstance<Boolean> keepDirectionInMinecart;
 	private final OptionInstance<Boolean> noCollisionEnabled;
 	private final OptionInstance<Boolean> noFlightResetEnabled;
 	private final OptionInstance<Boolean> noJumpDelayEnabled;
@@ -93,6 +108,7 @@ public final class WenhanClientConfigScreen extends OptionsSubScreen {
 	private final OptionInstance<Boolean> noTextureRotationKeepCollisionShapeOffsets;
 	private final OptionInstance<Boolean> playerHighlighterKeep;
 	private final OptionInstance<Boolean> playerHighlighterInformationHud;
+	private final OptionInstance<Boolean> transparentBlocksAlwaysRender;
 
 	private final OptionInstance<Boolean> unrestrictedViewRotation;
 	private final OptionInstance<Boolean> viewDirectionLockEnabled;
@@ -124,22 +140,26 @@ public final class WenhanClientConfigScreen extends OptionsSubScreen {
 		super(
 				parent,
 				Minecraft.getInstance().options,
-		Component.translatable("title.wenhan-client.config"));
+				Component.translatable("title.wenhan-client.config"));
 		this.boatUtilsDraft = BoatUtilsConfig.get();
 		this.attackThroughFoliageDraft = AttackThroughFoliageSubMod.config();
 		this.betterStepDraft = BetterStepSubMod.config();
+		this.cancelSlowdownDraft = CancelSlowdownSubMod.config();
 		this.clientFlyingDraft = ClientFlyingSubMod.config();
 		this.doubleJumpDraft = DoubleJumpConfig.get();
+		this.elytraCancelDraft = ElytraCancelSubMod.config();
 		this.flightDisablerDraft = FlightDisablerSubMod.config();
 		this.flySpeedModifierDraft = FlySpeedModifierConfig.get();
 		this.hideRealmsDraft = HideRealmsSubMod.config();
 		this.hidePasswordDraft = HidePasswordSubMod.config();
 		this.interactionDelayDraft = InteractionDelaySubMod.config();
+		this.minecartDirectionDraft = MinecartDirectionSubMod.config();
 		this.noCollisionDraft = NoCollisionSubMod.config();
 		this.noFlightResetDraft = NoFlightResetSubMod.config();
 		this.noJumpDelayDraft = NoJumpDelaySubMod.config();
 		this.noTextureRotationDraft = NoTextureRotationSubMod.config();
 		this.playerHighlighterDraft = PlayerHighlighterSubMod.config();
+		this.transparentBlocksDraft = TransparentBlocksSubMod.config();
 
 		this.attackThroughFoliageEnabled =
 				OptionInstance.createBoolean(
@@ -147,7 +167,7 @@ public final class WenhanClientConfigScreen extends OptionsSubScreen {
 						value ->
 								Tooltip.create(
 										Component.translatable(
-						"option.wenhan-client.attack-through-foliage.enabled.tooltip")),
+												"option.wenhan-client.attack-through-foliage.enabled.tooltip")),
 						this.attackThroughFoliageDraft.enabled,
 						value -> this.attackThroughFoliageDraft.enabled = value);
 		this.betterStepAirStepUpEnabled =
@@ -184,6 +204,15 @@ public final class WenhanClientConfigScreen extends OptionsSubScreen {
 								BetterStepConfig.STEP_HEIGHT_SLIDER_MAX),
 						BetterStepConfig.stepHeightToSlider(this.betterStepDraft.stepHeight),
 						this::onBetterStepStepHeightSliderChanged);
+		this.cancelSlowdownEnabled =
+				OptionInstance.createBoolean(
+						"option.wenhan-client.cancel-slowdown.enabled",
+						value ->
+								Tooltip.create(
+										Component.translatable(
+												"option.wenhan-client.cancel-slowdown.enabled.tooltip")),
+						this.cancelSlowdownDraft.enabled,
+						value -> this.cancelSlowdownDraft.enabled = value);
 		this.clientFlyingEnabled =
 				OptionInstance.createBoolean(
 						"option.wenhan-client.client-flying.enabled",
@@ -254,6 +283,15 @@ public final class WenhanClientConfigScreen extends OptionsSubScreen {
 												"option.wenhan-client.double-jump.cooldown_enabled.tooltip")),
 						this.doubleJumpDraft.cooldownEnabled,
 						value -> this.doubleJumpDraft.cooldownEnabled = value);
+		this.elytraCancelEnabled =
+				OptionInstance.createBoolean(
+						"option.wenhan-client.elytra-cancel.enabled",
+						value ->
+								Tooltip.create(
+										Component.translatable(
+												"option.wenhan-client.elytra-cancel.enabled.tooltip")),
+						this.elytraCancelDraft.enabled,
+						value -> this.elytraCancelDraft.enabled = value);
 		this.flightDisablerEnabled =
 				OptionInstance.createBoolean(
 						"option.wenhan-client.flight-disabler.enabled",
@@ -452,7 +490,7 @@ public final class WenhanClientConfigScreen extends OptionsSubScreen {
 						value ->
 								Tooltip.create(
 										Component.translatable(
-						"option.wenhan-client.no-texture-rotation.keep_collision_shape_offsets.tooltip")),
+												"option.wenhan-client.no-texture-rotation.keep_collision_shape_offsets.tooltip")),
 						this.noTextureRotationDraft.keepCollisionShapeOffsets,
 						value -> this.noTextureRotationDraft.keepCollisionShapeOffsets = value);
 		this.playerHighlighterKeep =
@@ -474,6 +512,24 @@ public final class WenhanClientConfigScreen extends OptionsSubScreen {
 						this.playerHighlighterDraft.informationHud == null
 								|| this.playerHighlighterDraft.informationHud,
 						value -> this.playerHighlighterDraft.informationHud = value);
+		this.transparentBlocksAlwaysRender =
+				OptionInstance.createBoolean(
+						"option.wenhan-client.transparent-blocks.always_render",
+						value ->
+								Tooltip.create(
+										Component.translatable(
+												"option.wenhan-client.transparent-blocks.always_render.tooltip")),
+						this.transparentBlocksDraft.alwaysRender,
+						value -> this.transparentBlocksDraft.alwaysRender = value);
+		this.keepDirectionInMinecart =
+				OptionInstance.createBoolean(
+						"option.wenhan-client.minecart-direction.keep_direction_in_minecart",
+						value ->
+								Tooltip.create(
+										Component.translatable(
+												"option.wenhan-client.minecart-direction.keep_direction_in_minecart.tooltip")),
+						this.minecartDirectionDraft.keepDirectionInMinecart,
+						value -> this.minecartDirectionDraft.keepDirectionInMinecart = value);
 
 		this.unrestrictedViewRotation =
 				OptionInstance.createBoolean(
@@ -582,11 +638,17 @@ public final class WenhanClientConfigScreen extends OptionsSubScreen {
 		this.list.addSmall(
 				this.clientFlyingEnabled,
 				this.flightDisablerEnabled,
+				this.elytraCancelEnabled,
 				this.noFlightResetEnabled,
 				this.noJumpDelayEnabled,
 				this.noCollisionEnabled,
 				this.attackThroughFoliageEnabled,
-				this.hideRealmsEnabled);
+				this.cancelSlowdownEnabled,
+				this.transparentBlocksAlwaysRender,
+				this.keepDirectionInMinecart,
+				this.hideRealmsEnabled,
+				this.interactionDelayMiningDelay,
+				this.interactionDelayPlacingDelay);
 		this.list.addHeader(Component.translatable("title.wenhan-client.better-step.config"));
 		this.addBetterStepOptions();
 		this.list.addHeader(Component.translatable("title.wenhan-client.double-jump.config"));
@@ -596,8 +658,6 @@ public final class WenhanClientConfigScreen extends OptionsSubScreen {
 		this.addFlySpeedModifierOptions();
 		this.list.addHeader(Component.translatable("title.wenhan-client.hide-password.config"));
 		this.list.addSmall(this.hidePasswordEnabled, this.hidePasswordHideLength);
-		this.list.addHeader(Component.translatable("title.wenhan-client.interaction-delay.config"));
-		this.list.addSmall(this.interactionDelayMiningDelay, this.interactionDelayPlacingDelay);
 		this.list.addHeader(
 				Component.translatable("title.wenhan-client.player-highlighter.config"));
 		this.list.addSmall(this.playerHighlighterKeep, this.playerHighlighterInformationHud);
@@ -653,18 +713,22 @@ public final class WenhanClientConfigScreen extends OptionsSubScreen {
 		AttackThroughFoliageSubMod.setConfig(this.attackThroughFoliageDraft);
 		this.applyBetterStepStepHeightInput();
 		BetterStepSubMod.setConfig(this.betterStepDraft);
+		CancelSlowdownSubMod.setConfig(this.cancelSlowdownDraft);
 		ClientFlyingSubMod.setConfig(this.clientFlyingDraft);
 		DoubleJumpConfig.set(this.doubleJumpDraft);
+		ElytraCancelSubMod.setConfig(this.elytraCancelDraft);
 		FlightDisablerSubMod.setConfig(this.flightDisablerDraft);
 		FlySpeedModifierConfig.set(this.flySpeedModifierDraft);
 		HideRealmsSubMod.setConfig(this.hideRealmsDraft);
 		HidePasswordSubMod.setConfig(this.hidePasswordDraft);
 		InteractionDelaySubMod.setConfig(this.interactionDelayDraft);
+		MinecartDirectionSubMod.setConfig(this.minecartDirectionDraft);
 		NoCollisionSubMod.setConfig(this.noCollisionDraft);
 		NoFlightResetSubMod.setConfig(this.noFlightResetDraft);
 		NoJumpDelaySubMod.setConfig(this.noJumpDelayDraft);
 		NoTextureRotationSubMod.setConfig(this.noTextureRotationDraft);
 		PlayerHighlighterSubMod.setConfig(this.playerHighlighterDraft);
+		TransparentBlocksSubMod.setConfig(this.transparentBlocksDraft);
 		BoatUtilsConfig.set(this.boatUtilsDraft);
 	}
 
@@ -761,7 +825,8 @@ public final class WenhanClientConfigScreen extends OptionsSubScreen {
 			return;
 		}
 
-		Double parsedValue = this.parseBetterStepStepHeight(this.betterStepStepHeightInput.getValue());
+		Double parsedValue =
+				this.parseBetterStepStepHeight(this.betterStepStepHeightInput.getValue());
 		if (parsedValue != null) {
 			this.betterStepDraft.stepHeight = BetterStepConfig.roundToOneDecimal(parsedValue);
 		}
