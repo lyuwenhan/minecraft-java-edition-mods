@@ -2,11 +2,9 @@
 	"required": true,
 	"package": "com.example.wenhanclient.notexturerotation.mixin",
 	"compatibilityLevel": "JAVA_25",
-	"mixins": [
-		"BlockBehaviourAccessor",
-		"BlockStateBaseMixin"
-	],
 	"client": [
+		"BlockBehaviourAccessor",
+		"BlockStateBaseMixin",
 		"ModelBlockRendererMixin",
 		"WeightedVariantsMixin"
 	],
