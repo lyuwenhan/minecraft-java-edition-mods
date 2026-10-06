@@ -24,6 +24,10 @@ public abstract class ConnectionMixin {
 			return packet;
 		}
 
+		if (ClientFlyingSubMod.isFallFlying()) {
+			return packet;
+		}
+
 		if (!(packet instanceof ServerboundMovePlayerPacket movePacket)) {
 			return packet;
 		}
