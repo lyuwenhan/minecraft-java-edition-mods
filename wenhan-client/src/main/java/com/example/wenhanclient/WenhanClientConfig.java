@@ -4,8 +4,8 @@ import com.example.wenhanclient.attackthroughfoliage.AttackThroughFoliageConfig;
 import com.example.wenhanclient.autologin.AutoLoginConfig;
 import com.example.wenhanclient.betterstep.BetterStepConfig;
 import com.example.wenhanclient.boatutils.BoatUtilsConfig;
-import com.example.wenhanclient.cancelslowdown.CancelSlowdownConfig;
-import com.example.wenhanclient.clientflying.ClientFlyingConfig;
+import com.example.wenhanclient.noslowdown.NoSlowdownConfig;
+import com.example.wenhanclient.creativeflying.CreativeFlyingConfig;
 import com.example.wenhanclient.doublejump.DoubleJumpConfig;
 import com.example.wenhanclient.elytracancel.ElytraCancelConfig;
 import com.example.wenhanclient.entityhighlighter.EntityHighlighterConfig;
@@ -42,8 +42,8 @@ public class WenhanClientConfig {
 	public AutoLoginConfig autoLogin = new AutoLoginConfig();
 	public BetterStepConfig betterStep = new BetterStepConfig();
 	public BoatUtilsConfig.Values boatUtils = BoatUtilsConfig.Values.defaults();
-	public CancelSlowdownConfig cancelSlowdown = new CancelSlowdownConfig();
-	public ClientFlyingConfig clientFlying = new ClientFlyingConfig();
+	public NoSlowdownConfig noSlowdown = new NoSlowdownConfig();
+	public CreativeFlyingConfig creativeFlying = new CreativeFlyingConfig();
 	public DoubleJumpConfig.Values doubleJump = DoubleJumpConfig.Values.defaults();
 	public ElytraCancelConfig elytraCancel = new ElytraCancelConfig();
 	public EntityHighlighterConfig entityHighlighter = new EntityHighlighterConfig();
@@ -114,11 +114,11 @@ public class WenhanClientConfig {
 			boatUtils = BoatUtilsConfig.Values.defaults();
 		}
 		boatUtils = BoatUtilsConfig.sanitize(boatUtils);
-		if (cancelSlowdown == null) {
-			cancelSlowdown = new CancelSlowdownConfig();
+		if (noSlowdown == null) {
+			noSlowdown = new NoSlowdownConfig();
 		}
-		if (clientFlying == null) {
-			clientFlying = new ClientFlyingConfig();
+		if (creativeFlying == null) {
+			creativeFlying = new CreativeFlyingConfig();
 		}
 		if (doubleJump == null) {
 			doubleJump = DoubleJumpConfig.Values.defaults();

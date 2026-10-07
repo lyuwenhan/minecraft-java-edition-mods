@@ -1,6 +1,6 @@
 {
 	"required": true,
-	"package": "com.example.wenhanclient.clientflying.mixin",
+	"package": "com.example.wenhanclient.creativeflying.mixin",
 	"compatibilityLevel": "JAVA_25",
 	"client": [
 		"ConnectionMixin",

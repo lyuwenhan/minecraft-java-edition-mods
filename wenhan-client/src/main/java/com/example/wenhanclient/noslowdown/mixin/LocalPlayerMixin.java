@@ -1,6 +1,6 @@
-package com.example.wenhanclient.cancelslowdown.mixin;
+package com.example.wenhanclient.noslowdown.mixin;
 
-import com.example.wenhanclient.cancelslowdown.CancelSlowdownSubMod;
+import com.example.wenhanclient.noslowdown.NoSlowdownSubMod;
 
 import net.minecraft.client.player.LocalPlayer;
 
@@ -20,17 +20,17 @@ public abstract class LocalPlayerMixin {
 							value = "INVOKE",
 							target =
 									"Lnet/minecraft/client/player/LocalPlayer;itemUseSpeedMultiplier()F"))
-	private float cancelSlowdown$keepUseItemInputSpeed(LocalPlayer player) {
-		if (CancelSlowdownSubMod.shouldCancel(player.getUseItem())) {
+	private float noSlowdown$keepUseItemInputSpeed(LocalPlayer player) {
+		if (NoSlowdownSubMod.shouldCancel(player.getUseItem())) {
 			return 1.0F;
 		}
 		return this.itemUseSpeedMultiplier();
 	}
 
 	@Inject(method = "isSlowDueToUsingItem", at = @At("HEAD"), cancellable = true)
-	private void cancelSlowdown$allowSprintingWhileUsingItem(CallbackInfoReturnable<Boolean> cir) {
+	private void noSlowdown$allowSprintingWhileUsingItem(CallbackInfoReturnable<Boolean> cir) {
 		LocalPlayer player = (LocalPlayer) (Object) this;
-		if (CancelSlowdownSubMod.shouldCancel(player.getUseItem())) {
+		if (NoSlowdownSubMod.shouldCancel(player.getUseItem())) {
 			cir.setReturnValue(false);
 		}
 	}

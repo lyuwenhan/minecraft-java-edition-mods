@@ -5,10 +5,10 @@ import com.example.wenhanclient.attackthroughfoliage.AttackThroughFoliageSubMod;
 import com.example.wenhanclient.betterstep.BetterStepConfig;
 import com.example.wenhanclient.betterstep.BetterStepSubMod;
 import com.example.wenhanclient.boatutils.BoatUtilsConfig;
-import com.example.wenhanclient.cancelslowdown.CancelSlowdownConfig;
-import com.example.wenhanclient.cancelslowdown.CancelSlowdownSubMod;
-import com.example.wenhanclient.clientflying.ClientFlyingConfig;
-import com.example.wenhanclient.clientflying.ClientFlyingSubMod;
+import com.example.wenhanclient.noslowdown.NoSlowdownConfig;
+import com.example.wenhanclient.noslowdown.NoSlowdownSubMod;
+import com.example.wenhanclient.creativeflying.CreativeFlyingConfig;
+import com.example.wenhanclient.creativeflying.CreativeFlyingSubMod;
 import com.example.wenhanclient.doublejump.DoubleJumpConfig;
 import com.example.wenhanclient.elytracancel.ElytraCancelConfig;
 import com.example.wenhanclient.elytracancel.ElytraCancelSubMod;
@@ -56,8 +56,8 @@ public final class WenhanClientConfigScreen extends OptionsSubScreen {
 	private final BoatUtilsConfig.Values boatUtilsDraft;
 	private final AttackThroughFoliageConfig attackThroughFoliageDraft;
 	private final BetterStepConfig betterStepDraft;
-	private final CancelSlowdownConfig cancelSlowdownDraft;
-	private final ClientFlyingConfig clientFlyingDraft;
+	private final NoSlowdownConfig noSlowdownDraft;
+	private final CreativeFlyingConfig creativeFlyingDraft;
 	private final DoubleJumpConfig.Values doubleJumpDraft;
 	private final ElytraCancelConfig elytraCancelDraft;
 	private final FlightDisablerConfig flightDisablerDraft;
@@ -78,8 +78,8 @@ public final class WenhanClientConfigScreen extends OptionsSubScreen {
 	private final OptionInstance<Boolean> betterStepAirStepUpEnabled;
 	private final OptionInstance<Boolean> betterStepStepDownEnabled;
 	private final OptionInstance<Integer> betterStepStepHeight;
-	private final OptionInstance<Boolean> cancelSlowdownEnabled;
-	private final OptionInstance<Boolean> clientFlyingEnabled;
+	private final OptionInstance<Boolean> noSlowdownEnabled;
+	private final OptionInstance<Boolean> creativeFlyingEnabled;
 	private final OptionInstance<Boolean> doubleJumpEnabled;
 	private final OptionInstance<Boolean> doubleJumpInfiniteJumps;
 	private final OptionInstance<Integer> doubleJumpJumpCount;
@@ -144,8 +144,8 @@ public final class WenhanClientConfigScreen extends OptionsSubScreen {
 		this.boatUtilsDraft = BoatUtilsConfig.get();
 		this.attackThroughFoliageDraft = AttackThroughFoliageSubMod.config();
 		this.betterStepDraft = BetterStepSubMod.config();
-		this.cancelSlowdownDraft = CancelSlowdownSubMod.config();
-		this.clientFlyingDraft = ClientFlyingSubMod.config();
+		this.noSlowdownDraft = NoSlowdownSubMod.config();
+		this.creativeFlyingDraft = CreativeFlyingSubMod.config();
 		this.doubleJumpDraft = DoubleJumpConfig.get();
 		this.elytraCancelDraft = ElytraCancelSubMod.config();
 		this.flightDisablerDraft = FlightDisablerSubMod.config();
@@ -204,24 +204,24 @@ public final class WenhanClientConfigScreen extends OptionsSubScreen {
 								BetterStepConfig.STEP_HEIGHT_SLIDER_MAX),
 						BetterStepConfig.stepHeightToSlider(this.betterStepDraft.stepHeight),
 						this::onBetterStepStepHeightSliderChanged);
-		this.cancelSlowdownEnabled =
+		this.noSlowdownEnabled =
 				OptionInstance.createBoolean(
-						"option.wenhan-client.cancel-slowdown.enabled",
+						"option.wenhan-client.no-slowdown.enabled",
 						value ->
 								Tooltip.create(
 										Component.translatable(
-												"option.wenhan-client.cancel-slowdown.enabled.tooltip")),
-						this.cancelSlowdownDraft.enabled,
-						value -> this.cancelSlowdownDraft.enabled = value);
-		this.clientFlyingEnabled =
+												"option.wenhan-client.no-slowdown.enabled.tooltip")),
+						this.noSlowdownDraft.enabled,
+						value -> this.noSlowdownDraft.enabled = value);
+		this.creativeFlyingEnabled =
 				OptionInstance.createBoolean(
-						"option.wenhan-client.client-flying.enabled",
+						"option.wenhan-client.creative-flying.enabled",
 						value ->
 								Tooltip.create(
 										Component.translatable(
-												"option.wenhan-client.client-flying.enabled.tooltip")),
-						this.clientFlyingDraft.enabled,
-						value -> this.clientFlyingDraft.enabled = value);
+												"option.wenhan-client.creative-flying.enabled.tooltip")),
+						this.creativeFlyingDraft.enabled,
+						value -> this.creativeFlyingDraft.enabled = value);
 		this.doubleJumpEnabled =
 				OptionInstance.createBoolean(
 						"option.wenhan-client.double-jump.enabled",
@@ -636,14 +636,14 @@ public final class WenhanClientConfigScreen extends OptionsSubScreen {
 	protected void addOptions() {
 		this.list.addHeader(Component.translatable("title.wenhan-client.general.config"));
 		this.list.addSmall(
-				this.clientFlyingEnabled,
+				this.creativeFlyingEnabled,
 				this.flightDisablerEnabled,
 				this.elytraCancelEnabled,
 				this.noFlightResetEnabled,
 				this.noJumpDelayEnabled,
 				this.noCollisionEnabled,
 				this.attackThroughFoliageEnabled,
-				this.cancelSlowdownEnabled,
+				this.noSlowdownEnabled,
 				this.transparentBlocksAlwaysRender,
 				this.keepDirectionInMinecart,
 				this.hideRealmsEnabled,
@@ -713,8 +713,8 @@ public final class WenhanClientConfigScreen extends OptionsSubScreen {
 		AttackThroughFoliageSubMod.setConfig(this.attackThroughFoliageDraft);
 		this.applyBetterStepStepHeightInput();
 		BetterStepSubMod.setConfig(this.betterStepDraft);
-		CancelSlowdownSubMod.setConfig(this.cancelSlowdownDraft);
-		ClientFlyingSubMod.setConfig(this.clientFlyingDraft);
+		NoSlowdownSubMod.setConfig(this.noSlowdownDraft);
+		CreativeFlyingSubMod.setConfig(this.creativeFlyingDraft);
 		DoubleJumpConfig.set(this.doubleJumpDraft);
 		ElytraCancelSubMod.setConfig(this.elytraCancelDraft);
 		FlightDisablerSubMod.setConfig(this.flightDisablerDraft);

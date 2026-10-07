@@ -1,26 +1,26 @@
-package com.example.wenhanclient.cancelslowdown;
+package com.example.wenhanclient.noslowdown;
 
 import com.example.wenhanclient.WenhanClientMod;
 
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemUseAnimation;
 
-public final class CancelSlowdownSubMod {
-	private static CancelSlowdownConfig config = new CancelSlowdownConfig();
+public final class NoSlowdownSubMod {
+	private static NoSlowdownConfig config = new NoSlowdownConfig();
 
-	private CancelSlowdownSubMod() {}
+	private NoSlowdownSubMod() {}
 
 	public static void init() {
-		config = WenhanClientMod.CONFIG.cancelSlowdown.copy();
+		config = WenhanClientMod.CONFIG.noSlowdown.copy();
 	}
 
-	public static CancelSlowdownConfig config() {
+	public static NoSlowdownConfig config() {
 		return config.copy();
 	}
 
-	public static void setConfig(CancelSlowdownConfig newConfig) {
-		config = newConfig == null ? new CancelSlowdownConfig() : newConfig.copy();
-		WenhanClientMod.CONFIG.cancelSlowdown = config.copy();
+	public static void setConfig(NoSlowdownConfig newConfig) {
+		config = newConfig == null ? new NoSlowdownConfig() : newConfig.copy();
+		WenhanClientMod.CONFIG.noSlowdown = config.copy();
 		WenhanClientMod.CONFIG.save();
 	}
 

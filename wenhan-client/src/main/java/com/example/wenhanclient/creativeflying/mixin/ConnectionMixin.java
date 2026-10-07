@@ -1,6 +1,6 @@
-package com.example.wenhanclient.clientflying.mixin;
+package com.example.wenhanclient.creativeflying.mixin;
 
-import com.example.wenhanclient.clientflying.ClientFlyingSubMod;
+import com.example.wenhanclient.creativeflying.CreativeFlyingSubMod;
 
 import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.Packet;
@@ -19,12 +19,12 @@ public abstract class ConnectionMixin {
 			at = @At("HEAD"),
 			argsOnly = true,
 			index = 1)
-	private Packet<?> clientflying$replaceOutgoingPacket(Packet<?> packet) {
-		if (!ClientFlyingSubMod.isEnabled()) {
+	private Packet<?> creativeflying$replaceOutgoingPacket(Packet<?> packet) {
+		if (!CreativeFlyingSubMod.isEnabled()) {
 			return packet;
 		}
 
-		if (ClientFlyingSubMod.isFallFlying()) {
+		if (CreativeFlyingSubMod.isFallFlying()) {
 			return packet;
 		}
 
@@ -32,10 +32,10 @@ public abstract class ConnectionMixin {
 			return packet;
 		}
 
-		return clientflying$copyMovePacketWithOnGroundTrue(movePacket);
+		return creativeflying$copyMovePacketWithOnGroundTrue(movePacket);
 	}
 
-	private static ServerboundMovePlayerPacket clientflying$copyMovePacketWithOnGroundTrue(
+	private static ServerboundMovePlayerPacket creativeflying$copyMovePacketWithOnGroundTrue(
 			ServerboundMovePlayerPacket packet) {
 
 		boolean horizontalCollision = packet.horizontalCollision();

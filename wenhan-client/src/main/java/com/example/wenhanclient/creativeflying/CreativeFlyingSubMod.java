@@ -1,4 +1,4 @@
-package com.example.wenhanclient.clientflying;
+package com.example.wenhanclient.creativeflying;
 
 import com.example.wenhanclient.WenhanClientMod;
 import com.example.wenhanclient.client.WenhanClientKeyCategories;
@@ -17,10 +17,10 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.GameType;
 
-public final class ClientFlyingSubMod {
+public final class CreativeFlyingSubMod {
 	private static final KeyMapping.Category CATEGORY = WenhanClientKeyCategories.GENERAL;
 	private static KeyMapping toggleKey;
-	private static ClientFlyingConfig config = new ClientFlyingConfig();
+	private static CreativeFlyingConfig config = new CreativeFlyingConfig();
 	private static boolean lastGlider = false;
 	private static boolean lastFlying = false;
 	private static boolean lastFallFlying = false;
@@ -28,7 +28,7 @@ public final class ClientFlyingSubMod {
 	private static boolean lastEnabled = false;
 	private static int startFallFlyingResendTicks = 0;
 
-	private ClientFlyingSubMod() {}
+	private CreativeFlyingSubMod() {}
 
 	private static void resetState() {
 		lastGlider = false;
@@ -49,20 +49,20 @@ public final class ClientFlyingSubMod {
 			changed = true;
 		}
 		if (changed) {
-			WenhanClientMod.CONFIG.clientFlying = config.copy();
+			WenhanClientMod.CONFIG.creativeFlying = config.copy();
 			WenhanClientMod.CONFIG.save();
 			client.player.sendOverlayMessage(
-					Component.literal("Client Flying: " + (config.enabled ? "ON" : "OFF")));
+					Component.literal("Creative Flying: " + (config.enabled ? "ON" : "OFF")));
 		}
 	}
 
-	public static ClientFlyingConfig config() {
+	public static CreativeFlyingConfig config() {
 		return config.copy();
 	}
 
-	public static void setConfig(ClientFlyingConfig newConfig) {
-		config = newConfig == null ? new ClientFlyingConfig() : newConfig.copy();
-		WenhanClientMod.CONFIG.clientFlying = config.copy();
+	public static void setConfig(CreativeFlyingConfig newConfig) {
+		config = newConfig == null ? new CreativeFlyingConfig() : newConfig.copy();
+		WenhanClientMod.CONFIG.creativeFlying = config.copy();
 		WenhanClientMod.CONFIG.save();
 	}
 
@@ -102,12 +102,12 @@ public final class ClientFlyingSubMod {
 	}
 
 	public static void init() {
-		System.out.println("[ClientFlying] Client initialized");
-		config = WenhanClientMod.CONFIG.clientFlying.copy();
+		System.out.println("[CreativeFlying] Client initialized");
+		config = WenhanClientMod.CONFIG.creativeFlying.copy();
 		toggleKey =
 				KeyMappingHelper.registerKeyMapping(
 						new KeyMapping(
-								"key.wenhan-client.client-flying.toggle",
+								"key.wenhan-client.creative-flying.toggle",
 								InputConstants.Type.KEYBOARD,
 								InputConstants.KEY_V,
 								CATEGORY,
@@ -115,12 +115,12 @@ public final class ClientFlyingSubMod {
 		ClientPlayConnectionEvents.JOIN.register(
 				(handler, sender, client) -> {
 					resetState();
-					System.out.println("[ClientFlying] State reset on join");
+					System.out.println("[CreativeFlying] State reset on join");
 				});
 		ClientPlayConnectionEvents.DISCONNECT.register(
 				(handler, client) -> {
 					resetState();
-					System.out.println("[ClientFlying] State reset on disconnect");
+					System.out.println("[CreativeFlying] State reset on disconnect");
 				});
 		ClientTickEvents.END_CLIENT_TICK.register(
 				client -> {
@@ -149,13 +149,13 @@ public final class ClientFlyingSubMod {
 								flying = client.player.getAbilities().flying;
 							}
 							if (lastGlider && !wearingGlider && lastFallFlying) {
-								System.out.println("[ClientFlying] set flying");
+								System.out.println("[CreativeFlying] set flying");
 								client.player.stopFallFlying();
 								client.player.getAbilities().flying = flying = true;
 								fallFlying = client.player.isFallFlying();
 							}
 							if (wearingGlider && !lastGlider) {
-								System.out.println("[ClientFlying] set fall flying");
+								System.out.println("[CreativeFlying] set fall flying");
 								client.player.getAbilities().flying = flying = false;
 								startFallFlying();
 							}
@@ -170,7 +170,7 @@ public final class ClientFlyingSubMod {
 							if (onground || !wearingGlider) {
 								startFallFlyingResendTicks = 0;
 							} else {
-								System.out.println("[ClientFlying] run fall flying");
+								System.out.println("[CreativeFlying] run fall flying");
 								if (!fallFlying) {
 									sendInternalStartFallFlyingPacket(client, connection);
 								}
