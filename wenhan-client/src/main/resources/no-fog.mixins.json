@@ -1,0 +1,13 @@
+{
+	"required": true,
+	"package": "com.example.wenhanclient.nofog.mixin",
+	"compatibilityLevel": "JAVA_25",
+	"client": [
+		"FogRendererMixin",
+		"LevelExtractorMixin",
+		"LivingEntityMixin"
+	],
+	"injectors": {
+		"defaultRequire": 1
+	}
+}

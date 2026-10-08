@@ -35,6 +35,34 @@ public abstract class LocalPlayerMixin {
 		}
 	}
 
+	@Redirect(
+			method = "isSprintingPossible",
+			at =
+					@At(
+							value = "INVOKE",
+							target =
+									"Lnet/minecraft/client/player/LocalPlayer;isMobilityRestricted()Z"))
+	private boolean noSlowdown$allowSprintingWhileBlind(LocalPlayer player) {
+		if (NoSlowdownSubMod.isEnabled()) {
+			return false;
+		}
+		return player.isMobilityRestricted();
+	}
+
+	@Redirect(
+			method = "isSprintingPossible",
+			at =
+					@At(
+							value = "INVOKE",
+							target =
+									"Lnet/minecraft/client/player/LocalPlayer;hasEnoughFoodToDoExhaustiveManoeuvres()Z"))
+	private boolean noSlowdown$allowSprintingWhileHungry(LocalPlayer player) {
+		if (NoSlowdownSubMod.isEnabled()) {
+			return true;
+		}
+		return player.getFoodData().hasEnoughFood() || player.getAbilities().mayfly;
+	}
+
 	@Shadow
 	private float itemUseSpeedMultiplier() {
 		throw new AssertionError();

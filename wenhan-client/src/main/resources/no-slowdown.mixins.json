@@ -3,7 +3,10 @@
 	"package": "com.example.wenhanclient.noslowdown.mixin",
 	"compatibilityLevel": "JAVA_25",
 	"client": [
-		"LocalPlayerMixin"
+		"EntityMixin",
+		"LivingEntityMixin",
+		"LocalPlayerMixin",
+		"SlimeBlockMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1

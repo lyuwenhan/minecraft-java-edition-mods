@@ -5,8 +5,6 @@ import com.example.wenhanclient.attackthroughfoliage.AttackThroughFoliageSubMod;
 import com.example.wenhanclient.betterstep.BetterStepConfig;
 import com.example.wenhanclient.betterstep.BetterStepSubMod;
 import com.example.wenhanclient.boatutils.BoatUtilsConfig;
-import com.example.wenhanclient.noslowdown.NoSlowdownConfig;
-import com.example.wenhanclient.noslowdown.NoSlowdownSubMod;
 import com.example.wenhanclient.creativeflying.CreativeFlyingConfig;
 import com.example.wenhanclient.creativeflying.CreativeFlyingSubMod;
 import com.example.wenhanclient.doublejump.DoubleJumpConfig;
@@ -28,8 +26,12 @@ import com.example.wenhanclient.nocollision.NoCollisionConfig;
 import com.example.wenhanclient.nocollision.NoCollisionSubMod;
 import com.example.wenhanclient.noflightreset.NoFlightResetConfig;
 import com.example.wenhanclient.noflightreset.NoFlightResetSubMod;
+import com.example.wenhanclient.nofog.NoFogConfig;
+import com.example.wenhanclient.nofog.NoFogSubMod;
 import com.example.wenhanclient.nojumpdelay.NoJumpDelayConfig;
 import com.example.wenhanclient.nojumpdelay.NoJumpDelaySubMod;
+import com.example.wenhanclient.noslowdown.NoSlowdownConfig;
+import com.example.wenhanclient.noslowdown.NoSlowdownSubMod;
 import com.example.wenhanclient.notexturerotation.NoTextureRotationConfig;
 import com.example.wenhanclient.notexturerotation.NoTextureRotationSubMod;
 import com.example.wenhanclient.playerhighlighter.PlayerHighlighterConfig;
@@ -68,6 +70,7 @@ public final class WenhanClientConfigScreen extends OptionsSubScreen {
 	private final MinecartDirectionConfig minecartDirectionDraft;
 	private final NoCollisionConfig noCollisionDraft;
 	private final NoFlightResetConfig noFlightResetDraft;
+	private final NoFogConfig noFogDraft;
 	private final NoJumpDelayConfig noJumpDelayDraft;
 	private final NoTextureRotationConfig noTextureRotationDraft;
 	private final PlayerHighlighterConfig playerHighlighterDraft;
@@ -102,6 +105,7 @@ public final class WenhanClientConfigScreen extends OptionsSubScreen {
 	private final OptionInstance<Boolean> keepDirectionInMinecart;
 	private final OptionInstance<Boolean> noCollisionEnabled;
 	private final OptionInstance<Boolean> noFlightResetEnabled;
+	private final OptionInstance<Boolean> noFogEnabled;
 	private final OptionInstance<Boolean> noJumpDelayEnabled;
 	private final OptionInstance<Boolean> noTextureRotationEnabled;
 	private final OptionInstance<Boolean> noTextureRotationDisableRandomOffset;
@@ -156,6 +160,7 @@ public final class WenhanClientConfigScreen extends OptionsSubScreen {
 		this.minecartDirectionDraft = MinecartDirectionSubMod.config();
 		this.noCollisionDraft = NoCollisionSubMod.config();
 		this.noFlightResetDraft = NoFlightResetSubMod.config();
+		this.noFogDraft = NoFogSubMod.config();
 		this.noJumpDelayDraft = NoJumpDelaySubMod.config();
 		this.noTextureRotationDraft = NoTextureRotationSubMod.config();
 		this.playerHighlighterDraft = PlayerHighlighterSubMod.config();
@@ -213,6 +218,15 @@ public final class WenhanClientConfigScreen extends OptionsSubScreen {
 												"option.wenhan-client.no-slowdown.enabled.tooltip")),
 						this.noSlowdownDraft.enabled,
 						value -> this.noSlowdownDraft.enabled = value);
+		this.noFogEnabled =
+				OptionInstance.createBoolean(
+						"option.wenhan-client.no-fog.enabled",
+						value ->
+								Tooltip.create(
+										Component.translatable(
+												"option.wenhan-client.no-fog.enabled.tooltip")),
+						this.noFogDraft.enabled,
+						value -> this.noFogDraft.enabled = value);
 		this.creativeFlyingEnabled =
 				OptionInstance.createBoolean(
 						"option.wenhan-client.creative-flying.enabled",
@@ -644,6 +658,7 @@ public final class WenhanClientConfigScreen extends OptionsSubScreen {
 				this.noCollisionEnabled,
 				this.attackThroughFoliageEnabled,
 				this.noSlowdownEnabled,
+				this.noFogEnabled,
 				this.transparentBlocksAlwaysRender,
 				this.keepDirectionInMinecart,
 				this.hideRealmsEnabled,
@@ -725,6 +740,7 @@ public final class WenhanClientConfigScreen extends OptionsSubScreen {
 		MinecartDirectionSubMod.setConfig(this.minecartDirectionDraft);
 		NoCollisionSubMod.setConfig(this.noCollisionDraft);
 		NoFlightResetSubMod.setConfig(this.noFlightResetDraft);
+		NoFogSubMod.setConfig(this.noFogDraft);
 		NoJumpDelaySubMod.setConfig(this.noJumpDelayDraft);
 		NoTextureRotationSubMod.setConfig(this.noTextureRotationDraft);
 		PlayerHighlighterSubMod.setConfig(this.playerHighlighterDraft);

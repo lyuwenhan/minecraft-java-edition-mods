@@ -2,6 +2,9 @@ package com.example.wenhanclient.noslowdown;
 
 import com.example.wenhanclient.WenhanClientMod;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemUseAnimation;
 
@@ -22,6 +25,17 @@ public final class NoSlowdownSubMod {
 		config = newConfig == null ? new NoSlowdownConfig() : newConfig.copy();
 		WenhanClientMod.CONFIG.noSlowdown = config.copy();
 		WenhanClientMod.CONFIG.save();
+	}
+
+	public static boolean isEnabled() {
+		return config.enabled;
+	}
+
+	public static boolean shouldCancelBlockSlowdown(Entity entity) {
+		if (!config.enabled || entity == null || Minecraft.getInstance().player == null) {
+			return false;
+		}
+		return entity == Minecraft.getInstance().player || entity instanceof LocalPlayer;
 	}
 
 	public static boolean shouldCancel(ItemStack stack) {

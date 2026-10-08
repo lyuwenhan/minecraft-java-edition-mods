@@ -38,6 +38,7 @@
 		"maplocator.mixins.json",
 		"no-collision.mixins.json",
 		"no-flight-reset.mixins.json",
+		"no-fog.mixins.json",
 		"no-jump-delay.mixins.json",
 		"no-texture-rotation.mixins.json",
 		"no-texture-rotation-sodium.mixins.json",

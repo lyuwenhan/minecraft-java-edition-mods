@@ -4,7 +4,6 @@ import com.example.wenhanclient.attackthroughfoliage.AttackThroughFoliageConfig;
 import com.example.wenhanclient.autologin.AutoLoginConfig;
 import com.example.wenhanclient.betterstep.BetterStepConfig;
 import com.example.wenhanclient.boatutils.BoatUtilsConfig;
-import com.example.wenhanclient.noslowdown.NoSlowdownConfig;
 import com.example.wenhanclient.creativeflying.CreativeFlyingConfig;
 import com.example.wenhanclient.doublejump.DoubleJumpConfig;
 import com.example.wenhanclient.elytracancel.ElytraCancelConfig;
@@ -18,7 +17,9 @@ import com.example.wenhanclient.interactiondelay.InteractionDelayConfig;
 import com.example.wenhanclient.minecartdirection.MinecartDirectionConfig;
 import com.example.wenhanclient.nocollision.NoCollisionConfig;
 import com.example.wenhanclient.noflightreset.NoFlightResetConfig;
+import com.example.wenhanclient.nofog.NoFogConfig;
 import com.example.wenhanclient.nojumpdelay.NoJumpDelayConfig;
+import com.example.wenhanclient.noslowdown.NoSlowdownConfig;
 import com.example.wenhanclient.notexturerotation.NoTextureRotationConfig;
 import com.example.wenhanclient.playerhighlighter.PlayerHighlighterConfig;
 import com.example.wenhanclient.transparentblocks.TransparentBlocksConfig;
@@ -57,6 +58,7 @@ public class WenhanClientConfig {
 	public MinecartDirectionConfig minecartDirection = new MinecartDirectionConfig();
 	public NoCollisionConfig noCollision = new NoCollisionConfig();
 	public NoFlightResetConfig noFlightReset = new NoFlightResetConfig();
+	public NoFogConfig noFog = new NoFogConfig();
 	public NoJumpDelayConfig noJumpDelay = new NoJumpDelayConfig();
 	public NoTextureRotationConfig noTextureRotation = new NoTextureRotationConfig();
 	public PlayerHighlighterConfig playerHighlighter = new PlayerHighlighterConfig();
@@ -159,6 +161,9 @@ public class WenhanClientConfig {
 		}
 		if (noFlightReset == null) {
 			noFlightReset = new NoFlightResetConfig();
+		}
+		if (noFog == null) {
+			noFog = new NoFogConfig();
 		}
 		if (noJumpDelay == null) {
 			noJumpDelay = new NoJumpDelayConfig();

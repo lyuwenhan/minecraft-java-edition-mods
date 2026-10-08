@@ -4,6 +4,7 @@ import com.example.wenhanclient.WenhanClientMod;
 
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.minecraft.client.Minecraft;
+import net.minecraft.core.SectionPos;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -95,10 +96,14 @@ public final class TransparentBlocksSubMod {
 		if (client.level == null || client.levelRenderer == null || client.gameRenderer == null) {
 			return;
 		}
-		client.levelRenderer.invalidateCompiledGeometry(
-				client.level,
-				client.options,
-				client.gameRenderer.mainCamera(),
-				client.getBlockColors());
+		SectionPos cameraSection = SectionPos.of(client.gameRenderer.mainCamera().position());
+		int renderDistance = client.options.getEffectiveRenderDistance();
+		client.level.setSectionRangeDirty(
+				cameraSection.x() - renderDistance,
+				client.level.getMinSectionY(),
+				cameraSection.z() - renderDistance,
+				cameraSection.x() + renderDistance,
+				client.level.getMaxSectionY() - 1,
+				cameraSection.z() + renderDistance);
 	}
 }

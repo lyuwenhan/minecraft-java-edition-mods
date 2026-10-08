@@ -105,7 +105,7 @@
 		},
 		{
 			"type": "minecraft:single",
-			"resource": "minecraft:item/structure_void",
+			"resource": "minecraft:block/structure_void",
 			"sprite": "minecraft:block/structure_void"
 		}
 	]
