@@ -81,16 +81,12 @@ public abstract class EntityMixin {
 		Vec3 speedMultiplier = this.stuckSpeedMultiplier;
 		this.stuckSpeedMultiplier = Vec3.ZERO;
 
-		if (this.noSlowdown$shouldPreserveOriginalSlowFall(velocity, speedMultiplier)) {
+		if (this.shouldKeepSlowFall(velocity, speedMultiplier)) {
 			entity.setDeltaMovement(new Vec3(velocity.x, 0.0D, velocity.z));
 		}
 	}
 
-	private boolean noSlowdown$shouldPreserveOriginalSlowFall(Vec3 velocity, Vec3 speedMultiplier) {
-		return velocity.y < 0.0D && speedMultiplier.y > 0.0D && speedMultiplier.y < 1.0D;
-	}
-
 	private boolean shouldKeepSlowFall(Vec3 movement, Vec3 speedMultiplier) {
-		return movement.y < 0.0D && speedMultiplier.y > 0.0D && speedMultiplier.y < 1.0D;
+		return movement.y < 0.0D;
 	}
 }
