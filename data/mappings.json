@@ -133,7 +133,7 @@
 			"description": "Temporarily adjusts Freecam or player flight speed using a key and the mouse wheel.",
 			"versions": {
 				"26.1.2": "1.1.9",
-				"26.3": "1.2.1"
+				"26.3": "1.2.2"
 			}
 		},
 		"forward-lock": {
@@ -618,6 +618,10 @@
 		"b56683425d39b4c937a553739efcfb54146caac2": {
 			"id": "fly-speed-modifier",
 			"version": "1.2.1"
+		},
+		"258735d408e93d4545e3b7d080dd22893cad4fea": {
+			"id": "fly-speed-modifier",
+			"version": "1.2.2"
 		},
 		"04532433cdcb001b3e7b5e6ad71f26d8079016f4": {
 			"id": "forward-lock",
