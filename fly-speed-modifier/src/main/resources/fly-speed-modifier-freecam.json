@@ -1,6 +1,7 @@
 {
-	"required": false,
+	"required": true,
 	"package": "com.example.flyspeedmodifier.mixin",
+	"plugin": "com.example.flyspeedmodifier.FreecamMixinPlugin",
 	"compatibilityLevel": "JAVA_25",
 	"client": [
 		"FreeCameraSpeedMixin"
