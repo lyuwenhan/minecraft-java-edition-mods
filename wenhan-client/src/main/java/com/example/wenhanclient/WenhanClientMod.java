@@ -24,6 +24,7 @@ import com.example.wenhanclient.nocollision.NoCollisionSubMod;
 import com.example.wenhanclient.noflightreset.NoFlightResetSubMod;
 import com.example.wenhanclient.nofog.NoFogSubMod;
 import com.example.wenhanclient.nojumpdelay.NoJumpDelaySubMod;
+import com.example.wenhanclient.noslimebounce.NoSlimeBounceSubMod;
 import com.example.wenhanclient.noslowdown.NoSlowdownSubMod;
 import com.example.wenhanclient.notexturerotation.NoTextureRotationSubMod;
 import com.example.wenhanclient.playerhighlighter.PlayerHighlighterSubMod;
@@ -42,6 +43,7 @@ public class WenhanClientMod implements ClientModInitializer {
 		BestArmorSubMod.init();
 		BoatUtilsSubMod.init();
 		NoSlowdownSubMod.init();
+		NoSlimeBounceSubMod.init();
 		CreativeFlyingSubMod.init();
 		DoubleJumpSubMod.init();
 		ElytraCancelSubMod.init();

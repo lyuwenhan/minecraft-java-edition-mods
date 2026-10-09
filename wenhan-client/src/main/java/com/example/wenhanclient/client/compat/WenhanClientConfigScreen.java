@@ -30,6 +30,8 @@ import com.example.wenhanclient.nofog.NoFogConfig;
 import com.example.wenhanclient.nofog.NoFogSubMod;
 import com.example.wenhanclient.nojumpdelay.NoJumpDelayConfig;
 import com.example.wenhanclient.nojumpdelay.NoJumpDelaySubMod;
+import com.example.wenhanclient.noslimebounce.NoSlimeBounceConfig;
+import com.example.wenhanclient.noslimebounce.NoSlimeBounceSubMod;
 import com.example.wenhanclient.noslowdown.NoSlowdownConfig;
 import com.example.wenhanclient.noslowdown.NoSlowdownSubMod;
 import com.example.wenhanclient.notexturerotation.NoTextureRotationConfig;
@@ -59,6 +61,7 @@ public final class WenhanClientConfigScreen extends OptionsSubScreen {
 	private final AttackThroughFoliageConfig attackThroughFoliageDraft;
 	private final BetterStepConfig betterStepDraft;
 	private final NoSlowdownConfig noSlowdownDraft;
+	private final NoSlimeBounceConfig noSlimeBounceDraft;
 	private final CreativeFlyingConfig creativeFlyingDraft;
 	private final DoubleJumpConfig.Values doubleJumpDraft;
 	private final ElytraCancelConfig elytraCancelDraft;
@@ -82,6 +85,7 @@ public final class WenhanClientConfigScreen extends OptionsSubScreen {
 	private final OptionInstance<Boolean> betterStepStepDownEnabled;
 	private final OptionInstance<Integer> betterStepStepHeight;
 	private final OptionInstance<Boolean> noSlowdownEnabled;
+	private final OptionInstance<Boolean> noSlimeBounceEnabled;
 	private final OptionInstance<Boolean> creativeFlyingEnabled;
 	private final OptionInstance<Boolean> doubleJumpEnabled;
 	private final OptionInstance<Boolean> doubleJumpInfiniteJumps;
@@ -97,6 +101,7 @@ public final class WenhanClientConfigScreen extends OptionsSubScreen {
 	private final OptionInstance<Boolean> flySpeedModifierResetOnAdjust;
 	private final OptionInstance<Double> flySpeedModifierScrollStep;
 	private final OptionInstance<Boolean> flySpeedModifierApplyToOtherMovement;
+	private final OptionInstance<Boolean> flySpeedModifierEnabled;
 	private final OptionInstance<Boolean> hideRealmsEnabled;
 	private final OptionInstance<Boolean> hidePasswordEnabled;
 	private final OptionInstance<Boolean> hidePasswordHideLength;
@@ -110,6 +115,7 @@ public final class WenhanClientConfigScreen extends OptionsSubScreen {
 	private final OptionInstance<Boolean> noTextureRotationEnabled;
 	private final OptionInstance<Boolean> noTextureRotationDisableRandomOffset;
 	private final OptionInstance<Boolean> noTextureRotationKeepCollisionShapeOffsets;
+	private final OptionInstance<Boolean> playerHighlighterEnabled;
 	private final OptionInstance<Boolean> playerHighlighterKeep;
 	private final OptionInstance<Boolean> playerHighlighterInformationHud;
 	private final OptionInstance<Boolean> transparentBlocksAlwaysRender;
@@ -149,6 +155,7 @@ public final class WenhanClientConfigScreen extends OptionsSubScreen {
 		this.attackThroughFoliageDraft = AttackThroughFoliageSubMod.config();
 		this.betterStepDraft = BetterStepSubMod.config();
 		this.noSlowdownDraft = NoSlowdownSubMod.config();
+		this.noSlimeBounceDraft = NoSlimeBounceSubMod.config();
 		this.creativeFlyingDraft = CreativeFlyingSubMod.config();
 		this.doubleJumpDraft = DoubleJumpConfig.get();
 		this.elytraCancelDraft = ElytraCancelSubMod.config();
@@ -218,6 +225,15 @@ public final class WenhanClientConfigScreen extends OptionsSubScreen {
 												"option.wenhan-client.no-slowdown.enabled.tooltip")),
 						this.noSlowdownDraft.enabled,
 						value -> this.noSlowdownDraft.enabled = value);
+		this.noSlimeBounceEnabled =
+				OptionInstance.createBoolean(
+						"option.wenhan-client.no-slime-bounce.enabled",
+						value ->
+								Tooltip.create(
+										Component.translatable(
+												"option.wenhan-client.no-slime-bounce.enabled.tooltip")),
+						this.noSlimeBounceDraft.enabled,
+						value -> this.noSlimeBounceDraft.enabled = value);
 		this.noFogEnabled =
 				OptionInstance.createBoolean(
 						"option.wenhan-client.no-fog.enabled",
@@ -315,6 +331,15 @@ public final class WenhanClientConfigScreen extends OptionsSubScreen {
 												"option.wenhan-client.flight-disabler.enabled.tooltip")),
 						this.flightDisablerDraft.enabled,
 						value -> this.flightDisablerDraft.enabled = value);
+		this.flySpeedModifierEnabled =
+				OptionInstance.createBoolean(
+						"option.wenhan-client.fly-speed-modifier.enabled",
+						value ->
+								Tooltip.create(
+										Component.translatable(
+												"option.wenhan-client.fly-speed-modifier.enabled.tooltip")),
+						this.flySpeedModifierDraft.enabled,
+						value -> this.flySpeedModifierDraft.enabled = value);
 		this.flySpeedModifierFullRange =
 				OptionInstance.createBoolean(
 						"option.wenhan-client.fly-speed-modifier.full_range",
@@ -507,6 +532,15 @@ public final class WenhanClientConfigScreen extends OptionsSubScreen {
 												"option.wenhan-client.no-texture-rotation.keep_collision_shape_offsets.tooltip")),
 						this.noTextureRotationDraft.keepCollisionShapeOffsets,
 						value -> this.noTextureRotationDraft.keepCollisionShapeOffsets = value);
+		this.playerHighlighterEnabled =
+				OptionInstance.createBoolean(
+						"option.wenhan-client.player-highlighter.enabled",
+						value ->
+								Tooltip.create(
+										Component.translatable(
+												"option.wenhan-client.player-highlighter.enabled.tooltip")),
+						this.playerHighlighterDraft.enabled,
+						value -> this.playerHighlighterDraft.enabled = value);
 		this.playerHighlighterKeep =
 				OptionInstance.createBoolean(
 						"option.wenhan-client.player-highlighter.keep",
@@ -658,6 +692,7 @@ public final class WenhanClientConfigScreen extends OptionsSubScreen {
 				this.noCollisionEnabled,
 				this.attackThroughFoliageEnabled,
 				this.noSlowdownEnabled,
+				this.noSlimeBounceEnabled,
 				this.noFogEnabled,
 				this.transparentBlocksAlwaysRender,
 				this.keepDirectionInMinecart,
@@ -666,22 +701,25 @@ public final class WenhanClientConfigScreen extends OptionsSubScreen {
 				this.interactionDelayPlacingDelay);
 		this.list.addHeader(Component.translatable("title.wenhan-client.better-step.config"));
 		this.addBetterStepOptions();
-		this.list.addHeader(Component.translatable("title.wenhan-client.double-jump.config"));
-		this.addDoubleJumpOptions();
-		this.list.addHeader(
-				Component.translatable("title.wenhan-client.fly-speed-modifier.config"));
-		this.addFlySpeedModifierOptions();
 		this.list.addHeader(Component.translatable("title.wenhan-client.hide-password.config"));
 		this.list.addSmall(this.hidePasswordEnabled, this.hidePasswordHideLength);
 		this.list.addHeader(
 				Component.translatable("title.wenhan-client.player-highlighter.config"));
-		this.list.addSmall(this.playerHighlighterKeep, this.playerHighlighterInformationHud);
+		this.list.addSmall(
+				this.playerHighlighterEnabled,
+				this.playerHighlighterKeep,
+				this.playerHighlighterInformationHud);
 		this.list.addHeader(
 				Component.translatable("title.wenhan-client.no-texture-rotation.config"));
 		this.list.addSmall(
 				this.noTextureRotationEnabled,
 				this.noTextureRotationDisableRandomOffset,
 				this.noTextureRotationKeepCollisionShapeOffsets);
+		this.list.addHeader(Component.translatable("title.wenhan-client.double-jump.config"));
+		this.addDoubleJumpOptions();
+		this.list.addHeader(
+				Component.translatable("title.wenhan-client.fly-speed-modifier.config"));
+		this.addFlySpeedModifierOptions();
 		this.list.addHeader(Component.translatable("title.wenhan-client.boat-utils.config"));
 		this.list.addSmall(
 				this.unrestrictedViewRotation,
@@ -729,6 +767,7 @@ public final class WenhanClientConfigScreen extends OptionsSubScreen {
 		this.applyBetterStepStepHeightInput();
 		BetterStepSubMod.setConfig(this.betterStepDraft);
 		NoSlowdownSubMod.setConfig(this.noSlowdownDraft);
+		NoSlimeBounceSubMod.setConfig(this.noSlimeBounceDraft);
 		CreativeFlyingSubMod.setConfig(this.creativeFlyingDraft);
 		DoubleJumpConfig.set(this.doubleJumpDraft);
 		ElytraCancelSubMod.setConfig(this.elytraCancelDraft);
@@ -750,6 +789,7 @@ public final class WenhanClientConfigScreen extends OptionsSubScreen {
 
 	private void addFlySpeedModifierOptions() {
 		this.list.addSmall(
+				this.flySpeedModifierEnabled,
 				this.flySpeedModifierFullRange,
 				this.flySpeedModifierMaxSpeed,
 				this.flySpeedModifierMinSpeed,

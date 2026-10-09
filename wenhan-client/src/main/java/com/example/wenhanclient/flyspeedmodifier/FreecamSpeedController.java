@@ -40,6 +40,13 @@ public final class FreecamSpeedController {
 	}
 
 	public static void onEndClientTick(Minecraft client) {
+		if (!FlySpeedModifierConfig.enabled()) {
+			wasAdjustSpeedKeyDown = false;
+			if (hasDirectOriginalFlyingSpeed) {
+				restoreDirectFlyingSpeed(client);
+			}
+			return;
+		}
 		updateAdjustKeyState();
 		SpeedTarget activeTarget = resolveActiveTarget(client);
 		if (activeTarget == SpeedTarget.DIRECT_FLIGHT) {
@@ -52,10 +59,18 @@ public final class FreecamSpeedController {
 	}
 
 	public static void onConfigChanged() {
+		if (!FlySpeedModifierConfig.enabled()) {
+			wasAdjustSpeedKeyDown = false;
+			restoreDirectFlyingSpeed(Minecraft.getInstance());
+			return;
+		}
 		resetTemporaryMultiplierSilently();
 	}
 
 	public static boolean handleMouseScroll(double verticalScroll) {
+		if (!FlySpeedModifierConfig.enabled()) {
+			return false;
+		}
 		if (verticalScroll == 0.0D) {
 			return false;
 		}
@@ -82,6 +97,9 @@ public final class FreecamSpeedController {
 	}
 
 	public static double applyFreecamSpeed(double originalSpeed) {
+		if (!FlySpeedModifierConfig.enabled()) {
+			return originalSpeed;
+		}
 		if (!shouldUseTemporaryFreecamMultiplier()) {
 			return originalSpeed;
 		}
@@ -89,6 +107,9 @@ public final class FreecamSpeedController {
 	}
 
 	public static boolean shouldModifyOtherMovement() {
+		if (!FlySpeedModifierConfig.enabled()) {
+			return false;
+		}
 		Minecraft client = Minecraft.getInstance();
 		return FlySpeedModifierConfig.applyToOtherMovement()
 				&& hasTemporaryMultiplier
@@ -102,6 +123,9 @@ public final class FreecamSpeedController {
 	}
 
 	public static float applyFreecamCreativeFlyingSpeed(float originalFlyingSpeed) {
+		if (!FlySpeedModifierConfig.enabled()) {
+			return originalFlyingSpeed;
+		}
 		if (!shouldUseTemporaryFreecamMultiplier()) {
 			return originalFlyingSpeed;
 		}

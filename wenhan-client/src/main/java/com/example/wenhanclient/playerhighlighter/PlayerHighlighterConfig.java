@@ -3,6 +3,7 @@ package com.example.wenhanclient.playerhighlighter;
 import com.example.wenhanclient.WenhanClientMod;
 
 public class PlayerHighlighterConfig {
+	public boolean enabled = false;
 	public boolean keep = false;
 	public Boolean informationHud = true;
 
@@ -17,6 +18,7 @@ public class PlayerHighlighterConfig {
 
 	public PlayerHighlighterConfig copy() {
 		PlayerHighlighterConfig copy = new PlayerHighlighterConfig();
+		copy.enabled = this.enabled;
 		copy.keep = this.keep;
 		copy.informationHud = this.informationHud;
 		return copy;

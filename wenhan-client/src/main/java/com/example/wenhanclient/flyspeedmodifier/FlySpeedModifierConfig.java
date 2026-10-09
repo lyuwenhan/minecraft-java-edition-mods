@@ -7,6 +7,7 @@ public final class FlySpeedModifierConfig {
 	public static final double DEFAULT_MAX_SPEED = 20.0D;
 	public static final double DEFAULT_INITIAL_SPEED = 1.0D;
 	public static final double DEFAULT_SCROLL_STEP = 0.1D;
+	public static final boolean DEFAULT_ENABLED = false;
 	public static final boolean DEFAULT_FULL_RANGE = false;
 	public static final boolean DEFAULT_RESET_ON_ADJUST = true;
 	public static final boolean DEFAULT_APPLY_TO_OTHER_MOVEMENT = false;
@@ -86,6 +87,10 @@ public final class FlySpeedModifierConfig {
 
 	public static synchronized boolean applyToOtherMovement() {
 		return current.applyToOtherMovement;
+	}
+
+	public static synchronized boolean enabled() {
+		return current.enabled;
 	}
 
 	public static Values sanitize(Values values) {
@@ -231,6 +236,7 @@ public final class FlySpeedModifierConfig {
 	}
 
 	public static final class Values {
+		public boolean enabled = DEFAULT_ENABLED;
 		public boolean fullRange = DEFAULT_FULL_RANGE;
 		public double minSpeed = DEFAULT_MIN_SPEED;
 		public double maxSpeed = DEFAULT_MAX_SPEED;
@@ -245,6 +251,7 @@ public final class FlySpeedModifierConfig {
 
 		public Values copy() {
 			Values copy = new Values();
+			copy.enabled = this.enabled;
 			copy.fullRange = this.fullRange;
 			copy.minSpeed = this.minSpeed;
 			copy.maxSpeed = this.maxSpeed;

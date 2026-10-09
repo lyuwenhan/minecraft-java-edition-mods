@@ -19,6 +19,7 @@ import com.example.wenhanclient.nocollision.NoCollisionConfig;
 import com.example.wenhanclient.noflightreset.NoFlightResetConfig;
 import com.example.wenhanclient.nofog.NoFogConfig;
 import com.example.wenhanclient.nojumpdelay.NoJumpDelayConfig;
+import com.example.wenhanclient.noslimebounce.NoSlimeBounceConfig;
 import com.example.wenhanclient.noslowdown.NoSlowdownConfig;
 import com.example.wenhanclient.notexturerotation.NoTextureRotationConfig;
 import com.example.wenhanclient.playerhighlighter.PlayerHighlighterConfig;
@@ -44,6 +45,7 @@ public class WenhanClientConfig {
 	public BetterStepConfig betterStep = new BetterStepConfig();
 	public BoatUtilsConfig.Values boatUtils = BoatUtilsConfig.Values.defaults();
 	public NoSlowdownConfig noSlowdown = new NoSlowdownConfig();
+	public NoSlimeBounceConfig noSlimeBounce = new NoSlimeBounceConfig();
 	public CreativeFlyingConfig creativeFlying = new CreativeFlyingConfig();
 	public DoubleJumpConfig.Values doubleJump = DoubleJumpConfig.Values.defaults();
 	public ElytraCancelConfig elytraCancel = new ElytraCancelConfig();
@@ -118,6 +120,9 @@ public class WenhanClientConfig {
 		boatUtils = BoatUtilsConfig.sanitize(boatUtils);
 		if (noSlowdown == null) {
 			noSlowdown = new NoSlowdownConfig();
+		}
+		if (noSlimeBounce == null) {
+			noSlimeBounce = new NoSlimeBounceConfig();
 		}
 		if (creativeFlying == null) {
 			creativeFlying = new CreativeFlyingConfig();

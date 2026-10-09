@@ -43,6 +43,9 @@ public final class PlayerHighlighterSubMod {
 		ClientTickEvents.END_CLIENT_TICK.register(
 				client -> {
 					while (TOGGLE_KEY.consumeClick()) {
+						if (!config.enabled) {
+							continue;
+						}
 						config.keep = !config.keep;
 						WenhanClientMod.CONFIG.playerHighlighter = config.copy();
 						WenhanClientMod.CONFIG.save();
@@ -63,7 +66,7 @@ public final class PlayerHighlighterSubMod {
 	}
 
 	public static boolean isHighlightActive() {
-		if (config == null) {
+		if (config == null || !config.enabled) {
 			return false;
 		}
 		if (config.keep) {
@@ -73,8 +76,8 @@ public final class PlayerHighlighterSubMod {
 	}
 
 	public static boolean isInformationHudVisible() {
-		if (config == null) {
-			return true;
+		if (config == null || !config.enabled) {
+			return false;
 		}
 		if (config.informationHud == null) {
 			return true;
