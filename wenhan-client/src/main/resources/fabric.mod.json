@@ -46,7 +46,8 @@
 		"numeric-enchantment-levels.mixins.json",
 		"playerhighlighter.mixins.json",
 		"remove-commands-length-limit.mixins.json",
-		"transparent-blocks.mixins.json"
+		"transparent-blocks.mixins.json",
+		"who-i-am.mixins.json"
 	],
 	"depends": {
 		"fabricloader": ">=0.19.5",

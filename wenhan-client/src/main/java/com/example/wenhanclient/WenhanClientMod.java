@@ -29,6 +29,7 @@ import com.example.wenhanclient.noslowdown.NoSlowdownSubMod;
 import com.example.wenhanclient.notexturerotation.NoTextureRotationSubMod;
 import com.example.wenhanclient.playerhighlighter.PlayerHighlighterSubMod;
 import com.example.wenhanclient.transparentblocks.TransparentBlocksSubMod;
+import com.example.wenhanclient.whoiam.WhoIAmSubMod;
 
 import net.fabricmc.api.ClientModInitializer;
 
@@ -65,6 +66,7 @@ public class WenhanClientMod implements ClientModInitializer {
 		NoTextureRotationSubMod.init();
 		PlayerHighlighterSubMod.init();
 		TransparentBlocksSubMod.init();
+		WhoIAmSubMod.init();
 		GreetSubMod.init(CONFIG.greet);
 	}
 }

@@ -24,6 +24,7 @@ import com.example.wenhanclient.noslowdown.NoSlowdownConfig;
 import com.example.wenhanclient.notexturerotation.NoTextureRotationConfig;
 import com.example.wenhanclient.playerhighlighter.PlayerHighlighterConfig;
 import com.example.wenhanclient.transparentblocks.TransparentBlocksConfig;
+import com.example.wenhanclient.whoiam.WhoIAmConfig;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonParseException;
@@ -65,6 +66,7 @@ public class WenhanClientConfig {
 	public NoTextureRotationConfig noTextureRotation = new NoTextureRotationConfig();
 	public PlayerHighlighterConfig playerHighlighter = new PlayerHighlighterConfig();
 	public TransparentBlocksConfig transparentBlocks = new TransparentBlocksConfig();
+	public WhoIAmConfig whoIAm = new WhoIAmConfig();
 
 	public static WenhanClientConfig load() {
 		if (!Files.exists(CONFIG_PATH)) {
@@ -181,6 +183,9 @@ public class WenhanClientConfig {
 		}
 		if (transparentBlocks == null) {
 			transparentBlocks = new TransparentBlocksConfig();
+		}
+		if (whoIAm == null) {
+			whoIAm = new WhoIAmConfig();
 		}
 	}
 }

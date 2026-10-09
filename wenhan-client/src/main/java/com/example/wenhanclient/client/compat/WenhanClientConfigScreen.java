@@ -40,6 +40,8 @@ import com.example.wenhanclient.playerhighlighter.PlayerHighlighterConfig;
 import com.example.wenhanclient.playerhighlighter.PlayerHighlighterSubMod;
 import com.example.wenhanclient.transparentblocks.TransparentBlocksConfig;
 import com.example.wenhanclient.transparentblocks.TransparentBlocksSubMod;
+import com.example.wenhanclient.whoiam.WhoIAmConfig;
+import com.example.wenhanclient.whoiam.WhoIAmSubMod;
 import com.mojang.serialization.Codec;
 
 import net.minecraft.client.Minecraft;
@@ -78,6 +80,7 @@ public final class WenhanClientConfigScreen extends OptionsSubScreen {
 	private final NoTextureRotationConfig noTextureRotationDraft;
 	private final PlayerHighlighterConfig playerHighlighterDraft;
 	private final TransparentBlocksConfig transparentBlocksDraft;
+	private final WhoIAmConfig whoIAmDraft;
 	private boolean saved;
 
 	private final OptionInstance<Boolean> attackThroughFoliageEnabled;
@@ -119,6 +122,8 @@ public final class WenhanClientConfigScreen extends OptionsSubScreen {
 	private final OptionInstance<Boolean> playerHighlighterKeep;
 	private final OptionInstance<Boolean> playerHighlighterInformationHud;
 	private final OptionInstance<Boolean> transparentBlocksAlwaysRender;
+	private final OptionInstance<Boolean> whoIAmShowLocalPlayerName;
+	private final OptionInstance<Boolean> whoIAmAppendPlayerNameToTitle;
 
 	private final OptionInstance<Boolean> unrestrictedViewRotation;
 	private final OptionInstance<Boolean> viewDirectionLockEnabled;
@@ -172,6 +177,7 @@ public final class WenhanClientConfigScreen extends OptionsSubScreen {
 		this.noTextureRotationDraft = NoTextureRotationSubMod.config();
 		this.playerHighlighterDraft = PlayerHighlighterSubMod.config();
 		this.transparentBlocksDraft = TransparentBlocksSubMod.config();
+		this.whoIAmDraft = WhoIAmSubMod.config();
 
 		this.attackThroughFoliageEnabled =
 				OptionInstance.createBoolean(
@@ -569,6 +575,24 @@ public final class WenhanClientConfigScreen extends OptionsSubScreen {
 												"option.wenhan-client.transparent-blocks.always_render.tooltip")),
 						this.transparentBlocksDraft.alwaysRender,
 						value -> this.transparentBlocksDraft.alwaysRender = value);
+		this.whoIAmShowLocalPlayerName =
+				OptionInstance.createBoolean(
+						"option.wenhan-client.who-i-am.show_local_player_name",
+						value ->
+								Tooltip.create(
+										Component.translatable(
+												"option.wenhan-client.who-i-am.show_local_player_name.tooltip")),
+						this.whoIAmDraft.showLocalPlayerName,
+						value -> this.whoIAmDraft.showLocalPlayerName = value);
+		this.whoIAmAppendPlayerNameToTitle =
+				OptionInstance.createBoolean(
+						"option.wenhan-client.who-i-am.append_player_name_to_title",
+						value ->
+								Tooltip.create(
+										Component.translatable(
+												"option.wenhan-client.who-i-am.append_player_name_to_title.tooltip")),
+						this.whoIAmDraft.appendPlayerNameToTitle,
+						value -> this.whoIAmDraft.appendPlayerNameToTitle = value);
 		this.keepDirectionInMinecart =
 				OptionInstance.createBoolean(
 						"option.wenhan-client.minecart-direction.keep_direction_in_minecart",
@@ -709,6 +733,10 @@ public final class WenhanClientConfigScreen extends OptionsSubScreen {
 				this.playerHighlighterEnabled,
 				this.playerHighlighterKeep,
 				this.playerHighlighterInformationHud);
+		this.list.addHeader(Component.translatable("title.wenhan-client.who-i-am.config"));
+		this.list.addSmall(
+				this.whoIAmShowLocalPlayerName,
+				this.whoIAmAppendPlayerNameToTitle);
 		this.list.addHeader(
 				Component.translatable("title.wenhan-client.no-texture-rotation.config"));
 		this.list.addSmall(
@@ -784,6 +812,7 @@ public final class WenhanClientConfigScreen extends OptionsSubScreen {
 		NoTextureRotationSubMod.setConfig(this.noTextureRotationDraft);
 		PlayerHighlighterSubMod.setConfig(this.playerHighlighterDraft);
 		TransparentBlocksSubMod.setConfig(this.transparentBlocksDraft);
+		WhoIAmSubMod.setConfig(this.whoIAmDraft);
 		BoatUtilsConfig.set(this.boatUtilsDraft);
 	}
 
