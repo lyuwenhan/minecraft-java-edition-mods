@@ -87,6 +87,7 @@ public final class WenhanClientConfigScreen extends OptionsSubScreen {
 	private final OptionInstance<Boolean> betterStepAirStepUpEnabled;
 	private final OptionInstance<Boolean> betterStepStepDownEnabled;
 	private final OptionInstance<Integer> betterStepStepHeight;
+	private final OptionInstance<Integer> betterStepSneakingStepHeight;
 	private final OptionInstance<Boolean> noSlowdownEnabled;
 	private final OptionInstance<Boolean> noSlimeBounceEnabled;
 	private final OptionInstance<Boolean> creativeFlyingEnabled;
@@ -136,7 +137,6 @@ public final class WenhanClientConfigScreen extends OptionsSubScreen {
 	private final OptionInstance<Boolean> handbrakeBoostEnabled;
 	private final OptionInstance<Boolean> lateralFrictionEnabled;
 
-	private EditBox betterStepStepHeightInput;
 	private EditBox doubleJumpJumpCountInput;
 	private EditBox doubleJumpCoyoteTimeInput;
 	private EditBox doubleJumpCooldownTicksInput;
@@ -144,9 +144,6 @@ public final class WenhanClientConfigScreen extends OptionsSubScreen {
 	private boolean synchronizingDoubleJumpCountSlider;
 	private boolean synchronizingDoubleJumpCoyoteTimeInput;
 	private boolean synchronizingDoubleJumpCoyoteTimeSlider;
-	private boolean synchronizingBetterStepStepHeightInput;
-	private boolean synchronizingBetterStepStepHeightSlider;
-	private String lastValidBetterStepStepHeightInput;
 	private String lastValidDoubleJumpCountInput;
 	private String lastValidDoubleJumpCoyoteTimeInput;
 	private String lastValidDoubleJumpCooldownInput;
@@ -222,6 +219,25 @@ public final class WenhanClientConfigScreen extends OptionsSubScreen {
 								BetterStepConfig.STEP_HEIGHT_SLIDER_MAX),
 						BetterStepConfig.stepHeightToSlider(this.betterStepDraft.stepHeight),
 						this::onBetterStepStepHeightSliderChanged);
+		this.betterStepSneakingStepHeight =
+				new OptionInstance<>(
+						"option.wenhan-client.better-step.sneaking_step_height",
+						value ->
+								Tooltip.create(
+										Component.translatable(
+												"option.wenhan-client.better-step.sneaking_step_height.tooltip")),
+						(optionText, value) ->
+								Component.translatable(
+										"option.wenhan-client.better-step.sneaking_step_height.value",
+										String.format(Locale.ROOT, "%.1f", value / 10.0D)),
+						new OptionInstance.IntRange(
+								BetterStepConfig.STEP_HEIGHT_SLIDER_MIN,
+								BetterStepConfig.STEP_HEIGHT_SLIDER_MAX),
+						BetterStepConfig.stepHeightToSlider(
+								this.betterStepDraft.sneakingStepHeight),
+						value ->
+								this.betterStepDraft.sneakingStepHeight =
+										BetterStepConfig.sliderToStepHeight(value));
 		this.noSlowdownEnabled =
 				OptionInstance.createBoolean(
 						"option.wenhan-client.no-slowdown.enabled",
@@ -734,9 +750,7 @@ public final class WenhanClientConfigScreen extends OptionsSubScreen {
 				this.playerHighlighterKeep,
 				this.playerHighlighterInformationHud);
 		this.list.addHeader(Component.translatable("title.wenhan-client.who-i-am.config"));
-		this.list.addSmall(
-				this.whoIAmShowLocalPlayerName,
-				this.whoIAmAppendPlayerNameToTitle);
+		this.list.addSmall(this.whoIAmShowLocalPlayerName, this.whoIAmAppendPlayerNameToTitle);
 		this.list.addHeader(
 				Component.translatable("title.wenhan-client.no-texture-rotation.config"));
 		this.list.addSmall(
@@ -792,7 +806,6 @@ public final class WenhanClientConfigScreen extends OptionsSubScreen {
 				DoubleJumpConfig.MIN_COOLDOWN_TICKS,
 				value -> this.doubleJumpDraft.cooldownTicks = value);
 		AttackThroughFoliageSubMod.setConfig(this.attackThroughFoliageDraft);
-		this.applyBetterStepStepHeightInput();
 		BetterStepSubMod.setConfig(this.betterStepDraft);
 		NoSlowdownSubMod.setConfig(this.noSlowdownDraft);
 		NoSlimeBounceSubMod.setConfig(this.noSlimeBounceDraft);
@@ -831,108 +844,11 @@ public final class WenhanClientConfigScreen extends OptionsSubScreen {
 
 	private void addBetterStepOptions() {
 		this.list.addSmall(this.betterStepAirStepUpEnabled, this.betterStepStepDownEnabled);
-		this.betterStepStepHeightInput =
-				new EditBox(
-						this.font,
-						0,
-						0,
-						150,
-						20,
-						Component.translatable(
-								"option.wenhan-client.better-step.step_height_input"));
-		this.betterStepStepHeightInput.setMaxLength(6);
-		this.lastValidBetterStepStepHeightInput =
-				formatBetterStepStepHeight(this.betterStepDraft.stepHeight);
-		this.betterStepStepHeightInput.setValue(this.lastValidBetterStepStepHeightInput);
-		this.betterStepStepHeightInput.setResponder(this::onBetterStepStepHeightInputChanged);
-		AbstractWidget stepHeightWidget = this.betterStepStepHeight.createButton(this.options);
-		this.list.addSmall(stepHeightWidget, this.betterStepStepHeightInput);
+		this.list.addSmall(this.betterStepStepHeight, this.betterStepSneakingStepHeight);
 	}
 
 	private void onBetterStepStepHeightSliderChanged(Integer value) {
-		if (this.synchronizingBetterStepStepHeightSlider) {
-			return;
-		}
 		this.betterStepDraft.stepHeight = BetterStepConfig.sliderToStepHeight(value);
-		this.syncBetterStepStepHeightInputFromSlider(this.betterStepDraft.stepHeight);
-	}
-
-	private void onBetterStepStepHeightInputChanged(String value) {
-		if (this.synchronizingBetterStepStepHeightInput) {
-			return;
-		}
-		if (value.isEmpty()) {
-			return;
-		}
-
-		Double parsedValue = this.parseBetterStepStepHeight(value);
-		if (parsedValue == null) {
-			this.restoreLastValidBetterStepStepHeightInput();
-			return;
-		}
-
-		double sanitized = BetterStepConfig.roundToOneDecimal(parsedValue);
-		this.betterStepDraft.stepHeight = sanitized;
-		this.lastValidBetterStepStepHeightInput = formatBetterStepStepHeight(sanitized);
-		this.setBetterStepStepHeightSliderValueSilently(sanitized);
-	}
-
-	private void setBetterStepStepHeightSliderValueSilently(double value) {
-		this.synchronizingBetterStepStepHeightSlider = true;
-		this.betterStepStepHeight.set(BetterStepConfig.stepHeightToSlider(value));
-		this.synchronizingBetterStepStepHeightSlider = false;
-	}
-
-	private void syncBetterStepStepHeightInputFromSlider(double value) {
-		if (this.betterStepStepHeightInput == null) {
-			return;
-		}
-
-		this.synchronizingBetterStepStepHeightInput = true;
-		this.lastValidBetterStepStepHeightInput = formatBetterStepStepHeight(value);
-		this.betterStepStepHeightInput.setValue(this.lastValidBetterStepStepHeightInput);
-		this.synchronizingBetterStepStepHeightInput = false;
-	}
-
-	private void restoreLastValidBetterStepStepHeightInput() {
-		if (this.betterStepStepHeightInput == null) {
-			return;
-		}
-
-		this.synchronizingBetterStepStepHeightInput = true;
-		this.betterStepStepHeightInput.setValue(this.lastValidBetterStepStepHeightInput);
-		this.synchronizingBetterStepStepHeightInput = false;
-	}
-
-	private void applyBetterStepStepHeightInput() {
-		if (this.betterStepStepHeightInput == null
-				|| this.betterStepStepHeightInput.getValue().isEmpty()) {
-			return;
-		}
-
-		Double parsedValue =
-				this.parseBetterStepStepHeight(this.betterStepStepHeightInput.getValue());
-		if (parsedValue != null) {
-			this.betterStepDraft.stepHeight = BetterStepConfig.roundToOneDecimal(parsedValue);
-		}
-	}
-
-	private Double parseBetterStepStepHeight(String value) {
-		try {
-			double parsedValue = Double.parseDouble(value);
-			if (!Double.isFinite(parsedValue)
-					|| parsedValue < BetterStepConfig.MIN_STEP_HEIGHT
-					|| parsedValue > BetterStepConfig.MAX_STEP_HEIGHT) {
-				return null;
-			}
-			return parsedValue;
-		} catch (NumberFormatException ignored) {
-			return null;
-		}
-	}
-
-	private static String formatBetterStepStepHeight(double value) {
-		return String.format(Locale.ROOT, "%.1f", BetterStepConfig.roundToOneDecimal(value));
 	}
 
 	private void onFlySpeedModifierFullRangeChanged(Boolean value) {

@@ -15,14 +15,14 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public abstract class EntityMaxUpStepMixin {
 	@Inject(method = "maxUpStep", at = @At("HEAD"), cancellable = true)
 	private void betterstep$applyPlayerStepHeight(CallbackInfoReturnable<Float> callbackInfo) {
-		if (!((Object) this instanceof Player)) {
+		if (!((Object) this instanceof Player player)) {
 			return;
 		}
 		if ((Object) this != Minecraft.getInstance().player) {
 			return;
 		}
 
-		float stepHeight = (float) BetterStepSubMod.stepHeight();
+		float stepHeight = (float) BetterStepSubMod.stepHeight(player);
 		if (stepHeight < 0.0F) {
 			return;
 		}

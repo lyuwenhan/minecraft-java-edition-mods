@@ -61,7 +61,7 @@ public abstract class EntityStepDownMixin {
 		if (!BetterStepSubMod.stepDownEnabled()) {
 			return false;
 		}
-		if (!(self instanceof Player)) {
+		if (!(self instanceof Player player)) {
 			return false;
 		}
 		if (!this.onGround()) {
@@ -70,7 +70,7 @@ public abstract class EntityStepDownMixin {
 		if (this.horizontalCollision) {
 			return false;
 		}
-		if (BetterStepSubMod.stepHeight() <= 0.0D) {
+		if (BetterStepSubMod.stepHeight(player) <= 0.0D) {
 			return false;
 		}
 		double horizontalLengthSquared = movement.x * movement.x + movement.z * movement.z;
@@ -85,7 +85,7 @@ public abstract class EntityStepDownMixin {
 
 	@Unique
 	private double betterstep$getSafeStepDownDistance(Player player) {
-		double stepHeight = BetterStepSubMod.stepHeight();
+		double stepHeight = BetterStepSubMod.stepHeight(player);
 		if (player.isCreative()) {
 			return stepHeight;
 		}

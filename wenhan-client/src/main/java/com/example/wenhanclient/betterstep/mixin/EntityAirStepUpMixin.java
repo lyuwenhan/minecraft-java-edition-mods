@@ -35,7 +35,7 @@ public abstract class EntityAirStepUpMixin {
 		double savedX = self.getX();
 		double savedY = self.getY();
 		double savedZ = self.getZ();
-		double maxStepUp = BetterStepSubMod.stepHeight();
+		double maxStepUp = BetterStepSubMod.stepHeight((Player) self);
 		Vec3 upAttempt = new Vec3(0.0D, maxStepUp, 0.0D);
 		Vec3 upResult = ((EntityAccessor) self).betterstep$invokeCollide(upAttempt);
 		if (upResult.y <= BETTERSTEP_EPSILON) {
@@ -81,7 +81,7 @@ public abstract class EntityAirStepUpMixin {
 		if (!this.horizontalCollision) {
 			return false;
 		}
-		if (BetterStepSubMod.stepHeight() <= 0.0D) {
+		if (BetterStepSubMod.stepHeight(player) <= 0.0D) {
 			return false;
 		}
 		double horizontalLengthSquared = movement.x * movement.x + movement.z * movement.z;

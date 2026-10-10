@@ -4,6 +4,7 @@ public final class BetterStepConfig {
 	public static final boolean DEFAULT_AIR_STEP_UP_ENABLED = true;
 	public static final boolean DEFAULT_STEP_DOWN_ENABLED = true;
 	public static final double DEFAULT_STEP_HEIGHT = 0.6D;
+	public static final double DEFAULT_SNEAKING_STEP_HEIGHT = DEFAULT_STEP_HEIGHT;
 	public static final double MIN_STEP_HEIGHT = 0.0D;
 	public static final double MAX_STEP_HEIGHT = 10.0D;
 	public static final int STEP_HEIGHT_SLIDER_MIN = 0;
@@ -12,6 +13,7 @@ public final class BetterStepConfig {
 	public boolean airStepUpEnabled = DEFAULT_AIR_STEP_UP_ENABLED;
 	public boolean stepDownEnabled = DEFAULT_STEP_DOWN_ENABLED;
 	public double stepHeight = DEFAULT_STEP_HEIGHT;
+	public double sneakingStepHeight = DEFAULT_SNEAKING_STEP_HEIGHT;
 
 	public static BetterStepConfig sanitize(BetterStepConfig config) {
 		BetterStepConfig sanitized = config == null ? new BetterStepConfig() : config.copy();
@@ -20,6 +22,13 @@ public final class BetterStepConfig {
 						clamp(
 								sanitized.stepHeight,
 								DEFAULT_STEP_HEIGHT,
+								MIN_STEP_HEIGHT,
+								MAX_STEP_HEIGHT));
+		sanitized.sneakingStepHeight =
+				roundToOneDecimal(
+						clamp(
+								sanitized.sneakingStepHeight,
+								DEFAULT_SNEAKING_STEP_HEIGHT,
 								MIN_STEP_HEIGHT,
 								MAX_STEP_HEIGHT));
 		return sanitized;
@@ -40,6 +49,7 @@ public final class BetterStepConfig {
 		copy.airStepUpEnabled = this.airStepUpEnabled;
 		copy.stepDownEnabled = this.stepDownEnabled;
 		copy.stepHeight = this.stepHeight;
+		copy.sneakingStepHeight = this.sneakingStepHeight;
 		return copy;
 	}
 
