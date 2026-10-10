@@ -86,6 +86,19 @@ public abstract class EntityMixin {
 		}
 	}
 
+	@Redirect(
+			method = "updateFluidInteraction",
+			at =
+					@At(
+							value = "INVOKE",
+							target = "Lnet/minecraft/world/entity/Entity;isPushedByFluid()Z"))
+	private boolean noSlowdown$cancelFluidCurrentPush(Entity entity) {
+		if (NoSlowdownSubMod.shouldCancelBlockSlowdown(entity)) {
+			return false;
+		}
+		return entity.isPushedByFluid();
+	}
+
 	private boolean shouldKeepSlowFall(Vec3 movement, Vec3 speedMultiplier) {
 		return movement.y < 0.0D;
 	}
