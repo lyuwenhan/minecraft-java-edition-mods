@@ -29,7 +29,9 @@ dependencies {
 
     compileOnly "maven.modrinth:modmenu:${modmenu_version}"
     compileOnly "maven.modrinth:do-a-barrel-roll:${dabr_version}"
+    compileOnly "maven.modrinth:yacl:${yacl_version}"
     runtimeOnly "maven.modrinth:modmenu:${modmenu_version}"
+    runtimeOnly "maven.modrinth:yacl:${yacl_version}"
 }
 
 java {
