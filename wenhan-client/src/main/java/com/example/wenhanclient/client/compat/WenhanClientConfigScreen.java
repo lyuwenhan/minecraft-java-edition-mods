@@ -53,10 +53,11 @@ import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.options.OptionsSubScreen;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 
 import java.util.Locale;
-import java.util.function.IntConsumer;
+import java.util.Optional;
 
 public final class WenhanClientConfigScreen extends OptionsSubScreen {
 	private final BoatUtilsConfig.Values boatUtilsDraft;
@@ -140,6 +141,8 @@ public final class WenhanClientConfigScreen extends OptionsSubScreen {
 	private EditBox doubleJumpJumpCountInput;
 	private EditBox doubleJumpCoyoteTimeInput;
 	private EditBox doubleJumpCooldownTicksInput;
+	private AbstractWidget doubleJumpJumpCountWidget;
+	private AbstractWidget doubleJumpCoyoteTimeWidget;
 	private boolean synchronizingDoubleJumpCountInput;
 	private boolean synchronizingDoubleJumpCountSlider;
 	private boolean synchronizingDoubleJumpCoyoteTimeInput;
@@ -301,13 +304,13 @@ public final class WenhanClientConfigScreen extends OptionsSubScreen {
 												"option.wenhan-client.double-jump.jump_count.tooltip")),
 						(optionText, value) ->
 								Component.literal(optionText.getString() + ": " + value),
-						UnitDouble.INSTANCE.xmap(
-								WenhanClientConfigScreen::toDoubleJumpCount,
-								WenhanClientConfigScreen::fromDoubleJumpCount),
-						Codec.intRange(
+						new SliderDisplayOverflowIntRange(
 								DoubleJumpConfig.MIN_JUMP_COUNT,
-								DoubleJumpConfig.SLIDER_MAX_JUMP_COUNT),
-						clampDoubleJumpCountToSlider(this.doubleJumpDraft.jumpCount),
+								DoubleJumpConfig.SLIDER_MAX_JUMP_COUNT,
+								DoubleJumpConfig.MAX_JUMP_COUNT),
+						Codec.intRange(
+								DoubleJumpConfig.MIN_JUMP_COUNT, DoubleJumpConfig.MAX_JUMP_COUNT),
+						this.doubleJumpDraft.jumpCount,
 						this::onDoubleJumpCountSliderChanged);
 		this.doubleJumpCoyoteTime =
 				new OptionInstance<>(
@@ -318,13 +321,14 @@ public final class WenhanClientConfigScreen extends OptionsSubScreen {
 												"option.wenhan-client.double-jump.coyote_time.tooltip")),
 						(optionText, value) ->
 								Component.literal(optionText.getString() + ": " + value),
-						UnitDouble.INSTANCE.xmap(
-								WenhanClientConfigScreen::toDoubleJumpCoyoteTime,
-								WenhanClientConfigScreen::fromDoubleJumpCoyoteTime),
+						new SliderDisplayOverflowIntRange(
+								DoubleJumpConfig.MIN_COYOTE_TIME_TICKS,
+								DoubleJumpConfig.SLIDER_MAX_COYOTE_TIME_TICKS,
+								DoubleJumpConfig.MAX_COYOTE_TIME_TICKS),
 						Codec.intRange(
 								DoubleJumpConfig.MIN_COYOTE_TIME_TICKS,
-								DoubleJumpConfig.SLIDER_MAX_COYOTE_TIME_TICKS),
-						clampDoubleJumpCoyoteTimeToSlider(this.doubleJumpDraft.coyoteTimeTicks),
+								DoubleJumpConfig.MAX_COYOTE_TIME_TICKS),
+						this.doubleJumpDraft.coyoteTimeTicks,
 						this::onDoubleJumpCoyoteTimeSliderChanged);
 		this.doubleJumpCooldownEnabled =
 				OptionInstance.createBoolean(
@@ -777,6 +781,12 @@ public final class WenhanClientConfigScreen extends OptionsSubScreen {
 	}
 
 	@Override
+	public boolean mouseClicked(MouseButtonEvent event, boolean doubleClick) {
+		this.clearFocusedDoubleJumpInputWhenClickedOutside(event.x(), event.y());
+		return super.mouseClicked(event, doubleClick);
+	}
+
+	@Override
 	public void onClose() {
 		this.saveOnce();
 		super.onClose();
@@ -793,18 +803,9 @@ public final class WenhanClientConfigScreen extends OptionsSubScreen {
 			return;
 		}
 		this.saved = true;
-		this.applyInputValue(
-				this.doubleJumpJumpCountInput,
-				DoubleJumpConfig.MIN_JUMP_COUNT,
-				value -> this.doubleJumpDraft.jumpCount = value);
-		this.applyInputValue(
-				this.doubleJumpCoyoteTimeInput,
-				DoubleJumpConfig.MIN_COYOTE_TIME_TICKS,
-				value -> this.doubleJumpDraft.coyoteTimeTicks = value);
-		this.applyInputValue(
-				this.doubleJumpCooldownTicksInput,
-				DoubleJumpConfig.MIN_COOLDOWN_TICKS,
-				value -> this.doubleJumpDraft.cooldownTicks = value);
+		this.commitDoubleJumpCountInput();
+		this.commitDoubleJumpCoyoteTimeInput();
+		this.commitDoubleJumpCooldownInput();
 		AttackThroughFoliageSubMod.setConfig(this.attackThroughFoliageDraft);
 		BetterStepSubMod.setConfig(this.betterStepDraft);
 		NoSlowdownSubMod.setConfig(this.noSlowdownDraft);
@@ -845,6 +846,28 @@ public final class WenhanClientConfigScreen extends OptionsSubScreen {
 	private void addBetterStepOptions() {
 		this.list.addSmall(this.betterStepAirStepUpEnabled, this.betterStepStepDownEnabled);
 		this.list.addSmall(this.betterStepStepHeight, this.betterStepSneakingStepHeight);
+	}
+
+	private void clearFocusedDoubleJumpInputWhenClickedOutside(double mouseX, double mouseY) {
+		if (this.doubleJumpJumpCountInput != null
+				&& this.doubleJumpJumpCountInput.isFocused()
+				&& !this.doubleJumpJumpCountInput.isMouseOver(mouseX, mouseY)) {
+			this.clearFocus();
+			return;
+		}
+
+		if (this.doubleJumpCoyoteTimeInput != null
+				&& this.doubleJumpCoyoteTimeInput.isFocused()
+				&& !this.doubleJumpCoyoteTimeInput.isMouseOver(mouseX, mouseY)) {
+			this.clearFocus();
+			return;
+		}
+
+		if (this.doubleJumpCooldownTicksInput != null
+				&& this.doubleJumpCooldownTicksInput.isFocused()
+				&& !this.doubleJumpCooldownTicksInput.isMouseOver(mouseX, mouseY)) {
+			this.clearFocus();
+		}
 	}
 
 	private void onBetterStepStepHeightSliderChanged(Integer value) {
@@ -975,8 +998,15 @@ public final class WenhanClientConfigScreen extends OptionsSubScreen {
 				this.fromFlySpeedModifierInitialSpeed(this.flySpeedModifierDraft.initialSpeed));
 	}
 
-	private void resetSliderWidget(OptionInstance<Double> option, double normalizedValue) {
+	private void resetSliderWidget(OptionInstance<?> option, double normalizedValue) {
 		var widget = this.list.findOption(option);
+		if (widget instanceof AbstractSliderButton slider) {
+			((AbstractSliderButtonAccessor) slider)
+					.flySpeedModifier$invokeSetValue(normalizedValue);
+		}
+	}
+
+	private void resetSliderWidget(AbstractWidget widget, double normalizedValue) {
 		if (widget instanceof AbstractSliderButton slider) {
 			((AbstractSliderButtonAccessor) slider)
 					.flySpeedModifier$invokeSetValue(normalizedValue);
@@ -1008,48 +1038,54 @@ public final class WenhanClientConfigScreen extends OptionsSubScreen {
 		this.list.addSmall(enabledWidget, infiniteJumpsWidget);
 
 		this.doubleJumpJumpCountInput =
-				new EditBox(
+				new FocusCommittingEditBox(
 						this.font,
 						0,
 						0,
 						150,
 						20,
-						Component.translatable(
-								"option.wenhan-client.double-jump.jump_count_input"));
+						Component.translatable("option.wenhan-client.double-jump.jump_count_input"),
+						this::commitDoubleJumpCountInput);
 		this.doubleJumpJumpCountInput.setMaxLength(10);
 		this.lastValidDoubleJumpCountInput = Integer.toString(this.doubleJumpDraft.jumpCount);
 		this.doubleJumpJumpCountInput.setValue(this.lastValidDoubleJumpCountInput);
 		this.doubleJumpJumpCountInput.setResponder(this::onDoubleJumpCountInputChanged);
-		AbstractWidget jumpCountWidget = this.doubleJumpJumpCount.createButton(this.options);
-		this.list.addSmall(jumpCountWidget, this.doubleJumpJumpCountInput);
+		this.doubleJumpJumpCountWidget = this.doubleJumpJumpCount.createButton(this.options);
+		this.updateDoubleJumpCountSliderWidget(
+				this.doubleJumpJumpCountWidget, this.doubleJumpDraft.jumpCount);
+		this.list.addSmall(this.doubleJumpJumpCountWidget, this.doubleJumpJumpCountInput);
 
 		this.doubleJumpCoyoteTimeInput =
-				new EditBox(
+				new FocusCommittingEditBox(
 						this.font,
 						0,
 						0,
 						150,
 						20,
 						Component.translatable(
-								"option.wenhan-client.double-jump.coyote_time_input"));
+								"option.wenhan-client.double-jump.coyote_time_input"),
+						this::commitDoubleJumpCoyoteTimeInput);
 		this.doubleJumpCoyoteTimeInput.setMaxLength(10);
 		this.lastValidDoubleJumpCoyoteTimeInput =
 				Integer.toString(this.doubleJumpDraft.coyoteTimeTicks);
 		this.doubleJumpCoyoteTimeInput.setValue(this.lastValidDoubleJumpCoyoteTimeInput);
 		this.doubleJumpCoyoteTimeInput.setResponder(this::onDoubleJumpCoyoteTimeInputChanged);
-		AbstractWidget coyoteTimeWidget = this.doubleJumpCoyoteTime.createButton(this.options);
-		this.list.addSmall(coyoteTimeWidget, this.doubleJumpCoyoteTimeInput);
+		this.doubleJumpCoyoteTimeWidget = this.doubleJumpCoyoteTime.createButton(this.options);
+		this.updateDoubleJumpCoyoteTimeSliderWidget(
+				this.doubleJumpCoyoteTimeWidget, this.doubleJumpDraft.coyoteTimeTicks);
+		this.list.addSmall(this.doubleJumpCoyoteTimeWidget, this.doubleJumpCoyoteTimeInput);
 
 		AbstractWidget cooldownEnabledWidget =
 				this.doubleJumpCooldownEnabled.createButton(this.options);
 		this.doubleJumpCooldownTicksInput =
-				new EditBox(
+				new FocusCommittingEditBox(
 						this.font,
 						0,
 						0,
 						150,
 						20,
-						Component.translatable("option.wenhan-client.double-jump.cooldown_ticks"));
+						Component.translatable("option.wenhan-client.double-jump.cooldown_ticks"),
+						this::commitDoubleJumpCooldownInput);
 		this.doubleJumpCooldownTicksInput.setMaxLength(10);
 		this.lastValidDoubleJumpCooldownInput =
 				Integer.toString(this.doubleJumpDraft.cooldownTicks);
@@ -1086,12 +1122,9 @@ public final class WenhanClientConfigScreen extends OptionsSubScreen {
 		}
 
 		this.lastValidDoubleJumpCountInput = value;
-		if (parsedValue < DoubleJumpConfig.MIN_JUMP_COUNT) {
-			return;
-		}
-
-		this.doubleJumpDraft.jumpCount = parsedValue;
-		this.setDoubleJumpCountSliderValueSilently(parsedValue);
+		int committedValue = Math.max(parsedValue, DoubleJumpConfig.MIN_JUMP_COUNT);
+		this.doubleJumpDraft.jumpCount = committedValue;
+		this.setDoubleJumpCountSliderValueSilently(committedValue);
 	}
 
 	private void onDoubleJumpCoyoteTimeInputChanged(String value) {
@@ -1124,13 +1157,15 @@ public final class WenhanClientConfigScreen extends OptionsSubScreen {
 
 	private void setDoubleJumpCountSliderValueSilently(int value) {
 		this.synchronizingDoubleJumpCountSlider = true;
-		this.doubleJumpJumpCount.set(clampDoubleJumpCountToSlider(value));
+		this.updateDoubleJumpCountSliderWidget(this.doubleJumpJumpCountWidget, value);
+		this.doubleJumpJumpCount.set(value);
 		this.synchronizingDoubleJumpCountSlider = false;
 	}
 
 	private void setDoubleJumpCoyoteTimeSliderValueSilently(int value) {
 		this.synchronizingDoubleJumpCoyoteTimeSlider = true;
-		this.doubleJumpCoyoteTime.set(clampDoubleJumpCoyoteTimeToSlider(value));
+		this.updateDoubleJumpCoyoteTimeSliderWidget(this.doubleJumpCoyoteTimeWidget, value);
+		this.doubleJumpCoyoteTime.set(value);
 		this.synchronizingDoubleJumpCoyoteTimeSlider = false;
 	}
 
@@ -1202,18 +1237,86 @@ public final class WenhanClientConfigScreen extends OptionsSubScreen {
 		}
 	}
 
-	private void applyInputValue(EditBox input, int minimum, IntConsumer setter) {
-		if (input == null || input.getValue().isEmpty()) {
+	private void commitDoubleJumpCountInput() {
+		if (this.doubleJumpJumpCountInput == null) {
 			return;
 		}
 
-		try {
-			int parsedValue = Integer.parseInt(input.getValue());
-			if (parsedValue >= minimum) {
-				setter.accept(parsedValue);
-			}
-		} catch (NumberFormatException ignored) {
+		Integer parsedValue =
+				this.parseInputOrLastValid(
+						this.doubleJumpJumpCountInput,
+						this.lastValidDoubleJumpCountInput,
+						DoubleJumpConfig.DEFAULT_JUMP_COUNT,
+						this::restoreLastValidDoubleJumpCountInput);
+		if (parsedValue == null) {
+			return;
 		}
+
+		int committedValue = Math.max(parsedValue, DoubleJumpConfig.MIN_JUMP_COUNT);
+		this.doubleJumpDraft.jumpCount = committedValue;
+		this.syncDoubleJumpCountInputFromSlider(committedValue);
+		this.setDoubleJumpCountSliderValueSilently(committedValue);
+	}
+
+	private void commitDoubleJumpCoyoteTimeInput() {
+		if (this.doubleJumpCoyoteTimeInput == null) {
+			return;
+		}
+
+		Integer parsedValue =
+				this.parseInputOrLastValid(
+						this.doubleJumpCoyoteTimeInput,
+						this.lastValidDoubleJumpCoyoteTimeInput,
+						DoubleJumpConfig.DEFAULT_COYOTE_TIME_TICKS,
+						this::restoreLastValidDoubleJumpCoyoteTimeInput);
+		if (parsedValue == null) {
+			return;
+		}
+
+		int committedValue = Math.max(parsedValue, DoubleJumpConfig.MIN_COYOTE_TIME_TICKS);
+		this.doubleJumpDraft.coyoteTimeTicks = committedValue;
+		this.syncDoubleJumpCoyoteTimeInputFromSlider(committedValue);
+		this.setDoubleJumpCoyoteTimeSliderValueSilently(committedValue);
+	}
+
+	private void commitDoubleJumpCooldownInput() {
+		if (this.doubleJumpCooldownTicksInput == null) {
+			return;
+		}
+
+		Integer parsedValue =
+				this.parseInputOrLastValid(
+						this.doubleJumpCooldownTicksInput,
+						this.lastValidDoubleJumpCooldownInput,
+						DoubleJumpConfig.DEFAULT_COOLDOWN_TICKS,
+						this::restoreLastValidDoubleJumpCooldownInput);
+		if (parsedValue == null) {
+			return;
+		}
+
+		int committedValue = Math.max(parsedValue, DoubleJumpConfig.MIN_COOLDOWN_TICKS);
+		this.lastValidDoubleJumpCooldownInput = Integer.toString(committedValue);
+		this.doubleJumpCooldownTicksInput.setValue(this.lastValidDoubleJumpCooldownInput);
+		this.doubleJumpDraft.cooldownTicks = committedValue;
+	}
+
+	private Integer parseInputOrLastValid(
+			EditBox input, String lastValidValue, int fallbackValue, Runnable restoreAction) {
+		String value = input.getValue();
+		if (value.isEmpty()) {
+			restoreAction.run();
+			value =
+					lastValidValue == null || lastValidValue.isEmpty()
+							? Integer.toString(fallbackValue)
+							: lastValidValue;
+		}
+
+		Integer parsedValue = this.parseNonNegativeInteger(value, restoreAction);
+		if (parsedValue != null) {
+			return parsedValue;
+		}
+
+		return this.parseNonNegativeInteger(Integer.toString(fallbackValue), () -> {});
 	}
 
 	private static int toDoubleJumpCount(double normalized) {
@@ -1261,5 +1364,97 @@ public final class WenhanClientConfigScreen extends OptionsSubScreen {
 			return DoubleJumpConfig.SLIDER_MAX_COYOTE_TIME_TICKS;
 		}
 		return value;
+	}
+
+	private void updateDoubleJumpCountSliderWidget(AbstractWidget widget, int value) {
+		if (widget == null) {
+			return;
+		}
+
+		this.resetSliderWidget(widget, fromDoubleJumpCount(value));
+		widget.setMessage(
+				Component.literal(
+						Component.translatable("option.wenhan-client.double-jump.jump_count")
+										.getString()
+								+ ": "
+								+ value));
+	}
+
+	private void updateDoubleJumpCoyoteTimeSliderWidget(AbstractWidget widget, int value) {
+		if (widget == null) {
+			return;
+		}
+
+		this.resetSliderWidget(widget, fromDoubleJumpCoyoteTime(value));
+		widget.setMessage(
+				Component.literal(
+						Component.translatable("option.wenhan-client.double-jump.coyote_time")
+										.getString()
+								+ ": "
+								+ value));
+	}
+
+	private static final class FocusCommittingEditBox extends EditBox {
+		private final Runnable commitOnFocusLost;
+
+		private FocusCommittingEditBox(
+				net.minecraft.client.gui.Font font,
+				int x,
+				int y,
+				int width,
+				int height,
+				Component message,
+				Runnable commitOnFocusLost) {
+			super(font, x, y, width, height, message);
+			this.commitOnFocusLost = commitOnFocusLost;
+		}
+
+		@Override
+		public void setFocused(boolean focused) {
+			boolean wasFocused = this.isFocused();
+			super.setFocused(focused);
+			if (wasFocused && !focused) {
+				this.commitOnFocusLost.run();
+			}
+		}
+	}
+
+	private record SliderDisplayOverflowIntRange(
+			int minInclusive, int sliderMaxInclusive, int maxInclusive)
+			implements OptionInstance.SliderableValueSet<Integer> {
+		@Override
+		public Optional<Integer> validateValue(Integer value) {
+			if (value == null || value < this.minInclusive || value > this.maxInclusive) {
+				return Optional.empty();
+			}
+			return Optional.of(value);
+		}
+
+		@Override
+		public Codec<Integer> codec() {
+			return Codec.intRange(this.minInclusive, this.maxInclusive);
+		}
+
+		@Override
+		public double toSliderValue(Integer value) {
+			double range = this.sliderMaxInclusive - this.minInclusive;
+			return (clampToSlider(value) - this.minInclusive) / range;
+		}
+
+		@Override
+		public Integer fromSliderValue(double value) {
+			double range = this.sliderMaxInclusive - this.minInclusive;
+			return clampToSlider((int) Math.round(this.minInclusive + value * range));
+		}
+
+		private int clampToSlider(int value) {
+			if (value < this.minInclusive) {
+				return this.minInclusive;
+			}
+			if (value > this.sliderMaxInclusive) {
+				return this.sliderMaxInclusive;
+			}
+			return value;
+		}
 	}
 }
