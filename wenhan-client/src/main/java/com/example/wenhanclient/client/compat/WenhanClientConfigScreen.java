@@ -4,6 +4,8 @@ import com.example.wenhanclient.attackthroughfoliage.AttackThroughFoliageConfig;
 import com.example.wenhanclient.attackthroughfoliage.AttackThroughFoliageSubMod;
 import com.example.wenhanclient.betterstep.BetterStepConfig;
 import com.example.wenhanclient.betterstep.BetterStepSubMod;
+import com.example.wenhanclient.blockexplosionguard.BlockExplosionGuardConfig;
+import com.example.wenhanclient.blockexplosionguard.BlockExplosionGuardSubMod;
 import com.example.wenhanclient.boatutils.BoatUtilsConfig;
 import com.example.wenhanclient.creativeflying.CreativeFlyingConfig;
 import com.example.wenhanclient.creativeflying.CreativeFlyingSubMod;
@@ -141,6 +143,12 @@ public final class WenhanClientConfigScreen {
 								false,
 								() -> drafts.noLevitation.enabled,
 								value -> drafts.noLevitation.enabled = value))
+				.option(
+						booleanOption(
+								"option.wenhan-client.block-explosion-guard.enabled",
+								false,
+								() -> drafts.blockExplosionGuard.enabled,
+								value -> drafts.blockExplosionGuard.enabled = value))
 				.option(
 						booleanOption(
 								"option.wenhan-client.no-collision.enabled",
@@ -766,6 +774,7 @@ public final class WenhanClientConfigScreen {
 	private static final class Drafts {
 		private final BoatUtilsConfig.Values boatUtils;
 		private final AttackThroughFoliageConfig attackThroughFoliage;
+		private final BlockExplosionGuardConfig blockExplosionGuard;
 		private final BetterStepConfig betterStep;
 		private final NoSlowdownConfig noSlowdown;
 		private final NoSlimeBounceConfig noSlimeBounce;
@@ -794,6 +803,7 @@ public final class WenhanClientConfigScreen {
 		private Drafts() {
 			this.boatUtils = BoatUtilsConfig.get();
 			this.attackThroughFoliage = AttackThroughFoliageSubMod.config();
+			this.blockExplosionGuard = BlockExplosionGuardSubMod.config();
 			this.betterStep = BetterStepSubMod.config();
 			this.noSlowdown = NoSlowdownSubMod.config();
 			this.noSlimeBounce = NoSlimeBounceSubMod.config();
@@ -827,6 +837,7 @@ public final class WenhanClientConfigScreen {
 
 		private void save() {
 			AttackThroughFoliageSubMod.setConfig(this.attackThroughFoliage);
+			BlockExplosionGuardSubMod.setConfig(this.blockExplosionGuard);
 			BetterStepSubMod.setConfig(this.betterStep);
 			NoSlowdownSubMod.setConfig(this.noSlowdown);
 			NoSlimeBounceSubMod.setConfig(this.noSlimeBounce);

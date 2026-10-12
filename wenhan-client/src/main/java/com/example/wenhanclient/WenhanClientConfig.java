@@ -3,6 +3,7 @@ package com.example.wenhanclient;
 import com.example.wenhanclient.attackthroughfoliage.AttackThroughFoliageConfig;
 import com.example.wenhanclient.autologin.AutoLoginConfig;
 import com.example.wenhanclient.betterstep.BetterStepConfig;
+import com.example.wenhanclient.blockexplosionguard.BlockExplosionGuardConfig;
 import com.example.wenhanclient.boatutils.BoatUtilsConfig;
 import com.example.wenhanclient.creativeflying.CreativeFlyingConfig;
 import com.example.wenhanclient.doublejump.DoubleJumpConfig;
@@ -48,6 +49,7 @@ public class WenhanClientConfig {
 	public AttackThroughFoliageConfig attackThroughFoliage = new AttackThroughFoliageConfig();
 	public AutoLoginConfig autoLogin = new AutoLoginConfig();
 	public BetterStepConfig betterStep = new BetterStepConfig();
+	public BlockExplosionGuardConfig blockExplosionGuard = new BlockExplosionGuardConfig();
 	public BoatUtilsConfig.Values boatUtils = BoatUtilsConfig.Values.defaults();
 	public NoSlowdownConfig noSlowdown = new NoSlowdownConfig();
 	public NoSlimeBounceConfig noSlimeBounce = new NoSlimeBounceConfig();
@@ -124,6 +126,9 @@ public class WenhanClientConfig {
 			betterStep = new BetterStepConfig();
 		}
 		betterStep = BetterStepConfig.sanitize(betterStep);
+		if (blockExplosionGuard == null) {
+			blockExplosionGuard = new BlockExplosionGuardConfig();
+		}
 		if (boatUtils == null) {
 			boatUtils = BoatUtilsConfig.Values.defaults();
 		}

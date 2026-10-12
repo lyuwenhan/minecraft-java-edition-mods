@@ -53,6 +53,8 @@
 	"option.wenhan-client.instant-respawn.enabled.tooltip": "Skips the death screen and respawns immediately.",
 	"option.wenhan-client.no-levitation.enabled": "No Levitation",
 	"option.wenhan-client.no-levitation.enabled.tooltip": "Cancels levitation for the local player.",
+	"option.wenhan-client.block-explosion-guard.enabled": "Block Explosion Guard",
+	"option.wenhan-client.block-explosion-guard.enabled.tooltip": "Prevents using beds or straw beds outside the Overworld, and respawn anchors outside the Nether. Mining is not blocked.",
 	"option.wenhan-client.no-collision.enabled": "No Collision",
 	"option.wenhan-client.no-collision.enabled.tooltip": "Prevents other entities from pushing the local player.",
 	"option.wenhan-client.no-camera-collision.enabled": "No Camera Collision",

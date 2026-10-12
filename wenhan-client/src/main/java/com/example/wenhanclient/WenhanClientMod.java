@@ -4,6 +4,7 @@ import com.example.wenhanclient.attackthroughfoliage.AttackThroughFoliageSubMod;
 import com.example.wenhanclient.autologin.AutoLoginSubMod;
 import com.example.wenhanclient.bestarmor.BestArmorSubMod;
 import com.example.wenhanclient.betterstep.BetterStepSubMod;
+import com.example.wenhanclient.blockexplosionguard.BlockExplosionGuardSubMod;
 import com.example.wenhanclient.boatutils.BoatUtilsSubMod;
 import com.example.wenhanclient.creativeflying.CreativeFlyingSubMod;
 import com.example.wenhanclient.doublejump.DoubleJumpSubMod;
@@ -46,6 +47,7 @@ public class WenhanClientMod implements ClientModInitializer {
 		AutoLoginSubMod.init();
 		BetterStepSubMod.init();
 		BestArmorSubMod.init();
+		BlockExplosionGuardSubMod.init();
 		BoatUtilsSubMod.init();
 		NoSlowdownSubMod.init();
 		NoSlimeBounceSubMod.init();

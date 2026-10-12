@@ -19,6 +19,7 @@
 	"mixins": [
 		"attack-through-foliage.mixins.json",
 		"better-step.mixins.json",
+		"block-explosion-guard.mixins.json",
 		"wenhan-client.mixins.json",
 		"boat-item-visibility.mixins.json",
 		"boat-utils.mixins.json",

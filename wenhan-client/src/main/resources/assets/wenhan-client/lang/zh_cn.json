@@ -53,6 +53,8 @@
 	"option.wenhan-client.instant-respawn.enabled.tooltip": "跳过死亡界面并立即复活。",
 	"option.wenhan-client.no-levitation.enabled": "取消悬浮",
 	"option.wenhan-client.no-levitation.enabled.tooltip": "取消本地玩家的悬浮效果。",
+	"option.wenhan-client.block-explosion-guard.enabled": "禁止触发方块爆炸",
+	"option.wenhan-client.block-explosion-guard.enabled.tooltip": "禁止在非主世界使用床或稻草床，并禁止在非下界使用重生锚。不阻止挖掘。",
 	"option.wenhan-client.no-collision.enabled": "无碰撞",
 	"option.wenhan-client.no-collision.enabled.tooltip": "阻止其他实体推动玩家。",
 	"option.wenhan-client.no-camera-collision.enabled": "移除镜头碰撞",
