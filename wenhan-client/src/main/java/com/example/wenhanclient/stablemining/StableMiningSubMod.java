@@ -65,6 +65,10 @@ public final class StableMiningSubMod {
 		return new BlockHitResult(center, direction, miningBlock, false);
 	}
 
+	public static boolean shouldCancelMouseMovement(Minecraft client) {
+		return hasValidMiningBlock(client);
+	}
+
 	public static void aimAtMiningBlock(Minecraft client) {
 		if (!hasValidMiningBlock(client)) {
 			return;
