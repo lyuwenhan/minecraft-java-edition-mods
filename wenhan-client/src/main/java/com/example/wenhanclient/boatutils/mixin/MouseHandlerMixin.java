@@ -1,6 +1,7 @@
 package com.example.wenhanclient.boatutils.mixin;
 
 import com.example.wenhanclient.boatutils.BoatUtilsConfig;
+import com.example.wenhanclient.boatutils.BoatUtilsSubMod;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.MouseHandler;
@@ -36,12 +37,31 @@ public abstract class MouseHandlerMixin {
 		if (boat == null) {
 			return horizontalRotation;
 		}
+		if (horizontalRotation != 0.0D) {
+			BoatUtilsSubMod.markCameraMovedByMouse();
+		}
 		if (!BoatUtilsConfig.viewDirectionLockEnabled()) {
 			return horizontalRotation;
 		}
 
 		this.boatUtils$horizontalViewChanged = horizontalRotation != 0.0D;
 		return horizontalRotation;
+	}
+
+	@ModifyArg(
+			method = "turnPlayer",
+			at =
+					@At(
+							value = "INVOKE",
+							target = "Lnet/minecraft/client/player/LocalPlayer;turn(DD)V"),
+			index = 1)
+	private double boatUtils$trackVerticalViewRotation(double verticalRotation) {
+		Minecraft client = Minecraft.getInstance();
+		AbstractBoat boat = boatUtils$getControlledBoat(client);
+		if (boat != null && verticalRotation != 0.0D) {
+			BoatUtilsSubMod.markCameraMovedByMouse();
+		}
+		return verticalRotation;
 	}
 
 	@Inject(method = "turnPlayer", at = @At("RETURN"))

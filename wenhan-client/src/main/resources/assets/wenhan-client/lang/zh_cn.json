@@ -175,6 +175,8 @@
 	"option.wenhan-client.boat-utils.unrestricted_view_rotation.tooltip": "移除原版乘船时的 180 度水平视角限制，使视角可以完整旋转一周。",
 	"option.wenhan-client.boat-utils.view_direction_lock_enabled": "跟随视角",
 	"option.wenhan-client.boat-utils.view_direction_lock_enabled.tooltip": "使船只始终跟随视角方向。左右移动键改为水平侧移，不再用于船只转向。",
+	"option.wenhan-client.boat-utils.camera_auto_recenter_enabled": "摄像机自动回正",
+	"option.wenhan-client.boat-utils.camera_auto_recenter_enabled.tooltip": "未开启跟随视角时，若 1.5 秒没有移动摄像机，将摄像机平滑回正并居中。",
 	"option.wenhan-client.boat-utils.direction_hotkeys_enabled": "方向快捷键",
 	"option.wenhan-client.boat-utils.direction_hotkeys_enabled.tooltip": "启用四个船只方向快捷键：上键吸附到最近的合法方向，下键转向正后方，左键或右键转到对应一侧的下一个合法方向。",
 	"option.wenhan-client.boat-utils.direction_hotkeys_use_45_degree_angles": "锁定到对角线方向",

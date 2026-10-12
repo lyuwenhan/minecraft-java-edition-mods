@@ -9,10 +9,15 @@ import net.minecraft.world.phys.Vec3;
 
 public final class BoatUtilsSubMod {
 	public static final String MOD_ID = "boat-utils";
+	private static final int CAMERA_AUTO_RECENTER_DELAY_TICKS = 30;
+	private static final float CAMERA_AUTO_RECENTER_YAW_STEP = 0.12F;
+	private static final float CAMERA_AUTO_RECENTER_PITCH_STEP = 0.16F;
+	private static final float CAMERA_AUTO_RECENTER_SNAP_EPSILON = 0.05F;
 
 	private static AbstractBoat handbrakeBoat;
 	private static int handbrakeTicks;
 	private static boolean handbrakeWasDown;
+	private static int cameraIdleTicks;
 
 	private BoatUtilsSubMod() {}
 
@@ -21,6 +26,7 @@ public final class BoatUtilsSubMod {
 		BoatDirectionHotkeys.initialize();
 		ClientTickEvents.START_CLIENT_TICK.register(BoatUtilsSubMod::applyFollowView);
 		ClientTickEvents.END_CLIENT_TICK.register(BoatUtilsSubMod::applyFollowView);
+		ClientTickEvents.END_CLIENT_TICK.register(BoatUtilsSubMod::applyCameraAutoRecenter);
 		ClientTickEvents.END_CLIENT_TICK.register(BoatUtilsSubMod::applyLateralFriction);
 		ClientTickEvents.END_CLIENT_TICK.register(BoatUtilsSubMod::clearInvalidHandbrakeState);
 		ClientTickEvents.END_CLIENT_TICK.register(BoatDirectionHotkeys::handleClientTick);
@@ -79,6 +85,49 @@ public final class BoatUtilsSubMod {
 				forwardX * forwardSpeed + rightX * newLateralSpeed,
 				movement.y,
 				forwardZ * forwardSpeed + rightZ * newLateralSpeed);
+	}
+
+	public static void markCameraMovedByMouse() {
+		cameraIdleTicks = 0;
+	}
+
+	private static void applyCameraAutoRecenter(Minecraft client) {
+		if (!BoatUtilsConfig.cameraAutoRecenterEnabled()
+				|| BoatUtilsConfig.viewDirectionLockEnabled()
+				|| client.player == null
+				|| client.gui.screen() != null) {
+			resetCameraAutoRecenterState();
+			return;
+		}
+
+		Entity vehicle = client.player.getVehicle();
+		if (!(vehicle instanceof AbstractBoat boat)
+				|| boat.getControllingPassenger() != client.player) {
+			resetCameraAutoRecenterState();
+			return;
+		}
+
+		if (cameraIdleTicks < CAMERA_AUTO_RECENTER_DELAY_TICKS) {
+			cameraIdleTicks++;
+			return;
+		}
+
+		float targetYaw = boat.getYRot();
+		float yawDelta = Mth.wrapDegrees(targetYaw - client.player.getYRot());
+		float pitchDelta = -client.player.getXRot();
+
+		float newYaw = client.player.getYRot() + yawDelta * CAMERA_AUTO_RECENTER_YAW_STEP;
+		float newPitch = client.player.getXRot() + pitchDelta * CAMERA_AUTO_RECENTER_PITCH_STEP;
+
+		if (Math.abs(yawDelta) <= CAMERA_AUTO_RECENTER_SNAP_EPSILON) {
+			newYaw = targetYaw;
+		}
+		if (Math.abs(pitchDelta) <= CAMERA_AUTO_RECENTER_SNAP_EPSILON) {
+			newPitch = 0.0F;
+		}
+
+		client.player.setYRot(newYaw);
+		client.player.setXRot(newPitch);
 	}
 
 	public static void applyHandbrakeAfterThrust(AbstractBoat boat) {
@@ -182,5 +231,9 @@ public final class BoatUtilsSubMod {
 		handbrakeBoat = null;
 		handbrakeTicks = 0;
 		handbrakeWasDown = false;
+	}
+
+	private static void resetCameraAutoRecenterState() {
+		cameraIdleTicks = 0;
 	}
 }

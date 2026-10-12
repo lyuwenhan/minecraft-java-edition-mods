@@ -34,6 +34,10 @@ public final class BoatUtilsConfig {
 		return current.viewDirectionLockEnabled;
 	}
 
+	public static synchronized boolean cameraAutoRecenterEnabled() {
+		return current.cameraAutoRecenterEnabled;
+	}
+
 	public static synchronized boolean directionHotkeysEnabled() {
 		return current.directionHotkeysEnabled;
 	}
@@ -81,6 +85,7 @@ public final class BoatUtilsConfig {
 	public static final class Values {
 		public boolean unrestrictedViewRotation;
 		public boolean viewDirectionLockEnabled;
+		public boolean cameraAutoRecenterEnabled;
 		public boolean directionHotkeysEnabled;
 		public boolean directionHotkeysUse45DegreeAngles;
 		public boolean blueIceSpeedEverywhere;
@@ -94,6 +99,7 @@ public final class BoatUtilsConfig {
 			Values values = new Values();
 			values.unrestrictedViewRotation = false;
 			values.viewDirectionLockEnabled = false;
+			values.cameraAutoRecenterEnabled = false;
 			values.directionHotkeysEnabled = false;
 			values.directionHotkeysUse45DegreeAngles = true;
 			values.blueIceSpeedEverywhere = false;
@@ -109,6 +115,7 @@ public final class BoatUtilsConfig {
 			Values copy = new Values();
 			copy.unrestrictedViewRotation = this.unrestrictedViewRotation;
 			copy.viewDirectionLockEnabled = this.viewDirectionLockEnabled;
+			copy.cameraAutoRecenterEnabled = this.cameraAutoRecenterEnabled;
 			copy.directionHotkeysEnabled = this.directionHotkeysEnabled;
 			copy.directionHotkeysUse45DegreeAngles = this.directionHotkeysUse45DegreeAngles;
 			copy.blueIceSpeedEverywhere = this.blueIceSpeedEverywhere;

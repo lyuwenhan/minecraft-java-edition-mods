@@ -175,6 +175,8 @@
 	"option.wenhan-client.boat-utils.unrestricted_view_rotation.tooltip": "Removes the vanilla 180-degree yaw restriction, allowing the camera to rotate freely in a full circle.",
 	"option.wenhan-client.boat-utils.view_direction_lock_enabled": "Follow View",
 	"option.wenhan-client.boat-utils.view_direction_lock_enabled.tooltip": "Makes the boat follow the view direction. Left and right movement keys strafe horizontally instead of turning the boat.",
+	"option.wenhan-client.boat-utils.camera_auto_recenter_enabled": "Auto Recenter Camera",
+	"option.wenhan-client.boat-utils.camera_auto_recenter_enabled.tooltip": "When Follow View is disabled, smoothly recenters the camera after 1.5 seconds without mouse camera movement.",
 	"option.wenhan-client.boat-utils.direction_hotkeys_enabled": "Direction Hotkeys",
 	"option.wenhan-client.boat-utils.direction_hotkeys_enabled.tooltip": "Enables the four boat direction shortcuts. Up snaps to the nearest allowed direction, Down turns around, and Left or Right turns to the next allowed direction on that side.",
 	"option.wenhan-client.boat-utils.direction_hotkeys_use_45_degree_angles": "Diagonal Directions",

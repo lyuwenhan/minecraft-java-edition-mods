@@ -471,6 +471,12 @@ public final class WenhanClientConfigScreen {
 								value -> drafts.boatUtils.viewDirectionLockEnabled = value))
 				.option(
 						booleanOption(
+								"option.wenhan-client.boat-utils.camera_auto_recenter_enabled",
+								false,
+								() -> drafts.boatUtils.cameraAutoRecenterEnabled,
+								value -> drafts.boatUtils.cameraAutoRecenterEnabled = value))
+				.option(
+						booleanOption(
 								"option.wenhan-client.boat-utils.direction_hotkeys_enabled",
 								false,
 								() -> drafts.boatUtils.directionHotkeysEnabled,
