@@ -18,7 +18,7 @@ public final class ConnectionMixin {
 			at = @At("HEAD"),
 			cancellable = true)
 	private void flightDisabler$cancelStartFallFlying(Packet<?> packet, CallbackInfo ci) {
-		if (!FlightDisablerSubMod.isEnabled()) {
+		if (!FlightDisablerSubMod.isElytraFlightDisabled()) {
 			return;
 		}
 		if (!(packet instanceof ServerboundPlayerCommandPacket commandPacket)) {

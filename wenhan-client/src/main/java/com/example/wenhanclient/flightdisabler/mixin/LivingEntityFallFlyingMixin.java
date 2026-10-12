@@ -14,7 +14,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class LivingEntityFallFlyingMixin {
 	@Inject(method = "travelFallFlying", at = @At("HEAD"), cancellable = true)
 	private void flightDisabler$cancelLocalElytraTravel(CallbackInfo ci) {
-		if (!FlightDisablerSubMod.isEnabled()) {
+		if (!FlightDisablerSubMod.isElytraFlightDisabled()) {
 			return;
 		}
 		Minecraft client = Minecraft.getInstance();

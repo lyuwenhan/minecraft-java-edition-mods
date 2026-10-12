@@ -40,7 +40,7 @@ public class LocalPlayerFlyingMixin {
 
 	private static void flightdisabler$setFlyingUnlessDisabled(
 			Abilities abilities, boolean flying) {
-		if (FlightDisablerSubMod.isEnabled() && flying) {
+		if (FlightDisablerSubMod.isCreativeFlightDisabled() && flying) {
 			abilities.flying = false;
 			return;
 		}

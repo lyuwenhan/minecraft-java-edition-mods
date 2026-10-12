@@ -93,10 +93,16 @@ public final class WenhanClientConfigScreen {
 								value -> drafts.creativeFlying.enabled = value))
 				.option(
 						booleanOption(
-								"option.wenhan-client.flight-disabler.enabled",
+								"option.wenhan-client.flight-disabler.creative_flight_enabled",
 								false,
-								() -> drafts.flightDisabler.enabled,
-								value -> drafts.flightDisabler.enabled = value))
+								() -> drafts.flightDisabler.creativeFlightEnabled,
+								value -> drafts.flightDisabler.creativeFlightEnabled = value))
+				.option(
+						booleanOption(
+								"option.wenhan-client.flight-disabler.elytra_flight_enabled",
+								false,
+								() -> drafts.flightDisabler.elytraFlightEnabled,
+								value -> drafts.flightDisabler.elytraFlightEnabled = value))
 				.option(
 						booleanOption(
 								"option.wenhan-client.elytra-cancel.enabled",

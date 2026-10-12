@@ -43,7 +43,15 @@ public final class FlightDisablerSubMod {
 	}
 
 	public static boolean isEnabled() {
-		return config.enabled;
+		return config.anyEnabled();
+	}
+
+	public static boolean isCreativeFlightDisabled() {
+		return config.creativeFlightEnabled();
+	}
+
+	public static boolean isElytraFlightDisabled() {
+		return config.elytraFlightEnabled();
 	}
 
 	private static void onEndClientTick(Minecraft client) {
@@ -55,27 +63,31 @@ public final class FlightDisablerSubMod {
 			return;
 		}
 		while (toggleKey.consumeClick()) {
-			config.enabled = !config.enabled;
+			boolean newValue = !config.anyEnabled();
+			config.creativeFlightEnabled = newValue;
+			config.elytraFlightEnabled = newValue;
 			WenhanClientMod.CONFIG.flightDisabler = config.copy();
 			WenhanClientMod.CONFIG.save();
 			if (client.player != null) {
 				client.player.sendOverlayMessage(
-						Component.literal("Flight Disabler: " + (config.enabled ? "ON" : "OFF")));
+						Component.literal("Flight Disabler: " + (newValue ? "ON" : "OFF")));
 			}
-			if (config.enabled) {
+			if (config.anyEnabled()) {
 				disableFlight(client);
 			}
 		}
 	}
 
 	public static void disableFlight(Minecraft client) {
-		if (!config.enabled || client.player == null) {
+		if (!config.anyEnabled() || client.player == null) {
 			return;
 		}
 
-		client.player.getAbilities().flying = false;
+		if (config.creativeFlightEnabled()) {
+			client.player.getAbilities().flying = false;
+		}
 
-		if (client.player.isFallFlying()) {
+		if (config.elytraFlightEnabled() && client.player.isFallFlying()) {
 			client.player.stopFallFlying();
 		}
 	}

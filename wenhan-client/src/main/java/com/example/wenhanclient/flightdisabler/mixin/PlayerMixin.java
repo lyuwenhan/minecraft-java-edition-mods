@@ -14,7 +14,7 @@ public abstract class PlayerMixin {
 
 	@Inject(method = "tryToStartFallFlying", at = @At("HEAD"), cancellable = true)
 	private void flightdisabler$disableStartFallFlying(CallbackInfoReturnable<Boolean> cir) {
-		if (!FlightDisablerSubMod.isEnabled()) {
+		if (!FlightDisablerSubMod.isElytraFlightDisabled()) {
 			return;
 		}
 
