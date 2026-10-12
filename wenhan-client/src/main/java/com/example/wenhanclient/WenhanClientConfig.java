@@ -13,6 +13,7 @@ import com.example.wenhanclient.flyspeedmodifier.FlySpeedModifierConfig;
 import com.example.wenhanclient.greet.GreetConfig;
 import com.example.wenhanclient.hidepassword.config.HidePasswordConfig;
 import com.example.wenhanclient.hiderealms.HideRealmsConfig;
+import com.example.wenhanclient.instantrespawn.InstantRespawnConfig;
 import com.example.wenhanclient.interactiondelay.InteractionDelayConfig;
 import com.example.wenhanclient.minecartdirection.MinecartDirectionConfig;
 import com.example.wenhanclient.nocameracollision.NoCameraCollisionConfig;
@@ -59,6 +60,7 @@ public class WenhanClientConfig {
 	public GreetConfig greet = new GreetConfig();
 	public HideRealmsConfig hideRealms = new HideRealmsConfig();
 	public HidePasswordConfig hidePassword = new HidePasswordConfig();
+	public InstantRespawnConfig instantRespawn = new InstantRespawnConfig();
 	public InteractionDelayConfig interactionDelay = new InteractionDelayConfig();
 	public MinecartDirectionConfig minecartDirection = new MinecartDirectionConfig();
 	public NoCameraCollisionConfig noCameraCollision = new NoCameraCollisionConfig();
@@ -160,6 +162,9 @@ public class WenhanClientConfig {
 		}
 		if (hidePassword == null) {
 			hidePassword = new HidePasswordConfig();
+		}
+		if (instantRespawn == null) {
+			instantRespawn = new InstantRespawnConfig();
 		}
 		if (interactionDelay == null) {
 			interactionDelay = new InteractionDelayConfig();

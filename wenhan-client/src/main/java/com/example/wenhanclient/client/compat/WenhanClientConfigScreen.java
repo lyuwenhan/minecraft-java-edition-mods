@@ -17,6 +17,8 @@ import com.example.wenhanclient.hidepassword.HidePasswordSubMod;
 import com.example.wenhanclient.hidepassword.config.HidePasswordConfig;
 import com.example.wenhanclient.hiderealms.HideRealmsConfig;
 import com.example.wenhanclient.hiderealms.HideRealmsSubMod;
+import com.example.wenhanclient.instantrespawn.InstantRespawnConfig;
+import com.example.wenhanclient.instantrespawn.InstantRespawnSubMod;
 import com.example.wenhanclient.interactiondelay.InteractionDelayConfig;
 import com.example.wenhanclient.interactiondelay.InteractionDelaySubMod;
 import com.example.wenhanclient.minecartdirection.MinecartDirectionConfig;
@@ -125,6 +127,12 @@ public final class WenhanClientConfigScreen {
 								false,
 								() -> drafts.noJumpDelay.enabled,
 								value -> drafts.noJumpDelay.enabled = value))
+				.option(
+						booleanOption(
+								"option.wenhan-client.instant-respawn.enabled",
+								false,
+								() -> drafts.instantRespawn.enabled,
+								value -> drafts.instantRespawn.enabled = value))
 				.option(
 						booleanOption(
 								"option.wenhan-client.no-collision.enabled",
@@ -760,6 +768,7 @@ public final class WenhanClientConfigScreen {
 		private final FlySpeedModifierConfig.Values flySpeedModifier;
 		private final HideRealmsConfig hideRealms;
 		private final HidePasswordConfig hidePassword;
+		private final InstantRespawnConfig instantRespawn;
 		private final InteractionDelayConfig interactionDelay;
 		private final MinecartDirectionConfig minecartDirection;
 		private final NoCameraCollisionConfig noCameraCollision;
@@ -787,6 +796,7 @@ public final class WenhanClientConfigScreen {
 			this.flySpeedModifier.fullRange = true;
 			this.hideRealms = HideRealmsSubMod.config();
 			this.hidePassword = HidePasswordSubMod.config();
+			this.instantRespawn = InstantRespawnSubMod.config();
 			this.interactionDelay = InteractionDelaySubMod.config();
 			this.minecartDirection = MinecartDirectionSubMod.config();
 			this.noCameraCollision = NoCameraCollisionSubMod.config();
@@ -819,6 +829,7 @@ public final class WenhanClientConfigScreen {
 			FlySpeedModifierConfig.set(this.flySpeedModifier);
 			HideRealmsSubMod.setConfig(this.hideRealms);
 			HidePasswordSubMod.setConfig(this.hidePassword);
+			InstantRespawnSubMod.setConfig(this.instantRespawn);
 			InteractionDelaySubMod.setConfig(this.interactionDelay);
 			MinecartDirectionSubMod.setConfig(this.minecartDirection);
 			NoCameraCollisionSubMod.setConfig(this.noCameraCollision);

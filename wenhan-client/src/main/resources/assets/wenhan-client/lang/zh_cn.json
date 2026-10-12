@@ -49,6 +49,8 @@
 	"option.wenhan-client.no-flight-reset.enabled.tooltip": "创造飞行时碰到地面后不取消当前飞行状态。",
 	"option.wenhan-client.no-jump-delay.enabled": "无跳跃延迟",
 	"option.wenhan-client.no-jump-delay.enabled.tooltip": "移除跳跃冷却，按住跳跃时可以快速连续跳跃。",
+	"option.wenhan-client.instant-respawn.enabled": "立即复活",
+	"option.wenhan-client.instant-respawn.enabled.tooltip": "跳过死亡界面并立即复活。",
 	"option.wenhan-client.no-collision.enabled": "无碰撞",
 	"option.wenhan-client.no-collision.enabled.tooltip": "阻止其他实体推动玩家。",
 	"option.wenhan-client.no-camera-collision.enabled": "移除镜头碰撞",

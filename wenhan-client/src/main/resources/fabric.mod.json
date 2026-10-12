@@ -34,6 +34,7 @@
 		"forward-lock.client.mixins.json",
 		"hide-realms.mixins.json",
 		"hide-password.mixins.json",
+		"instant-respawn.mixins.json",
 		"interaction-delay.mixins.json",
 		"maplocator.mixins.json",
 		"no-camera-collision.mixins.json",

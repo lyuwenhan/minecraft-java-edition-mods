@@ -49,6 +49,8 @@
 	"option.wenhan-client.no-flight-reset.enabled.tooltip": "Keeps creative flight enabled when touching the ground.",
 	"option.wenhan-client.no-jump-delay.enabled": "No Jump Delay",
 	"option.wenhan-client.no-jump-delay.enabled.tooltip": "Removes the jump cooldown so holding jump can trigger consecutive jumps immediately.",
+	"option.wenhan-client.instant-respawn.enabled": "Instant Respawn",
+	"option.wenhan-client.instant-respawn.enabled.tooltip": "Skips the death screen and respawns immediately.",
 	"option.wenhan-client.no-collision.enabled": "No Collision",
 	"option.wenhan-client.no-collision.enabled.tooltip": "Prevents other entities from pushing the local player.",
 	"option.wenhan-client.no-camera-collision.enabled": "No Camera Collision",
