@@ -64,6 +64,8 @@
 	"option.wenhan-client.block-explosion-guard.enabled.tooltip": "禁止在非主世界使用床或稻草床，并禁止在非下界使用重生锚。不阻止挖掘。",
 	"option.wenhan-client.no-collision.enabled": "无碰撞",
 	"option.wenhan-client.no-collision.enabled.tooltip": "阻止其他实体推动玩家。",
+	"option.wenhan-client.fluid-platform.enabled": "流体平台",
+	"option.wenhan-client.fluid-platform.enabled.tooltip": "允许本地玩家站在水和岩浆表面。下蹲时穿过。",
 	"option.wenhan-client.no-camera-collision.enabled": "移除镜头碰撞",
 	"option.wenhan-client.no-camera-collision.enabled.tooltip": "第三人称和第二人称视角保持固定镜头距离，不再因为方块阻挡而缩短。",
 	"option.wenhan-client.attack-through-foliage.enabled": "穿过植被攻击",

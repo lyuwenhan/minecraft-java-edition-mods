@@ -1,0 +1,14 @@
+{
+	"required": true,
+	"package": "com.example.wenhanclient.fluidplatform.mixin",
+	"compatibilityLevel": "JAVA_25",
+	"client": [
+		"EntityCollisionContextMixin",
+		"EntityFluidInteractionMixin",
+		"LivingEntityMixin",
+		"LiquidBlockMixin"
+	],
+	"injectors": {
+		"defaultRequire": 1
+	}
+}

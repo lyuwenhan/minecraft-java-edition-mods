@@ -11,6 +11,7 @@ import com.example.wenhanclient.doublejump.DoubleJumpConfig;
 import com.example.wenhanclient.elytracancel.ElytraCancelConfig;
 import com.example.wenhanclient.entityhighlighter.EntityHighlighterConfig;
 import com.example.wenhanclient.flightdisabler.FlightDisablerConfig;
+import com.example.wenhanclient.fluidplatform.FluidPlatformConfig;
 import com.example.wenhanclient.flyspeedmodifier.FlySpeedModifierConfig;
 import com.example.wenhanclient.greet.GreetConfig;
 import com.example.wenhanclient.hidepassword.config.HidePasswordConfig;
@@ -52,8 +53,7 @@ public class WenhanClientConfig {
 	public BetterStepConfig betterStep = new BetterStepConfig();
 	public BlockExplosionGuardConfig blockExplosionGuard = new BlockExplosionGuardConfig();
 	public BoatUtilsConfig.Values boatUtils = BoatUtilsConfig.Values.defaults();
-	public ClientPseudoUnrestrictConfig clientPseudoUnrestrict =
-			new ClientPseudoUnrestrictConfig();
+	public ClientPseudoUnrestrictConfig clientPseudoUnrestrict = new ClientPseudoUnrestrictConfig();
 	public NoSlowdownConfig noSlowdown = new NoSlowdownConfig();
 	public NoSlimeBounceConfig noSlimeBounce = new NoSlimeBounceConfig();
 	public CreativeFlyingConfig creativeFlying = new CreativeFlyingConfig();
@@ -61,6 +61,7 @@ public class WenhanClientConfig {
 	public ElytraCancelConfig elytraCancel = new ElytraCancelConfig();
 	public EntityHighlighterConfig entityHighlighter = new EntityHighlighterConfig();
 	public FlightDisablerConfig flightDisabler = new FlightDisablerConfig();
+	public FluidPlatformConfig fluidPlatform = new FluidPlatformConfig();
 	public FlySpeedModifierConfig.Values flySpeedModifier =
 			FlySpeedModifierConfig.Values.defaults();
 	public GreetConfig greet = new GreetConfig();
@@ -161,6 +162,9 @@ public class WenhanClientConfig {
 		entityHighlighter.fillMissing();
 		if (flightDisabler == null) {
 			flightDisabler = new FlightDisablerConfig();
+		}
+		if (fluidPlatform == null) {
+			fluidPlatform = new FluidPlatformConfig();
 		}
 		if (flySpeedModifier == null) {
 			flySpeedModifier = FlySpeedModifierConfig.Values.defaults();

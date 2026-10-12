@@ -12,6 +12,7 @@ import com.example.wenhanclient.doublejump.DoubleJumpSubMod;
 import com.example.wenhanclient.elytracancel.ElytraCancelSubMod;
 import com.example.wenhanclient.entityhighlighter.EntityHighlighterSubMod;
 import com.example.wenhanclient.flightdisabler.FlightDisablerSubMod;
+import com.example.wenhanclient.fluidplatform.FluidPlatformSubMod;
 import com.example.wenhanclient.flyspeedmodifier.FlySpeedModifierSubMod;
 import com.example.wenhanclient.forwardlock.ForwardLockSubMod;
 import com.example.wenhanclient.ghostblock.GhostblockSubMod;
@@ -58,6 +59,7 @@ public class WenhanClientMod implements ClientModInitializer {
 		ElytraCancelSubMod.init();
 		EntityHighlighterSubMod.init();
 		FlightDisablerSubMod.init();
+		FluidPlatformSubMod.init();
 		FlySpeedModifierSubMod.init();
 		ForwardLockSubMod.init();
 		GhostblockSubMod.init();

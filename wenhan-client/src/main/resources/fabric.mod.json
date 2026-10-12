@@ -31,6 +31,7 @@
 		"elytra-cancel.mixins.json",
 		"entityhighlighter.mixins.json",
 		"flight-disabler.mixins.json",
+		"fluid-platform.mixins.json",
 		"fly-speed-modifier.mixins.json",
 		"fly-speed-modifier-freecam.json",
 		"forward-lock.client.mixins.json",

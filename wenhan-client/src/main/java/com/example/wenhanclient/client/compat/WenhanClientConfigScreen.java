@@ -16,6 +16,8 @@ import com.example.wenhanclient.elytracancel.ElytraCancelConfig;
 import com.example.wenhanclient.elytracancel.ElytraCancelSubMod;
 import com.example.wenhanclient.flightdisabler.FlightDisablerConfig;
 import com.example.wenhanclient.flightdisabler.FlightDisablerSubMod;
+import com.example.wenhanclient.fluidplatform.FluidPlatformConfig;
+import com.example.wenhanclient.fluidplatform.FluidPlatformSubMod;
 import com.example.wenhanclient.flyspeedmodifier.FlySpeedModifierConfig;
 import com.example.wenhanclient.hidepassword.HidePasswordSubMod;
 import com.example.wenhanclient.hidepassword.config.HidePasswordConfig;
@@ -158,6 +160,12 @@ public final class WenhanClientConfigScreen {
 								false,
 								() -> drafts.noCollision.enabled,
 								value -> drafts.noCollision.enabled = value))
+				.option(
+						booleanOption(
+								"option.wenhan-client.fluid-platform.enabled",
+								false,
+								() -> drafts.fluidPlatform.enabled,
+								value -> drafts.fluidPlatform.enabled = value))
 				.option(
 						booleanOption(
 								"option.wenhan-client.no-camera-collision.enabled",
@@ -418,9 +426,7 @@ public final class WenhanClientConfigScreen {
 
 	private static ConfigCategory clientPseudoUnrestrictCategory(Drafts drafts) {
 		return ConfigCategory.createBuilder()
-				.name(
-						Component.translatable(
-								"title.wenhan-client.client-pseudo-unrestrict.config"))
+				.name(Component.translatable("title.wenhan-client.client-pseudo-unrestrict.config"))
 				.option(
 						booleanOption(
 								"option.wenhan-client.client-pseudo-unrestrict.block_interaction_range",
@@ -816,6 +822,7 @@ public final class WenhanClientConfigScreen {
 		private final DoubleJumpConfig.Values doubleJump;
 		private final ElytraCancelConfig elytraCancel;
 		private final FlightDisablerConfig flightDisabler;
+		private final FluidPlatformConfig fluidPlatform;
 		private final FlySpeedModifierConfig.Values flySpeedModifier;
 		private final HideRealmsConfig hideRealms;
 		private final HidePasswordConfig hidePassword;
@@ -846,6 +853,7 @@ public final class WenhanClientConfigScreen {
 			this.doubleJump = DoubleJumpConfig.get();
 			this.elytraCancel = ElytraCancelSubMod.config();
 			this.flightDisabler = FlightDisablerSubMod.config();
+			this.fluidPlatform = FluidPlatformSubMod.config();
 			this.flySpeedModifier = FlySpeedModifierConfig.get();
 			this.flySpeedModifier.fullRange = true;
 			this.hideRealms = HideRealmsSubMod.config();
@@ -881,6 +889,7 @@ public final class WenhanClientConfigScreen {
 			DoubleJumpConfig.set(this.doubleJump);
 			ElytraCancelSubMod.setConfig(this.elytraCancel);
 			FlightDisablerSubMod.setConfig(this.flightDisabler);
+			FluidPlatformSubMod.setConfig(this.fluidPlatform);
 			this.flySpeedModifier.fullRange = true;
 			normalizeFlySpeedModifierSpeeds(this.flySpeedModifier);
 			FlySpeedModifierConfig.set(this.flySpeedModifier);
