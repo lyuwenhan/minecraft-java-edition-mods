@@ -23,6 +23,7 @@
 		"wenhan-client.mixins.json",
 		"boat-item-visibility.mixins.json",
 		"boat-utils.mixins.json",
+		"client-pseudo-unrestrict.mixins.json",
 		"no-slowdown.mixins.json",
 		"creativeflying.mixins.json",
 		"dabr-server-config-override.mixins.json",

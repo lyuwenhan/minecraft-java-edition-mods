@@ -7,6 +7,8 @@ import com.example.wenhanclient.betterstep.BetterStepSubMod;
 import com.example.wenhanclient.blockexplosionguard.BlockExplosionGuardConfig;
 import com.example.wenhanclient.blockexplosionguard.BlockExplosionGuardSubMod;
 import com.example.wenhanclient.boatutils.BoatUtilsConfig;
+import com.example.wenhanclient.clientpseudounrestrict.ClientPseudoUnrestrictConfig;
+import com.example.wenhanclient.clientpseudounrestrict.ClientPseudoUnrestrictSubMod;
 import com.example.wenhanclient.creativeflying.CreativeFlyingConfig;
 import com.example.wenhanclient.creativeflying.CreativeFlyingSubMod;
 import com.example.wenhanclient.doublejump.DoubleJumpConfig;
@@ -85,6 +87,7 @@ public final class WenhanClientConfigScreen {
 				.category(whoIAmCategory(drafts))
 				.category(noTextureRotationCategory(drafts))
 				.category(doubleJumpCategory(drafts))
+				.category(clientPseudoUnrestrictCategory(drafts))
 				.category(flySpeedModifierCategory(drafts))
 				.category(boatUtilsCategory(drafts))
 				.save(drafts::save)
@@ -410,6 +413,36 @@ public final class WenhanClientConfigScreen {
 												Math.max(
 														DoubleJumpConfig.MIN_COOLDOWN_TICKS,
 														value)))
+				.build();
+	}
+
+	private static ConfigCategory clientPseudoUnrestrictCategory(Drafts drafts) {
+		return ConfigCategory.createBuilder()
+				.name(
+						Component.translatable(
+								"title.wenhan-client.client-pseudo-unrestrict.config"))
+				.option(
+						booleanOption(
+								"option.wenhan-client.client-pseudo-unrestrict.block_interaction_range",
+								false,
+								() -> drafts.clientPseudoUnrestrict.blockInteractionRange,
+								value ->
+										drafts.clientPseudoUnrestrict.blockInteractionRange =
+												value))
+				.option(
+						booleanOption(
+								"option.wenhan-client.client-pseudo-unrestrict.entity_interaction_range",
+								false,
+								() -> drafts.clientPseudoUnrestrict.entityInteractionRange,
+								value ->
+										drafts.clientPseudoUnrestrict.entityInteractionRange =
+												value))
+				.option(
+						booleanOption(
+								"option.wenhan-client.client-pseudo-unrestrict.instant_break",
+								false,
+								() -> drafts.clientPseudoUnrestrict.instantBreak,
+								value -> drafts.clientPseudoUnrestrict.instantBreak = value))
 				.build();
 	}
 
@@ -776,6 +809,7 @@ public final class WenhanClientConfigScreen {
 		private final AttackThroughFoliageConfig attackThroughFoliage;
 		private final BlockExplosionGuardConfig blockExplosionGuard;
 		private final BetterStepConfig betterStep;
+		private final ClientPseudoUnrestrictConfig clientPseudoUnrestrict;
 		private final NoSlowdownConfig noSlowdown;
 		private final NoSlimeBounceConfig noSlimeBounce;
 		private final CreativeFlyingConfig creativeFlying;
@@ -805,6 +839,7 @@ public final class WenhanClientConfigScreen {
 			this.attackThroughFoliage = AttackThroughFoliageSubMod.config();
 			this.blockExplosionGuard = BlockExplosionGuardSubMod.config();
 			this.betterStep = BetterStepSubMod.config();
+			this.clientPseudoUnrestrict = ClientPseudoUnrestrictSubMod.config();
 			this.noSlowdown = NoSlowdownSubMod.config();
 			this.noSlimeBounce = NoSlimeBounceSubMod.config();
 			this.creativeFlying = CreativeFlyingSubMod.config();
@@ -839,6 +874,7 @@ public final class WenhanClientConfigScreen {
 			AttackThroughFoliageSubMod.setConfig(this.attackThroughFoliage);
 			BlockExplosionGuardSubMod.setConfig(this.blockExplosionGuard);
 			BetterStepSubMod.setConfig(this.betterStep);
+			ClientPseudoUnrestrictSubMod.setConfig(this.clientPseudoUnrestrict);
 			NoSlowdownSubMod.setConfig(this.noSlowdown);
 			NoSlimeBounceSubMod.setConfig(this.noSlimeBounce);
 			CreativeFlyingSubMod.setConfig(this.creativeFlying);

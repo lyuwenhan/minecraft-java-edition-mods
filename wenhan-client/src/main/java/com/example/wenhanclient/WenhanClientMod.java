@@ -6,6 +6,7 @@ import com.example.wenhanclient.bestarmor.BestArmorSubMod;
 import com.example.wenhanclient.betterstep.BetterStepSubMod;
 import com.example.wenhanclient.blockexplosionguard.BlockExplosionGuardSubMod;
 import com.example.wenhanclient.boatutils.BoatUtilsSubMod;
+import com.example.wenhanclient.clientpseudounrestrict.ClientPseudoUnrestrictSubMod;
 import com.example.wenhanclient.creativeflying.CreativeFlyingSubMod;
 import com.example.wenhanclient.doublejump.DoubleJumpSubMod;
 import com.example.wenhanclient.elytracancel.ElytraCancelSubMod;
@@ -49,6 +50,7 @@ public class WenhanClientMod implements ClientModInitializer {
 		BestArmorSubMod.init();
 		BlockExplosionGuardSubMod.init();
 		BoatUtilsSubMod.init();
+		ClientPseudoUnrestrictSubMod.init();
 		NoSlowdownSubMod.init();
 		NoSlimeBounceSubMod.init();
 		CreativeFlyingSubMod.init();

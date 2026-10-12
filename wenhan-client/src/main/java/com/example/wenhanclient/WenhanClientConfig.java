@@ -5,6 +5,7 @@ import com.example.wenhanclient.autologin.AutoLoginConfig;
 import com.example.wenhanclient.betterstep.BetterStepConfig;
 import com.example.wenhanclient.blockexplosionguard.BlockExplosionGuardConfig;
 import com.example.wenhanclient.boatutils.BoatUtilsConfig;
+import com.example.wenhanclient.clientpseudounrestrict.ClientPseudoUnrestrictConfig;
 import com.example.wenhanclient.creativeflying.CreativeFlyingConfig;
 import com.example.wenhanclient.doublejump.DoubleJumpConfig;
 import com.example.wenhanclient.elytracancel.ElytraCancelConfig;
@@ -51,6 +52,8 @@ public class WenhanClientConfig {
 	public BetterStepConfig betterStep = new BetterStepConfig();
 	public BlockExplosionGuardConfig blockExplosionGuard = new BlockExplosionGuardConfig();
 	public BoatUtilsConfig.Values boatUtils = BoatUtilsConfig.Values.defaults();
+	public ClientPseudoUnrestrictConfig clientPseudoUnrestrict =
+			new ClientPseudoUnrestrictConfig();
 	public NoSlowdownConfig noSlowdown = new NoSlowdownConfig();
 	public NoSlimeBounceConfig noSlimeBounce = new NoSlimeBounceConfig();
 	public CreativeFlyingConfig creativeFlying = new CreativeFlyingConfig();
@@ -133,6 +136,9 @@ public class WenhanClientConfig {
 			boatUtils = BoatUtilsConfig.Values.defaults();
 		}
 		boatUtils = BoatUtilsConfig.sanitize(boatUtils);
+		if (clientPseudoUnrestrict == null) {
+			clientPseudoUnrestrict = new ClientPseudoUnrestrictConfig();
+		}
 		if (noSlowdown == null) {
 			noSlowdown = new NoSlowdownConfig();
 		}
