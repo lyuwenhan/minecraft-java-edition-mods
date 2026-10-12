@@ -37,6 +37,8 @@ import com.example.wenhanclient.notexturerotation.NoTextureRotationConfig;
 import com.example.wenhanclient.notexturerotation.NoTextureRotationSubMod;
 import com.example.wenhanclient.playerhighlighter.PlayerHighlighterConfig;
 import com.example.wenhanclient.playerhighlighter.PlayerHighlighterSubMod;
+import com.example.wenhanclient.stablemining.StableMiningConfig;
+import com.example.wenhanclient.stablemining.StableMiningSubMod;
 import com.example.wenhanclient.transparentblocks.TransparentBlocksConfig;
 import com.example.wenhanclient.transparentblocks.TransparentBlocksSubMod;
 import com.example.wenhanclient.whoiam.WhoIAmConfig;
@@ -175,6 +177,12 @@ public final class WenhanClientConfigScreen {
 								false,
 								() -> drafts.interactionDelay.miningDelay,
 								value -> drafts.interactionDelay.miningDelay = value))
+				.option(
+						booleanOption(
+								"option.wenhan-client.stable-mining.enabled",
+								false,
+								() -> drafts.stableMining.enabled,
+								value -> drafts.stableMining.enabled = value))
 				.option(
 						booleanOption(
 								"option.wenhan-client.interaction-delay.placing_delay",
@@ -752,6 +760,7 @@ public final class WenhanClientConfigScreen {
 		private final NoJumpDelayConfig noJumpDelay;
 		private final NoTextureRotationConfig noTextureRotation;
 		private final PlayerHighlighterConfig playerHighlighter;
+		private final StableMiningConfig stableMining;
 		private final TransparentBlocksConfig transparentBlocks;
 		private final WhoIAmConfig whoIAm;
 
@@ -777,6 +786,7 @@ public final class WenhanClientConfigScreen {
 			this.noJumpDelay = NoJumpDelaySubMod.config();
 			this.noTextureRotation = NoTextureRotationSubMod.config();
 			this.playerHighlighter = PlayerHighlighterSubMod.config();
+			this.stableMining = StableMiningSubMod.config();
 			this.transparentBlocks = TransparentBlocksSubMod.config();
 			this.whoIAm = WhoIAmSubMod.config();
 		}
@@ -807,6 +817,7 @@ public final class WenhanClientConfigScreen {
 			NoJumpDelaySubMod.setConfig(this.noJumpDelay);
 			NoTextureRotationSubMod.setConfig(this.noTextureRotation);
 			PlayerHighlighterSubMod.setConfig(this.playerHighlighter);
+			StableMiningSubMod.setConfig(this.stableMining);
 			TransparentBlocksSubMod.setConfig(this.transparentBlocks);
 			WhoIAmSubMod.setConfig(this.whoIAm);
 			BoatUtilsConfig.set(this.boatUtils);

@@ -110,6 +110,8 @@
 	"title.wenhan-client.interaction-delay.config": "Interaction Delay",
 	"option.wenhan-client.interaction-delay.mining_delay": "No Mining Delay",
 	"option.wenhan-client.interaction-delay.mining_delay.tooltip": "While holding attack on blocks, lowers repeat mining delay to 1 tick.",
+	"option.wenhan-client.stable-mining.enabled": "Stable Mining",
+	"option.wenhan-client.stable-mining.enabled.tooltip": "While mining a block, keeps your crosshair aimed at that block's center unless the line of sight is blocked.",
 	"option.wenhan-client.interaction-delay.placing_delay": "No Item Use Delay",
 	"option.wenhan-client.interaction-delay.placing_delay.tooltip": "While holding use on blocks, lowers repeat use/place delay to 1 tick.",
 	"title.wenhan-client.player-highlighter.config": "Player Highlighter",

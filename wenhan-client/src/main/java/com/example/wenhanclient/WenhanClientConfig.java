@@ -23,6 +23,7 @@ import com.example.wenhanclient.noslimebounce.NoSlimeBounceConfig;
 import com.example.wenhanclient.noslowdown.NoSlowdownConfig;
 import com.example.wenhanclient.notexturerotation.NoTextureRotationConfig;
 import com.example.wenhanclient.playerhighlighter.PlayerHighlighterConfig;
+import com.example.wenhanclient.stablemining.StableMiningConfig;
 import com.example.wenhanclient.transparentblocks.TransparentBlocksConfig;
 import com.example.wenhanclient.whoiam.WhoIAmConfig;
 import com.google.gson.Gson;
@@ -65,6 +66,7 @@ public class WenhanClientConfig {
 	public NoJumpDelayConfig noJumpDelay = new NoJumpDelayConfig();
 	public NoTextureRotationConfig noTextureRotation = new NoTextureRotationConfig();
 	public PlayerHighlighterConfig playerHighlighter = new PlayerHighlighterConfig();
+	public StableMiningConfig stableMining = new StableMiningConfig();
 	public TransparentBlocksConfig transparentBlocks = new TransparentBlocksConfig();
 	public WhoIAmConfig whoIAm = new WhoIAmConfig();
 
@@ -180,6 +182,9 @@ public class WenhanClientConfig {
 		}
 		if (playerHighlighter == null) {
 			playerHighlighter = new PlayerHighlighterConfig();
+		}
+		if (stableMining == null) {
+			stableMining = new StableMiningConfig();
 		}
 		if (transparentBlocks == null) {
 			transparentBlocks = new TransparentBlocksConfig();

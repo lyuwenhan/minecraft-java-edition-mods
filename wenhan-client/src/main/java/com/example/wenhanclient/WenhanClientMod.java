@@ -28,6 +28,7 @@ import com.example.wenhanclient.noslimebounce.NoSlimeBounceSubMod;
 import com.example.wenhanclient.noslowdown.NoSlowdownSubMod;
 import com.example.wenhanclient.notexturerotation.NoTextureRotationSubMod;
 import com.example.wenhanclient.playerhighlighter.PlayerHighlighterSubMod;
+import com.example.wenhanclient.stablemining.StableMiningSubMod;
 import com.example.wenhanclient.transparentblocks.TransparentBlocksSubMod;
 import com.example.wenhanclient.whoiam.WhoIAmSubMod;
 
@@ -65,6 +66,7 @@ public class WenhanClientMod implements ClientModInitializer {
 		NoJumpDelaySubMod.init();
 		NoTextureRotationSubMod.init();
 		PlayerHighlighterSubMod.init();
+		StableMiningSubMod.init();
 		TransparentBlocksSubMod.init();
 		WhoIAmSubMod.init();
 		GreetSubMod.init(CONFIG.greet);

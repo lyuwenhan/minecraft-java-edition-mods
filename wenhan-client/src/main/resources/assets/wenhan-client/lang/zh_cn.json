@@ -110,6 +110,8 @@
 	"title.wenhan-client.interaction-delay.config": "交互延迟",
 	"option.wenhan-client.interaction-delay.mining_delay": "取消挖掘延迟",
 	"option.wenhan-client.interaction-delay.mining_delay.tooltip": "长按攻击方块时，连续挖掘延迟将逐步降低至 1 tick。",
+	"option.wenhan-client.stable-mining.enabled": "稳定挖掘",
+	"option.wenhan-client.stable-mining.enabled.tooltip": "挖掘方块时保持准心指向该方块中心；若当前位置的视线会被阻挡，则不移动鼠标。",
 	"option.wenhan-client.interaction-delay.placing_delay": "取消放置延迟",
 	"option.wenhan-client.interaction-delay.placing_delay.tooltip": "长按使用/放置方块时，连续使用延迟将逐步降低至 1 tick。",
 	"title.wenhan-client.player-highlighter.config": "玩家高亮",
