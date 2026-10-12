@@ -33,6 +33,8 @@ import com.example.wenhanclient.nofog.NoFogConfig;
 import com.example.wenhanclient.nofog.NoFogSubMod;
 import com.example.wenhanclient.nojumpdelay.NoJumpDelayConfig;
 import com.example.wenhanclient.nojumpdelay.NoJumpDelaySubMod;
+import com.example.wenhanclient.nolevitation.NoLevitationConfig;
+import com.example.wenhanclient.nolevitation.NoLevitationSubMod;
 import com.example.wenhanclient.noslimebounce.NoSlimeBounceConfig;
 import com.example.wenhanclient.noslimebounce.NoSlimeBounceSubMod;
 import com.example.wenhanclient.noslowdown.NoSlowdownConfig;
@@ -133,6 +135,12 @@ public final class WenhanClientConfigScreen {
 								false,
 								() -> drafts.instantRespawn.enabled,
 								value -> drafts.instantRespawn.enabled = value))
+				.option(
+						booleanOption(
+								"option.wenhan-client.no-levitation.enabled",
+								false,
+								() -> drafts.noLevitation.enabled,
+								value -> drafts.noLevitation.enabled = value))
 				.option(
 						booleanOption(
 								"option.wenhan-client.no-collision.enabled",
@@ -776,6 +784,7 @@ public final class WenhanClientConfigScreen {
 		private final NoFlightResetConfig noFlightReset;
 		private final NoFogConfig noFog;
 		private final NoJumpDelayConfig noJumpDelay;
+		private final NoLevitationConfig noLevitation;
 		private final NoTextureRotationConfig noTextureRotation;
 		private final PlayerHighlighterConfig playerHighlighter;
 		private final StableMiningConfig stableMining;
@@ -804,6 +813,7 @@ public final class WenhanClientConfigScreen {
 			this.noFlightReset = NoFlightResetSubMod.config();
 			this.noFog = NoFogSubMod.config();
 			this.noJumpDelay = NoJumpDelaySubMod.config();
+			this.noLevitation = NoLevitationSubMod.config();
 			this.noTextureRotation = NoTextureRotationSubMod.config();
 			this.playerHighlighter = PlayerHighlighterSubMod.config();
 			this.stableMining = StableMiningSubMod.config();
@@ -837,6 +847,7 @@ public final class WenhanClientConfigScreen {
 			NoFlightResetSubMod.setConfig(this.noFlightReset);
 			NoFogSubMod.setConfig(this.noFog);
 			NoJumpDelaySubMod.setConfig(this.noJumpDelay);
+			NoLevitationSubMod.setConfig(this.noLevitation);
 			NoTextureRotationSubMod.setConfig(this.noTextureRotation);
 			PlayerHighlighterSubMod.setConfig(this.playerHighlighter);
 			StableMiningSubMod.setConfig(this.stableMining);

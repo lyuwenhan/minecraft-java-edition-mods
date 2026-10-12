@@ -21,6 +21,7 @@ import com.example.wenhanclient.nocollision.NoCollisionConfig;
 import com.example.wenhanclient.noflightreset.NoFlightResetConfig;
 import com.example.wenhanclient.nofog.NoFogConfig;
 import com.example.wenhanclient.nojumpdelay.NoJumpDelayConfig;
+import com.example.wenhanclient.nolevitation.NoLevitationConfig;
 import com.example.wenhanclient.noslimebounce.NoSlimeBounceConfig;
 import com.example.wenhanclient.noslowdown.NoSlowdownConfig;
 import com.example.wenhanclient.notexturerotation.NoTextureRotationConfig;
@@ -68,6 +69,7 @@ public class WenhanClientConfig {
 	public NoFlightResetConfig noFlightReset = new NoFlightResetConfig();
 	public NoFogConfig noFog = new NoFogConfig();
 	public NoJumpDelayConfig noJumpDelay = new NoJumpDelayConfig();
+	public NoLevitationConfig noLevitation = new NoLevitationConfig();
 	public NoTextureRotationConfig noTextureRotation = new NoTextureRotationConfig();
 	public PlayerHighlighterConfig playerHighlighter = new PlayerHighlighterConfig();
 	public StableMiningConfig stableMining = new StableMiningConfig();
@@ -186,6 +188,9 @@ public class WenhanClientConfig {
 		}
 		if (noJumpDelay == null) {
 			noJumpDelay = new NoJumpDelayConfig();
+		}
+		if (noLevitation == null) {
+			noLevitation = new NoLevitationConfig();
 		}
 		if (noTextureRotation == null) {
 			noTextureRotation = new NoTextureRotationConfig();
