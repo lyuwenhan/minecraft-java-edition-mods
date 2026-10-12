@@ -1,5 +1,7 @@
 package com.example.wenhanclient.boatutils;
 
+import com.example.wenhanclient.boatutils.mixin.AbstractBoatAccessor;
+
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.Mth;
@@ -13,6 +15,7 @@ public final class BoatUtilsSubMod {
 	private static final float CAMERA_AUTO_RECENTER_YAW_STEP = 0.12F;
 	private static final float CAMERA_AUTO_RECENTER_PITCH_STEP = 0.16F;
 	private static final float CAMERA_AUTO_RECENTER_SNAP_EPSILON = 0.05F;
+	private static final float HANDBRAKE_ROTATION_SNAP_EPSILON = 0.05F;
 
 	private static AbstractBoat handbrakeBoat;
 	private static int handbrakeTicks;
@@ -190,11 +193,22 @@ public final class BoatUtilsSubMod {
 
 		if (speed <= 1.0E-12D || newSpeed == 0.0D) {
 			boat.setDeltaMovement(0.0D, movement.y, 0.0D);
-			return;
+		} else {
+			double scale = newSpeed / speed;
+			boat.setDeltaMovement(movement.x * scale, movement.y, movement.z * scale);
 		}
 
-		double scale = newSpeed / speed;
-		boat.setDeltaMovement(movement.x * scale, movement.y, movement.z * scale);
+		AbstractBoatAccessor accessor = (AbstractBoatAccessor) boat;
+		float deltaRotation = accessor.boatUtils$getDeltaRotation();
+		float newDeltaRotation =
+				(float)
+						Math.copySign(
+								Math.max(Math.abs(deltaRotation) * 0.99F - 2.0F, 0.0F),
+								deltaRotation);
+		if (Math.abs(newDeltaRotation) <= HANDBRAKE_ROTATION_SNAP_EPSILON) {
+			newDeltaRotation = 0.0F;
+		}
+		accessor.boatUtils$setDeltaRotation(newDeltaRotation);
 	}
 
 	private static void applyReleaseBoost(AbstractBoat boat, int time) {

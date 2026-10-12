@@ -8,5 +8,8 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 @Mixin(AbstractBoat.class)
 public interface AbstractBoatAccessor {
 	@Accessor("deltaRotation")
+	float boatUtils$getDeltaRotation();
+
+	@Accessor("deltaRotation")
 	void boatUtils$setDeltaRotation(float deltaRotation);
 }
