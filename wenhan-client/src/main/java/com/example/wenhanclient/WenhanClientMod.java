@@ -20,6 +20,7 @@ import com.example.wenhanclient.interactiondelay.InteractionDelaySubMod;
 import com.example.wenhanclient.leavebutton.LeaveButtonSubMod;
 import com.example.wenhanclient.maplocator.MapLocatorSubMod;
 import com.example.wenhanclient.minecartdirection.MinecartDirectionSubMod;
+import com.example.wenhanclient.nocameracollision.NoCameraCollisionSubMod;
 import com.example.wenhanclient.nocollision.NoCollisionSubMod;
 import com.example.wenhanclient.noflightreset.NoFlightResetSubMod;
 import com.example.wenhanclient.nofog.NoFogSubMod;
@@ -60,6 +61,7 @@ public class WenhanClientMod implements ClientModInitializer {
 		LeaveButtonSubMod.init();
 		MapLocatorSubMod.init();
 		MinecartDirectionSubMod.init();
+		NoCameraCollisionSubMod.init();
 		NoCollisionSubMod.init();
 		NoFlightResetSubMod.init();
 		NoFogSubMod.init();

@@ -15,6 +15,7 @@ import com.example.wenhanclient.hidepassword.config.HidePasswordConfig;
 import com.example.wenhanclient.hiderealms.HideRealmsConfig;
 import com.example.wenhanclient.interactiondelay.InteractionDelayConfig;
 import com.example.wenhanclient.minecartdirection.MinecartDirectionConfig;
+import com.example.wenhanclient.nocameracollision.NoCameraCollisionConfig;
 import com.example.wenhanclient.nocollision.NoCollisionConfig;
 import com.example.wenhanclient.noflightreset.NoFlightResetConfig;
 import com.example.wenhanclient.nofog.NoFogConfig;
@@ -60,6 +61,7 @@ public class WenhanClientConfig {
 	public HidePasswordConfig hidePassword = new HidePasswordConfig();
 	public InteractionDelayConfig interactionDelay = new InteractionDelayConfig();
 	public MinecartDirectionConfig minecartDirection = new MinecartDirectionConfig();
+	public NoCameraCollisionConfig noCameraCollision = new NoCameraCollisionConfig();
 	public NoCollisionConfig noCollision = new NoCollisionConfig();
 	public NoFlightResetConfig noFlightReset = new NoFlightResetConfig();
 	public NoFogConfig noFog = new NoFogConfig();
@@ -164,6 +166,9 @@ public class WenhanClientConfig {
 		}
 		if (minecartDirection == null) {
 			minecartDirection = new MinecartDirectionConfig();
+		}
+		if (noCameraCollision == null) {
+			noCameraCollision = new NoCameraCollisionConfig();
 		}
 		if (noCollision == null) {
 			noCollision = new NoCollisionConfig();

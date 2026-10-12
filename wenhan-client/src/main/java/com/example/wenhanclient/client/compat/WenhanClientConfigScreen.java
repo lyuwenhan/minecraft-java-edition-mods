@@ -21,6 +21,8 @@ import com.example.wenhanclient.interactiondelay.InteractionDelayConfig;
 import com.example.wenhanclient.interactiondelay.InteractionDelaySubMod;
 import com.example.wenhanclient.minecartdirection.MinecartDirectionConfig;
 import com.example.wenhanclient.minecartdirection.MinecartDirectionSubMod;
+import com.example.wenhanclient.nocameracollision.NoCameraCollisionConfig;
+import com.example.wenhanclient.nocameracollision.NoCameraCollisionSubMod;
 import com.example.wenhanclient.nocollision.NoCollisionConfig;
 import com.example.wenhanclient.nocollision.NoCollisionSubMod;
 import com.example.wenhanclient.noflightreset.NoFlightResetConfig;
@@ -129,6 +131,12 @@ public final class WenhanClientConfigScreen {
 								false,
 								() -> drafts.noCollision.enabled,
 								value -> drafts.noCollision.enabled = value))
+				.option(
+						booleanOption(
+								"option.wenhan-client.no-camera-collision.enabled",
+								false,
+								() -> drafts.noCameraCollision.enabled,
+								value -> drafts.noCameraCollision.enabled = value))
 				.option(
 						booleanOption(
 								"option.wenhan-client.attack-through-foliage.enabled",
@@ -754,6 +762,7 @@ public final class WenhanClientConfigScreen {
 		private final HidePasswordConfig hidePassword;
 		private final InteractionDelayConfig interactionDelay;
 		private final MinecartDirectionConfig minecartDirection;
+		private final NoCameraCollisionConfig noCameraCollision;
 		private final NoCollisionConfig noCollision;
 		private final NoFlightResetConfig noFlightReset;
 		private final NoFogConfig noFog;
@@ -780,6 +789,7 @@ public final class WenhanClientConfigScreen {
 			this.hidePassword = HidePasswordSubMod.config();
 			this.interactionDelay = InteractionDelaySubMod.config();
 			this.minecartDirection = MinecartDirectionSubMod.config();
+			this.noCameraCollision = NoCameraCollisionSubMod.config();
 			this.noCollision = NoCollisionSubMod.config();
 			this.noFlightReset = NoFlightResetSubMod.config();
 			this.noFog = NoFogSubMod.config();
@@ -811,6 +821,7 @@ public final class WenhanClientConfigScreen {
 			HidePasswordSubMod.setConfig(this.hidePassword);
 			InteractionDelaySubMod.setConfig(this.interactionDelay);
 			MinecartDirectionSubMod.setConfig(this.minecartDirection);
+			NoCameraCollisionSubMod.setConfig(this.noCameraCollision);
 			NoCollisionSubMod.setConfig(this.noCollision);
 			NoFlightResetSubMod.setConfig(this.noFlightReset);
 			NoFogSubMod.setConfig(this.noFog);

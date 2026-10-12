@@ -51,6 +51,8 @@
 	"option.wenhan-client.no-jump-delay.enabled.tooltip": "Removes the jump cooldown so holding jump can trigger consecutive jumps immediately.",
 	"option.wenhan-client.no-collision.enabled": "No Collision",
 	"option.wenhan-client.no-collision.enabled.tooltip": "Prevents other entities from pushing the local player.",
+	"option.wenhan-client.no-camera-collision.enabled": "No Camera Collision",
+	"option.wenhan-client.no-camera-collision.enabled.tooltip": "Keeps the third-person camera distance fixed instead of shortening it when blocks are behind you.",
 	"option.wenhan-client.attack-through-foliage.enabled": "Attack Through Foliage",
 	"option.wenhan-client.attack-through-foliage.enabled.tooltip": "Allows entity targeting through non-colliding blocks such as grass and flowers.",
 	"option.wenhan-client.no-slowdown.enabled": "No Slowdown",

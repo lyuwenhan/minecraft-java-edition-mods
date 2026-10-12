@@ -51,6 +51,8 @@
 	"option.wenhan-client.no-jump-delay.enabled.tooltip": "移除跳跃冷却，按住跳跃时可以快速连续跳跃。",
 	"option.wenhan-client.no-collision.enabled": "无碰撞",
 	"option.wenhan-client.no-collision.enabled.tooltip": "阻止其他实体推动玩家。",
+	"option.wenhan-client.no-camera-collision.enabled": "移除镜头碰撞",
+	"option.wenhan-client.no-camera-collision.enabled.tooltip": "第三人称和第二人称视角保持固定镜头距离，不再因为方块阻挡而缩短。",
 	"option.wenhan-client.attack-through-foliage.enabled": "穿过植被攻击",
 	"option.wenhan-client.attack-through-foliage.enabled.tooltip": "攻击实体时忽略草、花等无实际碰撞箱的方块。",
 	"option.wenhan-client.no-slowdown.enabled": "取消减速",

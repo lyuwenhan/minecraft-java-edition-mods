@@ -36,6 +36,7 @@
 		"hide-password.mixins.json",
 		"interaction-delay.mixins.json",
 		"maplocator.mixins.json",
+		"no-camera-collision.mixins.json",
 		"no-collision.mixins.json",
 		"no-flight-reset.mixins.json",
 		"no-fog.mixins.json",
