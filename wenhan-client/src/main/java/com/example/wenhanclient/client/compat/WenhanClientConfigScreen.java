@@ -178,7 +178,7 @@ public final class WenhanClientConfigScreen {
 				.option(
 						booleanOption(
 								"option.wenhan-client.attack-through-foliage.enabled",
-								true,
+								false,
 								() -> drafts.attackThroughFoliage.enabled,
 								value -> drafts.attackThroughFoliage.enabled = value))
 				.option(
