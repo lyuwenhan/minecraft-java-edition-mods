@@ -2,10 +2,12 @@
 	"required": true,
 	"package": "com.example.wenhanclient.flyspeedmodifier.mixin",
 	"compatibilityLevel": "JAVA_25",
+	"plugin": "com.example.wenhanclient.flyspeedmodifier.FlySpeedModifierMixinPlugin",
 	"client": [
 		"AbstractSliderButtonAccessor",
 		"BoatMovementSpeedMixin",
 		"ElytraMovementSpeedMixin",
+		"FreeCameraSpeedMixin",
 		"MouseHandlerMixin",
 		"OtherMovementSpeedMixin"
 	],
