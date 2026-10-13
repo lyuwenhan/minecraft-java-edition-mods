@@ -360,13 +360,13 @@ public final class WenhanClientConfigScreen {
 				.option(
 						booleanOption(
 								"option.wenhan-client.who-i-am.show_local_player_name",
-								true,
+								false,
 								() -> drafts.whoIAm.showLocalPlayerName,
 								value -> drafts.whoIAm.showLocalPlayerName = value))
 				.option(
 						booleanOption(
 								"option.wenhan-client.who-i-am.append_player_name_to_title",
-								true,
+								false,
 								() -> drafts.whoIAm.appendPlayerNameToTitle,
 								value -> drafts.whoIAm.appendPlayerNameToTitle = value))
 				.build();
@@ -594,7 +594,7 @@ public final class WenhanClientConfigScreen {
 				.option(
 						booleanOption(
 								"option.wenhan-client.boat-utils.direction_hotkeys_use_45_degree_angles",
-								true,
+								false,
 								() -> drafts.boatUtils.directionHotkeysUse45DegreeAngles,
 								value ->
 										drafts.boatUtils.directionHotkeysUse45DegreeAngles = value))
