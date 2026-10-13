@@ -101,7 +101,7 @@ public final class BoatUtilsConfig {
 			values.viewDirectionLockEnabled = false;
 			values.cameraAutoRecenterEnabled = false;
 			values.directionHotkeysEnabled = false;
-			values.directionHotkeysUse45DegreeAngles = true;
+			values.directionHotkeysUse45DegreeAngles = false;
 			values.blueIceSpeedEverywhere = false;
 			values.preventSinking = false;
 			values.boatStepHeight = 0.0F;

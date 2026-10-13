@@ -3,8 +3,8 @@ package com.example.wenhanclient.whoiam;
 import com.example.wenhanclient.WenhanClientMod;
 
 public final class WhoIAmConfig {
-	public boolean showLocalPlayerName = true;
-	public boolean appendPlayerNameToTitle = true;
+	public boolean showLocalPlayerName = false;
+	public boolean appendPlayerNameToTitle = false;
 
 	public static WhoIAmConfig load() {
 		return WenhanClientMod.CONFIG.whoIAm.copy();

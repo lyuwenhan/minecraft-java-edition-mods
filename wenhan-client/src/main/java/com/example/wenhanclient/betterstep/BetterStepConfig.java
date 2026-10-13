@@ -1,8 +1,8 @@
 package com.example.wenhanclient.betterstep;
 
 public final class BetterStepConfig {
-	public static final boolean DEFAULT_AIR_STEP_UP_ENABLED = true;
-	public static final boolean DEFAULT_STEP_DOWN_ENABLED = true;
+	public static final boolean DEFAULT_AIR_STEP_UP_ENABLED = false;
+	public static final boolean DEFAULT_STEP_DOWN_ENABLED = false;
 	public static final double DEFAULT_STEP_HEIGHT = 0.6D;
 	public static final double DEFAULT_SNEAKING_STEP_HEIGHT = DEFAULT_STEP_HEIGHT;
 	public static final double MIN_STEP_HEIGHT = 0.0D;
