@@ -21,6 +21,7 @@ import com.example.wenhanclient.hidepassword.HidePasswordSubMod;
 import com.example.wenhanclient.hiderealms.HideRealmsSubMod;
 import com.example.wenhanclient.instantrespawn.InstantRespawnSubMod;
 import com.example.wenhanclient.interactiondelay.InteractionDelaySubMod;
+import com.example.wenhanclient.jumpheight.JumpHeightSubMod;
 import com.example.wenhanclient.leavebutton.LeaveButtonSubMod;
 import com.example.wenhanclient.maplocator.MapLocatorSubMod;
 import com.example.wenhanclient.minecartdirection.MinecartDirectionSubMod;
@@ -67,6 +68,7 @@ public class WenhanClientMod implements ClientModInitializer {
 		HidePasswordSubMod.init();
 		InstantRespawnSubMod.init();
 		InteractionDelaySubMod.init();
+		JumpHeightSubMod.init();
 		LeaveButtonSubMod.init();
 		MapLocatorSubMod.init();
 		MinecartDirectionSubMod.init();

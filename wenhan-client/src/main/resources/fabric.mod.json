@@ -39,6 +39,7 @@
 		"hide-password.mixins.json",
 		"instant-respawn.mixins.json",
 		"interaction-delay.mixins.json",
+		"jump-height.mixins.json",
 		"maplocator.mixins.json",
 		"no-camera-collision.mixins.json",
 		"no-collision.mixins.json",

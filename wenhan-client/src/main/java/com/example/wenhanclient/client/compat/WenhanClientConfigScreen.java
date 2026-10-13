@@ -27,6 +27,8 @@ import com.example.wenhanclient.instantrespawn.InstantRespawnConfig;
 import com.example.wenhanclient.instantrespawn.InstantRespawnSubMod;
 import com.example.wenhanclient.interactiondelay.InteractionDelayConfig;
 import com.example.wenhanclient.interactiondelay.InteractionDelaySubMod;
+import com.example.wenhanclient.jumpheight.JumpHeightConfig;
+import com.example.wenhanclient.jumpheight.JumpHeightSubMod;
 import com.example.wenhanclient.minecartdirection.MinecartDirectionConfig;
 import com.example.wenhanclient.minecartdirection.MinecartDirectionSubMod;
 import com.example.wenhanclient.nocameracollision.NoCameraCollisionConfig;
@@ -84,6 +86,7 @@ public final class WenhanClientConfigScreen {
 				.title(Component.translatable("title.wenhan-client.config"))
 				.category(generalCategory(drafts))
 				.category(betterStepCategory(drafts))
+				.category(jumpHeightCategory(drafts))
 				.category(hidePasswordCategory(drafts))
 				.category(playerHighlighterCategory(drafts))
 				.category(whoIAmCategory(drafts))
@@ -232,6 +235,34 @@ public final class WenhanClientConfigScreen {
 								false,
 								() -> drafts.interactionDelay.placingDelay,
 								value -> drafts.interactionDelay.placingDelay = value))
+				.build();
+	}
+
+	private static ConfigCategory jumpHeightCategory(Drafts drafts) {
+		return ConfigCategory.createBuilder()
+				.name(Component.translatable("title.wenhan-client.jump-height.config"))
+				.option(
+						booleanOption(
+								"option.wenhan-client.jump-height.enabled",
+								JumpHeightConfig.DEFAULT_ENABLED,
+								() -> drafts.jumpHeight.enabled,
+								value -> drafts.jumpHeight.enabled = value))
+				.option(
+						doubleFieldOption(
+								"option.wenhan-client.jump-height.target_height",
+								JumpHeightConfig.DEFAULT_TARGET_HEIGHT,
+								JumpHeightConfig.MIN_TARGET_HEIGHT,
+								JumpHeightConfig.MAX_TARGET_HEIGHT,
+								() -> drafts.jumpHeight.targetHeight,
+								value ->
+										drafts.jumpHeight.targetHeight =
+												clamp(
+														value,
+														JumpHeightConfig.MIN_TARGET_HEIGHT,
+														JumpHeightConfig.MAX_TARGET_HEIGHT),
+								value ->
+										Component.literal(
+												String.format(Locale.ROOT, "%.3f", value))))
 				.build();
 	}
 
@@ -828,6 +859,7 @@ public final class WenhanClientConfigScreen {
 		private final HidePasswordConfig hidePassword;
 		private final InstantRespawnConfig instantRespawn;
 		private final InteractionDelayConfig interactionDelay;
+		private final JumpHeightConfig jumpHeight;
 		private final MinecartDirectionConfig minecartDirection;
 		private final NoCameraCollisionConfig noCameraCollision;
 		private final NoCollisionConfig noCollision;
@@ -860,6 +892,7 @@ public final class WenhanClientConfigScreen {
 			this.hidePassword = HidePasswordSubMod.config();
 			this.instantRespawn = InstantRespawnSubMod.config();
 			this.interactionDelay = InteractionDelaySubMod.config();
+			this.jumpHeight = JumpHeightSubMod.config();
 			this.minecartDirection = MinecartDirectionSubMod.config();
 			this.noCameraCollision = NoCameraCollisionSubMod.config();
 			this.noCollision = NoCollisionSubMod.config();
@@ -897,6 +930,7 @@ public final class WenhanClientConfigScreen {
 			HidePasswordSubMod.setConfig(this.hidePassword);
 			InstantRespawnSubMod.setConfig(this.instantRespawn);
 			InteractionDelaySubMod.setConfig(this.interactionDelay);
+			JumpHeightSubMod.setConfig(this.jumpHeight);
 			MinecartDirectionSubMod.setConfig(this.minecartDirection);
 			NoCameraCollisionSubMod.setConfig(this.noCameraCollision);
 			NoCollisionSubMod.setConfig(this.noCollision);
