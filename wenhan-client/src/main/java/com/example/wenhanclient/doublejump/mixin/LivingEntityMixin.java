@@ -1,6 +1,7 @@
 package com.example.wenhanclient.doublejump.mixin;
 
 import com.example.wenhanclient.doublejump.DoubleJumpSubMod;
+import com.example.wenhanclient.coyote.CoyoteSubMod;
 
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.entity.LivingEntity;
@@ -36,7 +37,7 @@ public abstract class LivingEntityMixin {
 		if (entity.onGround()) {
 			doubleJump$airJumpsPerformed = 0;
 			doubleJump$cooldownTicksRemaining = 0;
-			doubleJump$coyoteTicksRemaining = DoubleJumpSubMod.config().coyoteTimeTicks;
+			doubleJump$coyoteTicksRemaining = CoyoteSubMod.config().timeTicks;
 			doubleJump$wasOnGround = true;
 			return;
 		}
@@ -62,7 +63,7 @@ public abstract class LivingEntityMixin {
 	private boolean doubleJump$allowConfiguredAirJump(LivingEntity entity) {
 		boolean onGround = entity.onGround();
 		if (onGround) {
-			if (entity instanceof LocalPlayer && DoubleJumpSubMod.config().enabled) {
+			if (entity instanceof LocalPlayer) {
 				doubleJump$pendingGroundJump = true;
 			}
 
@@ -70,10 +71,6 @@ public abstract class LivingEntityMixin {
 		}
 
 		if (!(entity instanceof LocalPlayer player)) {
-			return false;
-		}
-
-		if (!DoubleJumpSubMod.config().enabled) {
 			return false;
 		}
 
@@ -111,9 +108,7 @@ public abstract class LivingEntityMixin {
 			doubleJump$airJumpsPerformed++;
 		}
 
-		if ((doubleJump$pendingGroundJump
-						|| doubleJump$pendingCoyoteJump
-						|| doubleJump$pendingAirJump)
+		if ((doubleJump$pendingGroundJump || doubleJump$pendingAirJump)
 				&& DoubleJumpSubMod.config().cooldownEnabled) {
 			doubleJump$cooldownTicksRemaining = DoubleJumpSubMod.config().cooldownTicks;
 		}
@@ -129,7 +124,13 @@ public abstract class LivingEntityMixin {
 			return false;
 		}
 
-		return doubleJump$canPerformConfiguredJump(player);
+		if (player.isPassenger() || player.isFallFlying()) {
+			return false;
+		}
+
+		return !player.isInWater()
+				&& !player.isInLava()
+				&& !player.getAbilities().flying;
 	}
 
 	@Unique

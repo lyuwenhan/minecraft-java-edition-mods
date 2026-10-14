@@ -7,6 +7,7 @@ import com.example.wenhanclient.blockexplosionguard.BlockExplosionGuardConfig;
 import com.example.wenhanclient.boatutils.BoatUtilsConfig;
 import com.example.wenhanclient.clientpseudounrestrict.ClientPseudoUnrestrictConfig;
 import com.example.wenhanclient.creativeflying.CreativeFlyingConfig;
+import com.example.wenhanclient.coyote.CoyoteConfig;
 import com.example.wenhanclient.doublejump.DoubleJumpConfig;
 import com.example.wenhanclient.elytracancel.ElytraCancelConfig;
 import com.example.wenhanclient.entityhighlighter.EntityHighlighterConfig;
@@ -36,6 +37,7 @@ import com.example.wenhanclient.whoiam.WhoIAmConfig;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonParseException;
+import com.google.gson.JsonObject;
 
 import net.fabricmc.loader.api.FabricLoader;
 
@@ -59,6 +61,7 @@ public class WenhanClientConfig {
 	public NoSlowdownConfig noSlowdown = new NoSlowdownConfig();
 	public NoSlimeBounceConfig noSlimeBounce = new NoSlimeBounceConfig();
 	public CreativeFlyingConfig creativeFlying = new CreativeFlyingConfig();
+	public CoyoteConfig coyote = new CoyoteConfig();
 	public DoubleJumpConfig doubleJump = new DoubleJumpConfig();
 	public ElytraCancelConfig elytraCancel = new ElytraCancelConfig();
 	public EntityHighlighterConfig entityHighlighter = new EntityHighlighterConfig();
@@ -91,12 +94,20 @@ public class WenhanClientConfig {
 			return cfg;
 		}
 		try {
-			WenhanClientConfig cfg =
-					GSON.fromJson(
-							Files.readString(CONFIG_PATH, StandardCharsets.UTF_8),
-							WenhanClientConfig.class);
+			String json = Files.readString(CONFIG_PATH, StandardCharsets.UTF_8);
+			JsonObject root = GSON.fromJson(json, JsonObject.class);
+			WenhanClientConfig cfg = GSON.fromJson(root, WenhanClientConfig.class);
 			if (cfg == null) {
 				cfg = new WenhanClientConfig();
+			}
+			if (cfg.coyote == null) {
+				cfg.coyote = new CoyoteConfig();
+			}
+			if (!root.has("coyote") && root.has("doubleJump")) {
+				JsonObject doubleJump = root.getAsJsonObject("doubleJump");
+				if (doubleJump.has("coyoteTimeTicks")) {
+					cfg.coyote.timeTicks = doubleJump.get("coyoteTimeTicks").getAsInt();
+				}
 			}
 			cfg.fillMissing();
 			return cfg;
@@ -151,6 +162,10 @@ public class WenhanClientConfig {
 		if (creativeFlying == null) {
 			creativeFlying = new CreativeFlyingConfig();
 		}
+		if (coyote == null) {
+			coyote = new CoyoteConfig();
+		}
+		coyote.sanitize();
 		if (doubleJump == null) {
 			doubleJump = new DoubleJumpConfig();
 		}

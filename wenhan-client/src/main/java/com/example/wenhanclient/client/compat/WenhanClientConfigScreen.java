@@ -12,6 +12,8 @@ import com.example.wenhanclient.clientpseudounrestrict.ClientPseudoUnrestrictCon
 import com.example.wenhanclient.clientpseudounrestrict.ClientPseudoUnrestrictSubMod;
 import com.example.wenhanclient.creativeflying.CreativeFlyingConfig;
 import com.example.wenhanclient.creativeflying.CreativeFlyingSubMod;
+import com.example.wenhanclient.coyote.CoyoteConfig;
+import com.example.wenhanclient.coyote.CoyoteSubMod;
 import com.example.wenhanclient.doublejump.DoubleJumpConfig;
 import com.example.wenhanclient.doublejump.DoubleJumpSubMod;
 import com.example.wenhanclient.elytracancel.ElytraCancelConfig;
@@ -88,13 +90,11 @@ public final class WenhanClientConfigScreen {
 		return YetAnotherConfigLib.createBuilder()
 				.title(Component.translatable("title.wenhan-client.config"))
 				.category(generalCategory(drafts))
-				.category(betterStepCategory(drafts))
-				.category(jumpHeightCategory(drafts))
+				.category(movementCategory(drafts))
 				.category(hidePasswordCategory(drafts))
 				.category(playerHighlighterCategory(drafts))
 				.category(whoIAmCategory(drafts))
 				.category(noTextureRotationCategory(drafts))
-				.category(doubleJumpCategory(drafts))
 				.category(flySpeedModifierCategory(drafts))
 				.category(boatUtilsCategory(drafts))
 				.category(clientPseudoUnrestrictCategory(drafts))
@@ -106,6 +106,72 @@ public final class WenhanClientConfigScreen {
 	private static ConfigCategory generalCategory(Drafts drafts) {
 		return ConfigCategory.createBuilder()
 				.name(Component.translatable("title.wenhan-client.general.config"))
+				.option(
+						booleanOption(
+								"option.wenhan-client.hide-realms.enabled",
+								HideRealmsConfig.DEFAULT_ENABLED,
+								() -> drafts.hideRealms.enabled,
+								value -> drafts.hideRealms.enabled = value))
+				.option(
+						booleanOption(
+								"option.wenhan-client.instant-respawn.enabled",
+								InstantRespawnConfig.DEFAULT_ENABLED,
+								() -> drafts.instantRespawn.enabled,
+								value -> drafts.instantRespawn.enabled = value))
+				.option(
+						booleanOption(
+								"option.wenhan-client.block-explosion-guard.enabled",
+								BlockExplosionGuardConfig.DEFAULT_ENABLED,
+								() -> drafts.blockExplosionGuard.enabled,
+								value -> drafts.blockExplosionGuard.enabled = value))
+				.option(
+						booleanOption(
+								"option.wenhan-client.no-camera-collision.enabled",
+								NoCameraCollisionConfig.DEFAULT_ENABLED,
+								() -> drafts.noCameraCollision.enabled,
+								value -> drafts.noCameraCollision.enabled = value))
+				.option(
+						booleanOption(
+								"option.wenhan-client.attack-through-foliage.enabled",
+								AttackThroughFoliageConfig.DEFAULT_ENABLED,
+								() -> drafts.attackThroughFoliage.enabled,
+								value -> drafts.attackThroughFoliage.enabled = value))
+				.option(
+						booleanOption(
+								"option.wenhan-client.no-fog.enabled",
+								NoFogConfig.DEFAULT_ENABLED,
+								() -> drafts.noFog.enabled,
+								value -> drafts.noFog.enabled = value))
+				.option(
+						booleanOption(
+								"option.wenhan-client.transparent-blocks.always_render",
+								TransparentBlocksConfig.DEFAULT_ALWAYS_RENDER,
+								() -> drafts.transparentBlocks.alwaysRender,
+								value -> drafts.transparentBlocks.alwaysRender = value))
+				.option(
+						booleanOption(
+								"option.wenhan-client.interaction-delay.mining_delay",
+								InteractionDelayConfig.DEFAULT_MINING_DELAY,
+								() -> drafts.interactionDelay.miningDelay,
+								value -> drafts.interactionDelay.miningDelay = value))
+				.option(
+						booleanOption(
+								"option.wenhan-client.interaction-delay.placing_delay",
+								InteractionDelayConfig.DEFAULT_PLACING_DELAY,
+								() -> drafts.interactionDelay.placingDelay,
+								value -> drafts.interactionDelay.placingDelay = value))
+				.option(
+						booleanOption(
+								"option.wenhan-client.stable-mining.enabled",
+								StableMiningConfig.DEFAULT_ENABLED,
+								() -> drafts.stableMining.enabled,
+								value -> drafts.stableMining.enabled = value))
+				.build();
+	}
+
+	private static ConfigCategory movementCategory(Drafts drafts) {
+		return ConfigCategory.createBuilder()
+				.name(Component.translatable("title.wenhan-client.movement.config"))
 				.option(
 						booleanOption(
 								"option.wenhan-client.creative-flying.enabled",
@@ -143,23 +209,21 @@ public final class WenhanClientConfigScreen {
 								() -> drafts.noJumpDelay.enabled,
 								value -> drafts.noJumpDelay.enabled = value))
 				.option(
-						booleanOption(
-								"option.wenhan-client.instant-respawn.enabled",
-								InstantRespawnConfig.DEFAULT_ENABLED,
-								() -> drafts.instantRespawn.enabled,
-								value -> drafts.instantRespawn.enabled = value))
+						integerFieldOption(
+								"option.wenhan-client.coyote.time_ticks",
+								CoyoteConfig.DEFAULT_TIME_TICKS,
+								CoyoteConfig.MIN_TIME_TICKS,
+								CoyoteConfig.MAX_TIME_TICKS,
+								() -> drafts.coyote.timeTicks,
+								value ->
+									drafts.coyote.timeTicks =
+										Math.max(CoyoteConfig.MIN_TIME_TICKS, value)))
 				.option(
 						booleanOption(
 								"option.wenhan-client.no-levitation.enabled",
 								NoLevitationConfig.DEFAULT_ENABLED,
 								() -> drafts.noLevitation.enabled,
 								value -> drafts.noLevitation.enabled = value))
-				.option(
-						booleanOption(
-								"option.wenhan-client.block-explosion-guard.enabled",
-								BlockExplosionGuardConfig.DEFAULT_ENABLED,
-								() -> drafts.blockExplosionGuard.enabled,
-								value -> drafts.blockExplosionGuard.enabled = value))
 				.option(
 						booleanOption(
 								"option.wenhan-client.no-collision.enabled",
@@ -174,18 +238,6 @@ public final class WenhanClientConfigScreen {
 								value -> drafts.fluidPlatform.enabled = value))
 				.option(
 						booleanOption(
-								"option.wenhan-client.no-camera-collision.enabled",
-								NoCameraCollisionConfig.DEFAULT_ENABLED,
-								() -> drafts.noCameraCollision.enabled,
-								value -> drafts.noCameraCollision.enabled = value))
-				.option(
-						booleanOption(
-								"option.wenhan-client.attack-through-foliage.enabled",
-								AttackThroughFoliageConfig.DEFAULT_ENABLED,
-								() -> drafts.attackThroughFoliage.enabled,
-								value -> drafts.attackThroughFoliage.enabled = value))
-				.option(
-						booleanOption(
 								"option.wenhan-client.no-slowdown.enabled",
 								NoSlowdownConfig.DEFAULT_ENABLED,
 								() -> drafts.noSlowdown.enabled,
@@ -198,80 +250,10 @@ public final class WenhanClientConfigScreen {
 								value -> drafts.noSlimeBounce.enabled = value))
 				.option(
 						booleanOption(
-								"option.wenhan-client.no-fog.enabled",
-								NoFogConfig.DEFAULT_ENABLED,
-								() -> drafts.noFog.enabled,
-								value -> drafts.noFog.enabled = value))
-				.option(
-						booleanOption(
-								"option.wenhan-client.transparent-blocks.always_render",
-								TransparentBlocksConfig.DEFAULT_ALWAYS_RENDER,
-								() -> drafts.transparentBlocks.alwaysRender,
-								value -> drafts.transparentBlocks.alwaysRender = value))
-				.option(
-						booleanOption(
 								"option.wenhan-client.minecart-direction.keep_direction_in_minecart",
 								MinecartDirectionConfig.DEFAULT_KEEP_DIRECTION_IN_MINECART,
 								() -> drafts.minecartDirection.keepDirectionInMinecart,
 								value -> drafts.minecartDirection.keepDirectionInMinecart = value))
-				.option(
-						booleanOption(
-								"option.wenhan-client.hide-realms.enabled",
-								HideRealmsConfig.DEFAULT_ENABLED,
-								() -> drafts.hideRealms.enabled,
-								value -> drafts.hideRealms.enabled = value))
-				.option(
-						booleanOption(
-								"option.wenhan-client.interaction-delay.mining_delay",
-								InteractionDelayConfig.DEFAULT_MINING_DELAY,
-								() -> drafts.interactionDelay.miningDelay,
-								value -> drafts.interactionDelay.miningDelay = value))
-				.option(
-						booleanOption(
-								"option.wenhan-client.stable-mining.enabled",
-								StableMiningConfig.DEFAULT_ENABLED,
-								() -> drafts.stableMining.enabled,
-								value -> drafts.stableMining.enabled = value))
-				.option(
-						booleanOption(
-								"option.wenhan-client.interaction-delay.placing_delay",
-								InteractionDelayConfig.DEFAULT_PLACING_DELAY,
-								() -> drafts.interactionDelay.placingDelay,
-								value -> drafts.interactionDelay.placingDelay = value))
-				.build();
-	}
-
-	private static ConfigCategory jumpHeightCategory(Drafts drafts) {
-		return ConfigCategory.createBuilder()
-				.name(Component.translatable("title.wenhan-client.jump-height.config"))
-				.option(
-						booleanOption(
-								"option.wenhan-client.jump-height.enabled",
-								JumpHeightConfig.DEFAULT_ENABLED,
-								() -> drafts.jumpHeight.enabled,
-								value -> drafts.jumpHeight.enabled = value))
-				.option(
-						doubleFieldOption(
-								"option.wenhan-client.jump-height.target_height",
-								JumpHeightConfig.DEFAULT_TARGET_HEIGHT,
-								JumpHeightConfig.MIN_TARGET_HEIGHT,
-								JumpHeightConfig.MAX_TARGET_HEIGHT,
-								() -> drafts.jumpHeight.targetHeight,
-								value ->
-										drafts.jumpHeight.targetHeight =
-												clamp(
-														value,
-														JumpHeightConfig.MIN_TARGET_HEIGHT,
-														JumpHeightConfig.MAX_TARGET_HEIGHT),
-								value ->
-										Component.literal(
-												String.format(Locale.ROOT, "%.3f", value))))
-				.build();
-	}
-
-	private static ConfigCategory betterStepCategory(Drafts drafts) {
-		return ConfigCategory.createBuilder()
-				.name(Component.translatable("title.wenhan-client.better-step.config"))
 				.option(
 						booleanOption(
 								"option.wenhan-client.better-step.air_step_up_enabled",
@@ -310,6 +292,62 @@ public final class WenhanClientConfigScreen {
 								value ->
 										Component.literal(
 												String.format(Locale.ROOT, "%.1f", value))))
+				.option(
+						booleanOption(
+								"option.wenhan-client.jump-height.enabled",
+								JumpHeightConfig.DEFAULT_ENABLED,
+								() -> drafts.jumpHeight.enabled,
+								value -> drafts.jumpHeight.enabled = value))
+				.option(
+						doubleFieldOption(
+								"option.wenhan-client.jump-height.target_height",
+								JumpHeightConfig.DEFAULT_TARGET_HEIGHT,
+								JumpHeightConfig.MIN_TARGET_HEIGHT,
+								JumpHeightConfig.MAX_TARGET_HEIGHT,
+								() -> drafts.jumpHeight.targetHeight,
+								value ->
+										drafts.jumpHeight.targetHeight =
+												clamp(
+														value,
+														JumpHeightConfig.MIN_TARGET_HEIGHT,
+														JumpHeightConfig.MAX_TARGET_HEIGHT),
+								value ->
+										Component.literal(
+												String.format(Locale.ROOT, "%.3f", value))))
+				.option(
+						booleanOption(
+								"option.wenhan-client.double-jump.infinite_jumps",
+								DoubleJumpConfig.DEFAULT_INFINITE_JUMPS,
+								() -> drafts.doubleJump.infiniteJumps,
+								value -> drafts.doubleJump.infiniteJumps = value))
+				.option(
+						integerFieldOption(
+								"option.wenhan-client.double-jump.jump_count",
+								DoubleJumpConfig.DEFAULT_JUMP_COUNT,
+								DoubleJumpConfig.MIN_JUMP_COUNT,
+								DoubleJumpConfig.MAX_JUMP_COUNT,
+								() -> drafts.doubleJump.jumpCount,
+								value ->
+									drafts.doubleJump.jumpCount =
+										Math.max(DoubleJumpConfig.MIN_JUMP_COUNT, value)))
+				.option(
+						booleanOption(
+								"option.wenhan-client.double-jump.cooldown_enabled",
+								DoubleJumpConfig.DEFAULT_COOLDOWN_ENABLED,
+								() -> drafts.doubleJump.cooldownEnabled,
+								value -> drafts.doubleJump.cooldownEnabled = value))
+				.option(
+						integerFieldOption(
+								"option.wenhan-client.double-jump.cooldown_ticks",
+								DoubleJumpConfig.DEFAULT_COOLDOWN_TICKS,
+								DoubleJumpConfig.MIN_COOLDOWN_TICKS,
+								DoubleJumpConfig.MAX_COOLDOWN_TICKS,
+								() -> drafts.doubleJump.cooldownTicks,
+								value ->
+									drafts.doubleJump.cooldownTicks =
+										Math.max(
+												DoubleJumpConfig.MIN_COOLDOWN_TICKS,
+												value)))
 				.build();
 	}
 
@@ -397,64 +435,6 @@ public final class WenhanClientConfigScreen {
 								() -> drafts.noTextureRotation.keepCollisionShapeOffsets,
 								value ->
 										drafts.noTextureRotation.keepCollisionShapeOffsets = value))
-				.build();
-	}
-
-	private static ConfigCategory doubleJumpCategory(Drafts drafts) {
-		return ConfigCategory.createBuilder()
-				.name(Component.translatable("title.wenhan-client.double-jump.config"))
-				.option(
-						booleanOption(
-								"option.wenhan-client.double-jump.enabled",
-								DoubleJumpConfig.DEFAULT_ENABLED,
-								() -> drafts.doubleJump.enabled,
-								value -> drafts.doubleJump.enabled = value))
-				.option(
-						booleanOption(
-								"option.wenhan-client.double-jump.infinite_jumps",
-								DoubleJumpConfig.DEFAULT_INFINITE_JUMPS,
-								() -> drafts.doubleJump.infiniteJumps,
-								value -> drafts.doubleJump.infiniteJumps = value))
-				.option(
-						integerFieldOption(
-								"option.wenhan-client.double-jump.jump_count",
-								DoubleJumpConfig.DEFAULT_JUMP_COUNT,
-								DoubleJumpConfig.MIN_JUMP_COUNT,
-								DoubleJumpConfig.MAX_JUMP_COUNT,
-								() -> drafts.doubleJump.jumpCount,
-								value ->
-										drafts.doubleJump.jumpCount =
-												Math.max(DoubleJumpConfig.MIN_JUMP_COUNT, value)))
-				.option(
-						integerFieldOption(
-								"option.wenhan-client.double-jump.coyote_time",
-								DoubleJumpConfig.DEFAULT_COYOTE_TIME_TICKS,
-								DoubleJumpConfig.MIN_COYOTE_TIME_TICKS,
-								DoubleJumpConfig.MAX_COYOTE_TIME_TICKS,
-								() -> drafts.doubleJump.coyoteTimeTicks,
-								value ->
-										drafts.doubleJump.coyoteTimeTicks =
-												Math.max(
-														DoubleJumpConfig.MIN_COYOTE_TIME_TICKS,
-														value)))
-				.option(
-						booleanOption(
-								"option.wenhan-client.double-jump.cooldown_enabled",
-								DoubleJumpConfig.DEFAULT_COOLDOWN_ENABLED,
-								() -> drafts.doubleJump.cooldownEnabled,
-								value -> drafts.doubleJump.cooldownEnabled = value))
-				.option(
-						integerFieldOption(
-								"option.wenhan-client.double-jump.cooldown_ticks",
-								DoubleJumpConfig.DEFAULT_COOLDOWN_TICKS,
-								DoubleJumpConfig.MIN_COOLDOWN_TICKS,
-								DoubleJumpConfig.MAX_COOLDOWN_TICKS,
-								() -> drafts.doubleJump.cooldownTicks,
-								value ->
-										drafts.doubleJump.cooldownTicks =
-												Math.max(
-														DoubleJumpConfig.MIN_COOLDOWN_TICKS,
-														value)))
 				.build();
 	}
 
@@ -856,6 +836,7 @@ public final class WenhanClientConfigScreen {
 		private final NoSlowdownConfig noSlowdown;
 		private final NoSlimeBounceConfig noSlimeBounce;
 		private final CreativeFlyingConfig creativeFlying;
+		private final CoyoteConfig coyote;
 		private final DoubleJumpConfig doubleJump;
 		private final ElytraCancelConfig elytraCancel;
 		private final FlightDisablerConfig flightDisabler;
@@ -888,6 +869,7 @@ public final class WenhanClientConfigScreen {
 			this.noSlowdown = NoSlowdownSubMod.config();
 			this.noSlimeBounce = NoSlimeBounceSubMod.config();
 			this.creativeFlying = CreativeFlyingSubMod.config();
+			this.coyote = CoyoteSubMod.config();
 			this.doubleJump = DoubleJumpSubMod.config().copy();
 			this.elytraCancel = ElytraCancelSubMod.config();
 			this.flightDisabler = FlightDisablerSubMod.config();
@@ -925,6 +907,7 @@ public final class WenhanClientConfigScreen {
 			NoSlowdownSubMod.setConfig(this.noSlowdown);
 			NoSlimeBounceSubMod.setConfig(this.noSlimeBounce);
 			CreativeFlyingSubMod.setConfig(this.creativeFlying);
+			CoyoteSubMod.setConfig(this.coyote);
 			DoubleJumpSubMod.setConfig(this.doubleJump);
 			ElytraCancelSubMod.setConfig(this.elytraCancel);
 			FlightDisablerSubMod.setConfig(this.flightDisabler);
