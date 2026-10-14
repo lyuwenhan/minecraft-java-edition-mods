@@ -95,9 +95,9 @@ public final class WenhanClientConfigScreen {
 				.category(whoIAmCategory(drafts))
 				.category(noTextureRotationCategory(drafts))
 				.category(doubleJumpCategory(drafts))
-				.category(clientPseudoUnrestrictCategory(drafts))
 				.category(flySpeedModifierCategory(drafts))
 				.category(boatUtilsCategory(drafts))
+				.category(clientPseudoUnrestrictCategory(drafts))
 				.save(drafts::save)
 				.build()
 				.generateScreen(parent);
@@ -502,7 +502,7 @@ public final class WenhanClientConfigScreen {
 								"option.wenhan-client.fly-speed-modifier.max_speed",
 								FlySpeedModifierConfig.DEFAULT_MAX_SPEED,
 								FlySpeedModifierConfig.MIN_ALLOWED_MAX_SPEED,
-								FlySpeedModifierConfig.FULL_RANGE_MAX_SPEED,
+								FlySpeedModifierConfig.MAX_ALLOWED_MAX_SPEED,
 								() -> drafts.flySpeedModifier.maxSpeed,
 								value ->
 										onFlySpeedModifierMaxSpeedChanged(
@@ -767,7 +767,7 @@ public final class WenhanClientConfigScreen {
 						clamp(
 								value,
 								FlySpeedModifierConfig.MIN_ALLOWED_MAX_SPEED,
-								FlySpeedModifierConfig.FULL_RANGE_MAX_SPEED));
+								FlySpeedModifierConfig.MAX_ALLOWED_MAX_SPEED));
 		normalizeFlySpeedModifierSpeeds(draft);
 	}
 
@@ -794,7 +794,7 @@ public final class WenhanClientConfigScreen {
 						clamp(
 								draft.maxSpeed,
 								FlySpeedModifierConfig.MIN_ALLOWED_MAX_SPEED,
-								FlySpeedModifierConfig.FULL_RANGE_MAX_SPEED));
+								FlySpeedModifierConfig.MAX_ALLOWED_MAX_SPEED));
 		draft.initialSpeed =
 				roundToTwoDecimals(
 						constrainFlySpeedModifierInitialSpeed(draft, draft.initialSpeed));
@@ -841,6 +841,9 @@ public final class WenhanClientConfigScreen {
 	}
 
 	private static double roundToTwoDecimals(double value) {
+		if (Math.abs(value) > Long.MAX_VALUE / 100.0D) {
+			return value;
+		}
 		return Math.round(value * 100.0D) / 100.0D;
 	}
 

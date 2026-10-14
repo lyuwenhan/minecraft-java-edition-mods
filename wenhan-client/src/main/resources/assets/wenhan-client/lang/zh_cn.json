@@ -111,7 +111,7 @@
 	"option.wenhan-client.fly-speed-modifier.enabled": "启用",
 	"option.wenhan-client.fly-speed-modifier.enabled.tooltip": "启用飞行速度倍数调整。",
 	"option.wenhan-client.fly-speed-modifier.max_speed": "速度最大值",
-	"option.wenhan-client.fly-speed-modifier.max_speed.tooltip": "保存的临时飞行速度倍数上限。支持范围：1.00 倍到 100.00 倍。",
+	"option.wenhan-client.fly-speed-modifier.max_speed.tooltip": "保存的临时飞行速度倍数上限。最小值为 1.00 倍，建议设置在 100.00 倍以内。",
 	"option.wenhan-client.fly-speed-modifier.min_speed": "速度最小值",
 	"option.wenhan-client.fly-speed-modifier.min_speed.tooltip": "临时飞行速度倍数下限。支持范围：0.00 倍到 1.00 倍。",
 	"option.wenhan-client.fly-speed-modifier.initial_speed": "速度默认值",

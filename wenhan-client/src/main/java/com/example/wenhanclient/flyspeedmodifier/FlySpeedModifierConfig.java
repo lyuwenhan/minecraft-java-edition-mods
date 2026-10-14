@@ -16,9 +16,9 @@ public final class FlySpeedModifierConfig {
 	public static final double MIN_ALLOWED_MAX_SPEED = 1.0D;
 	public static final double STANDARD_MAX_SPEED = 20.0D;
 	public static final double FULL_RANGE_MAX_SPEED = 100.0D;
-	public static final double MAX_ALLOWED_MAX_SPEED = FULL_RANGE_MAX_SPEED;
+	public static final double MAX_ALLOWED_MAX_SPEED = Double.MAX_VALUE;
 	public static final double MIN_ALLOWED_INITIAL_SPEED = 0.0D;
-	public static final double MAX_ALLOWED_INITIAL_SPEED = 100.0D;
+	public static final double MAX_ALLOWED_INITIAL_SPEED = Double.MAX_VALUE;
 	public static final double MIN_ALLOWED_SCROLL_STEP = 0.1D;
 	public static final double MAX_ALLOWED_SCROLL_STEP = 2.0D;
 	public static final int MAX_SPEED_SLIDER_MIN = 100;
@@ -94,7 +94,7 @@ public final class FlySpeedModifierConfig {
 								value,
 								DEFAULT_INITIAL_SPEED,
 								MIN_ALLOWED_INITIAL_SPEED,
-								MAX_ALLOWED_INITIAL_SPEED));
+								sliderToInitialSpeed(INITIAL_SPEED_SLIDER_MAX)));
 		return (int) Math.round(sanitized * 100.0D);
 	}
 
@@ -120,7 +120,7 @@ public final class FlySpeedModifierConfig {
 	}
 
 	public static int maxSpeedToSlider(double value, boolean fullRange) {
-		double upperBound = fullRange ? FULL_RANGE_MAX_SPEED : STANDARD_MAX_SPEED;
+		double upperBound = sliderToMaxSpeed(maxSpeedSliderMax(fullRange), fullRange);
 		double sanitized =
 				roundToTwoDecimals(
 						clampFinite(value, DEFAULT_MAX_SPEED, MIN_ALLOWED_MAX_SPEED, upperBound));
@@ -155,6 +155,9 @@ public final class FlySpeedModifierConfig {
 	}
 
 	private static double roundToTwoDecimals(double value) {
+		if (Math.abs(value) > Long.MAX_VALUE / 100.0D) {
+			return value;
+		}
 		return Math.round(value * 100.0D) / 100.0D;
 	}
 

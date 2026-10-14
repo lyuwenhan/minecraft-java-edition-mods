@@ -111,7 +111,7 @@
 	"option.wenhan-client.fly-speed-modifier.enabled": "Enabled",
 	"option.wenhan-client.fly-speed-modifier.enabled.tooltip": "Enables flight speed multiplier adjustment.",
 	"option.wenhan-client.fly-speed-modifier.max_speed": "Maximum Speed",
-	"option.wenhan-client.fly-speed-modifier.max_speed.tooltip": "Saved upper bound for the temporary flight speed multiplier. Supported range: 1.00x to 100.00x.",
+	"option.wenhan-client.fly-speed-modifier.max_speed.tooltip": "Saved upper bound for the temporary flight speed multiplier. Minimum: 1.00x. Recommended: 100.00x or lower.",
 	"option.wenhan-client.fly-speed-modifier.min_speed": "Minimum Speed",
 	"option.wenhan-client.fly-speed-modifier.min_speed.tooltip": "Lower bound for the temporary flight speed multiplier. Supported range: 0.00x to 1.00x.",
 	"option.wenhan-client.fly-speed-modifier.initial_speed": "Default Speed",
