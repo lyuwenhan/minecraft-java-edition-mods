@@ -6,8 +6,8 @@ import com.example.wenhanclient.betterstep.BetterStepConfig;
 import com.example.wenhanclient.blockexplosionguard.BlockExplosionGuardConfig;
 import com.example.wenhanclient.boatutils.BoatUtilsConfig;
 import com.example.wenhanclient.clientpseudounrestrict.ClientPseudoUnrestrictConfig;
-import com.example.wenhanclient.creativeflying.CreativeFlyingConfig;
 import com.example.wenhanclient.coyote.CoyoteConfig;
+import com.example.wenhanclient.creativeflying.CreativeFlyingConfig;
 import com.example.wenhanclient.doublejump.DoubleJumpConfig;
 import com.example.wenhanclient.elytracancel.ElytraCancelConfig;
 import com.example.wenhanclient.entityhighlighter.EntityHighlighterConfig;
@@ -31,13 +31,14 @@ import com.example.wenhanclient.noslimebounce.NoSlimeBounceConfig;
 import com.example.wenhanclient.noslowdown.NoSlowdownConfig;
 import com.example.wenhanclient.notexturerotation.NoTextureRotationConfig;
 import com.example.wenhanclient.playerhighlighter.PlayerHighlighterConfig;
+import com.example.wenhanclient.playerwaypointinfo.PlayerWaypointInfoConfig;
 import com.example.wenhanclient.stablemining.StableMiningConfig;
 import com.example.wenhanclient.transparentblocks.TransparentBlocksConfig;
 import com.example.wenhanclient.whoiam.WhoIAmConfig;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonParseException;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
 
 import net.fabricmc.loader.api.FabricLoader;
 
@@ -83,6 +84,7 @@ public class WenhanClientConfig {
 	public NoLevitationConfig noLevitation = new NoLevitationConfig();
 	public NoTextureRotationConfig noTextureRotation = new NoTextureRotationConfig();
 	public PlayerHighlighterConfig playerHighlighter = new PlayerHighlighterConfig();
+	public PlayerWaypointInfoConfig playerWaypointInfo = new PlayerWaypointInfoConfig();
 	public StableMiningConfig stableMining = new StableMiningConfig();
 	public TransparentBlocksConfig transparentBlocks = new TransparentBlocksConfig();
 	public WhoIAmConfig whoIAm = new WhoIAmConfig();
@@ -233,6 +235,9 @@ public class WenhanClientConfig {
 		}
 		if (playerHighlighter == null) {
 			playerHighlighter = new PlayerHighlighterConfig();
+		}
+		if (playerWaypointInfo == null) {
+			playerWaypointInfo = new PlayerWaypointInfoConfig();
 		}
 		if (stableMining == null) {
 			stableMining = new StableMiningConfig();

@@ -2,16 +2,12 @@ package com.example.wenhanclient.playerhighlighter;
 
 import com.example.wenhanclient.WenhanClientMod;
 import com.example.wenhanclient.client.WenhanClientKeyCategories;
-import com.example.wenhanclient.playerhighlighter.client.HudIconRenderer;
 import com.mojang.blaze3d.platform.InputConstants;
 
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper;
-import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry;
-import net.fabricmc.fabric.api.client.rendering.v1.hud.VanillaHudElements;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.Identifier;
 
 public final class PlayerHighlighterSubMod {
 	public static final String MOD_ID = "wenhan-client";
@@ -43,10 +39,13 @@ public final class PlayerHighlighterSubMod {
 		ClientTickEvents.END_CLIENT_TICK.register(
 				client -> {
 					while (TOGGLE_KEY.consumeClick()) {
-						if (!config.enabled) {
+						if (config.mode() == PlayerHighlightMode.DISABLED) {
 							continue;
 						}
-						config.keep = !config.keep;
+						config.setMode(
+								config.mode() == PlayerHighlightMode.ALWAYS
+										? PlayerHighlightMode.HOLD
+										: PlayerHighlightMode.ALWAYS);
 						WenhanClientMod.CONFIG.playerHighlighter = config.copy();
 						WenhanClientMod.CONFIG.save();
 						if (client.player != null) {
@@ -57,32 +56,18 @@ public final class PlayerHighlighterSubMod {
 						}
 					}
 				});
-		HudElementRegistry.attachElementBefore(
-				VanillaHudElements.CHAT,
-				Identifier.fromNamespaceAndPath(MOD_ID, "player-highlighter/hud"),
-				(graphics, tickCounter) -> PlayerHighlighterHud.render(graphics));
-		HudIconRenderer.register();
 		System.out.println("[PlayerHighlighter] Client initialized");
 	}
 
 	public static boolean isHighlightActive() {
-		if (config == null || !config.enabled) {
+		if (config == null) {
 			return false;
 		}
-		if (config.keep) {
-			return true;
-		}
-		return HOLD_KEY != null && HOLD_KEY.isDown();
-	}
-
-	public static boolean isInformationHudVisible() {
-		if (config == null || !config.enabled) {
-			return false;
-		}
-		if (config.informationHud == null) {
-			return true;
-		}
-		return config.informationHud;
+		return switch (config.mode()) {
+			case DISABLED -> false;
+			case HOLD -> HOLD_KEY != null && HOLD_KEY.isDown();
+			case ALWAYS -> true;
+		};
 	}
 
 	public static PlayerHighlighterConfig config() {
@@ -91,6 +76,7 @@ public final class PlayerHighlighterSubMod {
 
 	public static void setConfig(PlayerHighlighterConfig newConfig) {
 		config = newConfig == null ? new PlayerHighlighterConfig() : newConfig.copy();
+		config.applyModeToLegacy();
 		WenhanClientMod.CONFIG.playerHighlighter = config.copy();
 		WenhanClientMod.CONFIG.save();
 	}

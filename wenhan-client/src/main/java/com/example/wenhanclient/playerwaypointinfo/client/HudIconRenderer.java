@@ -1,7 +1,7 @@
-package com.example.wenhanclient.playerhighlighter.client;
+package com.example.wenhanclient.playerwaypointinfo.client;
 
-import com.example.wenhanclient.playerhighlighter.GetDirections;
 import com.example.wenhanclient.playerhighlighter.PlayerHighlighterSubMod;
+import com.example.wenhanclient.playerwaypointinfo.GetDirections;
 
 import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.VanillaHudElements;

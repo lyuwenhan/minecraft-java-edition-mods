@@ -1,4 +1,4 @@
-package com.example.wenhanclient.playerhighlighter;
+package com.example.wenhanclient.playerwaypointinfo;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GameRenderer;

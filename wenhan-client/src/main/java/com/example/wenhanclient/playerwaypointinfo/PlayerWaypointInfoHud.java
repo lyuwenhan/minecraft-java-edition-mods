@@ -1,4 +1,4 @@
-package com.example.wenhanclient.playerhighlighter;
+package com.example.wenhanclient.playerwaypointinfo;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
@@ -13,15 +13,18 @@ import net.minecraft.world.phys.Vec3;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 import java.util.function.Consumer;
 
-public class PlayerHighlighterHud {
+public class PlayerWaypointInfoHud {
 	public static void render(GuiGraphicsExtractor graphics) {
-		if (!PlayerHighlighterSubMod.isInformationHudVisible()) {
+		if (!PlayerWaypointInfoSubMod.isInformationHudVisible()) {
 			return;
 		}
 		Minecraft client = Minecraft.getInstance();
@@ -37,6 +40,7 @@ public class PlayerHighlighterHud {
 		int lineHeight = client.font.lineHeight + 2;
 		int screenHeight = graphics.guiHeight();
 		int y = screenHeight - 22 - 8;
+		List<HudEntry> entries = new ArrayList<>();
 		Set<UUID> renderedPlayerUuids = new HashSet<>();
 		Vec3 cameraPos = new Vec3(camera.getX(), camera.getY(), camera.getZ());
 		for (var player : world.players()) {
@@ -56,54 +60,55 @@ public class PlayerHighlighterHud {
 					String.format(
 							"(%d, %d, %d)",
 							(int) targetPos.x, (int) targetPos.y, (int) targetPos.z);
-			drawLine(graphics, client, baseX, y, name, arrow, distText, healthText, posText);
+			entries.add(new HudEntry(name, arrow, distText, healthText, posText, name));
 			renderedPlayerUuids.add(player.getUUID());
-			y -= lineHeight;
+		}
+		Object networkHandler = client.getConnection();
+		if (networkHandler != null) {
+			Object waypointManager = findWaypointManager(networkHandler);
+			if (waypointManager != null && hasWaypoints(waypointManager)) {
+				forEachWaypoint(
+						waypointManager,
+						camera,
+						waypoint -> {
+							if (isAlreadyRenderedWaypoint(camera, waypoint, renderedPlayerUuids)) {
+								return;
+							}
+							WaypointDisplay display =
+									getWaypointDisplay(client, world, camera, waypoint);
+							if (display == null) {
+								return;
+							}
+							entries.add(
+									new HudEntry(
+											display.name,
+											display.arrow,
+											display.distanceText,
+											display.healthText,
+											display.posText,
+											getWaypointSortKey(waypoint, display)));
+						});
+			}
+		}
+		entries.sort(
+				Comparator.comparing(HudEntry::sortKey, String.CASE_INSENSITIVE_ORDER)
+						.thenComparing(HudEntry::name, String.CASE_INSENSITIVE_ORDER));
+		for (HudEntry entry : entries) {
 			if (y < 8) {
 				break;
 			}
+			drawLine(
+					graphics,
+					client,
+					baseX,
+					y,
+					entry.name,
+					entry.arrow,
+					entry.distanceText,
+					entry.healthText,
+					entry.posText);
+			y -= lineHeight;
 		}
-		Object networkHandler = client.getConnection();
-		if (networkHandler == null) {
-			return;
-		}
-		if (y < 8) {
-			return;
-		}
-		Object waypointManager = findWaypointManager(networkHandler);
-		if (waypointManager == null) {
-			return;
-		}
-		if (!hasWaypoints(waypointManager)) {
-			return;
-		}
-		int[] yRef = new int[] {y};
-		forEachWaypoint(
-				waypointManager,
-				camera,
-				waypoint -> {
-					if (yRef[0] < 8) {
-						return;
-					}
-					if (isAlreadyRenderedWaypoint(camera, waypoint, renderedPlayerUuids)) {
-						return;
-					}
-					WaypointDisplay display = getWaypointDisplay(client, world, camera, waypoint);
-					if (display == null) {
-						return;
-					}
-					drawLine(
-							graphics,
-							client,
-							baseX,
-							yRef[0],
-							display.name,
-							display.arrow,
-							display.distanceText,
-							display.healthText,
-							display.posText);
-					yRef[0] -= lineHeight;
-				});
 	}
 
 	private static void drawLine(
@@ -174,6 +179,15 @@ public class PlayerHighlighterHud {
 			return resolveStringIdName(client, world, id);
 		}
 		return "Waypoint";
+	}
+
+	private static String getWaypointSortKey(Object waypoint, WaypointDisplay display) {
+		Object nameOrId = invokeNoArg(waypoint, "name", "id", "getName", "getId");
+		if (nameOrId instanceof String stringValue && !stringValue.isBlank()) {
+			return stringValue;
+		}
+		String sourceId = getWaypointSourceString(waypoint);
+		return sourceId == null || sourceId.isBlank() ? display.name : sourceId;
 	}
 
 	private static String resolveUuidName(Minecraft client, ClientLevel world, UUID uuid) {
@@ -739,4 +753,12 @@ public class PlayerHighlighterHud {
 
 	private record WaypointDisplay(
 			String name, String arrow, String distanceText, String healthText, String posText) {}
+
+	private record HudEntry(
+			String name,
+			String arrow,
+			String distanceText,
+			String healthText,
+			String posText,
+			String sortKey) {}
 }

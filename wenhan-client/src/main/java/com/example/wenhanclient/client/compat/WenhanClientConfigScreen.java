@@ -10,10 +10,10 @@ import com.example.wenhanclient.boatutils.BoatUtilsConfig;
 import com.example.wenhanclient.boatutils.BoatUtilsSubMod;
 import com.example.wenhanclient.clientpseudounrestrict.ClientPseudoUnrestrictConfig;
 import com.example.wenhanclient.clientpseudounrestrict.ClientPseudoUnrestrictSubMod;
-import com.example.wenhanclient.creativeflying.CreativeFlyingConfig;
-import com.example.wenhanclient.creativeflying.CreativeFlyingSubMod;
 import com.example.wenhanclient.coyote.CoyoteConfig;
 import com.example.wenhanclient.coyote.CoyoteSubMod;
+import com.example.wenhanclient.creativeflying.CreativeFlyingConfig;
+import com.example.wenhanclient.creativeflying.CreativeFlyingSubMod;
 import com.example.wenhanclient.doublejump.DoubleJumpConfig;
 import com.example.wenhanclient.doublejump.DoubleJumpSubMod;
 import com.example.wenhanclient.elytracancel.ElytraCancelConfig;
@@ -54,8 +54,11 @@ import com.example.wenhanclient.noslowdown.NoSlowdownConfig;
 import com.example.wenhanclient.noslowdown.NoSlowdownSubMod;
 import com.example.wenhanclient.notexturerotation.NoTextureRotationConfig;
 import com.example.wenhanclient.notexturerotation.NoTextureRotationSubMod;
+import com.example.wenhanclient.playerhighlighter.PlayerHighlightMode;
 import com.example.wenhanclient.playerhighlighter.PlayerHighlighterConfig;
 import com.example.wenhanclient.playerhighlighter.PlayerHighlighterSubMod;
+import com.example.wenhanclient.playerwaypointinfo.PlayerWaypointInfoConfig;
+import com.example.wenhanclient.playerwaypointinfo.PlayerWaypointInfoSubMod;
 import com.example.wenhanclient.stablemining.StableMiningConfig;
 import com.example.wenhanclient.stablemining.StableMiningSubMod;
 import com.example.wenhanclient.transparentblocks.TransparentBlocksConfig;
@@ -70,6 +73,7 @@ import dev.isxander.yacl3.api.YetAnotherConfigLib;
 import dev.isxander.yacl3.api.controller.BooleanControllerBuilder;
 import dev.isxander.yacl3.api.controller.DoubleFieldControllerBuilder;
 import dev.isxander.yacl3.api.controller.DoubleSliderControllerBuilder;
+import dev.isxander.yacl3.api.controller.EnumControllerBuilder;
 import dev.isxander.yacl3.api.controller.FloatSliderControllerBuilder;
 import dev.isxander.yacl3.api.controller.IntegerFieldControllerBuilder;
 import dev.isxander.yacl3.api.controller.IntegerSliderControllerBuilder;
@@ -92,7 +96,6 @@ public final class WenhanClientConfigScreen {
 				.category(generalCategory(drafts))
 				.category(movementCategory(drafts))
 				.category(hidePasswordCategory(drafts))
-				.category(playerHighlighterCategory(drafts))
 				.category(whoIAmCategory(drafts))
 				.category(noTextureRotationCategory(drafts))
 				.category(flySpeedModifierCategory(drafts))
@@ -166,6 +169,19 @@ public final class WenhanClientConfigScreen {
 								StableMiningConfig.DEFAULT_ENABLED,
 								() -> drafts.stableMining.enabled,
 								value -> drafts.stableMining.enabled = value))
+				.option(
+						enumOption(
+								"option.wenhan-client.player-highlighter.mode",
+								PlayerHighlightMode.DISABLED,
+								PlayerHighlightMode.class,
+								() -> drafts.playerHighlighter.mode(),
+								value -> drafts.playerHighlighter.setMode(value)))
+				.option(
+						booleanOption(
+								"option.wenhan-client.player-waypoint-info.enabled",
+								PlayerWaypointInfoConfig.DEFAULT_ENABLED,
+								() -> drafts.playerWaypointInfo.enabled,
+								value -> drafts.playerWaypointInfo.enabled = value))
 				.build();
 	}
 
@@ -216,8 +232,8 @@ public final class WenhanClientConfigScreen {
 								CoyoteConfig.MAX_TIME_TICKS,
 								() -> drafts.coyote.timeTicks,
 								value ->
-									drafts.coyote.timeTicks =
-										Math.max(CoyoteConfig.MIN_TIME_TICKS, value)))
+										drafts.coyote.timeTicks =
+												Math.max(CoyoteConfig.MIN_TIME_TICKS, value)))
 				.option(
 						booleanOption(
 								"option.wenhan-client.no-levitation.enabled",
@@ -328,8 +344,8 @@ public final class WenhanClientConfigScreen {
 								DoubleJumpConfig.MAX_JUMP_COUNT,
 								() -> drafts.doubleJump.jumpCount,
 								value ->
-									drafts.doubleJump.jumpCount =
-										Math.max(DoubleJumpConfig.MIN_JUMP_COUNT, value)))
+										drafts.doubleJump.jumpCount =
+												Math.max(DoubleJumpConfig.MIN_JUMP_COUNT, value)))
 				.option(
 						booleanOption(
 								"option.wenhan-client.double-jump.cooldown_enabled",
@@ -344,10 +360,10 @@ public final class WenhanClientConfigScreen {
 								DoubleJumpConfig.MAX_COOLDOWN_TICKS,
 								() -> drafts.doubleJump.cooldownTicks,
 								value ->
-									drafts.doubleJump.cooldownTicks =
-										Math.max(
-												DoubleJumpConfig.MIN_COOLDOWN_TICKS,
-												value)))
+										drafts.doubleJump.cooldownTicks =
+												Math.max(
+														DoubleJumpConfig.MIN_COOLDOWN_TICKS,
+														value)))
 				.build();
 	}
 
@@ -366,32 +382,6 @@ public final class WenhanClientConfigScreen {
 								HidePasswordConfig.DEFAULT_HIDE_LENGTH,
 								() -> drafts.hidePassword.hideLength,
 								value -> drafts.hidePassword.hideLength = value))
-				.build();
-	}
-
-	private static ConfigCategory playerHighlighterCategory(Drafts drafts) {
-		return ConfigCategory.createBuilder()
-				.name(Component.translatable("title.wenhan-client.player-highlighter.config"))
-				.option(
-						booleanOption(
-								"option.wenhan-client.player-highlighter.enabled",
-								PlayerHighlighterConfig.DEFAULT_ENABLED,
-								() -> drafts.playerHighlighter.enabled,
-								value -> drafts.playerHighlighter.enabled = value))
-				.option(
-						booleanOption(
-								"option.wenhan-client.player-highlighter.keep",
-								PlayerHighlighterConfig.DEFAULT_KEEP,
-								() -> drafts.playerHighlighter.keep,
-								value -> drafts.playerHighlighter.keep = value))
-				.option(
-						booleanOption(
-								"option.wenhan-client.player-highlighter.information_hud",
-								PlayerHighlighterConfig.DEFAULT_INFORMATION_HUD,
-								() ->
-										drafts.playerHighlighter.informationHud == null
-												|| drafts.playerHighlighter.informationHud,
-								value -> drafts.playerHighlighter.informationHud = value))
 				.build();
 	}
 
@@ -717,6 +707,32 @@ public final class WenhanClientConfigScreen {
 				.build();
 	}
 
+	private static <T extends Enum<T>> Option<T> enumOption(
+			String key,
+			T defaultValue,
+			Class<T> enumClass,
+			Supplier<T> getter,
+			Consumer<T> setter) {
+		return Option.<T>createBuilder()
+				.name(Component.translatable(key))
+				.description(OptionDescription.of(Component.translatable(key + ".tooltip")))
+				.binding(defaultValue, getter, setter)
+				.controller(
+						option ->
+								EnumControllerBuilder.create(option)
+										.enumClass(enumClass)
+										.formatValue(
+												value ->
+														Component.translatable(
+																key
+																		+ "."
+																		+ value.name()
+																				.toLowerCase(
+																						Locale
+																								.ROOT))))
+				.build();
+	}
+
 	@SuppressWarnings("unused")
 	private static Option<Integer> integerSliderOption(
 			String key,
@@ -856,6 +872,7 @@ public final class WenhanClientConfigScreen {
 		private final NoLevitationConfig noLevitation;
 		private final NoTextureRotationConfig noTextureRotation;
 		private final PlayerHighlighterConfig playerHighlighter;
+		private final PlayerWaypointInfoConfig playerWaypointInfo;
 		private final StableMiningConfig stableMining;
 		private final TransparentBlocksConfig transparentBlocks;
 		private final WhoIAmConfig whoIAm;
@@ -890,6 +907,7 @@ public final class WenhanClientConfigScreen {
 			this.noLevitation = NoLevitationSubMod.config();
 			this.noTextureRotation = NoTextureRotationSubMod.config();
 			this.playerHighlighter = PlayerHighlighterSubMod.config();
+			this.playerWaypointInfo = PlayerWaypointInfoSubMod.config();
 			this.stableMining = StableMiningSubMod.config();
 			this.transparentBlocks = TransparentBlocksSubMod.config();
 			this.whoIAm = WhoIAmSubMod.config();
@@ -929,6 +947,7 @@ public final class WenhanClientConfigScreen {
 			NoLevitationSubMod.setConfig(this.noLevitation);
 			NoTextureRotationSubMod.setConfig(this.noTextureRotation);
 			PlayerHighlighterSubMod.setConfig(this.playerHighlighter);
+			PlayerWaypointInfoSubMod.setConfig(this.playerWaypointInfo);
 			StableMiningSubMod.setConfig(this.stableMining);
 			TransparentBlocksSubMod.setConfig(this.transparentBlocks);
 			WhoIAmSubMod.setConfig(this.whoIAm);
