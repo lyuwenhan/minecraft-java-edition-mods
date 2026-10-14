@@ -3,7 +3,9 @@ package com.example.wenhanclient.nolevitation;
 import com.example.wenhanclient.WenhanClientMod;
 
 public final class NoLevitationConfig {
-	public boolean enabled = false;
+	public static final boolean DEFAULT_ENABLED = false;
+
+	public boolean enabled = DEFAULT_ENABLED;
 
 	public static NoLevitationConfig load() {
 		return WenhanClientMod.CONFIG.noLevitation.copy();

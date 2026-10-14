@@ -15,23 +15,21 @@ public final class BetterStepConfig {
 	public double stepHeight = DEFAULT_STEP_HEIGHT;
 	public double sneakingStepHeight = DEFAULT_SNEAKING_STEP_HEIGHT;
 
-	public static BetterStepConfig sanitize(BetterStepConfig config) {
-		BetterStepConfig sanitized = config == null ? new BetterStepConfig() : config.copy();
-		sanitized.stepHeight =
+	public void sanitize() {
+		this.stepHeight =
 				roundToOneDecimal(
 						clamp(
-								sanitized.stepHeight,
+								this.stepHeight,
 								DEFAULT_STEP_HEIGHT,
 								MIN_STEP_HEIGHT,
 								MAX_STEP_HEIGHT));
-		sanitized.sneakingStepHeight =
+		this.sneakingStepHeight =
 				roundToOneDecimal(
 						clamp(
-								sanitized.sneakingStepHeight,
+								this.sneakingStepHeight,
 								DEFAULT_SNEAKING_STEP_HEIGHT,
 								MIN_STEP_HEIGHT,
 								MAX_STEP_HEIGHT));
-		return sanitized;
 	}
 
 	public static int stepHeightToSlider(double value) {

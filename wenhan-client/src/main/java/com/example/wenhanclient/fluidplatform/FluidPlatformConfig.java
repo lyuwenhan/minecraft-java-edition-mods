@@ -3,7 +3,9 @@ package com.example.wenhanclient.fluidplatform;
 import com.example.wenhanclient.WenhanClientMod;
 
 public final class FluidPlatformConfig {
-	public boolean enabled = false;
+	public static final boolean DEFAULT_ENABLED = false;
+
+	public boolean enabled = DEFAULT_ENABLED;
 
 	public static FluidPlatformConfig load() {
 		return WenhanClientMod.CONFIG.fluidPlatform.copy();

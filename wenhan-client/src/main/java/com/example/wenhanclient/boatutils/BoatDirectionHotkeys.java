@@ -84,7 +84,7 @@ public final class BoatDirectionHotkeys {
 		boolean turnLeftDown = turnLeft.isDown();
 		boolean turnRightDown = turnRight.isDown();
 
-		if (client.gui.screen() == null && BoatUtilsConfig.directionHotkeysEnabled()) {
+		if (client.gui.screen() == null && BoatUtilsSubMod.config().directionHotkeysEnabled) {
 			AbstractBoat boat = getControlledBoat(client);
 			if (boat != null) {
 				if (snapDown && !snapWasDown) {
@@ -144,7 +144,7 @@ public final class BoatDirectionHotkeys {
 	}
 
 	private static float suitableAngleStep() {
-		return BoatUtilsConfig.directionHotkeysUse45DegreeAngles()
+		return BoatUtilsSubMod.config().directionHotkeysUse45DegreeAngles
 				? DIAGONAL_ANGLE_STEP
 				: CARDINAL_ANGLE_STEP;
 	}

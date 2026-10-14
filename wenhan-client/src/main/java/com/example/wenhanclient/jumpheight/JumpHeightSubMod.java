@@ -10,7 +10,11 @@ public final class JumpHeightSubMod {
 	private JumpHeightSubMod() {}
 
 	public static void init() {
-		config = JumpHeightConfig.sanitize(WenhanClientMod.CONFIG.jumpHeight);
+		config =
+				WenhanClientMod.CONFIG.jumpHeight == null
+						? new JumpHeightConfig()
+						: WenhanClientMod.CONFIG.jumpHeight;
+		config.sanitize();
 		WenhanClientMod.CONFIG.jumpHeight = config.copy();
 	}
 
@@ -19,7 +23,8 @@ public final class JumpHeightSubMod {
 	}
 
 	public static void setConfig(JumpHeightConfig newConfig) {
-		config = JumpHeightConfig.sanitize(newConfig);
+		config = newConfig == null ? new JumpHeightConfig() : newConfig;
+		config.sanitize();
 		WenhanClientMod.CONFIG.jumpHeight = config.copy();
 		WenhanClientMod.CONFIG.save();
 	}

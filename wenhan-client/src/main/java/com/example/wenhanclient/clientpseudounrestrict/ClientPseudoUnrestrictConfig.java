@@ -3,9 +3,13 @@ package com.example.wenhanclient.clientpseudounrestrict;
 import com.example.wenhanclient.WenhanClientMod;
 
 public final class ClientPseudoUnrestrictConfig {
-	public boolean blockInteractionRange = false;
-	public boolean entityInteractionRange = false;
-	public boolean instantBreak = false;
+	public static final boolean DEFAULT_BLOCK_INTERACTION_RANGE = false;
+	public static final boolean DEFAULT_ENTITY_INTERACTION_RANGE = false;
+	public static final boolean DEFAULT_INSTANT_BREAK = false;
+
+	public boolean blockInteractionRange = DEFAULT_BLOCK_INTERACTION_RANGE;
+	public boolean entityInteractionRange = DEFAULT_ENTITY_INTERACTION_RANGE;
+	public boolean instantBreak = DEFAULT_INSTANT_BREAK;
 
 	public static ClientPseudoUnrestrictConfig load() {
 		return WenhanClientMod.CONFIG.clientPseudoUnrestrict.copy();

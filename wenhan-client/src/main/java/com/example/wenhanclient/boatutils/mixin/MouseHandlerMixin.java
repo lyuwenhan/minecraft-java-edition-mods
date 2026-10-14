@@ -1,6 +1,5 @@
 package com.example.wenhanclient.boatutils.mixin;
 
-import com.example.wenhanclient.boatutils.BoatUtilsConfig;
 import com.example.wenhanclient.boatutils.BoatUtilsSubMod;
 
 import net.minecraft.client.Minecraft;
@@ -40,7 +39,7 @@ public abstract class MouseHandlerMixin {
 		if (horizontalRotation != 0.0D) {
 			BoatUtilsSubMod.markCameraMovedByMouse();
 		}
-		if (!BoatUtilsConfig.viewDirectionLockEnabled()) {
+		if (!BoatUtilsSubMod.config().viewDirectionLockEnabled) {
 			return horizontalRotation;
 		}
 
@@ -72,7 +71,7 @@ public abstract class MouseHandlerMixin {
 		if (boat == null) {
 			return;
 		}
-		if (!BoatUtilsConfig.viewDirectionLockEnabled()) {
+		if (!BoatUtilsSubMod.config().viewDirectionLockEnabled) {
 			return;
 		}
 

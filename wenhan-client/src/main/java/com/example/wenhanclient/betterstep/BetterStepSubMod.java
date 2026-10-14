@@ -10,7 +10,11 @@ public final class BetterStepSubMod {
 	private BetterStepSubMod() {}
 
 	public static void init() {
-		config = BetterStepConfig.sanitize(WenhanClientMod.CONFIG.betterStep);
+		config =
+				WenhanClientMod.CONFIG.betterStep == null
+						? new BetterStepConfig()
+						: WenhanClientMod.CONFIG.betterStep;
+		config.sanitize();
 		WenhanClientMod.CONFIG.betterStep = config.copy();
 	}
 
@@ -19,7 +23,8 @@ public final class BetterStepSubMod {
 	}
 
 	public static void setConfig(BetterStepConfig newConfig) {
-		config = BetterStepConfig.sanitize(newConfig);
+		config = newConfig == null ? new BetterStepConfig() : newConfig;
+		config.sanitize();
 		WenhanClientMod.CONFIG.betterStep = config.copy();
 		WenhanClientMod.CONFIG.save();
 	}

@@ -1,5 +1,6 @@
 package com.example.wenhanclient.flyspeedmodifier;
 
+import com.example.wenhanclient.WenhanClientMod;
 import com.example.wenhanclient.client.WenhanClientKeyCategories;
 import com.mojang.blaze3d.platform.InputConstants;
 
@@ -12,11 +13,17 @@ public final class FlySpeedModifierSubMod {
 	public static final String MOD_ID = "fly-speed-modifier";
 	private static final KeyMapping.Category CATEGORY = WenhanClientKeyCategories.GENERAL;
 	private static KeyMapping adjustSpeedKey;
+	private static FlySpeedModifierConfig config = new FlySpeedModifierConfig();
 
 	private FlySpeedModifierSubMod() {}
 
 	public static void init() {
-		FlySpeedModifierConfig.load();
+		config =
+				WenhanClientMod.CONFIG.flySpeedModifier == null
+						? new FlySpeedModifierConfig()
+						: WenhanClientMod.CONFIG.flySpeedModifier;
+		config.sanitize();
+		WenhanClientMod.CONFIG.flySpeedModifier = config.copy();
 		adjustSpeedKey =
 				KeyMappingHelper.registerKeyMapping(
 						new KeyMapping(
@@ -29,5 +36,21 @@ public final class FlySpeedModifierSubMod {
 		ClientTickEvents.END_CLIENT_TICK.register(FreecamSpeedController::onEndClientTick);
 		ClientPlayConnectionEvents.JOIN.register(
 				(handler, sender, client) -> FreecamSpeedController.onJoinWorld());
+	}
+
+	public static FlySpeedModifierConfig config() {
+		return config;
+	}
+
+	public static void setConfig(FlySpeedModifierConfig newConfig) {
+		config = newConfig == null ? new FlySpeedModifierConfig() : newConfig;
+		config.sanitize();
+		WenhanClientMod.CONFIG.flySpeedModifier = config.copy();
+		WenhanClientMod.CONFIG.save();
+		FreecamSpeedController.onConfigChanged();
+	}
+
+	public static void resetConfigToDefaults() {
+		setConfig(new FlySpeedModifierConfig());
 	}
 }

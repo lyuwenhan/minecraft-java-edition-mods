@@ -6,9 +6,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GreetConfig {
-	public boolean selfEnabled = true;
+	public static final boolean DEFAULT_SELF_ENABLED = true;
+	public static final boolean DEFAULT_OTHER_ENABLED = true;
+
+	public boolean selfEnabled = DEFAULT_SELF_ENABLED;
 	public List<String> selfGreetings = new ArrayList<>();
-	public boolean otherEnabled = true;
+	public boolean otherEnabled = DEFAULT_OTHER_ENABLED;
 	public List<String> otherGreetings = new ArrayList<>();
 	public StringMatchRules otherBlacklist = new StringMatchRules();
 	public StringMatchRules otherBlacklistExcept = new StringMatchRules();

@@ -3,7 +3,9 @@ package com.example.wenhanclient.noflightreset;
 import com.example.wenhanclient.WenhanClientMod;
 
 public final class NoFlightResetConfig {
-	public boolean enabled = false;
+	public static final boolean DEFAULT_ENABLED = false;
+
+	public boolean enabled = DEFAULT_ENABLED;
 
 	public static NoFlightResetConfig load() {
 		return WenhanClientMod.CONFIG.noFlightReset.copy();

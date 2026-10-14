@@ -3,9 +3,13 @@ package com.example.wenhanclient.playerhighlighter;
 import com.example.wenhanclient.WenhanClientMod;
 
 public class PlayerHighlighterConfig {
-	public boolean enabled = false;
-	public boolean keep = false;
-	public Boolean informationHud = true;
+	public static final boolean DEFAULT_ENABLED = false;
+	public static final boolean DEFAULT_KEEP = false;
+	public static final Boolean DEFAULT_INFORMATION_HUD = true;
+
+	public boolean enabled = DEFAULT_ENABLED;
+	public boolean keep = DEFAULT_KEEP;
+	public Boolean informationHud = DEFAULT_INFORMATION_HUD;
 
 	public static PlayerHighlighterConfig load() {
 		return WenhanClientMod.CONFIG.playerHighlighter.copy();

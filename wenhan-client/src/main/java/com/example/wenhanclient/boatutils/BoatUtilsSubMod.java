@@ -1,5 +1,6 @@
 package com.example.wenhanclient.boatutils;
 
+import com.example.wenhanclient.WenhanClientMod;
 import com.example.wenhanclient.boatutils.mixin.AbstractBoatAccessor;
 
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
@@ -21,11 +22,17 @@ public final class BoatUtilsSubMod {
 	private static int handbrakeTicks;
 	private static boolean handbrakeWasDown;
 	private static int cameraIdleTicks;
+	private static BoatUtilsConfig config = new BoatUtilsConfig();
 
 	private BoatUtilsSubMod() {}
 
 	public static void init() {
-		BoatUtilsConfig.load();
+		config =
+				WenhanClientMod.CONFIG.boatUtils == null
+						? new BoatUtilsConfig()
+						: WenhanClientMod.CONFIG.boatUtils;
+		config.sanitize();
+		WenhanClientMod.CONFIG.boatUtils = config.copy();
 		BoatDirectionHotkeys.initialize();
 		ClientTickEvents.START_CLIENT_TICK.register(BoatUtilsSubMod::applyFollowView);
 		ClientTickEvents.END_CLIENT_TICK.register(BoatUtilsSubMod::applyFollowView);
@@ -35,8 +42,19 @@ public final class BoatUtilsSubMod {
 		ClientTickEvents.END_CLIENT_TICK.register(BoatDirectionHotkeys::handleClientTick);
 	}
 
+	public static BoatUtilsConfig config() {
+		return config;
+	}
+
+	public static void setConfig(BoatUtilsConfig newConfig) {
+		config = newConfig == null ? new BoatUtilsConfig() : newConfig;
+		config.sanitize();
+		WenhanClientMod.CONFIG.boatUtils = config.copy();
+		WenhanClientMod.CONFIG.save();
+	}
+
 	private static void applyFollowView(Minecraft client) {
-		if (!BoatUtilsConfig.viewDirectionLockEnabled()) {
+		if (!config.viewDirectionLockEnabled) {
 			return;
 		}
 		if (client.player == null) {
@@ -59,7 +77,7 @@ public final class BoatUtilsSubMod {
 	}
 
 	private static void applyLateralFriction(Minecraft client) {
-		if (!BoatUtilsConfig.lateralFrictionEnabled() || client.player == null) {
+		if (!config.lateralFrictionEnabled || client.player == null) {
 			return;
 		}
 
@@ -95,8 +113,8 @@ public final class BoatUtilsSubMod {
 	}
 
 	private static void applyCameraAutoRecenter(Minecraft client) {
-		if (!BoatUtilsConfig.cameraAutoRecenterEnabled()
-				|| BoatUtilsConfig.viewDirectionLockEnabled()
+		if (!config.cameraAutoRecenterEnabled
+				|| config.viewDirectionLockEnabled
 				|| client.player == null
 				|| client.gui.screen() != null) {
 			resetCameraAutoRecenterState();
@@ -145,10 +163,9 @@ public final class BoatUtilsSubMod {
 			handbrakeBoat = boat;
 		}
 
-		boolean handbrakeDown =
-				BoatUtilsConfig.handbrakeEnabled() && client.options.keyJump.isDown();
+		boolean handbrakeDown = config.handbrakeEnabled && client.options.keyJump.isDown();
 		if (handbrakeDown) {
-			if (BoatUtilsConfig.handbrakeBoostEnabled()) {
+			if (config.handbrakeBoostEnabled) {
 				handbrakeTicks++;
 			}
 			handbrakeWasDown = true;
@@ -157,7 +174,7 @@ public final class BoatUtilsSubMod {
 		}
 
 		if (handbrakeWasDown
-				&& BoatUtilsConfig.handbrakeBoostEnabled()
+				&& config.handbrakeBoostEnabled
 				&& handbrakeTicks > 0
 				&& client.options.keyUp.isDown()) {
 			applyReleaseBoost(boat, handbrakeTicks);

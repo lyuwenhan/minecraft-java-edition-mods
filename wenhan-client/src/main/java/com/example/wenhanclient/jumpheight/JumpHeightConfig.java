@@ -27,13 +27,11 @@ public final class JumpHeightConfig {
 		return copy;
 	}
 
-	public static JumpHeightConfig sanitize(JumpHeightConfig config) {
-		JumpHeightConfig sanitized = config == null ? new JumpHeightConfig() : config.copy();
-		if (!Double.isFinite(sanitized.targetHeight)) {
-			sanitized.targetHeight = DEFAULT_TARGET_HEIGHT;
+	public void sanitize() {
+		if (!Double.isFinite(this.targetHeight)) {
+			this.targetHeight = DEFAULT_TARGET_HEIGHT;
 		}
-		sanitized.targetHeight =
-				Math.max(MIN_TARGET_HEIGHT, Math.min(MAX_TARGET_HEIGHT, sanitized.targetHeight));
-		return sanitized;
+		this.targetHeight =
+				Math.max(MIN_TARGET_HEIGHT, Math.min(MAX_TARGET_HEIGHT, this.targetHeight));
 	}
 }

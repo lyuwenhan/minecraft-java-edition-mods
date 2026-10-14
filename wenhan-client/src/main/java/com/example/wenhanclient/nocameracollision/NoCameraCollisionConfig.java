@@ -3,7 +3,9 @@ package com.example.wenhanclient.nocameracollision;
 import com.example.wenhanclient.WenhanClientMod;
 
 public final class NoCameraCollisionConfig {
-	public boolean enabled = false;
+	public static final boolean DEFAULT_ENABLED = false;
+
+	public boolean enabled = DEFAULT_ENABLED;
 
 	public static NoCameraCollisionConfig load() {
 		return WenhanClientMod.CONFIG.noCameraCollision.copy();

@@ -3,7 +3,9 @@ package com.example.wenhanclient.nocollision;
 import com.example.wenhanclient.WenhanClientMod;
 
 public final class NoCollisionConfig {
-	public boolean enabled = false;
+	public static final boolean DEFAULT_ENABLED = false;
+
+	public boolean enabled = DEFAULT_ENABLED;
 
 	public static NoCollisionConfig load() {
 		return WenhanClientMod.CONFIG.noCollision.copy();

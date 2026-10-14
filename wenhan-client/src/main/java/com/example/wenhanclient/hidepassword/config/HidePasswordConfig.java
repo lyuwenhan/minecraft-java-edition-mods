@@ -1,8 +1,11 @@
 package com.example.wenhanclient.hidepassword.config;
 
 public class HidePasswordConfig {
-	public boolean enabled = true;
-	public boolean hideLength = false;
+	public static final boolean DEFAULT_ENABLED = true;
+	public static final boolean DEFAULT_HIDE_LENGTH = false;
+
+	public boolean enabled = DEFAULT_ENABLED;
+	public boolean hideLength = DEFAULT_HIDE_LENGTH;
 
 	public HidePasswordConfig copy() {
 		HidePasswordConfig copy = new HidePasswordConfig();

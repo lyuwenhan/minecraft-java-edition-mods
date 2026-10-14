@@ -1,6 +1,5 @@
 package com.example.wenhanclient.boatutils.mixin;
 
-import com.example.wenhanclient.boatutils.BoatUtilsConfig;
 import com.example.wenhanclient.boatutils.BoatUtilsSubMod;
 import com.example.wenhanclient.boatutils.FlySpeedModifierIntegration;
 
@@ -41,7 +40,7 @@ public abstract class AbstractBoatMixin {
 
 	@Inject(method = "controlBoat", at = @At("HEAD"), cancellable = true)
 	private void boatUtils$useViewRelativeMovement(CallbackInfo callbackInfo) {
-		if (!BoatUtilsConfig.viewDirectionLockEnabled()) {
+		if (!BoatUtilsSubMod.config().viewDirectionLockEnabled) {
 			return;
 		}
 		if (!boatUtils$isControlledByLocalPlayer()) {
@@ -93,7 +92,7 @@ public abstract class AbstractBoatMixin {
 
 	@Inject(method = "controlBoat", at = @At("TAIL"))
 	private void boatUtils$applyHandbrakeAfterVanillaThrust(CallbackInfo callbackInfo) {
-		if (BoatUtilsConfig.viewDirectionLockEnabled()) {
+		if (BoatUtilsSubMod.config().viewDirectionLockEnabled) {
 			return;
 		}
 		BoatUtilsSubMod.applyHandbrakeAfterThrust((AbstractBoat) (Object) this);
@@ -106,7 +105,7 @@ public abstract class AbstractBoatMixin {
 		if (passenger != client.player) {
 			return;
 		}
-		if (!BoatUtilsConfig.unrestrictedViewRotation()) {
+		if (!BoatUtilsSubMod.config().unrestrictedViewRotation) {
 			return;
 		}
 
@@ -119,7 +118,7 @@ public abstract class AbstractBoatMixin {
 
 	@ModifyVariable(method = "floatBoat", at = @At("STORE"), index = 5)
 	private float boatUtils$useBlueIceFrictionInEveryStatus(float friction) {
-		if (!BoatUtilsConfig.blueIceSpeedEverywhere()) {
+		if (!BoatUtilsSubMod.config().blueIceSpeedEverywhere) {
 			return friction;
 		}
 		if (!boatUtils$isControlledByLocalPlayer()) {
@@ -136,7 +135,7 @@ public abstract class AbstractBoatMixin {
 							target =
 									"Lnet/minecraft/world/entity/vehicle/boat/AbstractBoat;setDeltaMovement(Lnet/minecraft/world/phys/Vec3;)V"))
 	private void boatUtils$applyBlueIceFrictionDuringWaterEntry(AbstractBoat boat, Vec3 movement) {
-		if (!BoatUtilsConfig.blueIceSpeedEverywhere()) {
+		if (!BoatUtilsSubMod.config().blueIceSpeedEverywhere) {
 			boat.setDeltaMovement(movement);
 			return;
 		}
@@ -153,7 +152,7 @@ public abstract class AbstractBoatMixin {
 
 	@Inject(method = "floatBoat", at = @At("TAIL"))
 	private void boatUtils$applyGentleUnderwaterBuoyancy(CallbackInfo callbackInfo) {
-		if (!BoatUtilsConfig.preventSinking()) {
+		if (!BoatUtilsSubMod.config().preventSinking) {
 			return;
 		}
 		if (!boatUtils$isControlledByLocalPlayer()) {
@@ -171,7 +170,7 @@ public abstract class AbstractBoatMixin {
 
 	@Inject(method = "tick", at = @At("TAIL"))
 	private void boatUtils$keepUnderwaterPassengersMounted(CallbackInfo callbackInfo) {
-		if (!BoatUtilsConfig.preventSinking()) {
+		if (!BoatUtilsSubMod.config().preventSinking) {
 			return;
 		}
 		if (this.status != AbstractBoat.Status.UNDER_WATER
@@ -185,7 +184,7 @@ public abstract class AbstractBoatMixin {
 	@Inject(method = "canAddPassenger", at = @At("HEAD"), cancellable = true)
 	private void boatUtils$allowUnderwaterBoarding(
 			Entity passenger, CallbackInfoReturnable<Boolean> callbackInfo) {
-		if (!BoatUtilsConfig.preventSinking()) {
+		if (!BoatUtilsSubMod.config().preventSinking) {
 			return;
 		}
 

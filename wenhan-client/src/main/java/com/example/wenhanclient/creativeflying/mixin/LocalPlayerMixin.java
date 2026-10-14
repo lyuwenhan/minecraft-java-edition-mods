@@ -21,7 +21,8 @@ public abstract class LocalPlayerMixin {
 							value = "INVOKE",
 							target =
 									"Lnet/minecraft/client/multiplayer/ClientPacketListener;send(Lnet/minecraft/network/protocol/Packet;)V"))
-	private void creativeflying$onSendFromAiStep(ClientPacketListener connection, Packet<?> packet) {
+	private void creativeflying$onSendFromAiStep(
+			ClientPacketListener connection, Packet<?> packet) {
 		if (packet instanceof ServerboundPlayerCommandPacket commandPacket
 				&& commandPacket.getAction()
 						== ServerboundPlayerCommandPacket.Action.START_FALL_FLYING) {

@@ -1,9 +1,11 @@
 package com.example.wenhanclient.autologin;
 
 import com.mojang.brigadier.arguments.StringArgumentType;
+import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommands;
+import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.minecraft.client.Minecraft;
@@ -36,9 +38,7 @@ public final class AutoLoginSubMod {
 						dispatcher.register(ClientCommands.literal("wc").then(autoLoginNode())));
 	}
 
-	private static com.mojang.brigadier.builder.LiteralArgumentBuilder<
-					net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource>
-			autoLoginNode() {
+	private static LiteralArgumentBuilder<FabricClientCommandSource> autoLoginNode() {
 		return ClientCommands.literal("autologin")
 				.then(
 						ClientCommands.literal("set")

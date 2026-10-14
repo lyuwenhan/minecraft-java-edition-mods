@@ -3,8 +3,11 @@ package com.example.wenhanclient.interactiondelay;
 import com.example.wenhanclient.WenhanClientMod;
 
 public final class InteractionDelayConfig {
-	public boolean miningDelay = false;
-	public boolean placingDelay = false;
+	public static final boolean DEFAULT_MINING_DELAY = false;
+	public static final boolean DEFAULT_PLACING_DELAY = false;
+
+	public boolean miningDelay = DEFAULT_MINING_DELAY;
+	public boolean placingDelay = DEFAULT_PLACING_DELAY;
 
 	public static InteractionDelayConfig load() {
 		return WenhanClientMod.CONFIG.interactionDelay.copy();

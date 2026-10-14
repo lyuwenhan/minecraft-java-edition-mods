@@ -1,6 +1,6 @@
 package com.example.wenhanclient.boatutils.mixin;
 
-import com.example.wenhanclient.boatutils.BoatUtilsConfig;
+import com.example.wenhanclient.boatutils.BoatUtilsSubMod;
 
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.vehicle.boat.AbstractBoat;
@@ -19,7 +19,7 @@ public abstract class EntityMixin {
 			return;
 		}
 
-		callbackInfo.setReturnValue(BoatUtilsConfig.boatStepHeight());
+		callbackInfo.setReturnValue(BoatUtilsSubMod.config().boatStepHeight);
 	}
 
 	@Redirect(
@@ -30,6 +30,6 @@ public abstract class EntityMixin {
 			return entity.onGround();
 		}
 
-		return BoatUtilsConfig.boatStepHeight() > 0.0F;
+		return BoatUtilsSubMod.config().boatStepHeight > 0.0F;
 	}
 }

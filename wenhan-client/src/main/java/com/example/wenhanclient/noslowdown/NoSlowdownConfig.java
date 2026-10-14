@@ -3,7 +3,9 @@ package com.example.wenhanclient.noslowdown;
 import com.example.wenhanclient.WenhanClientMod;
 
 public final class NoSlowdownConfig {
-	public boolean enabled = false;
+	public static final boolean DEFAULT_ENABLED = false;
+
+	public boolean enabled = DEFAULT_ENABLED;
 
 	public static NoSlowdownConfig load() {
 		return WenhanClientMod.CONFIG.noSlowdown.copy();

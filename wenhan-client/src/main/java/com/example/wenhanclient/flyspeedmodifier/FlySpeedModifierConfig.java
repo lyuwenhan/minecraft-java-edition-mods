@@ -1,6 +1,6 @@
 package com.example.wenhanclient.flyspeedmodifier;
 
-import com.example.wenhanclient.WenhanClientMod;
+import java.util.Locale;
 
 public final class FlySpeedModifierConfig {
 	public static final double DEFAULT_MIN_SPEED = 0.0D;
@@ -30,106 +30,50 @@ public final class FlySpeedModifierConfig {
 	public static final int INITIAL_SPEED_SLIDER_MAX = 10000;
 	public static final int SCROLL_STEP_SLIDER_MIN = 1;
 	public static final int SCROLL_STEP_SLIDER_MAX = 20;
-	private static Values current = Values.defaults();
+	public boolean enabled = DEFAULT_ENABLED;
+	public boolean fullRange = DEFAULT_FULL_RANGE;
+	public double minSpeed = DEFAULT_MIN_SPEED;
+	public double maxSpeed = DEFAULT_MAX_SPEED;
+	public double initialSpeed = DEFAULT_INITIAL_SPEED;
+	public double scrollStep = DEFAULT_SCROLL_STEP;
+	public boolean resetOnAdjust = DEFAULT_RESET_ON_ADJUST;
+	public boolean applyToOtherMovement = DEFAULT_APPLY_TO_OTHER_MOVEMENT;
 
-	private FlySpeedModifierConfig() {}
-
-	public static synchronized void load() {
-		current = sanitize(WenhanClientMod.CONFIG.flySpeedModifier);
-		WenhanClientMod.CONFIG.flySpeedModifier = current.copy();
-	}
-
-	public static synchronized void save() {
-		WenhanClientMod.CONFIG.flySpeedModifier = current.copy();
-		WenhanClientMod.CONFIG.save();
-	}
-
-	public static synchronized Values get() {
-		return current.copy();
-	}
-
-	public static synchronized void set(Values values) {
-		current = sanitize(values);
-		save();
-		FreecamSpeedController.onConfigChanged();
-	}
-
-	public static synchronized void resetToDefaults() {
-		current = Values.defaults();
-		save();
-		FreecamSpeedController.onConfigChanged();
-	}
-
-	public static synchronized double minSpeed() {
-		return current.minSpeed;
-	}
-
-	public static synchronized boolean fullRange() {
-		return current.fullRange;
-	}
-
-	public static synchronized double maxSpeed() {
-		double upperBound = current.fullRange ? FULL_RANGE_MAX_SPEED : STANDARD_MAX_SPEED;
-		return clampFinite(current.maxSpeed, DEFAULT_MAX_SPEED, MIN_ALLOWED_MAX_SPEED, upperBound);
-	}
-
-	public static synchronized double initialSpeed() {
-		return clampFinite(current.initialSpeed, DEFAULT_INITIAL_SPEED, minSpeed(), maxSpeed());
-	}
-
-	public static synchronized double scrollStep() {
-		return current.scrollStep;
-	}
-
-	public static synchronized boolean resetOnAdjust() {
-		return current.resetOnAdjust;
-	}
-
-	public static synchronized boolean applyToOtherMovement() {
-		return current.applyToOtherMovement;
-	}
-
-	public static synchronized boolean enabled() {
-		return current.enabled;
-	}
-
-	public static Values sanitize(Values values) {
-		Values sanitized = values == null ? Values.defaults() : values.copy();
-		sanitized.minSpeed =
+	public void sanitize() {
+		this.minSpeed =
 				clampFinite(
-						sanitized.minSpeed,
+						this.minSpeed,
 						DEFAULT_MIN_SPEED,
 						MIN_ALLOWED_MIN_SPEED,
 						MAX_ALLOWED_MIN_SPEED);
-		sanitized.maxSpeed =
+		this.maxSpeed =
 				clampFinite(
-						sanitized.maxSpeed,
+						this.maxSpeed,
 						DEFAULT_MAX_SPEED,
 						MIN_ALLOWED_MAX_SPEED,
 						MAX_ALLOWED_MAX_SPEED);
-		sanitized.initialSpeed =
+		this.initialSpeed =
 				roundToTwoDecimals(
 						clampFinite(
-								sanitized.initialSpeed,
+								this.initialSpeed,
 								DEFAULT_INITIAL_SPEED,
 								MIN_ALLOWED_INITIAL_SPEED,
 								MAX_ALLOWED_INITIAL_SPEED));
-		if (!sanitized.fullRange) {
-			if (sanitized.maxSpeed > STANDARD_MAX_SPEED) {
-				sanitized.maxSpeed = DEFAULT_MAX_SPEED;
+		if (!this.fullRange) {
+			if (this.maxSpeed > STANDARD_MAX_SPEED) {
+				this.maxSpeed = DEFAULT_MAX_SPEED;
 			}
-			if (sanitized.initialSpeed > STANDARD_MAX_SPEED) {
-				sanitized.initialSpeed = DEFAULT_INITIAL_SPEED;
+			if (this.initialSpeed > STANDARD_MAX_SPEED) {
+				this.initialSpeed = DEFAULT_INITIAL_SPEED;
 			}
 		}
-		sanitized.scrollStep =
+		this.scrollStep =
 				roundToOneDecimal(
 						clampFinite(
-								sanitized.scrollStep,
+								this.scrollStep,
 								DEFAULT_SCROLL_STEP,
 								MIN_ALLOWED_SCROLL_STEP,
 								MAX_ALLOWED_SCROLL_STEP));
-		return sanitized;
 	}
 
 	public static int minSpeedToSlider(double value) {
@@ -199,11 +143,11 @@ public final class FlySpeedModifierConfig {
 	}
 
 	public static String formatSpeed(double value) {
-		return String.format(java.util.Locale.ROOT, "%.2fx", value);
+		return String.format(Locale.ROOT, "%.2fx", value);
 	}
 
 	public static String formatScrollStep(double value) {
-		return String.format(java.util.Locale.ROOT, "%.1f", value);
+		return String.format(Locale.ROOT, "%.1f", value);
 	}
 
 	private static double roundToOneDecimal(double value) {
@@ -235,31 +179,16 @@ public final class FlySpeedModifierConfig {
 		return value;
 	}
 
-	public static final class Values {
-		public boolean enabled = DEFAULT_ENABLED;
-		public boolean fullRange = DEFAULT_FULL_RANGE;
-		public double minSpeed = DEFAULT_MIN_SPEED;
-		public double maxSpeed = DEFAULT_MAX_SPEED;
-		public double initialSpeed = DEFAULT_INITIAL_SPEED;
-		public double scrollStep = DEFAULT_SCROLL_STEP;
-		public boolean resetOnAdjust = DEFAULT_RESET_ON_ADJUST;
-		public boolean applyToOtherMovement = DEFAULT_APPLY_TO_OTHER_MOVEMENT;
-
-		public static Values defaults() {
-			return new Values();
-		}
-
-		public Values copy() {
-			Values copy = new Values();
-			copy.enabled = this.enabled;
-			copy.fullRange = this.fullRange;
-			copy.minSpeed = this.minSpeed;
-			copy.maxSpeed = this.maxSpeed;
-			copy.initialSpeed = this.initialSpeed;
-			copy.scrollStep = this.scrollStep;
-			copy.resetOnAdjust = this.resetOnAdjust;
-			copy.applyToOtherMovement = this.applyToOtherMovement;
-			return copy;
-		}
+	public FlySpeedModifierConfig copy() {
+		FlySpeedModifierConfig copy = new FlySpeedModifierConfig();
+		copy.enabled = this.enabled;
+		copy.fullRange = this.fullRange;
+		copy.minSpeed = this.minSpeed;
+		copy.maxSpeed = this.maxSpeed;
+		copy.initialSpeed = this.initialSpeed;
+		copy.scrollStep = this.scrollStep;
+		copy.resetOnAdjust = this.resetOnAdjust;
+		copy.applyToOtherMovement = this.applyToOtherMovement;
+		return copy;
 	}
 }

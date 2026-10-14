@@ -3,9 +3,13 @@ package com.example.wenhanclient.flightdisabler;
 import com.example.wenhanclient.WenhanClientMod;
 
 public final class FlightDisablerConfig {
-	public Boolean enabled = null;
-	public boolean creativeFlightEnabled = false;
-	public boolean elytraFlightEnabled = false;
+	public static final Boolean DEFAULT_ENABLED = null;
+	public static final boolean DEFAULT_CREATIVE_FLIGHT_ENABLED = false;
+	public static final boolean DEFAULT_ELYTRA_FLIGHT_ENABLED = false;
+
+	public Boolean enabled = DEFAULT_ENABLED;
+	public boolean creativeFlightEnabled = DEFAULT_CREATIVE_FLIGHT_ENABLED;
+	public boolean elytraFlightEnabled = DEFAULT_ELYTRA_FLIGHT_ENABLED;
 
 	public static FlightDisablerConfig load() {
 		return WenhanClientMod.CONFIG.flightDisabler.copy();

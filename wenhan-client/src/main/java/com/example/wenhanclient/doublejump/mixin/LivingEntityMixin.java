@@ -1,6 +1,6 @@
 package com.example.wenhanclient.doublejump.mixin;
 
-import com.example.wenhanclient.doublejump.DoubleJumpConfig;
+import com.example.wenhanclient.doublejump.DoubleJumpSubMod;
 
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.entity.LivingEntity;
@@ -36,7 +36,7 @@ public abstract class LivingEntityMixin {
 		if (entity.onGround()) {
 			doubleJump$airJumpsPerformed = 0;
 			doubleJump$cooldownTicksRemaining = 0;
-			doubleJump$coyoteTicksRemaining = DoubleJumpConfig.coyoteTimeTicks();
+			doubleJump$coyoteTicksRemaining = DoubleJumpSubMod.config().coyoteTimeTicks;
 			doubleJump$wasOnGround = true;
 			return;
 		}
@@ -62,7 +62,7 @@ public abstract class LivingEntityMixin {
 	private boolean doubleJump$allowConfiguredAirJump(LivingEntity entity) {
 		boolean onGround = entity.onGround();
 		if (onGround) {
-			if (entity instanceof LocalPlayer && DoubleJumpConfig.enabled()) {
+			if (entity instanceof LocalPlayer && DoubleJumpSubMod.config().enabled) {
 				doubleJump$pendingGroundJump = true;
 			}
 
@@ -73,7 +73,7 @@ public abstract class LivingEntityMixin {
 			return false;
 		}
 
-		if (!DoubleJumpConfig.enabled()) {
+		if (!DoubleJumpSubMod.config().enabled) {
 			return false;
 		}
 
@@ -114,8 +114,8 @@ public abstract class LivingEntityMixin {
 		if ((doubleJump$pendingGroundJump
 						|| doubleJump$pendingCoyoteJump
 						|| doubleJump$pendingAirJump)
-				&& DoubleJumpConfig.cooldownEnabled()) {
-			doubleJump$cooldownTicksRemaining = DoubleJumpConfig.cooldownTicks();
+				&& DoubleJumpSubMod.config().cooldownEnabled) {
+			doubleJump$cooldownTicksRemaining = DoubleJumpSubMod.config().cooldownTicks;
 		}
 
 		doubleJump$pendingGroundJump = false;
@@ -138,11 +138,11 @@ public abstract class LivingEntityMixin {
 			return false;
 		}
 
-		if (DoubleJumpConfig.infiniteJumps()) {
+		if (DoubleJumpSubMod.config().infiniteJumps) {
 			return true;
 		}
 
-		int maximumAirJumps = DoubleJumpConfig.jumpCount() - 1;
+		int maximumAirJumps = DoubleJumpSubMod.config().jumpCount - 1;
 		return doubleJump$airJumpsPerformed < maximumAirJumps;
 	}
 
@@ -164,6 +164,6 @@ public abstract class LivingEntityMixin {
 			return false;
 		}
 
-		return !DoubleJumpConfig.cooldownEnabled() || doubleJump$cooldownTicksRemaining <= 0;
+		return !DoubleJumpSubMod.config().cooldownEnabled || doubleJump$cooldownTicksRemaining <= 0;
 	}
 }

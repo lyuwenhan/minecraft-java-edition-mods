@@ -3,9 +3,13 @@ package com.example.wenhanclient.notexturerotation;
 import com.example.wenhanclient.WenhanClientMod;
 
 public final class NoTextureRotationConfig {
-	public boolean enabled = false;
-	public boolean disableRandomOffset = true;
-	public boolean keepCollisionShapeOffsets = true;
+	public static final boolean DEFAULT_ENABLED = false;
+	public static final boolean DEFAULT_DISABLE_RANDOM_OFFSET = true;
+	public static final boolean DEFAULT_KEEP_COLLISION_SHAPE_OFFSETS = true;
+
+	public boolean enabled = DEFAULT_ENABLED;
+	public boolean disableRandomOffset = DEFAULT_DISABLE_RANDOM_OFFSET;
+	public boolean keepCollisionShapeOffsets = DEFAULT_KEEP_COLLISION_SHAPE_OFFSETS;
 
 	public static NoTextureRotationConfig load() {
 		return WenhanClientMod.CONFIG.noTextureRotation.copy();

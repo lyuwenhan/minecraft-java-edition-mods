@@ -7,11 +7,13 @@ import com.example.wenhanclient.betterstep.BetterStepSubMod;
 import com.example.wenhanclient.blockexplosionguard.BlockExplosionGuardConfig;
 import com.example.wenhanclient.blockexplosionguard.BlockExplosionGuardSubMod;
 import com.example.wenhanclient.boatutils.BoatUtilsConfig;
+import com.example.wenhanclient.boatutils.BoatUtilsSubMod;
 import com.example.wenhanclient.clientpseudounrestrict.ClientPseudoUnrestrictConfig;
 import com.example.wenhanclient.clientpseudounrestrict.ClientPseudoUnrestrictSubMod;
 import com.example.wenhanclient.creativeflying.CreativeFlyingConfig;
 import com.example.wenhanclient.creativeflying.CreativeFlyingSubMod;
 import com.example.wenhanclient.doublejump.DoubleJumpConfig;
+import com.example.wenhanclient.doublejump.DoubleJumpSubMod;
 import com.example.wenhanclient.elytracancel.ElytraCancelConfig;
 import com.example.wenhanclient.elytracancel.ElytraCancelSubMod;
 import com.example.wenhanclient.flightdisabler.FlightDisablerConfig;
@@ -19,6 +21,7 @@ import com.example.wenhanclient.flightdisabler.FlightDisablerSubMod;
 import com.example.wenhanclient.fluidplatform.FluidPlatformConfig;
 import com.example.wenhanclient.fluidplatform.FluidPlatformSubMod;
 import com.example.wenhanclient.flyspeedmodifier.FlySpeedModifierConfig;
+import com.example.wenhanclient.flyspeedmodifier.FlySpeedModifierSubMod;
 import com.example.wenhanclient.hidepassword.HidePasswordSubMod;
 import com.example.wenhanclient.hidepassword.config.HidePasswordConfig;
 import com.example.wenhanclient.hiderealms.HideRealmsConfig;
@@ -106,133 +109,133 @@ public final class WenhanClientConfigScreen {
 				.option(
 						booleanOption(
 								"option.wenhan-client.creative-flying.enabled",
-								false,
+								CreativeFlyingConfig.DEFAULT_ENABLED,
 								() -> drafts.creativeFlying.enabled,
 								value -> drafts.creativeFlying.enabled = value))
 				.option(
 						booleanOption(
 								"option.wenhan-client.flight-disabler.creative_flight_enabled",
-								false,
+								FlightDisablerConfig.DEFAULT_CREATIVE_FLIGHT_ENABLED,
 								() -> drafts.flightDisabler.creativeFlightEnabled,
 								value -> drafts.flightDisabler.creativeFlightEnabled = value))
 				.option(
 						booleanOption(
 								"option.wenhan-client.flight-disabler.elytra_flight_enabled",
-								false,
+								FlightDisablerConfig.DEFAULT_ELYTRA_FLIGHT_ENABLED,
 								() -> drafts.flightDisabler.elytraFlightEnabled,
 								value -> drafts.flightDisabler.elytraFlightEnabled = value))
 				.option(
 						booleanOption(
 								"option.wenhan-client.elytra-cancel.enabled",
-								false,
+								ElytraCancelConfig.DEFAULT_ENABLED,
 								() -> drafts.elytraCancel.enabled,
 								value -> drafts.elytraCancel.enabled = value))
 				.option(
 						booleanOption(
 								"option.wenhan-client.no-flight-reset.enabled",
-								false,
+								NoFlightResetConfig.DEFAULT_ENABLED,
 								() -> drafts.noFlightReset.enabled,
 								value -> drafts.noFlightReset.enabled = value))
 				.option(
 						booleanOption(
 								"option.wenhan-client.no-jump-delay.enabled",
-								false,
+								NoJumpDelayConfig.DEFAULT_ENABLED,
 								() -> drafts.noJumpDelay.enabled,
 								value -> drafts.noJumpDelay.enabled = value))
 				.option(
 						booleanOption(
 								"option.wenhan-client.instant-respawn.enabled",
-								false,
+								InstantRespawnConfig.DEFAULT_ENABLED,
 								() -> drafts.instantRespawn.enabled,
 								value -> drafts.instantRespawn.enabled = value))
 				.option(
 						booleanOption(
 								"option.wenhan-client.no-levitation.enabled",
-								false,
+								NoLevitationConfig.DEFAULT_ENABLED,
 								() -> drafts.noLevitation.enabled,
 								value -> drafts.noLevitation.enabled = value))
 				.option(
 						booleanOption(
 								"option.wenhan-client.block-explosion-guard.enabled",
-								false,
+								BlockExplosionGuardConfig.DEFAULT_ENABLED,
 								() -> drafts.blockExplosionGuard.enabled,
 								value -> drafts.blockExplosionGuard.enabled = value))
 				.option(
 						booleanOption(
 								"option.wenhan-client.no-collision.enabled",
-								false,
+								NoCollisionConfig.DEFAULT_ENABLED,
 								() -> drafts.noCollision.enabled,
 								value -> drafts.noCollision.enabled = value))
 				.option(
 						booleanOption(
 								"option.wenhan-client.fluid-platform.enabled",
-								false,
+								FluidPlatformConfig.DEFAULT_ENABLED,
 								() -> drafts.fluidPlatform.enabled,
 								value -> drafts.fluidPlatform.enabled = value))
 				.option(
 						booleanOption(
 								"option.wenhan-client.no-camera-collision.enabled",
-								false,
+								NoCameraCollisionConfig.DEFAULT_ENABLED,
 								() -> drafts.noCameraCollision.enabled,
 								value -> drafts.noCameraCollision.enabled = value))
 				.option(
 						booleanOption(
 								"option.wenhan-client.attack-through-foliage.enabled",
-								false,
+								AttackThroughFoliageConfig.DEFAULT_ENABLED,
 								() -> drafts.attackThroughFoliage.enabled,
 								value -> drafts.attackThroughFoliage.enabled = value))
 				.option(
 						booleanOption(
 								"option.wenhan-client.no-slowdown.enabled",
-								false,
+								NoSlowdownConfig.DEFAULT_ENABLED,
 								() -> drafts.noSlowdown.enabled,
 								value -> drafts.noSlowdown.enabled = value))
 				.option(
 						booleanOption(
 								"option.wenhan-client.no-slime-bounce.enabled",
-								false,
+								NoSlimeBounceConfig.DEFAULT_ENABLED,
 								() -> drafts.noSlimeBounce.enabled,
 								value -> drafts.noSlimeBounce.enabled = value))
 				.option(
 						booleanOption(
 								"option.wenhan-client.no-fog.enabled",
-								false,
+								NoFogConfig.DEFAULT_ENABLED,
 								() -> drafts.noFog.enabled,
 								value -> drafts.noFog.enabled = value))
 				.option(
 						booleanOption(
 								"option.wenhan-client.transparent-blocks.always_render",
-								false,
+								TransparentBlocksConfig.DEFAULT_ALWAYS_RENDER,
 								() -> drafts.transparentBlocks.alwaysRender,
 								value -> drafts.transparentBlocks.alwaysRender = value))
 				.option(
 						booleanOption(
 								"option.wenhan-client.minecart-direction.keep_direction_in_minecart",
-								false,
+								MinecartDirectionConfig.DEFAULT_KEEP_DIRECTION_IN_MINECART,
 								() -> drafts.minecartDirection.keepDirectionInMinecart,
 								value -> drafts.minecartDirection.keepDirectionInMinecart = value))
 				.option(
 						booleanOption(
 								"option.wenhan-client.hide-realms.enabled",
-								false,
+								HideRealmsConfig.DEFAULT_ENABLED,
 								() -> drafts.hideRealms.enabled,
 								value -> drafts.hideRealms.enabled = value))
 				.option(
 						booleanOption(
 								"option.wenhan-client.interaction-delay.mining_delay",
-								false,
+								InteractionDelayConfig.DEFAULT_MINING_DELAY,
 								() -> drafts.interactionDelay.miningDelay,
 								value -> drafts.interactionDelay.miningDelay = value))
 				.option(
 						booleanOption(
 								"option.wenhan-client.stable-mining.enabled",
-								false,
+								StableMiningConfig.DEFAULT_ENABLED,
 								() -> drafts.stableMining.enabled,
 								value -> drafts.stableMining.enabled = value))
 				.option(
 						booleanOption(
 								"option.wenhan-client.interaction-delay.placing_delay",
-								false,
+								InteractionDelayConfig.DEFAULT_PLACING_DELAY,
 								() -> drafts.interactionDelay.placingDelay,
 								value -> drafts.interactionDelay.placingDelay = value))
 				.build();
@@ -316,13 +319,13 @@ public final class WenhanClientConfigScreen {
 				.option(
 						booleanOption(
 								"option.wenhan-client.hide-password.enabled",
-								true,
+								HidePasswordConfig.DEFAULT_ENABLED,
 								() -> drafts.hidePassword.enabled,
 								value -> drafts.hidePassword.enabled = value))
 				.option(
 						booleanOption(
 								"option.wenhan-client.hide-password.hide_length",
-								false,
+								HidePasswordConfig.DEFAULT_HIDE_LENGTH,
 								() -> drafts.hidePassword.hideLength,
 								value -> drafts.hidePassword.hideLength = value))
 				.build();
@@ -334,19 +337,19 @@ public final class WenhanClientConfigScreen {
 				.option(
 						booleanOption(
 								"option.wenhan-client.player-highlighter.enabled",
-								false,
+								PlayerHighlighterConfig.DEFAULT_ENABLED,
 								() -> drafts.playerHighlighter.enabled,
 								value -> drafts.playerHighlighter.enabled = value))
 				.option(
 						booleanOption(
 								"option.wenhan-client.player-highlighter.keep",
-								false,
+								PlayerHighlighterConfig.DEFAULT_KEEP,
 								() -> drafts.playerHighlighter.keep,
 								value -> drafts.playerHighlighter.keep = value))
 				.option(
 						booleanOption(
 								"option.wenhan-client.player-highlighter.information_hud",
-								true,
+								PlayerHighlighterConfig.DEFAULT_INFORMATION_HUD,
 								() ->
 										drafts.playerHighlighter.informationHud == null
 												|| drafts.playerHighlighter.informationHud,
@@ -360,13 +363,13 @@ public final class WenhanClientConfigScreen {
 				.option(
 						booleanOption(
 								"option.wenhan-client.who-i-am.show_local_player_name",
-								false,
+								WhoIAmConfig.DEFAULT_SHOW_LOCAL_PLAYER_NAME,
 								() -> drafts.whoIAm.showLocalPlayerName,
 								value -> drafts.whoIAm.showLocalPlayerName = value))
 				.option(
 						booleanOption(
 								"option.wenhan-client.who-i-am.append_player_name_to_title",
-								false,
+								WhoIAmConfig.DEFAULT_APPEND_PLAYER_NAME_TO_TITLE,
 								() -> drafts.whoIAm.appendPlayerNameToTitle,
 								value -> drafts.whoIAm.appendPlayerNameToTitle = value))
 				.build();
@@ -378,19 +381,19 @@ public final class WenhanClientConfigScreen {
 				.option(
 						booleanOption(
 								"option.wenhan-client.no-texture-rotation.enabled",
-								false,
+								NoTextureRotationConfig.DEFAULT_ENABLED,
 								() -> drafts.noTextureRotation.enabled,
 								value -> drafts.noTextureRotation.enabled = value))
 				.option(
 						booleanOption(
 								"option.wenhan-client.no-texture-rotation.disable_random_offset",
-								true,
+								NoTextureRotationConfig.DEFAULT_DISABLE_RANDOM_OFFSET,
 								() -> drafts.noTextureRotation.disableRandomOffset,
 								value -> drafts.noTextureRotation.disableRandomOffset = value))
 				.option(
 						booleanOption(
 								"option.wenhan-client.no-texture-rotation.keep_collision_shape_offsets",
-								true,
+								NoTextureRotationConfig.DEFAULT_KEEP_COLLISION_SHAPE_OFFSETS,
 								() -> drafts.noTextureRotation.keepCollisionShapeOffsets,
 								value ->
 										drafts.noTextureRotation.keepCollisionShapeOffsets = value))
@@ -461,7 +464,7 @@ public final class WenhanClientConfigScreen {
 				.option(
 						booleanOption(
 								"option.wenhan-client.client-pseudo-unrestrict.block_interaction_range",
-								false,
+								ClientPseudoUnrestrictConfig.DEFAULT_BLOCK_INTERACTION_RANGE,
 								() -> drafts.clientPseudoUnrestrict.blockInteractionRange,
 								value ->
 										drafts.clientPseudoUnrestrict.blockInteractionRange =
@@ -469,7 +472,7 @@ public final class WenhanClientConfigScreen {
 				.option(
 						booleanOption(
 								"option.wenhan-client.client-pseudo-unrestrict.entity_interaction_range",
-								false,
+								ClientPseudoUnrestrictConfig.DEFAULT_ENTITY_INTERACTION_RANGE,
 								() -> drafts.clientPseudoUnrestrict.entityInteractionRange,
 								value ->
 										drafts.clientPseudoUnrestrict.entityInteractionRange =
@@ -477,7 +480,7 @@ public final class WenhanClientConfigScreen {
 				.option(
 						booleanOption(
 								"option.wenhan-client.client-pseudo-unrestrict.instant_break",
-								false,
+								ClientPseudoUnrestrictConfig.DEFAULT_INSTANT_BREAK,
 								() -> drafts.clientPseudoUnrestrict.instantBreak,
 								value -> drafts.clientPseudoUnrestrict.instantBreak = value))
 				.build();
@@ -570,68 +573,68 @@ public final class WenhanClientConfigScreen {
 				.option(
 						booleanOption(
 								"option.wenhan-client.boat-utils.unrestricted_view_rotation",
-								false,
+								BoatUtilsConfig.DEFAULT_UNRESTRICTED_VIEW_ROTATION,
 								() -> drafts.boatUtils.unrestrictedViewRotation,
 								value -> drafts.boatUtils.unrestrictedViewRotation = value))
 				.option(
 						booleanOption(
 								"option.wenhan-client.boat-utils.view_direction_lock_enabled",
-								false,
+								BoatUtilsConfig.DEFAULT_VIEW_DIRECTION_LOCK_ENABLED,
 								() -> drafts.boatUtils.viewDirectionLockEnabled,
 								value -> drafts.boatUtils.viewDirectionLockEnabled = value))
 				.option(
 						booleanOption(
 								"option.wenhan-client.boat-utils.camera_auto_recenter_enabled",
-								false,
+								BoatUtilsConfig.DEFAULT_CAMERA_AUTO_RECENTER_ENABLED,
 								() -> drafts.boatUtils.cameraAutoRecenterEnabled,
 								value -> drafts.boatUtils.cameraAutoRecenterEnabled = value))
 				.option(
 						booleanOption(
 								"option.wenhan-client.boat-utils.direction_hotkeys_enabled",
-								false,
+								BoatUtilsConfig.DEFAULT_DIRECTION_HOTKEYS_ENABLED,
 								() -> drafts.boatUtils.directionHotkeysEnabled,
 								value -> drafts.boatUtils.directionHotkeysEnabled = value))
 				.option(
 						booleanOption(
 								"option.wenhan-client.boat-utils.direction_hotkeys_use_45_degree_angles",
-								false,
+								BoatUtilsConfig.DEFAULT_DIRECTION_HOTKEYS_USE_45_DEGREE_ANGLES,
 								() -> drafts.boatUtils.directionHotkeysUse45DegreeAngles,
 								value ->
 										drafts.boatUtils.directionHotkeysUse45DegreeAngles = value))
 				.option(
 						booleanOption(
 								"option.wenhan-client.boat-utils.blue_ice_speed_everywhere",
-								false,
+								BoatUtilsConfig.DEFAULT_BLUE_ICE_SPEED_EVERYWHERE,
 								() -> drafts.boatUtils.blueIceSpeedEverywhere,
 								value -> drafts.boatUtils.blueIceSpeedEverywhere = value))
 				.option(
 						booleanOption(
 								"option.wenhan-client.boat-utils.prevent_sinking",
-								false,
+								BoatUtilsConfig.DEFAULT_PREVENT_SINKING,
 								() -> drafts.boatUtils.preventSinking,
 								value -> drafts.boatUtils.preventSinking = value))
 				.option(
 						booleanOption(
 								"option.wenhan-client.boat-utils.handbrake_enabled",
-								false,
+								BoatUtilsConfig.DEFAULT_HANDBRAKE_ENABLED,
 								() -> drafts.boatUtils.handbrakeEnabled,
 								value -> drafts.boatUtils.handbrakeEnabled = value))
 				.option(
 						booleanOption(
 								"option.wenhan-client.boat-utils.handbrake_boost_enabled",
-								false,
+								BoatUtilsConfig.DEFAULT_HANDBRAKE_BOOST_ENABLED,
 								() -> drafts.boatUtils.handbrakeBoostEnabled,
 								value -> drafts.boatUtils.handbrakeBoostEnabled = value))
 				.option(
 						booleanOption(
 								"option.wenhan-client.boat-utils.lateral_friction_enabled",
-								false,
+								BoatUtilsConfig.DEFAULT_LATERAL_FRICTION_ENABLED,
 								() -> drafts.boatUtils.lateralFrictionEnabled,
 								value -> drafts.boatUtils.lateralFrictionEnabled = value))
 				.option(
 						floatSliderOption(
 								"option.wenhan-client.boat-utils.boat_step_height",
-								0.0F,
+								BoatUtilsConfig.DEFAULT_BOAT_STEP_HEIGHT,
 								0.0F,
 								10.0F,
 								0.1F,
@@ -758,7 +761,7 @@ public final class WenhanClientConfigScreen {
 	}
 
 	private static void onFlySpeedModifierMaxSpeedChanged(
-			FlySpeedModifierConfig.Values draft, double value) {
+			FlySpeedModifierConfig draft, double value) {
 		draft.maxSpeed =
 				roundToTwoDecimals(
 						clamp(
@@ -769,7 +772,7 @@ public final class WenhanClientConfigScreen {
 	}
 
 	private static void onFlySpeedModifierMinSpeedChanged(
-			FlySpeedModifierConfig.Values draft, double value) {
+			FlySpeedModifierConfig draft, double value) {
 		draft.minSpeed =
 				roundToTwoDecimals(
 						clamp(
@@ -779,7 +782,7 @@ public final class WenhanClientConfigScreen {
 		normalizeFlySpeedModifierSpeeds(draft);
 	}
 
-	private static void normalizeFlySpeedModifierSpeeds(FlySpeedModifierConfig.Values draft) {
+	private static void normalizeFlySpeedModifierSpeeds(FlySpeedModifierConfig draft) {
 		draft.minSpeed =
 				roundToTwoDecimals(
 						clamp(
@@ -798,20 +801,20 @@ public final class WenhanClientConfigScreen {
 	}
 
 	private static double constrainFlySpeedModifierInitialSpeed(
-			FlySpeedModifierConfig.Values draft, double value) {
+			FlySpeedModifierConfig draft, double value) {
 		return Math.max(
 				flySpeedModifierInitialSpeedMinimum(draft),
 				Math.min(value, flySpeedModifierInitialSpeedMaximum(draft)));
 	}
 
-	private static double flySpeedModifierInitialSpeedMinimum(FlySpeedModifierConfig.Values draft) {
+	private static double flySpeedModifierInitialSpeedMinimum(FlySpeedModifierConfig draft) {
 		return clamp(
 				draft.minSpeed,
 				FlySpeedModifierConfig.MIN_ALLOWED_INITIAL_SPEED,
 				FlySpeedModifierConfig.MAX_ALLOWED_INITIAL_SPEED);
 	}
 
-	private static double flySpeedModifierInitialSpeedMaximum(FlySpeedModifierConfig.Values draft) {
+	private static double flySpeedModifierInitialSpeedMaximum(FlySpeedModifierConfig draft) {
 		double maxSpeed =
 				clamp(
 						draft.maxSpeed,
@@ -842,7 +845,7 @@ public final class WenhanClientConfigScreen {
 	}
 
 	private static final class Drafts {
-		private final BoatUtilsConfig.Values boatUtils;
+		private final BoatUtilsConfig boatUtils;
 		private final AttackThroughFoliageConfig attackThroughFoliage;
 		private final BlockExplosionGuardConfig blockExplosionGuard;
 		private final BetterStepConfig betterStep;
@@ -850,11 +853,11 @@ public final class WenhanClientConfigScreen {
 		private final NoSlowdownConfig noSlowdown;
 		private final NoSlimeBounceConfig noSlimeBounce;
 		private final CreativeFlyingConfig creativeFlying;
-		private final DoubleJumpConfig.Values doubleJump;
+		private final DoubleJumpConfig doubleJump;
 		private final ElytraCancelConfig elytraCancel;
 		private final FlightDisablerConfig flightDisabler;
 		private final FluidPlatformConfig fluidPlatform;
-		private final FlySpeedModifierConfig.Values flySpeedModifier;
+		private final FlySpeedModifierConfig flySpeedModifier;
 		private final HideRealmsConfig hideRealms;
 		private final HidePasswordConfig hidePassword;
 		private final InstantRespawnConfig instantRespawn;
@@ -874,7 +877,7 @@ public final class WenhanClientConfigScreen {
 		private final WhoIAmConfig whoIAm;
 
 		private Drafts() {
-			this.boatUtils = BoatUtilsConfig.get();
+			this.boatUtils = BoatUtilsSubMod.config().copy();
 			this.attackThroughFoliage = AttackThroughFoliageSubMod.config();
 			this.blockExplosionGuard = BlockExplosionGuardSubMod.config();
 			this.betterStep = BetterStepSubMod.config();
@@ -882,11 +885,11 @@ public final class WenhanClientConfigScreen {
 			this.noSlowdown = NoSlowdownSubMod.config();
 			this.noSlimeBounce = NoSlimeBounceSubMod.config();
 			this.creativeFlying = CreativeFlyingSubMod.config();
-			this.doubleJump = DoubleJumpConfig.get();
+			this.doubleJump = DoubleJumpSubMod.config().copy();
 			this.elytraCancel = ElytraCancelSubMod.config();
 			this.flightDisabler = FlightDisablerSubMod.config();
 			this.fluidPlatform = FluidPlatformSubMod.config();
-			this.flySpeedModifier = FlySpeedModifierConfig.get();
+			this.flySpeedModifier = FlySpeedModifierSubMod.config().copy();
 			this.flySpeedModifier.fullRange = true;
 			this.hideRealms = HideRealmsSubMod.config();
 			this.hidePassword = HidePasswordSubMod.config();
@@ -919,13 +922,13 @@ public final class WenhanClientConfigScreen {
 			NoSlowdownSubMod.setConfig(this.noSlowdown);
 			NoSlimeBounceSubMod.setConfig(this.noSlimeBounce);
 			CreativeFlyingSubMod.setConfig(this.creativeFlying);
-			DoubleJumpConfig.set(this.doubleJump);
+			DoubleJumpSubMod.setConfig(this.doubleJump);
 			ElytraCancelSubMod.setConfig(this.elytraCancel);
 			FlightDisablerSubMod.setConfig(this.flightDisabler);
 			FluidPlatformSubMod.setConfig(this.fluidPlatform);
 			this.flySpeedModifier.fullRange = true;
 			normalizeFlySpeedModifierSpeeds(this.flySpeedModifier);
-			FlySpeedModifierConfig.set(this.flySpeedModifier);
+			FlySpeedModifierSubMod.setConfig(this.flySpeedModifier);
 			HideRealmsSubMod.setConfig(this.hideRealms);
 			HidePasswordSubMod.setConfig(this.hidePassword);
 			InstantRespawnSubMod.setConfig(this.instantRespawn);
@@ -943,7 +946,7 @@ public final class WenhanClientConfigScreen {
 			StableMiningSubMod.setConfig(this.stableMining);
 			TransparentBlocksSubMod.setConfig(this.transparentBlocks);
 			WhoIAmSubMod.setConfig(this.whoIAm);
-			BoatUtilsConfig.set(this.boatUtils);
+			BoatUtilsSubMod.setConfig(this.boatUtils);
 		}
 	}
 }

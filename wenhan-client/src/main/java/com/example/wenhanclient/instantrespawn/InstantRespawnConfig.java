@@ -3,7 +3,9 @@ package com.example.wenhanclient.instantrespawn;
 import com.example.wenhanclient.WenhanClientMod;
 
 public final class InstantRespawnConfig {
-	public boolean enabled = false;
+	public static final boolean DEFAULT_ENABLED = false;
+
+	public boolean enabled = DEFAULT_ENABLED;
 
 	public static InstantRespawnConfig load() {
 		return WenhanClientMod.CONFIG.instantRespawn.copy();

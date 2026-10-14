@@ -31,7 +31,7 @@ public final class FreecamSpeedController {
 	}
 
 	public static void onJoinWorld() {
-		temporaryMultiplier = clampMultiplier(FlySpeedModifierConfig.initialSpeed());
+		temporaryMultiplier = clampMultiplier(FlySpeedModifierSubMod.config().initialSpeed);
 		hasTemporaryMultiplier = false;
 		wasAdjustSpeedKeyDown = false;
 
@@ -40,7 +40,7 @@ public final class FreecamSpeedController {
 	}
 
 	public static void onEndClientTick(Minecraft client) {
-		if (!FlySpeedModifierConfig.enabled()) {
+		if (!FlySpeedModifierSubMod.config().enabled) {
 			wasAdjustSpeedKeyDown = false;
 			if (hasDirectOriginalFlyingSpeed) {
 				restoreDirectFlyingSpeed(client);
@@ -59,7 +59,7 @@ public final class FreecamSpeedController {
 	}
 
 	public static void onConfigChanged() {
-		if (!FlySpeedModifierConfig.enabled()) {
+		if (!FlySpeedModifierSubMod.config().enabled) {
 			wasAdjustSpeedKeyDown = false;
 			restoreDirectFlyingSpeed(Minecraft.getInstance());
 			return;
@@ -68,7 +68,7 @@ public final class FreecamSpeedController {
 	}
 
 	public static boolean handleMouseScroll(double verticalScroll) {
-		if (!FlySpeedModifierConfig.enabled()) {
+		if (!FlySpeedModifierSubMod.config().enabled) {
 			return false;
 		}
 		if (verticalScroll == 0.0D) {
@@ -83,12 +83,14 @@ public final class FreecamSpeedController {
 			return false;
 		}
 		if (!hasTemporaryMultiplier) {
-			temporaryMultiplier = clampMultiplier(FlySpeedModifierConfig.initialSpeed());
+			temporaryMultiplier = clampMultiplier(FlySpeedModifierSubMod.config().initialSpeed);
 			hasTemporaryMultiplier = true;
 		}
 		temporaryMultiplier =
 				adjustMultiplierNonLinearly(
-						temporaryMultiplier, verticalScroll, FlySpeedModifierConfig.scrollStep());
+						temporaryMultiplier,
+						verticalScroll,
+						FlySpeedModifierSubMod.config().scrollStep);
 		if (activeTarget == SpeedTarget.DIRECT_FLIGHT) {
 			applyDirectFlyingSpeed(client);
 		}
@@ -97,7 +99,7 @@ public final class FreecamSpeedController {
 	}
 
 	public static double applyFreecamSpeed(double originalSpeed) {
-		if (!FlySpeedModifierConfig.enabled()) {
+		if (!FlySpeedModifierSubMod.config().enabled) {
 			return originalSpeed;
 		}
 		if (!shouldUseTemporaryFreecamMultiplier()) {
@@ -107,11 +109,11 @@ public final class FreecamSpeedController {
 	}
 
 	public static boolean shouldModifyOtherMovement() {
-		if (!FlySpeedModifierConfig.enabled()) {
+		if (!FlySpeedModifierSubMod.config().enabled) {
 			return false;
 		}
 		Minecraft client = Minecraft.getInstance();
-		return FlySpeedModifierConfig.applyToOtherMovement()
+		return FlySpeedModifierSubMod.config().applyToOtherMovement
 				&& hasTemporaryMultiplier
 				&& client.player != null
 				&& !isFreecamEnabled()
@@ -123,7 +125,7 @@ public final class FreecamSpeedController {
 	}
 
 	public static float applyFreecamCreativeFlyingSpeed(float originalFlyingSpeed) {
-		if (!FlySpeedModifierConfig.enabled()) {
+		if (!FlySpeedModifierSubMod.config().enabled) {
 			return originalFlyingSpeed;
 		}
 		if (!shouldUseTemporaryFreecamMultiplier()) {
@@ -143,7 +145,7 @@ public final class FreecamSpeedController {
 		if (isDirectFlyingActive(client)) {
 			return SpeedTarget.DIRECT_FLIGHT;
 		}
-		if (FlySpeedModifierConfig.applyToOtherMovement()
+		if (FlySpeedModifierSubMod.config().applyToOtherMovement
 				&& client != null
 				&& client.player != null) {
 			return SpeedTarget.OTHER_MOVEMENT;
@@ -196,8 +198,8 @@ public final class FreecamSpeedController {
 	}
 
 	private static void showCurrentMultiplierOnKeyPress() {
-		if (FlySpeedModifierConfig.resetOnAdjust() || !hasTemporaryMultiplier) {
-			temporaryMultiplier = clampMultiplier(FlySpeedModifierConfig.initialSpeed());
+		if (FlySpeedModifierSubMod.config().resetOnAdjust || !hasTemporaryMultiplier) {
+			temporaryMultiplier = clampMultiplier(FlySpeedModifierSubMod.config().initialSpeed);
 			hasTemporaryMultiplier = true;
 		} else {
 			temporaryMultiplier = clampMultiplier(temporaryMultiplier);
@@ -214,7 +216,7 @@ public final class FreecamSpeedController {
 	}
 
 	private static void resetTemporaryMultiplierSilently() {
-		temporaryMultiplier = clampMultiplier(FlySpeedModifierConfig.initialSpeed());
+		temporaryMultiplier = clampMultiplier(FlySpeedModifierSubMod.config().initialSpeed);
 		hasTemporaryMultiplier = true;
 		Minecraft client = Minecraft.getInstance();
 		SpeedTarget activeTarget = resolveActiveTarget(client);
@@ -332,10 +334,10 @@ public final class FreecamSpeedController {
 
 	private static double clampMultiplier(double value) {
 		if (!Double.isFinite(value)) {
-			return FlySpeedModifierConfig.minSpeed();
+			return FlySpeedModifierSubMod.config().minSpeed;
 		}
-		double min = FlySpeedModifierConfig.minSpeed();
-		double max = FlySpeedModifierConfig.maxSpeed();
+		double min = FlySpeedModifierSubMod.config().minSpeed;
+		double max = FlySpeedModifierSubMod.config().maxSpeed;
 		if (value < min) {
 			return min;
 		}

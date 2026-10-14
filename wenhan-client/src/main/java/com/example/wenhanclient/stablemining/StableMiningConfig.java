@@ -3,7 +3,9 @@ package com.example.wenhanclient.stablemining;
 import com.example.wenhanclient.WenhanClientMod;
 
 public final class StableMiningConfig {
-	public boolean enabled = false;
+	public static final boolean DEFAULT_ENABLED = false;
+
+	public boolean enabled = DEFAULT_ENABLED;
 
 	public static StableMiningConfig load() {
 		return WenhanClientMod.CONFIG.stableMining.copy();

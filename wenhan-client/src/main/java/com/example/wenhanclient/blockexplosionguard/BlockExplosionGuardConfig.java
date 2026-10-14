@@ -3,7 +3,9 @@ package com.example.wenhanclient.blockexplosionguard;
 import com.example.wenhanclient.WenhanClientMod;
 
 public final class BlockExplosionGuardConfig {
-	public boolean enabled = false;
+	public static final boolean DEFAULT_ENABLED = false;
+
+	public boolean enabled = DEFAULT_ENABLED;
 
 	public static BlockExplosionGuardConfig load() {
 		return WenhanClientMod.CONFIG.blockExplosionGuard.copy();

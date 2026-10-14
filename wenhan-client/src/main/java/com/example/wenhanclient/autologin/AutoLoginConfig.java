@@ -9,10 +9,12 @@ public class AutoLoginConfig {
 	public Map<String, Credential> servers = new HashMap<>();
 
 	public static class Credential {
+		public static final boolean DEFAULT_ENABLED = true;
+
 		public String enc;
 		public String salt;
 		public String iv;
-		public boolean enabled = true;
+		public boolean enabled = DEFAULT_ENABLED;
 	}
 
 	public static AutoLoginConfig load() {

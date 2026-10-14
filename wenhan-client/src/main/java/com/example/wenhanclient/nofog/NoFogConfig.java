@@ -3,7 +3,9 @@ package com.example.wenhanclient.nofog;
 import com.example.wenhanclient.WenhanClientMod;
 
 public final class NoFogConfig {
-	public boolean enabled = false;
+	public static final boolean DEFAULT_ENABLED = false;
+
+	public boolean enabled = DEFAULT_ENABLED;
 
 	public static NoFogConfig load() {
 		return WenhanClientMod.CONFIG.noFog.copy();

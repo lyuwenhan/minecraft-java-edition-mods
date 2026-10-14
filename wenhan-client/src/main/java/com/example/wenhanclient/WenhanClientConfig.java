@@ -43,6 +43,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.HashMap;
 
 public class WenhanClientConfig {
 	private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
@@ -53,18 +54,17 @@ public class WenhanClientConfig {
 	public AutoLoginConfig autoLogin = new AutoLoginConfig();
 	public BetterStepConfig betterStep = new BetterStepConfig();
 	public BlockExplosionGuardConfig blockExplosionGuard = new BlockExplosionGuardConfig();
-	public BoatUtilsConfig.Values boatUtils = BoatUtilsConfig.Values.defaults();
+	public BoatUtilsConfig boatUtils = new BoatUtilsConfig();
 	public ClientPseudoUnrestrictConfig clientPseudoUnrestrict = new ClientPseudoUnrestrictConfig();
 	public NoSlowdownConfig noSlowdown = new NoSlowdownConfig();
 	public NoSlimeBounceConfig noSlimeBounce = new NoSlimeBounceConfig();
 	public CreativeFlyingConfig creativeFlying = new CreativeFlyingConfig();
-	public DoubleJumpConfig.Values doubleJump = DoubleJumpConfig.Values.defaults();
+	public DoubleJumpConfig doubleJump = new DoubleJumpConfig();
 	public ElytraCancelConfig elytraCancel = new ElytraCancelConfig();
 	public EntityHighlighterConfig entityHighlighter = new EntityHighlighterConfig();
 	public FlightDisablerConfig flightDisabler = new FlightDisablerConfig();
 	public FluidPlatformConfig fluidPlatform = new FluidPlatformConfig();
-	public FlySpeedModifierConfig.Values flySpeedModifier =
-			FlySpeedModifierConfig.Values.defaults();
+	public FlySpeedModifierConfig flySpeedModifier = new FlySpeedModifierConfig();
 	public GreetConfig greet = new GreetConfig();
 	public HideRealmsConfig hideRealms = new HideRealmsConfig();
 	public HidePasswordConfig hidePassword = new HidePasswordConfig();
@@ -126,19 +126,19 @@ public class WenhanClientConfig {
 			autoLogin = new AutoLoginConfig();
 		}
 		if (autoLogin.servers == null) {
-			autoLogin.servers = new java.util.HashMap<>();
+			autoLogin.servers = new HashMap<>();
 		}
 		if (betterStep == null) {
 			betterStep = new BetterStepConfig();
 		}
-		betterStep = BetterStepConfig.sanitize(betterStep);
+		betterStep.sanitize();
 		if (blockExplosionGuard == null) {
 			blockExplosionGuard = new BlockExplosionGuardConfig();
 		}
 		if (boatUtils == null) {
-			boatUtils = BoatUtilsConfig.Values.defaults();
+			boatUtils = new BoatUtilsConfig();
 		}
-		boatUtils = BoatUtilsConfig.sanitize(boatUtils);
+		boatUtils.sanitize();
 		if (clientPseudoUnrestrict == null) {
 			clientPseudoUnrestrict = new ClientPseudoUnrestrictConfig();
 		}
@@ -152,9 +152,9 @@ public class WenhanClientConfig {
 			creativeFlying = new CreativeFlyingConfig();
 		}
 		if (doubleJump == null) {
-			doubleJump = DoubleJumpConfig.Values.defaults();
+			doubleJump = new DoubleJumpConfig();
 		}
-		doubleJump = DoubleJumpConfig.sanitize(doubleJump);
+		doubleJump.sanitize();
 		if (elytraCancel == null) {
 			elytraCancel = new ElytraCancelConfig();
 		}
@@ -169,9 +169,9 @@ public class WenhanClientConfig {
 			fluidPlatform = new FluidPlatformConfig();
 		}
 		if (flySpeedModifier == null) {
-			flySpeedModifier = FlySpeedModifierConfig.Values.defaults();
+			flySpeedModifier = new FlySpeedModifierConfig();
 		}
-		flySpeedModifier = FlySpeedModifierConfig.sanitize(flySpeedModifier);
+		flySpeedModifier.sanitize();
 		if (greet == null) {
 			greet = new GreetConfig();
 		}
@@ -191,7 +191,7 @@ public class WenhanClientConfig {
 		if (jumpHeight == null) {
 			jumpHeight = new JumpHeightConfig();
 		}
-		jumpHeight = JumpHeightConfig.sanitize(jumpHeight);
+		jumpHeight.sanitize();
 		if (minecartDirection == null) {
 			minecartDirection = new MinecartDirectionConfig();
 		}

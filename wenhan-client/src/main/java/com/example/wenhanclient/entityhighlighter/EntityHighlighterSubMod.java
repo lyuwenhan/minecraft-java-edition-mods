@@ -17,6 +17,7 @@ import net.minecraft.world.entity.MobCategory;
 
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 
@@ -296,7 +297,7 @@ public final class EntityHighlighterSubMod {
 			Iterable<String> values, SuggestionsBuilder builder) {
 		String remaining = builder.getRemainingLowerCase();
 		for (String value : values) {
-			if (value != null && value.toLowerCase(java.util.Locale.ROOT).startsWith(remaining)) {
+			if (value != null && value.toLowerCase(Locale.ROOT).startsWith(remaining)) {
 				builder.suggest(value);
 			}
 		}

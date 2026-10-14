@@ -3,7 +3,9 @@ package com.example.wenhanclient.attackthroughfoliage;
 import com.example.wenhanclient.WenhanClientMod;
 
 public final class AttackThroughFoliageConfig {
-	public boolean enabled = false;
+	public static final boolean DEFAULT_ENABLED = false;
+
+	public boolean enabled = DEFAULT_ENABLED;
 
 	public static AttackThroughFoliageConfig load() {
 		return WenhanClientMod.CONFIG.attackThroughFoliage.copy();
