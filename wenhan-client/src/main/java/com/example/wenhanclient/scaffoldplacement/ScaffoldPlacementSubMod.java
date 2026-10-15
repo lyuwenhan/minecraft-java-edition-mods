@@ -9,12 +9,14 @@ import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.state.level.BlockOutlineRenderState;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.tags.FluidTags;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
@@ -54,14 +56,14 @@ public final class ScaffoldPlacementSubMod {
 		config = newConfig == null ? new ScaffoldPlacementConfig() : newConfig.copy();
 		WenhanClientMod.CONFIG.scaffoldPlacement = config.copy();
 		WenhanClientMod.CONFIG.save();
-		if (!config.enabled) {
+		if (!config.enabled && !config.liquidSurfacePlacement) {
 			focusedPos = null;
 		}
 	}
 
 	public static BlockHitResult getCrosshairTarget(Minecraft client) {
 		focusedPos = null;
-		if (!config.enabled
+		if ((!config.enabled && !config.liquidSurfacePlacement)
 				|| client == null
 				|| client.level == null
 				|| client.player == null
@@ -102,9 +104,10 @@ public final class ScaffoldPlacementSubMod {
 	}
 
 	private static boolean isVirtualTarget(Minecraft client, InteractionHand hand, BlockPos pos) {
-		if (!client.level.getBlockState(pos).canBeReplaced()
+		BlockState state = client.level.getBlockState(pos);
+		if (!state.canBeReplaced()
 				|| client.player.getBoundingBox().intersects(new AABB(pos))
-				|| !hasOccupiedNeighbor(client, pos)
+				|| !isEnabledTarget(client, pos, state)
 				|| !PlacementRestrictionSubMod.canPlaceAt(pos)
 				|| !client.player.isWithinBlockInteractionRange(pos, 0.0D)) {
 			return false;
@@ -120,13 +123,53 @@ public final class ScaffoldPlacementSubMod {
 		return context.canPlace();
 	}
 
-	private static boolean hasOccupiedNeighbor(Minecraft client, BlockPos pos) {
+	private static boolean isEnabledTarget(Minecraft client, BlockPos pos, BlockState state) {
+		return (config.enabled && hasSelectableHorizontalNeighbor(client, pos))
+				|| (config.liquidSurfacePlacement && isAtAirLiquidBoundary(client, pos, state));
+	}
+
+	private static boolean hasSelectableHorizontalNeighbor(Minecraft client, BlockPos pos) {
 		for (Direction direction : HORIZONTAL_DIRECTIONS) {
 			BlockPos neighbor = pos.relative(direction);
 			BlockState state = client.level.getBlockState(neighbor);
 			if (!state.getShape(client.level, neighbor).isEmpty()) {
 				return true;
 			}
+		}
+		return false;
+	}
+
+	private static boolean isAtAirLiquidBoundary(Minecraft client, BlockPos pos, BlockState state) {
+		boolean targetIsAir = state.isAir();
+		FluidState targetFluid = state.getFluidState();
+		boolean targetIsLiquid = !targetFluid.isEmpty();
+		if (!targetIsAir && !targetIsLiquid) {
+			return false;
+		}
+
+		if (targetIsLiquid && !isPlayerInSameLiquid(client.player, targetFluid)) {
+			return false;
+		}
+
+		for (Direction direction : Direction.values()) {
+			BlockState neighbor = client.level.getBlockState(pos.relative(direction));
+			FluidState neighborFluid = neighbor.getFluidState();
+			if ((targetIsAir
+							&& !neighborFluid.isEmpty()
+							&& !isPlayerInSameLiquid(client.player, neighborFluid))
+					|| (targetIsLiquid && neighbor.isAir())) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	private static boolean isPlayerInSameLiquid(LocalPlayer player, FluidState fluid) {
+		if (fluid.is(FluidTags.WATER)) {
+			return player.isInWater();
+		}
+		if (fluid.is(FluidTags.LAVA)) {
+			return player.isInLava();
 		}
 		return false;
 	}

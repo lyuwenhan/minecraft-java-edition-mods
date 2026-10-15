@@ -134,6 +134,8 @@
 	"option.wenhan-client.stable-mining.enabled.tooltip": "While mining a block, keeps your crosshair aimed at that block's center unless the line of sight is blocked.",
 	"option.wenhan-client.scaffold-placement.enabled": "Scaffold Placement Assist",
 	"option.wenhan-client.scaffold-placement.enabled.tooltip": "While holding a block and not targeting a real block, allows the crosshair to target placeable cells one block horizontally outward from blocks with a selectable outline. Fluids are not expansion anchors, and real block hits always take priority.",
+	"option.wenhan-client.scaffold-placement.liquid_surface_placement": "Liquid Surface Placement",
+	"option.wenhan-client.scaffold-placement.liquid_surface_placement.tooltip": "While holding a block and not targeting a real block: when inside the matching liquid, targets liquid cells touching air; otherwise, targets air cells touching that liquid. This only supplies extra crosshair targets and never blocks placement allowed by other behavior.",
 	"option.wenhan-client.interaction-delay.placing_delay": "No Item Use Delay",
 	"option.wenhan-client.interaction-delay.placing_delay.tooltip": "While holding use on blocks, lowers repeat use/place delay to 1 tick.",
 	"option.wenhan-client.player-highlighter.mode": "Player Highlight Mode",

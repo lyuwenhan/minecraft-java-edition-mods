@@ -190,6 +190,12 @@ public final class WenhanClientConfigScreen {
 								() -> drafts.scaffoldPlacement.enabled,
 								value -> drafts.scaffoldPlacement.enabled = value))
 				.option(
+						booleanOption(
+								"option.wenhan-client.scaffold-placement.liquid_surface_placement",
+								ScaffoldPlacementConfig.DEFAULT_LIQUID_SURFACE_PLACEMENT,
+								() -> drafts.scaffoldPlacement.liquidSurfacePlacement,
+								value -> drafts.scaffoldPlacement.liquidSurfacePlacement = value))
+				.option(
 						enumOption(
 								"option.wenhan-client.player-highlighter.mode",
 								PlayerHighlightMode.DISABLED,
