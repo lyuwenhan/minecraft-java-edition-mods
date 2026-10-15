@@ -1,6 +1,7 @@
 package com.example.wenhanclient.placementrestriction.mixin;
 
 import com.example.wenhanclient.placementrestriction.PlacementRestrictionSubMod;
+import com.example.wenhanclient.scaffoldplacement.ScaffoldPlacementSubMod;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.Entity;
@@ -24,6 +25,14 @@ public abstract class MinecraftMixin {
 		BlockHitResult adjusted = PlacementRestrictionSubMod.adjustFocus((Minecraft) (Object) this);
 		if (adjusted != null) {
 			this.hitResult = adjusted;
+			this.crosshairPickEntity = null;
+			return;
+		}
+
+		BlockHitResult scaffoldTarget =
+				ScaffoldPlacementSubMod.getCrosshairTarget((Minecraft) (Object) this);
+		if (scaffoldTarget != null) {
+			this.hitResult = scaffoldTarget;
 			this.crosshairPickEntity = null;
 		}
 	}

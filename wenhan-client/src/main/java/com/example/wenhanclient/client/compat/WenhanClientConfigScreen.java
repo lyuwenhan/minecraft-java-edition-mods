@@ -67,6 +67,8 @@ import com.example.wenhanclient.playerhighlighter.PlayerHighlighterConfig;
 import com.example.wenhanclient.playerhighlighter.PlayerHighlighterSubMod;
 import com.example.wenhanclient.playerwaypointinfo.PlayerWaypointInfoConfig;
 import com.example.wenhanclient.playerwaypointinfo.PlayerWaypointInfoSubMod;
+import com.example.wenhanclient.scaffoldplacement.ScaffoldPlacementConfig;
+import com.example.wenhanclient.scaffoldplacement.ScaffoldPlacementSubMod;
 import com.example.wenhanclient.stablemining.StableMiningConfig;
 import com.example.wenhanclient.stablemining.StableMiningSubMod;
 import com.example.wenhanclient.transparentblocks.TransparentBlocksConfig;
@@ -181,6 +183,12 @@ public final class WenhanClientConfigScreen {
 								StableMiningConfig.DEFAULT_ENABLED,
 								() -> drafts.stableMining.enabled,
 								value -> drafts.stableMining.enabled = value))
+				.option(
+						booleanOption(
+								"option.wenhan-client.scaffold-placement.enabled",
+								ScaffoldPlacementConfig.DEFAULT_ENABLED,
+								() -> drafts.scaffoldPlacement.enabled,
+								value -> drafts.scaffoldPlacement.enabled = value))
 				.option(
 						enumOption(
 								"option.wenhan-client.player-highlighter.mode",
@@ -975,6 +983,7 @@ public final class WenhanClientConfigScreen {
 		private final PlayerHighlighterConfig playerHighlighter;
 		private final PlayerWaypointInfoConfig playerWaypointInfo;
 		private final PlacementRestrictionConfig placementRestriction;
+		private final ScaffoldPlacementConfig scaffoldPlacement;
 		private final StableMiningConfig stableMining;
 		private final TransparentBlocksConfig transparentBlocks;
 		private final WhoIAmConfig whoIAm;
@@ -1012,6 +1021,7 @@ public final class WenhanClientConfigScreen {
 			this.playerHighlighter = PlayerHighlighterSubMod.config();
 			this.playerWaypointInfo = PlayerWaypointInfoSubMod.config();
 			this.placementRestriction = PlacementRestrictionSubMod.config();
+			this.scaffoldPlacement = ScaffoldPlacementSubMod.config();
 			this.stableMining = StableMiningSubMod.config();
 			this.transparentBlocks = TransparentBlocksSubMod.config();
 			this.whoIAm = WhoIAmSubMod.config();
@@ -1054,6 +1064,7 @@ public final class WenhanClientConfigScreen {
 			PlayerHighlighterSubMod.setConfig(this.playerHighlighter);
 			PlayerWaypointInfoSubMod.setConfig(this.playerWaypointInfo);
 			PlacementRestrictionSubMod.setConfig(this.placementRestriction);
+			ScaffoldPlacementSubMod.setConfig(this.scaffoldPlacement);
 			StableMiningSubMod.setConfig(this.stableMining);
 			TransparentBlocksSubMod.setConfig(this.transparentBlocks);
 			WhoIAmSubMod.setConfig(this.whoIAm);

@@ -34,6 +34,7 @@ import com.example.wenhanclient.notexturerotation.NoTextureRotationConfig;
 import com.example.wenhanclient.placementrestriction.PlacementRestrictionConfig;
 import com.example.wenhanclient.playerhighlighter.PlayerHighlighterConfig;
 import com.example.wenhanclient.playerwaypointinfo.PlayerWaypointInfoConfig;
+import com.example.wenhanclient.scaffoldplacement.ScaffoldPlacementConfig;
 import com.example.wenhanclient.stablemining.StableMiningConfig;
 import com.example.wenhanclient.transparentblocks.TransparentBlocksConfig;
 import com.example.wenhanclient.whoiam.WhoIAmConfig;
@@ -89,6 +90,7 @@ public class WenhanClientConfig {
 	public PlayerHighlighterConfig playerHighlighter = new PlayerHighlighterConfig();
 	public PlayerWaypointInfoConfig playerWaypointInfo = new PlayerWaypointInfoConfig();
 	public PlacementRestrictionConfig placementRestriction = new PlacementRestrictionConfig();
+	public ScaffoldPlacementConfig scaffoldPlacement = new ScaffoldPlacementConfig();
 	public StableMiningConfig stableMining = new StableMiningConfig();
 	public TransparentBlocksConfig transparentBlocks = new TransparentBlocksConfig();
 	public WhoIAmConfig whoIAm = new WhoIAmConfig();
@@ -251,6 +253,9 @@ public class WenhanClientConfig {
 			placementRestriction = new PlacementRestrictionConfig();
 		}
 		placementRestriction.sanitize();
+		if (scaffoldPlacement == null) {
+			scaffoldPlacement = new ScaffoldPlacementConfig();
+		}
 		if (stableMining == null) {
 			stableMining = new StableMiningConfig();
 		}
