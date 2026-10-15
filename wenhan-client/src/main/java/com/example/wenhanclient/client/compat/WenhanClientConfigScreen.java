@@ -1,5 +1,7 @@
 package com.example.wenhanclient.client.compat;
 
+import com.example.wenhanclient.attackablehighlighter.AttackableEntityHighlighterConfig;
+import com.example.wenhanclient.attackablehighlighter.AttackableEntityHighlighterSubMod;
 import com.example.wenhanclient.attackthroughfoliage.AttackThroughFoliageConfig;
 import com.example.wenhanclient.attackthroughfoliage.AttackThroughFoliageSubMod;
 import com.example.wenhanclient.autoaim.AutoAimConfig;
@@ -113,6 +115,7 @@ public final class WenhanClientConfigScreen {
 				.category(flySpeedModifierCategory(drafts))
 				.category(boatUtilsCategory(drafts))
 				.category(placementRestrictionCategory(drafts))
+				.category(attackableEntityHighlighterCategory(drafts))
 				.category(autoAimCategory(drafts))
 				.category(clientPseudoUnrestrictCategory(drafts))
 				.save(drafts::save)
@@ -544,6 +547,26 @@ public final class WenhanClientConfigScreen {
 				.build();
 	}
 
+	private static ConfigCategory attackableEntityHighlighterCategory(Drafts drafts) {
+		return ConfigCategory.createBuilder()
+				.name(
+						Component.translatable(
+								"title.wenhan-client.attackable-entity-highlighter.config"))
+				.option(
+						booleanOption(
+								"option.wenhan-client.attackable-entity-highlighter.enabled",
+								AttackableEntityHighlighterConfig.DEFAULT_ENABLED,
+								() -> drafts.attackableEntityHighlighter.enabled,
+								value -> drafts.attackableEntityHighlighter.enabled = value))
+				.option(
+						colorOption(
+								"option.wenhan-client.attackable-entity-highlighter.color",
+								AttackableEntityHighlighterConfig.DEFAULT_COLOR,
+								() -> drafts.attackableEntityHighlighter.color,
+								value -> drafts.attackableEntityHighlighter.color = value))
+				.build();
+	}
+
 	private static ConfigCategory placementRestrictionCategory(Drafts drafts) {
 		return ConfigCategory.createBuilder()
 				.name(Component.translatable("title.wenhan-client.placement-restriction.config"))
@@ -958,6 +981,7 @@ public final class WenhanClientConfigScreen {
 	}
 
 	private static final class Drafts {
+		private final AttackableEntityHighlighterConfig attackableEntityHighlighter;
 		private final BoatUtilsConfig boatUtils;
 		private final AttackThroughFoliageConfig attackThroughFoliage;
 		private final AutoAimConfig autoAim;
@@ -995,6 +1019,7 @@ public final class WenhanClientConfigScreen {
 		private final WhoIAmConfig whoIAm;
 
 		private Drafts() {
+			this.attackableEntityHighlighter = AttackableEntityHighlighterSubMod.config();
 			this.boatUtils = BoatUtilsSubMod.config().copy();
 			this.attackThroughFoliage = AttackThroughFoliageSubMod.config();
 			this.autoAim = AutoAimSubMod.config();
@@ -1038,6 +1063,7 @@ public final class WenhanClientConfigScreen {
 		}
 
 		private void save() {
+			AttackableEntityHighlighterSubMod.setConfig(this.attackableEntityHighlighter);
 			AttackThroughFoliageSubMod.setConfig(this.attackThroughFoliage);
 			AutoAimSubMod.setConfig(this.autoAim);
 			BlockExplosionGuardSubMod.setConfig(this.blockExplosionGuard);

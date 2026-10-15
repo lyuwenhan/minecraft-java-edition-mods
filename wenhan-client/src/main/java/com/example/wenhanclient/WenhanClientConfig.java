@@ -1,5 +1,6 @@
 package com.example.wenhanclient;
 
+import com.example.wenhanclient.attackablehighlighter.AttackableEntityHighlighterConfig;
 import com.example.wenhanclient.attackthroughfoliage.AttackThroughFoliageConfig;
 import com.example.wenhanclient.autoaim.AutoAimConfig;
 import com.example.wenhanclient.autologin.AutoLoginConfig;
@@ -57,6 +58,8 @@ public class WenhanClientConfig {
 			FabricLoader.getInstance().getConfigDir().resolve("wenhan-client.json");
 
 	public AttackThroughFoliageConfig attackThroughFoliage = new AttackThroughFoliageConfig();
+	public AttackableEntityHighlighterConfig attackableEntityHighlighter =
+			new AttackableEntityHighlighterConfig();
 	public AutoAimConfig autoAim = new AutoAimConfig();
 	public AutoLoginConfig autoLogin = new AutoLoginConfig();
 	public BetterStepConfig betterStep = new BetterStepConfig();
@@ -141,6 +144,10 @@ public class WenhanClientConfig {
 		if (attackThroughFoliage == null) {
 			attackThroughFoliage = new AttackThroughFoliageConfig();
 		}
+		if (attackableEntityHighlighter == null) {
+			attackableEntityHighlighter = new AttackableEntityHighlighterConfig();
+		}
+		attackableEntityHighlighter.sanitize();
 		if (autoAim == null) {
 			autoAim = new AutoAimConfig();
 		}

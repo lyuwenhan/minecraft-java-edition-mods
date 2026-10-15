@@ -1,5 +1,6 @@
 package com.example.wenhanclient.entityhighlighter;
 
+import com.example.wenhanclient.attackablehighlighter.AttackableEntityHighlighterSubMod;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
@@ -531,6 +532,9 @@ public final class EntityHighlighterSubMod {
 	}
 
 	public static Integer getHighlightColor(Entity entity) {
+		if (AttackableEntityHighlighterSubMod.getHighlightColor(entity) != null) {
+			return null;
+		}
 		EntityHighlighterConfig currentConfig = config;
 		if (currentConfig == null) {
 			return null;

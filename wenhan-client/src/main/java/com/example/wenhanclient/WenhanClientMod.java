@@ -1,5 +1,6 @@
 package com.example.wenhanclient;
 
+import com.example.wenhanclient.attackablehighlighter.AttackableEntityHighlighterSubMod;
 import com.example.wenhanclient.attackthroughfoliage.AttackThroughFoliageSubMod;
 import com.example.wenhanclient.autoaim.AutoAimSubMod;
 import com.example.wenhanclient.autologin.AutoLoginSubMod;
@@ -52,6 +53,7 @@ public class WenhanClientMod implements ClientModInitializer {
 	@Override
 	public void onInitializeClient() {
 		AttackThroughFoliageSubMod.init();
+		AttackableEntityHighlighterSubMod.init();
 		AutoAimSubMod.init();
 		AutoLoginSubMod.init();
 		BetterStepSubMod.init();
