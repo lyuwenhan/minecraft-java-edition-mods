@@ -17,6 +17,7 @@
 		]
 	},
 	"mixins": [
+		"auto-aim.mixins.json",
 		"attack-through-foliage.mixins.json",
 		"better-step.mixins.json",
 		"block-explosion-guard.mixins.json",
@@ -51,6 +52,7 @@
 		"no-texture-rotation-sodium.mixins.json",
 		"numeric-enchantment-levels.mixins.json",
 		"playerhighlighter.mixins.json",
+		"placement-restriction.mixins.json",
 		"remove-commands-length-limit.mixins.json",
 		"stable-mining.mixins.json",
 		"transparent-blocks.mixins.json",

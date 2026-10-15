@@ -56,7 +56,6 @@ public final class PlayerHighlighterSubMod {
 						}
 					}
 				});
-		System.out.println("[PlayerHighlighter] Client initialized");
 	}
 
 	public static boolean isHighlightActive() {

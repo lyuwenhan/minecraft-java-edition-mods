@@ -34,7 +34,6 @@ public final class EntityHighlighterSubMod {
 	public static void init() {
 		config = EntityHighlighterConfig.load();
 		registerCommands();
-		System.out.println("[EntityHighlighter] Client initialized");
 	}
 
 	private static void registerCommands() {

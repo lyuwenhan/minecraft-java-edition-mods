@@ -10,12 +10,8 @@ import net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.network.chat.Component;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 public final class HidePasswordSubMod {
 	public static final String MOD_ID = "hide-password";
-	public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 	private static final KeyMapping.Category CATEGORY = WenhanClientKeyCategories.GENERAL;
 	public static HidePasswordConfig CONFIG;
 	private static KeyMapping toggleKey;
@@ -24,7 +20,6 @@ public final class HidePasswordSubMod {
 
 	public static void init() {
 		loadConfig();
-		LOGGER.info("HidePassword loaded, enabled={}", CONFIG.enabled);
 		registerKeyMapping();
 	}
 
@@ -42,7 +37,6 @@ public final class HidePasswordSubMod {
 					while (toggleKey.consumeClick()) {
 						CONFIG.enabled = !CONFIG.enabled;
 						saveConfig();
-						LOGGER.info("HidePassword enabled={}", CONFIG.enabled);
 						if (client.player != null) {
 							client.player.sendSystemMessage(
 									Component.literal(

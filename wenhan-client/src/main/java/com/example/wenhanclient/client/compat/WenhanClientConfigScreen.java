@@ -2,6 +2,11 @@ package com.example.wenhanclient.client.compat;
 
 import com.example.wenhanclient.attackthroughfoliage.AttackThroughFoliageConfig;
 import com.example.wenhanclient.attackthroughfoliage.AttackThroughFoliageSubMod;
+import com.example.wenhanclient.autoaim.AutoAimConfig;
+import com.example.wenhanclient.autoaim.AutoAimMode;
+import com.example.wenhanclient.autoaim.AutoAimSubMod;
+import com.example.wenhanclient.autoaim.AutoAttackMode;
+import com.example.wenhanclient.autoaim.ViewRestoreMode;
 import com.example.wenhanclient.betterstep.BetterStepConfig;
 import com.example.wenhanclient.betterstep.BetterStepSubMod;
 import com.example.wenhanclient.blockexplosionguard.BlockExplosionGuardConfig;
@@ -54,6 +59,9 @@ import com.example.wenhanclient.noslowdown.NoSlowdownConfig;
 import com.example.wenhanclient.noslowdown.NoSlowdownSubMod;
 import com.example.wenhanclient.notexturerotation.NoTextureRotationConfig;
 import com.example.wenhanclient.notexturerotation.NoTextureRotationSubMod;
+import com.example.wenhanclient.placementrestriction.PlacementRestrictionConfig;
+import com.example.wenhanclient.placementrestriction.PlacementRestrictionMode;
+import com.example.wenhanclient.placementrestriction.PlacementRestrictionSubMod;
 import com.example.wenhanclient.playerhighlighter.PlayerHighlightMode;
 import com.example.wenhanclient.playerhighlighter.PlayerHighlighterConfig;
 import com.example.wenhanclient.playerhighlighter.PlayerHighlighterSubMod;
@@ -71,6 +79,7 @@ import dev.isxander.yacl3.api.Option;
 import dev.isxander.yacl3.api.OptionDescription;
 import dev.isxander.yacl3.api.YetAnotherConfigLib;
 import dev.isxander.yacl3.api.controller.BooleanControllerBuilder;
+import dev.isxander.yacl3.api.controller.ColorControllerBuilder;
 import dev.isxander.yacl3.api.controller.DoubleFieldControllerBuilder;
 import dev.isxander.yacl3.api.controller.DoubleSliderControllerBuilder;
 import dev.isxander.yacl3.api.controller.EnumControllerBuilder;
@@ -82,6 +91,7 @@ import dev.isxander.yacl3.api.controller.ValueFormatter;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 
+import java.awt.Color;
 import java.util.Locale;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -100,6 +110,8 @@ public final class WenhanClientConfigScreen {
 				.category(noTextureRotationCategory(drafts))
 				.category(flySpeedModifierCategory(drafts))
 				.category(boatUtilsCategory(drafts))
+				.category(placementRestrictionCategory(drafts))
+				.category(autoAimCategory(drafts))
 				.category(clientPseudoUnrestrictCategory(drafts))
 				.save(drafts::save)
 				.build()
@@ -456,6 +468,81 @@ public final class WenhanClientConfigScreen {
 				.build();
 	}
 
+	private static ConfigCategory autoAimCategory(Drafts drafts) {
+		return ConfigCategory.createBuilder()
+				.name(Component.translatable("title.wenhan-client.auto-aim.config"))
+				.option(
+						enumOption(
+								"option.wenhan-client.auto-aim.mode",
+								AutoAimConfig.DEFAULT_MODE,
+								AutoAimMode.class,
+								() -> drafts.autoAim.mode,
+								value -> drafts.autoAim.mode = value))
+				.option(
+						enumOption(
+								"option.wenhan-client.auto-aim.view_restore",
+								AutoAimConfig.DEFAULT_VIEW_RESTORE,
+								ViewRestoreMode.class,
+								() -> drafts.autoAim.viewRestore,
+								value -> drafts.autoAim.viewRestore = value))
+				.option(
+						doubleFieldOption(
+								"option.wenhan-client.auto-aim.max_attack_distance",
+								AutoAimConfig.DEFAULT_MAX_ATTACK_DISTANCE,
+								AutoAimConfig.MIN_MAX_ATTACK_DISTANCE,
+								AutoAimConfig.MAX_MAX_ATTACK_DISTANCE,
+								() -> drafts.autoAim.maxAttackDistance,
+								value -> drafts.autoAim.maxAttackDistance = value,
+								value -> Component.literal(Double.toString(value))))
+				.option(
+						booleanOption(
+								"option.wenhan-client.auto-aim.highlight_target",
+								AutoAimConfig.DEFAULT_HIGHLIGHT_TARGET,
+								() -> drafts.autoAim.highlightTarget,
+								value -> drafts.autoAim.highlightTarget = value))
+				.option(
+						colorOption(
+								"option.wenhan-client.auto-aim.highlight_color",
+								AutoAimConfig.DEFAULT_HIGHLIGHT_COLOR,
+								() -> drafts.autoAim.highlightColor,
+								value -> drafts.autoAim.highlightColor = value))
+				.option(
+						booleanOption(
+								"option.wenhan-client.auto-aim.attack_through_walls",
+								AutoAimConfig.DEFAULT_ATTACK_THROUGH_WALLS,
+								() -> drafts.autoAim.attackThroughWalls,
+								value -> drafts.autoAim.attackThroughWalls = value))
+				.option(
+						enumOption(
+								"option.wenhan-client.auto-aim.auto_attack",
+								AutoAimConfig.DEFAULT_AUTO_ATTACK,
+								AutoAttackMode.class,
+								() -> drafts.autoAim.autoAttack,
+								value -> drafts.autoAim.autoAttack = value))
+				.option(
+						integerFieldOption(
+								"option.wenhan-client.auto-aim.auto_attack_delay_ticks",
+								AutoAimConfig.DEFAULT_AUTO_ATTACK_DELAY_TICKS,
+								0,
+								AutoAimConfig.MAX_AUTO_ATTACK_DELAY_TICKS,
+								() -> drafts.autoAim.autoAttackDelayTicks,
+								value -> drafts.autoAim.autoAttackDelayTicks = value))
+				.build();
+	}
+
+	private static ConfigCategory placementRestrictionCategory(Drafts drafts) {
+		return ConfigCategory.createBuilder()
+				.name(Component.translatable("title.wenhan-client.placement-restriction.config"))
+				.option(
+						enumOption(
+								"option.wenhan-client.placement-restriction.mode",
+								PlacementRestrictionConfig.DEFAULT_MODE,
+								PlacementRestrictionMode.class,
+								() -> drafts.placementRestriction.mode,
+								value -> drafts.placementRestriction.mode = value))
+				.build();
+	}
+
 	private static ConfigCategory flySpeedModifierCategory(Drafts drafts) {
 		double initialSpeedMinimum = flySpeedModifierInitialSpeedMinimum(drafts.flySpeedModifier);
 		double initialSpeedMaximum = flySpeedModifierInitialSpeedMaximum(drafts.flySpeedModifier);
@@ -625,6 +712,19 @@ public final class WenhanClientConfigScreen {
 				.description(OptionDescription.of(Component.translatable(key + ".tooltip")))
 				.binding(defaultValue, getter, setter)
 				.controller(BooleanControllerBuilder::create)
+				.build();
+	}
+
+	private static Option<Color> colorOption(
+			String key, int defaultValue, Supplier<Integer> getter, Consumer<Integer> setter) {
+		return Option.<Color>createBuilder()
+				.name(Component.translatable(key))
+				.description(OptionDescription.of(Component.translatable(key + ".tooltip")))
+				.binding(
+						new Color(defaultValue & 0xFFFFFF),
+						() -> new Color(getter.get() & 0xFFFFFF),
+						value -> setter.accept(value.getRGB() & 0xFFFFFF))
+				.controller(option -> ColorControllerBuilder.create(option).allowAlpha(false))
 				.build();
 	}
 
@@ -846,6 +946,7 @@ public final class WenhanClientConfigScreen {
 	private static final class Drafts {
 		private final BoatUtilsConfig boatUtils;
 		private final AttackThroughFoliageConfig attackThroughFoliage;
+		private final AutoAimConfig autoAim;
 		private final BlockExplosionGuardConfig blockExplosionGuard;
 		private final BetterStepConfig betterStep;
 		private final ClientPseudoUnrestrictConfig clientPseudoUnrestrict;
@@ -873,6 +974,7 @@ public final class WenhanClientConfigScreen {
 		private final NoTextureRotationConfig noTextureRotation;
 		private final PlayerHighlighterConfig playerHighlighter;
 		private final PlayerWaypointInfoConfig playerWaypointInfo;
+		private final PlacementRestrictionConfig placementRestriction;
 		private final StableMiningConfig stableMining;
 		private final TransparentBlocksConfig transparentBlocks;
 		private final WhoIAmConfig whoIAm;
@@ -880,6 +982,7 @@ public final class WenhanClientConfigScreen {
 		private Drafts() {
 			this.boatUtils = BoatUtilsSubMod.config().copy();
 			this.attackThroughFoliage = AttackThroughFoliageSubMod.config();
+			this.autoAim = AutoAimSubMod.config();
 			this.blockExplosionGuard = BlockExplosionGuardSubMod.config();
 			this.betterStep = BetterStepSubMod.config();
 			this.clientPseudoUnrestrict = ClientPseudoUnrestrictSubMod.config();
@@ -908,6 +1011,7 @@ public final class WenhanClientConfigScreen {
 			this.noTextureRotation = NoTextureRotationSubMod.config();
 			this.playerHighlighter = PlayerHighlighterSubMod.config();
 			this.playerWaypointInfo = PlayerWaypointInfoSubMod.config();
+			this.placementRestriction = PlacementRestrictionSubMod.config();
 			this.stableMining = StableMiningSubMod.config();
 			this.transparentBlocks = TransparentBlocksSubMod.config();
 			this.whoIAm = WhoIAmSubMod.config();
@@ -919,6 +1023,7 @@ public final class WenhanClientConfigScreen {
 
 		private void save() {
 			AttackThroughFoliageSubMod.setConfig(this.attackThroughFoliage);
+			AutoAimSubMod.setConfig(this.autoAim);
 			BlockExplosionGuardSubMod.setConfig(this.blockExplosionGuard);
 			BetterStepSubMod.setConfig(this.betterStep);
 			ClientPseudoUnrestrictSubMod.setConfig(this.clientPseudoUnrestrict);
@@ -948,6 +1053,7 @@ public final class WenhanClientConfigScreen {
 			NoTextureRotationSubMod.setConfig(this.noTextureRotation);
 			PlayerHighlighterSubMod.setConfig(this.playerHighlighter);
 			PlayerWaypointInfoSubMod.setConfig(this.playerWaypointInfo);
+			PlacementRestrictionSubMod.setConfig(this.placementRestriction);
 			StableMiningSubMod.setConfig(this.stableMining);
 			TransparentBlocksSubMod.setConfig(this.transparentBlocks);
 			WhoIAmSubMod.setConfig(this.whoIAm);

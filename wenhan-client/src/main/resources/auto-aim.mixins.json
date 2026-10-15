@@ -1,0 +1,14 @@
+{
+	"required": true,
+	"package": "com.example.wenhanclient.autoaim.mixin",
+	"compatibilityLevel": "JAVA_25",
+	"client": [
+		"EntityMixin",
+		"MinecraftMixin",
+		"MouseHandlerMixin",
+		"MultiPlayerGameModeMixin"
+	],
+	"injectors": {
+		"defaultRequire": 1
+	}
+}

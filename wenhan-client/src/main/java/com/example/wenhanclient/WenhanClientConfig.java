@@ -1,6 +1,7 @@
 package com.example.wenhanclient;
 
 import com.example.wenhanclient.attackthroughfoliage.AttackThroughFoliageConfig;
+import com.example.wenhanclient.autoaim.AutoAimConfig;
 import com.example.wenhanclient.autologin.AutoLoginConfig;
 import com.example.wenhanclient.betterstep.BetterStepConfig;
 import com.example.wenhanclient.blockexplosionguard.BlockExplosionGuardConfig;
@@ -30,6 +31,7 @@ import com.example.wenhanclient.nolevitation.NoLevitationConfig;
 import com.example.wenhanclient.noslimebounce.NoSlimeBounceConfig;
 import com.example.wenhanclient.noslowdown.NoSlowdownConfig;
 import com.example.wenhanclient.notexturerotation.NoTextureRotationConfig;
+import com.example.wenhanclient.placementrestriction.PlacementRestrictionConfig;
 import com.example.wenhanclient.playerhighlighter.PlayerHighlighterConfig;
 import com.example.wenhanclient.playerwaypointinfo.PlayerWaypointInfoConfig;
 import com.example.wenhanclient.stablemining.StableMiningConfig;
@@ -54,6 +56,7 @@ public class WenhanClientConfig {
 			FabricLoader.getInstance().getConfigDir().resolve("wenhan-client.json");
 
 	public AttackThroughFoliageConfig attackThroughFoliage = new AttackThroughFoliageConfig();
+	public AutoAimConfig autoAim = new AutoAimConfig();
 	public AutoLoginConfig autoLogin = new AutoLoginConfig();
 	public BetterStepConfig betterStep = new BetterStepConfig();
 	public BlockExplosionGuardConfig blockExplosionGuard = new BlockExplosionGuardConfig();
@@ -85,6 +88,7 @@ public class WenhanClientConfig {
 	public NoTextureRotationConfig noTextureRotation = new NoTextureRotationConfig();
 	public PlayerHighlighterConfig playerHighlighter = new PlayerHighlighterConfig();
 	public PlayerWaypointInfoConfig playerWaypointInfo = new PlayerWaypointInfoConfig();
+	public PlacementRestrictionConfig placementRestriction = new PlacementRestrictionConfig();
 	public StableMiningConfig stableMining = new StableMiningConfig();
 	public TransparentBlocksConfig transparentBlocks = new TransparentBlocksConfig();
 	public WhoIAmConfig whoIAm = new WhoIAmConfig();
@@ -135,6 +139,10 @@ public class WenhanClientConfig {
 		if (attackThroughFoliage == null) {
 			attackThroughFoliage = new AttackThroughFoliageConfig();
 		}
+		if (autoAim == null) {
+			autoAim = new AutoAimConfig();
+		}
+		autoAim.sanitize();
 		if (autoLogin == null) {
 			autoLogin = new AutoLoginConfig();
 		}
@@ -239,6 +247,10 @@ public class WenhanClientConfig {
 		if (playerWaypointInfo == null) {
 			playerWaypointInfo = new PlayerWaypointInfoConfig();
 		}
+		if (placementRestriction == null) {
+			placementRestriction = new PlacementRestrictionConfig();
+		}
+		placementRestriction.sanitize();
 		if (stableMining == null) {
 			stableMining = new StableMiningConfig();
 		}

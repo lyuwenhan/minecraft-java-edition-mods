@@ -1,6 +1,7 @@
 package com.example.wenhanclient.attackthroughfoliage.mixin;
 
 import com.example.wenhanclient.attackthroughfoliage.AttackThroughFoliageSubMod;
+import com.example.wenhanclient.placementrestriction.PlacementRestrictionSubMod;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -40,6 +41,7 @@ public abstract class MinecraftMixin {
 	private void attackThroughFoliage$pickEntityBehindNonCollidingBlock(
 			float tickDelta, CallbackInfo ci) {
 		if (!AttackThroughFoliageSubMod.isEnabled()
+				|| PlacementRestrictionSubMod.shouldOverrideCrosshair(Minecraft.getInstance())
 				|| this.level == null
 				|| this.player == null
 				|| !(this.hitResult instanceof BlockHitResult blockHitResult)) {

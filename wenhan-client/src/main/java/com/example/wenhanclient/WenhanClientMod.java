@@ -1,6 +1,7 @@
 package com.example.wenhanclient;
 
 import com.example.wenhanclient.attackthroughfoliage.AttackThroughFoliageSubMod;
+import com.example.wenhanclient.autoaim.AutoAimSubMod;
 import com.example.wenhanclient.autologin.AutoLoginSubMod;
 import com.example.wenhanclient.bestarmor.BestArmorSubMod;
 import com.example.wenhanclient.betterstep.BetterStepSubMod;
@@ -37,6 +38,7 @@ import com.example.wenhanclient.noslowdown.NoSlowdownSubMod;
 import com.example.wenhanclient.notexturerotation.NoTextureRotationSubMod;
 import com.example.wenhanclient.playerhighlighter.PlayerHighlighterSubMod;
 import com.example.wenhanclient.playerwaypointinfo.PlayerWaypointInfoSubMod;
+import com.example.wenhanclient.placementrestriction.PlacementRestrictionSubMod;
 import com.example.wenhanclient.stablemining.StableMiningSubMod;
 import com.example.wenhanclient.transparentblocks.TransparentBlocksSubMod;
 import com.example.wenhanclient.whoiam.WhoIAmSubMod;
@@ -49,6 +51,7 @@ public class WenhanClientMod implements ClientModInitializer {
 	@Override
 	public void onInitializeClient() {
 		AttackThroughFoliageSubMod.init();
+		AutoAimSubMod.init();
 		AutoLoginSubMod.init();
 		BetterStepSubMod.init();
 		BestArmorSubMod.init();
@@ -84,6 +87,7 @@ public class WenhanClientMod implements ClientModInitializer {
 		NoTextureRotationSubMod.init();
 		PlayerHighlighterSubMod.init();
 		PlayerWaypointInfoSubMod.init();
+		PlacementRestrictionSubMod.init();
 		StableMiningSubMod.init();
 		TransparentBlocksSubMod.init();
 		WhoIAmSubMod.init();

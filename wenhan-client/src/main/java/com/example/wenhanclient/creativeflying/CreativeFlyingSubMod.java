@@ -102,7 +102,6 @@ public final class CreativeFlyingSubMod {
 	}
 
 	public static void init() {
-		System.out.println("[CreativeFlying] Client initialized");
 		config = WenhanClientMod.CONFIG.creativeFlying.copy();
 		toggleKey =
 				KeyMappingHelper.registerKeyMapping(
@@ -113,15 +112,9 @@ public final class CreativeFlyingSubMod {
 								CATEGORY,
 								1));
 		ClientPlayConnectionEvents.JOIN.register(
-				(handler, sender, client) -> {
-					resetState();
-					System.out.println("[CreativeFlying] State reset on join");
-				});
+				(handler, sender, client) -> resetState());
 		ClientPlayConnectionEvents.DISCONNECT.register(
-				(handler, client) -> {
-					resetState();
-					System.out.println("[CreativeFlying] State reset on disconnect");
-				});
+				(handler, client) -> resetState());
 		ClientTickEvents.END_CLIENT_TICK.register(
 				client -> {
 					ClientPacketListener connection = client.getConnection();
@@ -149,13 +142,11 @@ public final class CreativeFlyingSubMod {
 								flying = client.player.getAbilities().flying;
 							}
 							if (lastGlider && !wearingGlider && lastFallFlying) {
-								System.out.println("[CreativeFlying] set flying");
 								client.player.stopFallFlying();
 								client.player.getAbilities().flying = flying = true;
 								fallFlying = client.player.isFallFlying();
 							}
 							if (wearingGlider && !lastGlider) {
-								System.out.println("[CreativeFlying] set fall flying");
 								client.player.getAbilities().flying = flying = false;
 								startFallFlying();
 							}
@@ -170,7 +161,6 @@ public final class CreativeFlyingSubMod {
 							if (onground || !wearingGlider) {
 								startFallFlyingResendTicks = 0;
 							} else {
-								System.out.println("[CreativeFlying] run fall flying");
 								if (!fallFlying) {
 									sendInternalStartFallFlyingPacket(client, connection);
 								}
