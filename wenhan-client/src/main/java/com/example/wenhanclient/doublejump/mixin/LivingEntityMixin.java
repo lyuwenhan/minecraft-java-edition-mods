@@ -1,7 +1,7 @@
 package com.example.wenhanclient.doublejump.mixin;
 
-import com.example.wenhanclient.doublejump.DoubleJumpSubMod;
 import com.example.wenhanclient.coyote.CoyoteSubMod;
+import com.example.wenhanclient.doublejump.DoubleJumpSubMod;
 
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.entity.LivingEntity;
@@ -128,9 +128,7 @@ public abstract class LivingEntityMixin {
 			return false;
 		}
 
-		return !player.isInWater()
-				&& !player.isInLava()
-				&& !player.getAbilities().flying;
+		return !player.isInWater() && !player.isInLava() && !player.getAbilities().flying;
 	}
 
 	@Unique

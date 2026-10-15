@@ -1,6 +1,5 @@
 package com.example.wenhanclient.boatutils;
 
-
 public final class BoatUtilsConfig {
 	public static final boolean DEFAULT_UNRESTRICTED_VIEW_ROTATION = false;
 	public static final boolean DEFAULT_VIEW_DIRECTION_LOCK_ENABLED = false;

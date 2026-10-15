@@ -111,10 +111,8 @@ public final class CreativeFlyingSubMod {
 								InputConstants.KEY_V,
 								CATEGORY,
 								1));
-		ClientPlayConnectionEvents.JOIN.register(
-				(handler, sender, client) -> resetState());
-		ClientPlayConnectionEvents.DISCONNECT.register(
-				(handler, client) -> resetState());
+		ClientPlayConnectionEvents.JOIN.register((handler, sender, client) -> resetState());
+		ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> resetState());
 		ClientTickEvents.END_CLIENT_TICK.register(
 				client -> {
 					ClientPacketListener connection = client.getConnection();
