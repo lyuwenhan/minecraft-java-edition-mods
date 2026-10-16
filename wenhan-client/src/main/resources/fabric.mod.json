@@ -28,6 +28,7 @@
 		"no-slowdown.mixins.json",
 		"creativeflying.mixins.json",
 		"dabr-server-config-override.mixins.json",
+		"delayed-falling.mixins.json",
 		"double-jump.mixins.json",
 		"elytra-cancel.mixins.json",
 		"entityhighlighter.mixins.json",

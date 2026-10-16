@@ -10,6 +10,7 @@ import com.example.wenhanclient.boatutils.BoatUtilsConfig;
 import com.example.wenhanclient.clientpseudounrestrict.ClientPseudoUnrestrictConfig;
 import com.example.wenhanclient.coyote.CoyoteConfig;
 import com.example.wenhanclient.creativeflying.CreativeFlyingConfig;
+import com.example.wenhanclient.delayedfalling.DelayedFallingConfig;
 import com.example.wenhanclient.doublejump.DoubleJumpConfig;
 import com.example.wenhanclient.elytracancel.ElytraCancelConfig;
 import com.example.wenhanclient.entityhighlighter.EntityHighlighterConfig;
@@ -69,6 +70,7 @@ public class WenhanClientConfig {
 	public NoSlowdownConfig noSlowdown = new NoSlowdownConfig();
 	public NoSlimeBounceConfig noSlimeBounce = new NoSlimeBounceConfig();
 	public CreativeFlyingConfig creativeFlying = new CreativeFlyingConfig();
+	public DelayedFallingConfig delayedFalling = new DelayedFallingConfig();
 	public CoyoteConfig coyote = new CoyoteConfig();
 	public DoubleJumpConfig doubleJump = new DoubleJumpConfig();
 	public ElytraCancelConfig elytraCancel = new ElytraCancelConfig();
@@ -181,6 +183,10 @@ public class WenhanClientConfig {
 		if (creativeFlying == null) {
 			creativeFlying = new CreativeFlyingConfig();
 		}
+		if (delayedFalling == null) {
+			delayedFalling = new DelayedFallingConfig();
+		}
+		delayedFalling.sanitize();
 		if (coyote == null) {
 			coyote = new CoyoteConfig();
 		}

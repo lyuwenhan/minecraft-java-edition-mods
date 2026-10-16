@@ -11,6 +11,7 @@ import com.example.wenhanclient.boatutils.BoatUtilsSubMod;
 import com.example.wenhanclient.clientpseudounrestrict.ClientPseudoUnrestrictSubMod;
 import com.example.wenhanclient.coyote.CoyoteSubMod;
 import com.example.wenhanclient.creativeflying.CreativeFlyingSubMod;
+import com.example.wenhanclient.delayedfalling.DelayedFallingSubMod;
 import com.example.wenhanclient.doublejump.DoubleJumpSubMod;
 import com.example.wenhanclient.elytracancel.ElytraCancelSubMod;
 import com.example.wenhanclient.entityhighlighter.EntityHighlighterSubMod;
@@ -64,6 +65,7 @@ public class WenhanClientMod implements ClientModInitializer {
 		NoSlowdownSubMod.init();
 		NoSlimeBounceSubMod.init();
 		CreativeFlyingSubMod.init();
+		DelayedFallingSubMod.init();
 		CoyoteSubMod.init();
 		DoubleJumpSubMod.init();
 		ElytraCancelSubMod.init();

@@ -54,6 +54,8 @@
 	"option.wenhan-client.no-jump-delay.enabled.tooltip": "Removes the jump cooldown so holding jump can trigger consecutive jumps immediately.",
 	"option.wenhan-client.coyote.time_ticks": "Coyote Time",
 	"option.wenhan-client.coyote.time_ticks.tooltip": "Allows a ground jump for this many ticks after walking or falling off an edge. Minimum: 0.",
+	"option.wenhan-client.delayed-falling.delay_ticks": "Delayed Falling Time",
+	"option.wenhan-client.delayed-falling.delay_ticks.tooltip": "After walking off a block edge, keeps the player at the same height for this many ticks.",
 	"title.wenhan-client.jump-height.config": "Override Jump Height",
 	"option.wenhan-client.jump-height.enabled": "Override Jump Height",
 	"option.wenhan-client.jump-height.enabled.tooltip": "Overrides the local player's jump strength using the configured target jump height.",
@@ -260,6 +262,6 @@
 	"option.wenhan-client.auto-aim.auto_attack.disabled": "No",
 	"option.wenhan-client.auto-aim.auto_attack.after_cooldown": "After Attack Cooldown",
 	"option.wenhan-client.auto-aim.auto_attack.enabled": "Yes",
-	"option.wenhan-client.auto-aim.auto_attack_delay_ticks": "Automatic Attack Delay (ticks)",
+	"option.wenhan-client.auto-aim.auto_attack_delay_ticks": "Automatic Attack Delay",
 	"option.wenhan-client.auto-aim.auto_attack_delay_ticks.tooltip": "Extra ticks to wait before repeatedly attacking the same target. The first selection or a target switch has no added delay."
 }

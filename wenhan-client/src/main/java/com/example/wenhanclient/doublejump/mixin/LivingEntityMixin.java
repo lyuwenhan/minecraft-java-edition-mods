@@ -1,6 +1,7 @@
 package com.example.wenhanclient.doublejump.mixin;
 
 import com.example.wenhanclient.coyote.CoyoteSubMod;
+import com.example.wenhanclient.delayedfalling.DelayedFallingSubMod;
 import com.example.wenhanclient.doublejump.DoubleJumpSubMod;
 
 import net.minecraft.client.player.LocalPlayer;
@@ -19,6 +20,7 @@ public abstract class LivingEntityMixin {
 	@Unique private boolean doubleJump$pendingAirJump;
 	@Unique private boolean doubleJump$pendingGroundJump;
 	@Unique private boolean doubleJump$pendingCoyoteJump;
+	@Unique private boolean doubleJump$pendingDelayedFallingJump;
 	@Unique private int doubleJump$cooldownTicksRemaining;
 	@Unique private int doubleJump$coyoteTicksRemaining;
 	@Unique private boolean doubleJump$wasOnGround;
@@ -29,6 +31,7 @@ public abstract class LivingEntityMixin {
 		doubleJump$pendingAirJump = false;
 		doubleJump$pendingGroundJump = false;
 		doubleJump$pendingCoyoteJump = false;
+		doubleJump$pendingDelayedFallingJump = false;
 
 		if (!(entity instanceof LocalPlayer)) {
 			return;
@@ -38,6 +41,10 @@ public abstract class LivingEntityMixin {
 			doubleJump$airJumpsPerformed = 0;
 			doubleJump$cooldownTicksRemaining = 0;
 			doubleJump$coyoteTicksRemaining = CoyoteSubMod.config().timeTicks;
+			doubleJump$wasOnGround = true;
+			return;
+		}
+		if (DelayedFallingSubMod.isDelaying((LocalPlayer) entity)) {
 			doubleJump$wasOnGround = true;
 			return;
 		}
@@ -74,6 +81,12 @@ public abstract class LivingEntityMixin {
 			return false;
 		}
 
+		if (DelayedFallingSubMod.isDelaying(player)) {
+			doubleJump$pendingDelayedFallingJump = true;
+			DelayedFallingSubMod.stopDelay(player);
+			return true;
+		}
+
 		if (doubleJump$canCoyoteJump(player)) {
 			doubleJump$pendingCoyoteJump = true;
 			return true;
@@ -103,18 +116,25 @@ public abstract class LivingEntityMixin {
 		if (doubleJump$pendingCoyoteJump) {
 			doubleJump$coyoteTicksRemaining = 0;
 		}
+		if (doubleJump$pendingDelayedFallingJump) {
+			doubleJump$coyoteTicksRemaining = 0;
+			doubleJump$wasOnGround = false;
+		}
 
 		if (doubleJump$pendingAirJump) {
 			doubleJump$airJumpsPerformed++;
 		}
 
-		if ((doubleJump$pendingGroundJump || doubleJump$pendingAirJump)
+		if ((doubleJump$pendingGroundJump
+						|| doubleJump$pendingDelayedFallingJump
+						|| doubleJump$pendingAirJump)
 				&& DoubleJumpSubMod.config().cooldownEnabled) {
 			doubleJump$cooldownTicksRemaining = DoubleJumpSubMod.config().cooldownTicks;
 		}
 
 		doubleJump$pendingGroundJump = false;
 		doubleJump$pendingCoyoteJump = false;
+		doubleJump$pendingDelayedFallingJump = false;
 		doubleJump$pendingAirJump = false;
 	}
 

@@ -1,0 +1,12 @@
+{
+	"required": true,
+	"package": "com.example.wenhanclient.delayedfalling.mixin",
+	"compatibilityLevel": "JAVA_25",
+	"client": [
+		"EntityMixin",
+		"LivingEntityMixin"
+	],
+	"injectors": {
+		"defaultRequire": 1
+	}
+}

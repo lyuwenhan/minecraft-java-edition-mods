@@ -21,6 +21,8 @@ import com.example.wenhanclient.coyote.CoyoteConfig;
 import com.example.wenhanclient.coyote.CoyoteSubMod;
 import com.example.wenhanclient.creativeflying.CreativeFlyingConfig;
 import com.example.wenhanclient.creativeflying.CreativeFlyingSubMod;
+import com.example.wenhanclient.delayedfalling.DelayedFallingConfig;
+import com.example.wenhanclient.delayedfalling.DelayedFallingSubMod;
 import com.example.wenhanclient.doublejump.DoubleJumpConfig;
 import com.example.wenhanclient.doublejump.DoubleJumpSubMod;
 import com.example.wenhanclient.elytracancel.ElytraCancelConfig;
@@ -254,16 +256,6 @@ public final class WenhanClientConfigScreen {
 								() -> drafts.noJumpDelay.enabled,
 								value -> drafts.noJumpDelay.enabled = value))
 				.option(
-						integerFieldOption(
-								"option.wenhan-client.coyote.time_ticks",
-								CoyoteConfig.DEFAULT_TIME_TICKS,
-								CoyoteConfig.MIN_TIME_TICKS,
-								CoyoteConfig.MAX_TIME_TICKS,
-								() -> drafts.coyote.timeTicks,
-								value ->
-										drafts.coyote.timeTicks =
-												Math.max(CoyoteConfig.MIN_TIME_TICKS, value)))
-				.option(
 						booleanOption(
 								"option.wenhan-client.no-levitation.enabled",
 								NoLevitationConfig.DEFAULT_ENABLED,
@@ -392,6 +384,28 @@ public final class WenhanClientConfigScreen {
 										drafts.doubleJump.cooldownTicks =
 												Math.max(
 														DoubleJumpConfig.MIN_COOLDOWN_TICKS,
+														value)))
+				.option(
+						integerFieldOption(
+								"option.wenhan-client.coyote.time_ticks",
+								CoyoteConfig.DEFAULT_TIME_TICKS,
+								CoyoteConfig.MIN_TIME_TICKS,
+								CoyoteConfig.MAX_TIME_TICKS,
+								() -> drafts.coyote.timeTicks,
+								value ->
+										drafts.coyote.timeTicks =
+												Math.max(CoyoteConfig.MIN_TIME_TICKS, value)))
+				.option(
+						integerFieldOption(
+								"option.wenhan-client.delayed-falling.delay_ticks",
+								DelayedFallingConfig.DEFAULT_DELAY_TICKS,
+								DelayedFallingConfig.MIN_DELAY_TICKS,
+								DelayedFallingConfig.MAX_DELAY_TICKS,
+								() -> drafts.delayedFalling.delayTicks,
+								value ->
+										drafts.delayedFalling.delayTicks =
+												Math.max(
+														DelayedFallingConfig.MIN_DELAY_TICKS,
 														value)))
 				.build();
 	}
@@ -991,6 +1005,7 @@ public final class WenhanClientConfigScreen {
 		private final NoSlowdownConfig noSlowdown;
 		private final NoSlimeBounceConfig noSlimeBounce;
 		private final CreativeFlyingConfig creativeFlying;
+		private final DelayedFallingConfig delayedFalling;
 		private final CoyoteConfig coyote;
 		private final DoubleJumpConfig doubleJump;
 		private final ElytraCancelConfig elytraCancel;
@@ -1029,6 +1044,7 @@ public final class WenhanClientConfigScreen {
 			this.noSlowdown = NoSlowdownSubMod.config();
 			this.noSlimeBounce = NoSlimeBounceSubMod.config();
 			this.creativeFlying = CreativeFlyingSubMod.config();
+			this.delayedFalling = DelayedFallingSubMod.config();
 			this.coyote = CoyoteSubMod.config();
 			this.doubleJump = DoubleJumpSubMod.config().copy();
 			this.elytraCancel = ElytraCancelSubMod.config();
@@ -1072,6 +1088,7 @@ public final class WenhanClientConfigScreen {
 			NoSlowdownSubMod.setConfig(this.noSlowdown);
 			NoSlimeBounceSubMod.setConfig(this.noSlimeBounce);
 			CreativeFlyingSubMod.setConfig(this.creativeFlying);
+			DelayedFallingSubMod.setConfig(this.delayedFalling);
 			CoyoteSubMod.setConfig(this.coyote);
 			DoubleJumpSubMod.setConfig(this.doubleJump);
 			ElytraCancelSubMod.setConfig(this.elytraCancel);
