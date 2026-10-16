@@ -77,6 +77,8 @@ import com.example.wenhanclient.stablemining.StableMiningConfig;
 import com.example.wenhanclient.stablemining.StableMiningSubMod;
 import com.example.wenhanclient.transparentblocks.TransparentBlocksConfig;
 import com.example.wenhanclient.transparentblocks.TransparentBlocksSubMod;
+import com.example.wenhanclient.voidfloor.VoidFloorConfig;
+import com.example.wenhanclient.voidfloor.VoidFloorSubMod;
 import com.example.wenhanclient.whoiam.WhoIAmConfig;
 import com.example.wenhanclient.whoiam.WhoIAmSubMod;
 
@@ -273,6 +275,12 @@ public final class WenhanClientConfigScreen {
 								FluidPlatformConfig.DEFAULT_ENABLED,
 								() -> drafts.fluidPlatform.enabled,
 								value -> drafts.fluidPlatform.enabled = value))
+				.option(
+						booleanOption(
+								"option.wenhan-client.void-floor.enabled",
+								VoidFloorConfig.DEFAULT_ENABLED,
+								() -> drafts.voidFloor.enabled,
+								value -> drafts.voidFloor.enabled = value))
 				.option(
 						booleanOption(
 								"option.wenhan-client.no-slowdown.enabled",
@@ -1031,6 +1039,7 @@ public final class WenhanClientConfigScreen {
 		private final ScaffoldPlacementConfig scaffoldPlacement;
 		private final StableMiningConfig stableMining;
 		private final TransparentBlocksConfig transparentBlocks;
+		private final VoidFloorConfig voidFloor;
 		private final WhoIAmConfig whoIAm;
 
 		private Drafts() {
@@ -1071,6 +1080,7 @@ public final class WenhanClientConfigScreen {
 			this.scaffoldPlacement = ScaffoldPlacementSubMod.config();
 			this.stableMining = StableMiningSubMod.config();
 			this.transparentBlocks = TransparentBlocksSubMod.config();
+			this.voidFloor = VoidFloorSubMod.config();
 			this.whoIAm = WhoIAmSubMod.config();
 		}
 
@@ -1116,6 +1126,7 @@ public final class WenhanClientConfigScreen {
 			ScaffoldPlacementSubMod.setConfig(this.scaffoldPlacement);
 			StableMiningSubMod.setConfig(this.stableMining);
 			TransparentBlocksSubMod.setConfig(this.transparentBlocks);
+			VoidFloorSubMod.setConfig(this.voidFloor);
 			WhoIAmSubMod.setConfig(this.whoIAm);
 			BoatUtilsSubMod.setConfig(this.boatUtils);
 		}

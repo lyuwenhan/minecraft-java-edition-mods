@@ -71,6 +71,8 @@
 	"option.wenhan-client.no-collision.enabled.tooltip": "Prevents other entities from pushing the local player.",
 	"option.wenhan-client.fluid-platform.enabled": "Fluid Platform",
 	"option.wenhan-client.fluid-platform.enabled.tooltip": "Allows the local player to stand on water and lava surfaces. Sneak to pass through.",
+	"option.wenhan-client.void-floor.enabled": "Void Floor",
+	"option.wenhan-client.void-floor.enabled.tooltip": "Creates a one-way floor at Y=-105 in the Overworld and Y=-41 in the Nether and End. Requires flight permission and only blocks downward movement.",
 	"option.wenhan-client.no-camera-collision.enabled": "No Camera Collision",
 	"option.wenhan-client.no-camera-collision.enabled.tooltip": "Keeps the third-person camera distance fixed instead of shortening it when blocks are behind you.",
 	"option.wenhan-client.attack-through-foliage.enabled": "Attack Through Foliage",

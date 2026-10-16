@@ -44,6 +44,7 @@ import com.example.wenhanclient.playerwaypointinfo.PlayerWaypointInfoSubMod;
 import com.example.wenhanclient.scaffoldplacement.ScaffoldPlacementSubMod;
 import com.example.wenhanclient.stablemining.StableMiningSubMod;
 import com.example.wenhanclient.transparentblocks.TransparentBlocksSubMod;
+import com.example.wenhanclient.voidfloor.VoidFloorSubMod;
 import com.example.wenhanclient.whoiam.WhoIAmSubMod;
 
 import net.fabricmc.api.ClientModInitializer;
@@ -96,6 +97,7 @@ public class WenhanClientMod implements ClientModInitializer {
 		ScaffoldPlacementSubMod.init();
 		StableMiningSubMod.init();
 		TransparentBlocksSubMod.init();
+		VoidFloorSubMod.init();
 		WhoIAmSubMod.init();
 		GreetSubMod.init(CONFIG.greet);
 	}

@@ -57,6 +57,7 @@
 		"remove-commands-length-limit.mixins.json",
 		"stable-mining.mixins.json",
 		"transparent-blocks.mixins.json",
+		"void-floor.mixins.json",
 		"who-i-am.mixins.json"
 	],
 	"depends": {

@@ -126,7 +126,7 @@ public final class DelayedFallingSubMod {
 				&& !player.getAbilities().flying;
 	}
 
-	private static boolean hasSupportBelow(LocalPlayer player) {
+	public static boolean hasSupportBelow(LocalPlayer player) {
 		AABB bounds = player.getBoundingBox();
 		AABB probe =
 				new AABB(

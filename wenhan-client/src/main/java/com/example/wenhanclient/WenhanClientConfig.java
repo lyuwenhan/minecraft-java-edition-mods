@@ -39,6 +39,7 @@ import com.example.wenhanclient.playerwaypointinfo.PlayerWaypointInfoConfig;
 import com.example.wenhanclient.scaffoldplacement.ScaffoldPlacementConfig;
 import com.example.wenhanclient.stablemining.StableMiningConfig;
 import com.example.wenhanclient.transparentblocks.TransparentBlocksConfig;
+import com.example.wenhanclient.voidfloor.VoidFloorConfig;
 import com.example.wenhanclient.whoiam.WhoIAmConfig;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -98,6 +99,7 @@ public class WenhanClientConfig {
 	public ScaffoldPlacementConfig scaffoldPlacement = new ScaffoldPlacementConfig();
 	public StableMiningConfig stableMining = new StableMiningConfig();
 	public TransparentBlocksConfig transparentBlocks = new TransparentBlocksConfig();
+	public VoidFloorConfig voidFloor = new VoidFloorConfig();
 	public WhoIAmConfig whoIAm = new WhoIAmConfig();
 
 	public static WenhanClientConfig load() {
@@ -274,6 +276,9 @@ public class WenhanClientConfig {
 		}
 		if (transparentBlocks == null) {
 			transparentBlocks = new TransparentBlocksConfig();
+		}
+		if (voidFloor == null) {
+			voidFloor = new VoidFloorConfig();
 		}
 		if (whoIAm == null) {
 			whoIAm = new WhoIAmConfig();
