@@ -265,5 +265,8 @@
 	"option.wenhan-client.auto-aim.auto_attack.after_cooldown": "After Attack Cooldown",
 	"option.wenhan-client.auto-aim.auto_attack.enabled": "Yes",
 	"option.wenhan-client.auto-aim.auto_attack_delay_ticks": "Automatic Attack Delay",
-	"option.wenhan-client.auto-aim.auto_attack_delay_ticks.tooltip": "Extra ticks to wait before repeatedly attacking the same target. The first selection or a target switch has no added delay."
+	"option.wenhan-client.auto-aim.auto_attack_delay_ticks.tooltip": "Extra ticks to wait before repeatedly attacking the same target. The first selection or a target switch has no added delay.",
+	"option.wenhan-client.safe-drop.enabled": "Safe Drop",
+	"option.wenhan-client.safe-drop.enabled.tooltip": "Requires a second drop key press to confirm dropping protected items in game.",
+	"message.wenhan-client.safe-drop.confirm": "Please press drop again"
 }

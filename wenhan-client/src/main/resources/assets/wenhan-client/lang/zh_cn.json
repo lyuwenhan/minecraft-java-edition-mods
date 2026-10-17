@@ -265,5 +265,8 @@
 	"option.wenhan-client.auto-aim.auto_attack.after_cooldown": "攻击冷却结束后",
 	"option.wenhan-client.auto-aim.auto_attack.enabled": "是",
 	"option.wenhan-client.auto-aim.auto_attack_delay_ticks": "自动攻击延迟",
-	"option.wenhan-client.auto-aim.auto_attack_delay_ticks.tooltip": "连续攻击同一目标前等待的额外游戏刻数。首次选中或切换目标时不增加延迟。"
+	"option.wenhan-client.auto-aim.auto_attack_delay_ticks.tooltip": "连续攻击同一目标前等待的额外游戏刻数。首次选中或切换目标时不增加延迟。",
+	"option.wenhan-client.safe-drop.enabled": "安全丢弃",
+	"option.wenhan-client.safe-drop.enabled.tooltip": "游戏中丢弃受保护物品时，需再按一次丢弃键确认。",
+	"message.wenhan-client.safe-drop.confirm": "请再次按下丢弃"
 }

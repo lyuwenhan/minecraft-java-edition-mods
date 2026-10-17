@@ -9,14 +9,6 @@ import org.spongepowered.asm.mixin.injection.ModifyArg;
 
 import java.util.function.Function;
 
-/**
- * Makes both client toggle keys ignore the corresponding server-enforced boolean.
- *
- * <p>DABR passes method references to two {@code Optional.map(...)} calls in {@code clientTick}:
- * the first maps {@code LimitedModConfigServer::forceEnabled}, and the second maps {@code
- * LimitedModConfigServer::allowThrusting}. Method references compile to {@code invokedynamic}, so
- * replace the mapper arguments at the two exact call ordinals.
- */
 @Mixin(ModKeybindings.class)
 public abstract class ModKeybindingsMixin {
 	@ModifyArg(

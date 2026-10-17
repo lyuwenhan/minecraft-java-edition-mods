@@ -41,6 +41,7 @@ import com.example.wenhanclient.notexturerotation.NoTextureRotationSubMod;
 import com.example.wenhanclient.placementrestriction.PlacementRestrictionSubMod;
 import com.example.wenhanclient.playerhighlighter.PlayerHighlighterSubMod;
 import com.example.wenhanclient.playerwaypointinfo.PlayerWaypointInfoSubMod;
+import com.example.wenhanclient.safedrop.SafeDropSubMod;
 import com.example.wenhanclient.scaffoldplacement.ScaffoldPlacementSubMod;
 import com.example.wenhanclient.stablemining.StableMiningSubMod;
 import com.example.wenhanclient.transparentblocks.TransparentBlocksSubMod;
@@ -94,6 +95,7 @@ public class WenhanClientMod implements ClientModInitializer {
 		PlayerHighlighterSubMod.init();
 		PlayerWaypointInfoSubMod.init();
 		PlacementRestrictionSubMod.init();
+		SafeDropSubMod.init();
 		ScaffoldPlacementSubMod.init();
 		StableMiningSubMod.init();
 		TransparentBlocksSubMod.init();

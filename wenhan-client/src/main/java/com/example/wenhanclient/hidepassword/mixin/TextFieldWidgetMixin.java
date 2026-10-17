@@ -34,8 +34,6 @@ public abstract class TextFieldWidgetMixin {
 			return;
 		}
 
-		// Put the password formatter first so later command-syntax formatters cannot expose the
-		// password.
 		formatters.add(0, this::hidepassword$formatRenderSegment);
 		hidepassword$formatterInstalled = true;
 	}

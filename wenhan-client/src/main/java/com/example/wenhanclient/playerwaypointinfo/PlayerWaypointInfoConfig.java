@@ -3,7 +3,7 @@ package com.example.wenhanclient.playerwaypointinfo;
 import com.example.wenhanclient.WenhanClientMod;
 
 public class PlayerWaypointInfoConfig {
-	public static final boolean DEFAULT_ENABLED = true;
+	public static final boolean DEFAULT_ENABLED = false;
 
 	public boolean enabled = DEFAULT_ENABLED;
 

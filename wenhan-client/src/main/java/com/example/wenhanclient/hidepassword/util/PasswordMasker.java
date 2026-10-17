@@ -2,7 +2,6 @@ package com.example.wenhanclient.hidepassword.util;
 
 import java.util.List;
 
-/** Render-only masking logic used by the EditBox mixin. */
 public final class PasswordMasker {
 	private static final List<CommandMaskRule> COMMAND_PREFIXES =
 			List.of(
@@ -19,16 +18,6 @@ public final class PasswordMasker {
 
 	private PasswordMasker() {}
 
-	/**
-	 * Masks only the render segment supplied by EditBox.TextFormatter.
-	 *
-	 * @param value the complete, real EditBox value
-	 * @param text the render segment supplied by Minecraft
-	 * @param offset the segment's UTF-16 offset in {@code value}
-	 * @param hideLength whether every masked argument should render as its own fixed
-	 *	 eight-character mask
-	 * @return the masked render segment, or {@code null} when this segment does not need masking
-	 */
 	public static String maskRenderSegment(
 			String value, String text, int offset, boolean hideLength) {
 		if (value == null || text == null || offset < 0 || offset > value.length()) {

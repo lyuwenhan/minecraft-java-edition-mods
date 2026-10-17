@@ -1,7 +1,7 @@
 package com.example.wenhanclient.doublejump;
 
 public final class DoubleJumpConfig {
-	public static final int DEFAULT_JUMP_COUNT = 2;
+	public static final int DEFAULT_JUMP_COUNT = 1;
 	public static final boolean DEFAULT_INFINITE_JUMPS = false;
 	public static final boolean DEFAULT_COOLDOWN_ENABLED = false;
 	public static final int DEFAULT_COOLDOWN_TICKS = 5;

@@ -1,6 +1,5 @@
 package com.example.wenhanclient.forwardlock;
 
-/** Pure input state machine for forward-lock activation and cancellation. */
 final class ForwardLockController {
 	static final int DOUBLE_TAP_WINDOW_TICKS = 7;
 

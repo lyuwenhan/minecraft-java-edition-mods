@@ -10,11 +10,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(ModConfig.class)
 public abstract class ModConfigMixin {
-	/**
-	 * DABR's original getEnableThrust() combines the local client toggle with the server's
-	 * allowThrusting value. For gameplay, keep only the client's own toggle. The received server
-	 * configuration object itself is untouched.
-	 */
 	@Inject(method = "getEnableThrust", at = @At("HEAD"), cancellable = true)
 	private void dabrServerConfigOverride$allowThrustingForGameplay(
 			CallbackInfoReturnable<Boolean> cir) {
@@ -29,8 +24,5 @@ public abstract class ModConfigMixin {
 							value = "INVOKE",
 							target =
 									"Lnl/enjarai/doabarrelroll/util/ToastUtil;toasty(Ljava/lang/String;)V"))
-	private void dabrServerConfigOverride$suppressIgnoredServerOverrideToasts(String messageKey) {
-		// Both server restrictions handled by this mod are ignored for client gameplay, so neither
-		// warning should claim that the corresponding local setting has been overridden.
-	}
+	private void dabrServerConfigOverride$suppressIgnoredServerOverrideToasts(String messageKey) {}
 }
