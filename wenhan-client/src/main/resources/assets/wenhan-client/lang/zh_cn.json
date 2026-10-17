@@ -82,7 +82,7 @@
 	"option.wenhan-client.no-slime-bounce.enabled": "取消史莱姆弹跳",
 	"option.wenhan-client.no-slime-bounce.enabled.tooltip": "阻止史莱姆块让玩家弹跳。",
 	"option.wenhan-client.no-fog.enabled": "无雾",
-	"option.wenhan-client.no-fog.enabled.tooltip": "移除水下、岩浆、细雪、失明、黑暗、天气、Boss 和维度地形迷雾，并取消视野扭曲。",
+	"option.wenhan-client.no-fog.enabled.tooltip": "移除水下、岩浆、细雪、失明、黑暗、天气、Boss 和维度地形迷雾、虚空遮罩、低高度天空变黑、群系天空色和液体中的天空变色，并取消视野扭曲。",
 	"option.wenhan-client.transparent-blocks.always_render": "持续渲染透明方块",
 	"option.wenhan-client.transparent-blocks.always_render.tooltip": "持续显示屏障、结构空位和光源方块。",
 	"title.wenhan-client.who-i-am.config": "我是谁",

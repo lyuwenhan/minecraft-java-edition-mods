@@ -82,7 +82,7 @@
 	"option.wenhan-client.no-slime-bounce.enabled": "No Slime Bounce",
 	"option.wenhan-client.no-slime-bounce.enabled.tooltip": "Prevents slime blocks from bouncing the local player.",
 	"option.wenhan-client.no-fog.enabled": "No Fog",
-	"option.wenhan-client.no-fog.enabled.tooltip": "Removes water, lava, powdered snow, blindness, darkness, weather, boss, dimension terrain fog, and FOV distortion.",
+	"option.wenhan-client.no-fog.enabled.tooltip": "Removes water, lava, powdered snow, blindness, darkness, weather, boss, dimension terrain fog, the void sky mask, low-altitude sky darkening, biome sky tints, sky color changes in fluids, and FOV distortion.",
 	"option.wenhan-client.transparent-blocks.always_render": "Always Render Barriers",
 	"option.wenhan-client.transparent-blocks.always_render.tooltip": "Keeps barrier, structure void, and light blocks visible.",
 	"title.wenhan-client.who-i-am.config": "Who I Am",

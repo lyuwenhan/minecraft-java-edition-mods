@@ -27,6 +27,10 @@ public final class DelayedFallingSubMod {
 		return config.copy();
 	}
 
+	public static boolean isEnabled() {
+		return config.delayTicks > 0;
+	}
+
 	public static void setConfig(DelayedFallingConfig newConfig) {
 		config = newConfig == null ? new DelayedFallingConfig() : newConfig.copy();
 		WenhanClientMod.CONFIG.delayedFalling = config.copy();
@@ -48,17 +52,16 @@ public final class DelayedFallingSubMod {
 			return;
 		}
 
-		if (player.onGround()) {
+		// onGround can be stale after a horizontal-only move or a server correction.
+		// Only actual collision support ends the suspension.
+		if (hasSupportBelow(player)) {
+			boolean wasDelaying = delaying;
 			delaying = false;
 			ticksRemaining = 0;
-			return;
-		}
-
-		if (delaying && hasSupportBelow(player)) {
-			delaying = false;
-			ticksRemaining = 0;
-			player.setOnGround(true);
-			player.resetFallDistance();
+			if (wasDelaying) {
+				player.setOnGround(true);
+				player.resetFallDistance();
+			}
 			return;
 		}
 
@@ -80,6 +83,10 @@ public final class DelayedFallingSubMod {
 			return;
 		}
 		Vec3 movement = player.getDeltaMovement();
+		if (!canDelay(player) || movement.y > 0.0D) {
+			stopDelay(player);
+			return;
+		}
 		player.setDeltaMovement(movement.x, 0.0D, movement.z);
 		player.resetFallDistance();
 		if (ticksRemaining > 0) {
@@ -92,6 +99,17 @@ public final class DelayedFallingSubMod {
 
 	public static boolean isDelaying(LocalPlayer player) {
 		return player != null && trackedPlayer == player && delaying;
+	}
+
+	public static Vec3 restrictMovement(LocalPlayer player, Vec3 movement) {
+		if (!isDelaying(player)) {
+			return movement;
+		}
+		if (!canDelay(player) || movement.y > 0.0D) {
+			stopDelay(player);
+			return movement;
+		}
+		return movement.y < 0.0D ? new Vec3(movement.x, 0.0D, movement.z) : movement;
 	}
 
 	public static void startAfterWalkingOffEdge(LocalPlayer player, double previousY) {

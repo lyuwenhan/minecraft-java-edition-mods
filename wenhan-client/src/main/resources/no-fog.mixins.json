@@ -3,9 +3,12 @@
 	"package": "com.example.wenhanclient.nofog.mixin",
 	"compatibilityLevel": "JAVA_25",
 	"client": [
+		"CameraMixin",
+		"EnvironmentAttributeProbeMixin",
 		"FogRendererMixin",
 		"LevelExtractorMixin",
-		"LivingEntityMixin"
+		"LivingEntityMixin",
+		"SkyRendererMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1

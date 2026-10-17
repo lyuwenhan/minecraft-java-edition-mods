@@ -8,6 +8,7 @@ import net.minecraft.client.renderer.fog.FogRenderer;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
@@ -32,6 +33,15 @@ public abstract class FogRendererMixin {
 		}
 
 		return FogRenderer.FogMode.NONE;
+	}
+
+	// This clamp normalizes the height-based void darkness before it darkens the background color.
+	@ModifyArg(
+			method = "computeFogColor",
+			at = @At(value = "INVOKE", target = "Lnet/minecraft/util/Mth;clamp(FFF)F"),
+			index = 0)
+	private float noFog$removeVoidDarkening(float darkness) {
+		return NoFogSubMod.isEnabled() ? 0.0F : darkness;
 	}
 
 	private static void disableFog(FogData data) {
