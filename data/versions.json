@@ -415,6 +415,15 @@
 			"Planet Minecraft": "https://www.planetminecraft.com/mod/shared-player-data-6993864"
 		}
 	},
+	"voxy-client-side": {
+		"versions": [
+			"1.2.0"
+		],
+		"hasIcon": true,
+		"displayName": "Voxy Client Side",
+		"description": "Generates missing vanilla chunks into Voxy using per-server seeds and client-side commands.",
+		"link": {}
+	},
 	"who-i-am": {
 		"versions": [
 			"1.1.0",

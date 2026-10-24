@@ -220,6 +220,14 @@
 				"26.3": "1.2.0"
 			}
 		},
+		"voxy-client-side": {
+			"hasIcon": true,
+			"displayName": "Voxy Client Side",
+			"description": "Generates missing vanilla chunks into Voxy using per-server seeds and client-side commands.",
+			"versions": {
+				"26.3": "1.2.0"
+			}
+		},
 		"who-i-am": {
 			"hasIcon": true,
 			"displayName": "Who I Am",
@@ -841,6 +849,10 @@
 		},
 		"9e14e4973242e2bc8229791f4daf46e21afaa107": {
 			"id": "shared-player-data",
+			"version": "1.2.0"
+		},
+		"03ddd79442ba7f739e9a9ba3fbe237290a6c3119": {
+			"id": "voxy-client-side",
 			"version": "1.2.0"
 		},
 		"e9373af234358247e937b3153ae516e6beb46690": {
