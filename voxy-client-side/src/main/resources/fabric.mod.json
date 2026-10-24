@@ -1,0 +1,23 @@
+{
+	"schemaVersion": 1,
+	"id": "voxy-client-side",
+	"version": "${version}",
+	"name": "Voxy Client Side",
+	"description": "Generates missing vanilla chunks into Voxy using per-server seeds and client-side commands.",
+	"authors": [
+		"Wenhan"
+	],
+	"environment": "client",
+	"entrypoints": {
+		"client": [
+			"com.example.voxyclientside.VoxyClientSideMod"
+		]
+	},
+	"depends": {
+		"fabricloader": ">=0.19.5",
+		"fabric-api": "*",
+		"voxy": ">=0.2.20-beta",
+		"minecraft": "26.3",
+		"java": ">=25"
+	}
+}

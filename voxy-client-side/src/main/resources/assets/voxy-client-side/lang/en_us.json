@@ -1,0 +1,14 @@
+{
+	"command.voxygen.enabled": "Voxygen enabled.",
+	"command.voxygen.disabled": "Voxygen disabled.",
+	"command.voxygen.status": "Voxygen is %s. Seed for world %s: %s. Radius: %s chunks. Generator: %s",
+	"command.voxygen.radius": "Voxygen radius: %s chunks.",
+	"command.voxygen.radius_set": "Voxygen radius set to %s chunks.",
+	"command.voxygen.threads": "Voxygen generation threads: %s.",
+	"command.voxygen.threads_set": "Voxygen generation threads set to %s.",
+	"command.voxygen.seed": "Seed for world %s: %s",
+	"command.voxygen.seed_set": "Seed for world %s set to %s.",
+	"command.voxygen.seed_local_read_only": "The local server provides its real seed; manual seed setting is disabled.",
+	"command.voxygen.seed_unset": "not set",
+	"command.voxygen.no_server": "You are not in a world."
+}

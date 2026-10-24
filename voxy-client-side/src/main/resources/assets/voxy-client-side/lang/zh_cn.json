@@ -1,0 +1,14 @@
+{
+	"command.voxygen.enabled": "Voxygen 已启用。",
+	"command.voxygen.disabled": "Voxygen 已禁用。",
+	"command.voxygen.status": "Voxygen 当前%s。世界 %s 的种子：%s。半径：%s 区块。生成器：%s",
+	"command.voxygen.radius": "Voxygen 半径：%s 区块。",
+	"command.voxygen.radius_set": "已将 Voxygen 半径设置为 %s 区块。",
+	"command.voxygen.threads": "Voxygen 生成线程数：%s。",
+	"command.voxygen.threads_set": "已将 Voxygen 生成线程数设置为 %s。",
+	"command.voxygen.seed": "世界 %s 的种子：%s",
+	"command.voxygen.seed_set": "已将世界 %s 的种子设置为 %s。",
+	"command.voxygen.seed_local_read_only": "当前本地服务器已提供真实种子，无需手动设置。",
+	"command.voxygen.seed_unset": "未设置",
+	"command.voxygen.no_server": "当前未进入世界。"
+}
