@@ -45,6 +45,7 @@
 - Fabric Loader 0.19.5+
 - Fabric API 0.160.5+
 - Java 25
+- Voxy (强制要求)
 
 ## License
 

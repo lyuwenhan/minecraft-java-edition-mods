@@ -45,6 +45,7 @@ Generation is available only for locally recognized vanilla Overworld, Nether, a
 - Fabric Loader 0.19.5+
 - Fabric API 0.160.5+
 - Java 25
+- Voxy (Required)
 
 ## License
 
