@@ -93,7 +93,9 @@ public final class VoxyClientSideMod implements ClientModInitializer {
 	private static int setEnabled(FabricClientCommandSource source, boolean enabled) {
 		config.enable = enabled;
 		config.save();
-		VoxygenGenerationService.invalidate();
+		if (!enabled) {
+			VoxygenGenerationService.invalidate();
+		}
 		source.sendFeedback(
 				Component.translatable(
 						enabled ? "command.voxygen.enabled" : "command.voxygen.disabled"));
@@ -124,7 +126,6 @@ public final class VoxyClientSideMod implements ClientModInitializer {
 	private static int setRadius(FabricClientCommandSource source, int radius) {
 		config.radius = radius;
 		config.save();
-		VoxygenGenerationService.invalidate();
 		source.sendFeedback(Component.translatable("command.voxygen.radius_set", radius));
 		return Command.SINGLE_SUCCESS;
 	}
@@ -137,7 +138,6 @@ public final class VoxyClientSideMod implements ClientModInitializer {
 	private static int setThreads(FabricClientCommandSource source, int threads) {
 		config.threads = threads;
 		config.save();
-		VoxygenGenerationService.invalidate();
 		source.sendFeedback(Component.translatable("command.voxygen.threads_set", threads));
 		return Command.SINGLE_SUCCESS;
 	}
