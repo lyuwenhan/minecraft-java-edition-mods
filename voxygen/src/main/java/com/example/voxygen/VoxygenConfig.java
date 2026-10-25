@@ -1,4 +1,4 @@
-package com.example.voxyclientside;
+package com.example.voxygen;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -15,29 +15,32 @@ import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
 
-public final class VoxyClientSideConfig {
-	private static final Logger LOGGER = LoggerFactory.getLogger("voxy-client-side");
+public final class VoxygenConfig {
+	private static final Logger LOGGER = LoggerFactory.getLogger("voxygen");
 	private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 	private static final Path CONFIG_PATH =
+			FabricLoader.getInstance().getConfigDir().resolve("voxygen.json");
+	private static final Path LEGACY_CONFIG_PATH =
 			FabricLoader.getInstance().getConfigDir().resolve("voxy-client-side.json");
 
 	public boolean enable = true;
+	public boolean showProgress = false;
 	public int radius = 64;
 	public int threads = 32;
 	public Map<String, Long> seeds = new HashMap<>();
 
-	public static VoxyClientSideConfig load() {
-		if (!Files.exists(CONFIG_PATH)) {
-			VoxyClientSideConfig config = new VoxyClientSideConfig();
+	public static VoxygenConfig load() {
+		Path source = Files.exists(CONFIG_PATH) ? CONFIG_PATH : LEGACY_CONFIG_PATH;
+		if (!Files.exists(source)) {
+			VoxygenConfig config = new VoxygenConfig();
 			config.save();
 			return config;
 		}
 
 		try {
-			VoxyClientSideConfig config =
-					GSON.fromJson(Files.readString(CONFIG_PATH), VoxyClientSideConfig.class);
+			VoxygenConfig config = GSON.fromJson(Files.readString(source), VoxygenConfig.class);
 			if (config == null) {
-				config = new VoxyClientSideConfig();
+				config = new VoxygenConfig();
 			}
 			if (config.seeds == null) {
 				config.seeds = new HashMap<>();
@@ -53,8 +56,8 @@ public final class VoxyClientSideConfig {
 			config.save();
 			return config;
 		} catch (IOException | JsonParseException e) {
-			LOGGER.error("Failed to load Voxy Client Side config", e);
-			return new VoxyClientSideConfig();
+			LOGGER.error("Failed to load Voxygen config", e);
+			return new VoxygenConfig();
 		}
 	}
 
@@ -63,7 +66,7 @@ public final class VoxyClientSideConfig {
 			Files.createDirectories(CONFIG_PATH.getParent());
 			Files.writeString(CONFIG_PATH, GSON.toJson(this));
 		} catch (IOException e) {
-			LOGGER.error("Failed to save Voxy Client Side config", e);
+			LOGGER.error("Failed to save Voxygen config", e);
 		}
 	}
 }

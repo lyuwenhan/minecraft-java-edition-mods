@@ -1,4 +1,4 @@
-package com.example.voxyclientside;
+package com.example.voxygen;
 
 import me.cortex.voxy.common.voxelization.VoxelizedSection;
 import me.cortex.voxy.common.voxelization.WorldConversionFactory;
@@ -84,7 +84,7 @@ import java.util.concurrent.atomic.AtomicLong;
 
 /** Generates vanilla chunks off-thread and inserts their voxelized sections into Voxy. */
 final class VoxygenGenerationService {
-	private static final Logger LOGGER = LoggerFactory.getLogger("voxy-client-side");
+	private static final Logger LOGGER = LoggerFactory.getLogger("voxygen");
 	private static final ThreadPoolExecutor EXECUTOR =
 			new ThreadPoolExecutor(
 					32,
@@ -112,10 +112,7 @@ final class VoxygenGenerationService {
 	}
 
 	static void tick(
-			Minecraft client,
-			VoxyClientSideConfig config,
-			String serverAddress,
-			Long effectiveSeed) {
+			Minecraft client, VoxygenConfig config, String serverAddress, Long effectiveSeed) {
 		if (!config.enable
 				|| client.level == null
 				|| client.player == null
@@ -229,6 +226,35 @@ final class VoxygenGenerationService {
 				current.failures.get(),
 				current.verificationFailures.get());
 	}
+
+	static ProgressSnapshot progressSnapshot() {
+		Session current = session;
+		if (current == null
+				|| current.retiring
+				|| current.preparing
+				|| current.preparationFailure != null
+				|| !current.windowReady) {
+			return null;
+		}
+		int total = current.coverage.size();
+		if (total == 0) {
+			return null;
+		}
+		int completed = Math.min(current.finished.size(), total);
+		boolean complete;
+		synchronized (current.windowLock) {
+			complete =
+					completed == total
+							&& current.inFlight.get() == 0
+							&& current.pending.isEmpty()
+							&& current.retries.isEmpty()
+							&& !current.windowTaskScheduled
+							&& !current.windowTaskRunning;
+		}
+		return new ProgressSnapshot(current, (float) completed / (float) total, complete);
+	}
+
+	record ProgressSnapshot(Object sessionKey, float progress, boolean complete) {}
 
 	private static void retire(Component reason) {
 		Session current = session;

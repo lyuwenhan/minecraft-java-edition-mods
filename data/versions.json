@@ -415,14 +415,17 @@
 			"Planet Minecraft": "https://www.planetminecraft.com/mod/shared-player-data-6993864"
 		}
 	},
-	"voxy-client-side": {
+	"voxygen": {
 		"versions": [
 			"1.2.0"
 		],
 		"hasIcon": true,
-		"displayName": "Voxy Client Side",
+		"displayName": "Voxygen",
 		"description": "Generates missing vanilla chunks into Voxy using per-server seeds and client-side commands.",
-		"link": {}
+		"link": {
+			"Curseforge": "https://www.curseforge.com/minecraft/mc-mods/voxygen",
+			"Planet Minecraft": "https://www.planetminecraft.com/mod/voxygen"
+		}
 	},
 	"who-i-am": {
 		"versions": [

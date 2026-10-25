@@ -1,4 +1,4 @@
-package com.example.voxyclientside;
+package com.example.voxygen;
 
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
@@ -15,12 +15,12 @@ import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.storage.LevelResource;
 
-public final class VoxyClientSideMod implements ClientModInitializer {
-	private static VoxyClientSideConfig config;
+public final class VoxygenMod implements ClientModInitializer {
+	private static VoxygenConfig config;
 
 	@Override
 	public void onInitializeClient() {
-		config = VoxyClientSideConfig.load();
+		config = VoxygenConfig.load();
 		VoxygenGenerationService.initialize();
 		ClientCommandRegistrationCallback.EVENT.register(
 				(dispatcher, registryAccess) -> dispatcher.register(buildCommand()));
@@ -29,6 +29,7 @@ public final class VoxyClientSideMod implements ClientModInitializer {
 					String worldKey = getCurrentWorldKey();
 					VoxygenGenerationService.tick(
 							client, config, worldKey, getEffectiveSeed(client, worldKey));
+					VoxygenProgressBossBar.tick(client, config.showProgress);
 				});
 	}
 
@@ -71,6 +72,24 @@ public final class VoxyClientSideMod implements ClientModInitializer {
 																context.getSource(),
 																IntegerArgumentType.getInteger(
 																		context, "threads")))));
+		root.then(
+				ClientCommands.literal("progress")
+						.executes(context -> sendProgress(context.getSource()))
+						.then(
+								ClientCommands.literal("on")
+										.executes(
+												context -> setProgress(context.getSource(), true)))
+						.then(
+								ClientCommands.literal("off")
+										.executes(
+												context -> setProgress(context.getSource(), false)))
+						.then(
+								ClientCommands.literal("toggle")
+										.executes(
+												context ->
+														setProgress(
+																context.getSource(),
+																!config.showProgress))));
 		root.then(
 				ClientCommands.literal("seed")
 						.executes(context -> sendSeed(context.getSource()))
@@ -139,6 +158,33 @@ public final class VoxyClientSideMod implements ClientModInitializer {
 		config.threads = threads;
 		config.save();
 		source.sendFeedback(Component.translatable("command.voxygen.threads_set", threads));
+		return Command.SINGLE_SUCCESS;
+	}
+
+	private static int sendProgress(FabricClientCommandSource source) {
+		source.sendFeedback(
+				Component.translatable(
+						"command.voxygen.progress",
+						Component.translatable(
+								config.showProgress
+										? "command.voxygen.option.on"
+										: "command.voxygen.option.off")));
+		return Command.SINGLE_SUCCESS;
+	}
+
+	private static int setProgress(FabricClientCommandSource source, boolean enabled) {
+		config.showProgress = enabled;
+		config.save();
+		if (!enabled) {
+			VoxygenProgressBossBar.hide(Minecraft.getInstance());
+		}
+		source.sendFeedback(
+				Component.translatable(
+						"command.voxygen.progress_set",
+						Component.translatable(
+								enabled
+										? "command.voxygen.option.on"
+										: "command.voxygen.option.off")));
 		return Command.SINGLE_SUCCESS;
 	}
 

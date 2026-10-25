@@ -1,8 +1,8 @@
 # Languages (语言)
 
-[EN/English](https://lyuwenhan.github.io/extensions/minecraft-java/voxy-client-side/README/README.html) | [ZH-CN/简体中文](https://lyuwenhan.github.io/extensions/minecraft-java/voxy-client-side/README/README_ZH-CN.html)
+[EN/English](https://lyuwenhan.github.io/extensions/minecraft-java/voxygen/README/README.html) | [ZH-CN/简体中文](https://lyuwenhan.github.io/extensions/minecraft-java/voxygen/README/README_ZH-CN.html)
 
-# Voxy Client Side
+# Voxygen
 
 A client-side Fabric mod that stores one world seed per multiplayer server address and provides the `/voxygen` command.
 
@@ -33,7 +33,7 @@ A client-side Fabric mod that stores one world seed per multiplayer server addre
 
 In singleplayer, Voxygen reads the real seed directly from Minecraft's integrated server and uses it without saving it to the configuration. Otherwise, the seed is configured explicitly with `/voxygen seed <seed>`. Voxygen never runs vanilla `/seed` automatically and does not capture its output.
 
-The configuration is saved to `config/voxy-client-side.json`. It contains the global `enable` setting, generation `radius`, worker count `threads`, and a `seeds` map keyed by multiplayer server address or singleplayer save path.
+The configuration is saved to `config/voxygen.json`. It contains the global `enable` setting, generation `radius`, worker count `threads`, and a `seeds` map keyed by multiplayer server address or singleplayer save path.
 
 ## Generation
 

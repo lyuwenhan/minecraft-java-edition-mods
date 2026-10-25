@@ -7,7 +7,7 @@ version = "${mod_version}"
 group = "com.example"
 
 base {
-    archivesName = "voxy-client-side"
+    archivesName = "voxygen"
 }
 
 repositories {

@@ -1,8 +1,8 @@
 # Languages (语言)
 
-[EN/English](https://lyuwenhan.github.io/extensions/minecraft-java/voxy-client-side/README/README.html) | [ZH-CN/简体中文](https://lyuwenhan.github.io/extensions/minecraft-java/voxy-client-side/README/README_ZH-CN.html)
+[EN/English](https://lyuwenhan.github.io/extensions/minecraft-java/voxygen/README/README.html) | [ZH-CN/简体中文](https://lyuwenhan.github.io/extensions/minecraft-java/voxygen/README/README_ZH-CN.html)
 
-# Voxy Client Side
+# Voxygen
 
 A client-side Fabric mod that stores one world seed per multiplayer server address and provides the `/voxygen` command.
 
@@ -17,6 +17,8 @@ A client-side Fabric mod that stores one world seed per multiplayer server addre
 /voxygen radius <radius>
 /voxygen threads
 /voxygen threads <threads>
+/voxygen progress
+/voxygen progress on|off|toggle
 /voxygen seed
 /voxygen seed <seed>
 ```
@@ -28,12 +30,14 @@ A client-side Fabric mod that stores one world seed per multiplayer server addre
 - `radius <radius>` sets the radius to a positive integer. The default is `64` chunks.
 - `threads` shows the configured worker count.
 - `threads <threads>` sets the worker count from `1` to `256`. The default is `32`.
+- `progress` shows whether the generation progress boss bar is enabled.
+- `progress on|off|toggle` controls the yellow `Voxygen` progress boss bar. It is disabled by default and disappears two seconds after generation completes.
 - `seed` shows the seed recorded for the current world.
 - `seed <seed>` manually sets the seed when no local integrated-server seed is available. The argument is hidden when the local seed can be read directly.
 
 In singleplayer, Voxygen reads the real seed directly from Minecraft's integrated server and uses it without saving it to the configuration. Otherwise, the seed is configured explicitly with `/voxygen seed <seed>`. Voxygen never runs vanilla `/seed` automatically and does not capture its output.
 
-The configuration is saved to `config/voxy-client-side.json`. It contains the global `enable` setting, generation `radius`, worker count `threads`, and a `seeds` map keyed by multiplayer server address or singleplayer save path.
+The configuration is saved to `config/voxygen.json`. It contains the global `enable` setting, progress display setting `showProgress`, generation `radius`, worker count `threads`, and a `seeds` map keyed by multiplayer server address or singleplayer save path. Existing `voxy-client-side.json` settings are imported automatically on first launch after upgrading.
 
 ## Generation
 

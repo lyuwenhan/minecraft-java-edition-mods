@@ -1,8 +1,8 @@
 {
 	"schemaVersion": 1,
-	"id": "voxy-client-side",
+	"id": "voxygen",
 	"version": "${version}",
-	"name": "Voxy Client Side",
+	"name": "Voxygen",
 	"description": "Generates missing vanilla chunks into Voxy using per-server seeds and client-side commands.",
 	"authors": [
 		"Wenhan"
@@ -10,7 +10,7 @@
 	"environment": "client",
 	"entrypoints": {
 		"client": [
-			"com.example.voxyclientside.VoxyClientSideMod"
+			"com.example.voxygen.VoxygenMod"
 		]
 	},
 	"depends": {

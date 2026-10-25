@@ -1,8 +1,8 @@
 # Languages (语言)
 
-[EN/English](https://lyuwenhan.github.io/extensions/minecraft-java/voxy-client-side/README/README.html) | [ZH-CN/简体中文](https://lyuwenhan.github.io/extensions/minecraft-java/voxy-client-side/README/README_ZH-CN.html)
+[EN/English](https://lyuwenhan.github.io/extensions/minecraft-java/voxygen/README/README.html) | [ZH-CN/简体中文](https://lyuwenhan.github.io/extensions/minecraft-java/voxygen/README/README_ZH-CN.html)
 
-# Voxy Client Side
+# Voxygen
 
 一个纯客户端 Fabric 模组，按照多人服务器地址分别记录世界种子，并提供 `/voxygen` 命令。
 
@@ -33,7 +33,7 @@
 
 在单人世界中，Voxygen 会直接读取 Minecraft 整合服务器的真实 seed 并使用，不写入配置。无法读取本地 seed 时，才通过 `/voxygen seed <seed>` 显式设置。Voxygen 不会自动执行原版 `/seed`，也不会读取它的输出。
 
-配置保存在 `config/voxy-client-side.json`，其中包含全局开关 `enable`、生成半径 `radius`、工作线程数 `threads`，以及使用多人服务器地址或单人存档路径作为键的 `seeds` 映射。
+配置保存在 `config/voxygen.json`，其中包含全局开关 `enable`、生成半径 `radius`、工作线程数 `threads`，以及使用多人服务器地址或单人存档路径作为键的 `seeds` 映射。
 
 ## 区块生成
 
