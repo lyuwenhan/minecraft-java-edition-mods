@@ -8,6 +8,8 @@
 /voxygen radius <radius>
 /voxygen threads
 /voxygen threads <threads>
+/voxygen progress
+/voxygen progress on|off|toggle
 /voxygen seed
 /voxygen seed <seed>[/code]
 [list]
@@ -18,10 +20,12 @@
 [*][b]radius <radius>[/b] sets the radius to a positive integer. The default is [b]64[/b] chunks.[/*]
 [*][b]threads[/b] shows the configured worker count.[/*]
 [*][b]threads <threads>[/b] sets the worker count from [b]1[/b] to [b]256[/b]. The default is [b]32[/b].[/*]
+[*][b]progress[/b] shows whether the generation progress boss bar is enabled.[/*]
+[*][b]progress on|off|toggle[/b] controls the yellow [b]Voxygen[/b] progress boss bar. It is disabled by default and disappears two seconds after generation completes.[/*]
 [*][b]seed[/b] shows the seed recorded for the current world.[/*]
 [*][b]seed <seed>[/b] manually sets the seed when no local integrated-server seed is available. The argument is hidden when the local seed can be read directly.[/*]
 [/list]In singleplayer, Voxygen reads the real seed directly from Minecraft's integrated server and uses it without saving it to the configuration. Otherwise, the seed is configured explicitly with [b]/voxygen seed <seed>[/b]. Voxygen never runs vanilla [b]/seed[/b] automatically and does not capture its output.
-The configuration is saved to [b]config/voxygen.json[/b]. It contains the global [b]enable[/b] setting, generation [b]radius[/b], worker count [b]threads[/b], and a [b]seeds[/b] map keyed by multiplayer server address or singleplayer save path.
+The configuration is saved to [b]config/voxygen.json[/b]. It contains the global [b]enable[/b] setting, progress display setting [b]showProgress[/b], generation [b]radius[/b], worker count [b]threads[/b], and a [b]seeds[/b] map keyed by multiplayer server address or singleplayer save path. Existing [b]voxy-client-side.json[/b] settings are imported automatically on first launch after upgrading.
 [h2]Generation[/h2]While enabled, Voxygen visits the square around the player in a continuous clockwise square spiral based on Chebyshev distance. It generates missing chunks on background worker threads, using Minecraft's local vanilla [b]ChunkGenerator[/b] through [b]ChunkStatus.TERRAIN[/b], then reuses Voxy's voxelization, mip generation, and world-update path.
 Only the target [b]1x1[/b] chunk is generated; neighboring chunks are not generated or read. This produces biomes and base terrain, including aquifer fluids, but deliberately excludes trees, structures, ores, vegetation, and placed lakes. Voxelized terrain currently uses sky light [b]15[/b] and block light [b]0[/b].
 Voxygen determines whether to skip a chunk solely from data actually stored in Voxy; vanilla client render distance does not affect the decision. It checks Voxy before generation, before voxelization, and immediately before insertion so generated data does not replace terrain already received from the server.

@@ -17,6 +17,8 @@
 /voxygen radius <radius>
 /voxygen threads
 /voxygen threads <threads>
+/voxygen progress
+/voxygen progress on|off|toggle
 /voxygen seed
 /voxygen seed <seed>
 ```
@@ -28,12 +30,14 @@
 - `radius <radius>`：将半径设置为正整数，默认值为 `64` 个区块。
 - `threads`：查看当前工作线程数。
 - `threads <threads>`：将工作线程数设置为 `1` 至 `256`，默认值为 `32`。
+- `progress`：查看生成进度 BossBar 是否启用。
+- `progress on|off|toggle`：控制黄色的 `Voxygen` 生成进度 BossBar。默认关闭，生成完成两秒后自动消失。
 - `seed`：查看当前世界已记录的种子。
 - `seed <seed>`：本地整合服务器 seed 无法直接取得时用于手动设置；能直接读取本地 seed 时会隐藏此参数。
 
 在单人世界中，Voxygen 会直接读取 Minecraft 整合服务器的真实 seed 并使用，不写入配置。无法读取本地 seed 时，才通过 `/voxygen seed <seed>` 显式设置。Voxygen 不会自动执行原版 `/seed`，也不会读取它的输出。
 
-配置保存在 `config/voxygen.json`，其中包含全局开关 `enable`、生成半径 `radius`、工作线程数 `threads`，以及使用多人服务器地址或单人存档路径作为键的 `seeds` 映射。
+配置保存在 `config/voxygen.json`，其中包含全局开关 `enable`、进度显示开关 `showProgress`、生成半径 `radius`、工作线程数 `threads`，以及使用多人服务器地址或单人存档路径作为键的 `seeds` 映射。升级后首次启动时会自动导入已有的 `voxy-client-side.json` 配置。
 
 ## 区块生成
 
