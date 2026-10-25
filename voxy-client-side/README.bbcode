@@ -6,6 +6,8 @@
 /voxygen toggle
 /voxygen radius
 /voxygen radius <radius>
+/voxygen threads
+/voxygen threads <threads>
 /voxygen seed
 /voxygen seed <seed>[/code]
 [list]
@@ -14,12 +16,17 @@
 [*][b]toggle[/b] switches the current state.[/*]
 [*][b]radius[/b] shows the configured radius in chunks.[/*]
 [*][b]radius <radius>[/b] sets the radius to a positive integer. The default is [b]64[/b] chunks.[/*]
+[*][b]threads[/b] shows the configured worker count.[/*]
+[*][b]threads <threads>[/b] sets the worker count from [b]1[/b] to [b]256[/b]. The default is [b]32[/b].[/*]
 [*][b]seed[/b] shows the seed recorded for the current world.[/*]
 [*][b]seed <seed>[/b] manually sets the seed when no local integrated-server seed is available. The argument is hidden when the local seed can be read directly.[/*]
 [/list]In singleplayer, Voxygen reads the real seed directly from Minecraft's integrated server and uses it without saving it to the configuration. Otherwise, the seed is configured explicitly with [b]/voxygen seed <seed>[/b]. Voxygen never runs vanilla [b]/seed[/b] automatically and does not capture its output.
-The configuration is saved to [b]config/voxy-client-side.json[/b]. It contains the global [b]enable[/b] setting, the generation [b]radius[/b], and a [b]seeds[/b] map keyed by multiplayer server address or singleplayer save path.
-[h2]Generation[/h2]While enabled, Voxygen visits the square around the player in Chebyshev-distance order and generates missing chunks on background worker threads. It uses Minecraft's local vanilla [b]ChunkGenerator[/b] through [b]ChunkStatus.FEATURES[/b], then reuses Voxy's voxelization, mip generation, and world-update path.
-Voxygen skips client-loaded chunks and chunks that already contain Voxy data. It checks again before voxelization and immediately before insertion so generated data does not replace real server terrain.
+The configuration is saved to [b]config/voxy-client-side.json[/b]. It contains the global [b]enable[/b] setting, generation [b]radius[/b], worker count [b]threads[/b], and a [b]seeds[/b] map keyed by multiplayer server address or singleplayer save path.
+[h2]Generation[/h2]While enabled, Voxygen visits the square around the player in a continuous clockwise square spiral based on Chebyshev distance. It generates missing chunks on background worker threads, using Minecraft's local vanilla [b]ChunkGenerator[/b] through [b]ChunkStatus.TERRAIN[/b], then reuses Voxy's voxelization, mip generation, and world-update path.
+Only the target [b]1x1[/b] chunk is generated; neighboring chunks are not generated or read. This produces biomes and base terrain, including aquifer fluids, but deliberately excludes trees, structures, ores, vegetation, and placed lakes. Voxelized terrain currently uses sky light [b]15[/b] and block light [b]0[/b].
+Voxygen determines whether to skip a chunk solely from data actually stored in Voxy; vanilla client render distance does not affect the decision. It checks Voxy before generation, before voxelization, and immediately before insertion so generated data does not replace terrain already received from the server.
+The generation window follows the player. Center and radius updates run on a dedicated background thread, coalesce rapid changes, and rebuild the remaining queue in spiral order while retaining completed, active, and retry work that still overlaps the new window. After one update finishes, another can run after a one-second cooldown. Initial generation starts two seconds after joining a valid world.
+Changing the worker count does not restart generation. Excess active jobs finish normally when the count is lowered, while raising it allows more jobs to start. Failed chunks enter a retry queue. When a session must be replaced, it stops dispatching new work and lets active jobs finish and save first.
 Generation is available only for locally recognized vanilla Overworld, Nether, and End dimensions. It pauses instead of guessing when the current server has no recorded seed, the dimension is unsupported, Voxy is unavailable, or the required local world-generation registries are missing. Custom server-side world-generation settings cannot be inferred from a seed alone.
 [h2]Supported Versions[/h2][list]
 [*]Minecraft 26.3[/*]
