@@ -20,8 +20,6 @@ public final class VoxygenConfig {
 	private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 	private static final Path CONFIG_PATH =
 			FabricLoader.getInstance().getConfigDir().resolve("voxygen.json");
-	private static final Path LEGACY_CONFIG_PATH =
-			FabricLoader.getInstance().getConfigDir().resolve("voxy-client-side.json");
 
 	public boolean enable = true;
 	public boolean showProgress = false;
@@ -30,15 +28,15 @@ public final class VoxygenConfig {
 	public Map<String, Long> seeds = new HashMap<>();
 
 	public static VoxygenConfig load() {
-		Path source = Files.exists(CONFIG_PATH) ? CONFIG_PATH : LEGACY_CONFIG_PATH;
-		if (!Files.exists(source)) {
+		if (!Files.exists(CONFIG_PATH)) {
 			VoxygenConfig config = new VoxygenConfig();
 			config.save();
 			return config;
 		}
 
 		try {
-			VoxygenConfig config = GSON.fromJson(Files.readString(source), VoxygenConfig.class);
+			VoxygenConfig config =
+					GSON.fromJson(Files.readString(CONFIG_PATH), VoxygenConfig.class);
 			if (config == null) {
 				config = new VoxygenConfig();
 			}
