@@ -13,6 +13,9 @@
 			"com.example.voxygen.VoxygenMod"
 		]
 	},
+	"mixins": [
+		"voxygen.mixins.json"
+	],
 	"depends": {
 		"fabricloader": ">=0.19.5",
 		"fabric-api": "*",

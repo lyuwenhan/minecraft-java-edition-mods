@@ -1,5 +1,8 @@
 package com.example.voxygen;
 
+import it.unimi.dsi.fastutil.shorts.ShortArrayList;
+import it.unimi.dsi.fastutil.shorts.ShortList;
+
 import me.cortex.voxy.common.voxelization.VoxelizedSection;
 import me.cortex.voxy.common.voxelization.WorldConversionFactory;
 import me.cortex.voxy.common.voxelization.WorldVoxilizedSectionMipper;
@@ -16,18 +19,26 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.LayeredRegistryAccess;
 import net.minecraft.core.RegistryAccess;
+import net.minecraft.core.SectionPos;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
 import net.minecraft.resources.RegistryDataLoader;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.RegistryLayer;
+import net.minecraft.server.level.GenerationChunkHolder;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.resources.MultiPackResourceManager;
 import net.minecraft.util.RandomSource;
+import net.minecraft.util.StaticCache2D;
+import net.minecraft.util.datafix.DataFixers;
+import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelHeightAccessor;
+import net.minecraft.world.level.LightLayer;
 import net.minecraft.world.level.StructureManager;
 import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.biome.Biome;
@@ -38,38 +49,56 @@ import net.minecraft.world.level.biome.MultiNoiseBiomeSourceParameterList;
 import net.minecraft.world.level.biome.MultiNoiseBiomeSourceParameterLists;
 import net.minecraft.world.level.biome.TheEndBiomeSource;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.ChunkAccess;
 import net.minecraft.world.level.chunk.ChunkGenerator;
+import net.minecraft.world.level.chunk.ChunkGeneratorStructureState;
 import net.minecraft.world.level.chunk.ChunkSource;
 import net.minecraft.world.level.chunk.LevelChunkSection;
+import net.minecraft.world.level.chunk.LightChunk;
+import net.minecraft.world.level.chunk.LightChunkGetter;
 import net.minecraft.world.level.chunk.PalettedContainerFactory;
 import net.minecraft.world.level.chunk.ProtoChunk;
 import net.minecraft.world.level.chunk.UpgradeData;
+import net.minecraft.world.level.chunk.status.ChunkPyramid;
 import net.minecraft.world.level.chunk.status.ChunkStatus;
+import net.minecraft.world.level.chunk.status.ChunkStatusTasks;
+import net.minecraft.world.level.chunk.status.ChunkStep;
+import net.minecraft.world.level.chunk.status.WorldGenContext;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.levelgen.NoiseBasedChunkGenerator;
 import net.minecraft.world.level.levelgen.NoiseGeneratorSettings;
 import net.minecraft.world.level.levelgen.RandomState;
 import net.minecraft.world.level.levelgen.WorldOptions;
 import net.minecraft.world.level.levelgen.blending.Blender;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplateManager;
 import net.minecraft.world.level.levelgen.synth.NormalNoise;
+import net.minecraft.world.level.lighting.LevelLightEngine;
+import net.minecraft.world.level.storage.LevelStorageSource;
 import net.minecraft.world.ticks.BlackholeTickAccess;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.Collections;
 import java.util.EnumSet;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
+import java.util.concurrent.CancellationException;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.concurrent.Executors;
@@ -81,6 +110,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.concurrent.locks.ReentrantLock;
 
 /** Generates vanilla chunks off-thread and inserts their voxelized sections into Voxy. */
 final class VoxygenGenerationService {
@@ -165,6 +195,7 @@ final class VoxygenGenerationService {
 			if (!current.isDrained()) {
 				return;
 			}
+			current.closeContext();
 			session = null;
 			current = null;
 		}
@@ -223,7 +254,7 @@ final class VoxygenGenerationService {
 				current.insertedSections.get(),
 				current.skippedVoxy.get(),
 				current.emptyChunks.get(),
-				current.failures.get(),
+				current.failedChunks.size(),
 				current.verificationFailures.get());
 	}
 
@@ -247,7 +278,8 @@ final class VoxygenGenerationService {
 					completed == total
 							&& current.inFlight.get() == 0
 							&& current.pending.isEmpty()
-							&& current.retries.isEmpty()
+							&& current.retryOne.isEmpty()
+							&& current.retryTwo.isEmpty()
 							&& !current.windowTaskScheduled
 							&& !current.windowTaskRunning;
 		}
@@ -261,6 +293,7 @@ final class VoxygenGenerationService {
 		if (current != null) {
 			current.retire();
 			if (current.isDrained()) {
+				current.closeContext();
 				session = null;
 			}
 		}
@@ -311,18 +344,28 @@ final class VoxygenGenerationService {
 		private final Set<Long> coverage = ConcurrentHashMap.newKeySet();
 		private final Set<Long> finished = ConcurrentHashMap.newKeySet();
 		private final Set<Long> queued = ConcurrentHashMap.newKeySet();
-		private final Set<Long> retryQueued = ConcurrentHashMap.newKeySet();
+		private final Set<Long> retryOneQueued = ConcurrentHashMap.newKeySet();
+		private final Set<Long> retryTwoQueued = ConcurrentHashMap.newKeySet();
 		private final Set<Long> activeChunks = ConcurrentHashMap.newKeySet();
+		private final Set<Long> failedChunks = ConcurrentHashMap.newKeySet();
 		private final ConcurrentLinkedDeque<Long> pending = new ConcurrentLinkedDeque<>();
-		private final ConcurrentLinkedDeque<Long> retries = new ConcurrentLinkedDeque<>();
+		private final ConcurrentLinkedDeque<Long> retryOne = new ConcurrentLinkedDeque<>();
+		private final ConcurrentLinkedDeque<Long> retryTwo = new ConcurrentLinkedDeque<>();
 		private final AtomicInteger inFlight = new AtomicInteger();
-		private final AtomicLong dispatches = new AtomicLong();
+		private final AtomicInteger retryInFlight = new AtomicInteger();
+		private int normalDispatchesSinceRetry;
+		private int retryDispatchBudget;
+		private boolean retryOneTurn = true;
+		private boolean retryDrainMode;
+		private final Object decorationOrderLock = new Object();
+		private final Set<Long> completedDecorationSequences = new HashSet<>();
+		private long nextDecorationSequence;
+		private long decorationSequenceToRun;
 		private final AtomicInteger generatedChunks = new AtomicInteger();
 		private final AtomicInteger insertedChunks = new AtomicInteger();
 		private final AtomicInteger insertedSections = new AtomicInteger();
 		private final AtomicInteger skippedVoxy = new AtomicInteger();
 		private final AtomicInteger emptyChunks = new AtomicInteger();
-		private final AtomicInteger failures = new AtomicInteger();
 		private final AtomicInteger verificationFailures = new AtomicInteger();
 		private volatile GenerationContext context;
 		private volatile Throwable preparationFailure;
@@ -384,11 +427,25 @@ final class VoxygenGenerationService {
 
 		private void retire() {
 			retiring = true;
+			synchronized (decorationOrderLock) {
+				decorationOrderLock.notifyAll();
+			}
+			GenerationContext currentContext = context;
+			if (currentContext != null) {
+				currentContext.cancel();
+			}
 			synchronized (windowLock) {
 				if (windowFuture != null && windowFuture.cancel(false)) {
 					windowTaskScheduled = false;
 					windowFuture = null;
 				}
+			}
+		}
+
+		private void closeContext() {
+			GenerationContext currentContext = context;
+			if (currentContext != null) {
+				currentContext.close();
 			}
 		}
 
@@ -483,15 +540,19 @@ final class VoxygenGenerationService {
 			synchronized (coverageLock) {
 				coverage.retainAll(nextCoverage);
 				finished.retainAll(nextCoverage);
-				retryQueued.retainAll(nextCoverage);
-				retries.removeIf(packed -> !nextCoverage.contains(packed));
+				failedChunks.retainAll(nextCoverage);
+				retryOneQueued.retainAll(nextCoverage);
+				retryTwoQueued.retainAll(nextCoverage);
+				retryOne.removeIf(packed -> !nextCoverage.contains(packed));
+				retryTwo.removeIf(packed -> !nextCoverage.contains(packed));
 				coverage.addAll(nextCoverage);
 				pending.clear();
 				queued.clear();
 				for (long packed : ordered) {
 					if (!finished.contains(packed)
 							&& !activeChunks.contains(packed)
-							&& !retryQueued.contains(packed)
+							&& !retryOneQueued.contains(packed)
+							&& !retryTwoQueued.contains(packed)
 							&& queued.add(packed)) {
 						pending.addLast(packed);
 					}
@@ -537,37 +598,51 @@ final class VoxygenGenerationService {
 							"command.voxygen.state.running",
 							level.dimension().identifier().toString());
 			while (inFlight.get() < workerCount) {
-				Long next = pollNext();
+				ScheduledChunk next = pollNext();
 				if (next == null) {
-					if (inFlight.get() == 0 && pending.isEmpty() && retries.isEmpty()) {
+					if (inFlight.get() == 0
+							&& pending.isEmpty()
+							&& retryOne.isEmpty()
+							&& retryTwo.isEmpty()) {
 						state = Component.translatable("command.voxygen.state.complete");
 					}
 					return;
 				}
-				long packed = next;
+				long packed = next.packed();
 				int chunkX = ChunkPos.getX(packed);
 				int chunkZ = ChunkPos.getZ(packed);
 
 				inFlight.incrementAndGet();
+				if (next.stage() != RetryStage.NORMAL) {
+					retryInFlight.incrementAndGet();
+				}
 				EXECUTOR.execute(
 						() -> {
 							boolean succeeded = false;
 							try {
-								succeeded = generateOne(this, chunkX, chunkZ);
+								succeeded =
+										generateOne(
+												this, chunkX, chunkZ, next.decorationSequence());
 							} catch (Throwable throwable) {
-								failures.incrementAndGet();
-								LOGGER.warn(
-										"Failed to generate chunk [{}, {}], reason: {}",
-										chunkX,
-										chunkZ,
-										failureReason(throwable),
-										throwable);
+								if (!retiring) {
+									LOGGER.warn(
+											"Failed to generate chunk [{}, {}], reason: {}",
+											chunkX,
+											chunkZ,
+											failureReason(throwable),
+											throwable);
+								}
 							} finally {
+								finishDecorationSequence(next.decorationSequence());
 								activeChunks.remove(packed);
 								if (succeeded) {
+									failedChunks.remove(packed);
 									markFinished(packed);
 								} else {
-									enqueueRetry(packed);
+									handleFailure(next);
+								}
+								if (next.stage() != RetryStage.NORMAL) {
+									retryInFlight.decrementAndGet();
 								}
 								inFlight.decrementAndGet();
 							}
@@ -575,34 +650,123 @@ final class VoxygenGenerationService {
 			}
 		}
 
-		private Long pollNext() {
-			boolean retryTurn = (dispatches.get() + 1L) % 100L == 0L;
-			Long packed = retryTurn ? poll(retries, retryQueued) : poll(pending, queued);
-			if (packed == null) {
-				packed = retryTurn ? poll(pending, queued) : poll(retries, retryQueued);
+		private ScheduledChunk pollNext() {
+			while (true) {
+				if (!retryDrainMode
+						&& (retryOneQueued.size() > 100 || retryTwoQueued.size() > 100)) {
+					retryDrainMode = true;
+					retryDispatchBudget = 0;
+					normalDispatchesSinceRetry = 0;
+				}
+
+				if (retryDrainMode) {
+					ScheduledChunk retry = pollAnyRetry();
+					if (retry != null) {
+						return retry;
+					}
+					if (retryInFlight.get() > 0) {
+						return null;
+					}
+					retryDrainMode = false;
+					retryDispatchBudget = 0;
+					normalDispatchesSinceRetry = 0;
+					continue;
+				}
+
+				if (retryDispatchBudget > 0) {
+					ScheduledChunk retry =
+							retryOneTurn
+									? poll(retryOne, retryOneQueued, RetryStage.FIRST)
+									: poll(retryTwo, retryTwoQueued, RetryStage.SECOND);
+					if (retry != null) {
+						retryDispatchBudget--;
+						if (retryDispatchBudget == 0) {
+							finishRetryBatch();
+						}
+						return retry;
+					}
+					finishRetryBatch();
+				}
+
+				if (normalDispatchesSinceRetry >= 10) {
+					retryDispatchBudget = 10;
+					continue;
+				}
+
+				ScheduledChunk normal = poll(pending, queued, RetryStage.NORMAL);
+				if (normal != null) {
+					normalDispatchesSinceRetry++;
+					return normal;
+				}
+
+				if (!retryOne.isEmpty() || !retryTwo.isEmpty()) {
+					retryDispatchBudget = 10;
+					continue;
+				}
+				return null;
 			}
-			if (packed != null) {
-				dispatches.incrementAndGet();
-			}
-			return packed;
 		}
 
-		private Long poll(ConcurrentLinkedDeque<Long> queue, Set<Long> membership) {
+		private ScheduledChunk pollAnyRetry() {
+			ScheduledChunk retry =
+					retryOneTurn
+							? poll(retryOne, retryOneQueued, RetryStage.FIRST)
+							: poll(retryTwo, retryTwoQueued, RetryStage.SECOND);
+			if (retry == null) {
+				retry =
+						retryOneTurn
+								? poll(retryTwo, retryTwoQueued, RetryStage.SECOND)
+								: poll(retryOne, retryOneQueued, RetryStage.FIRST);
+			}
+			if (retry != null) {
+				retryOneTurn = !retryOneTurn;
+			}
+			return retry;
+		}
+
+		private void finishRetryBatch() {
+			retryDispatchBudget = 0;
+			normalDispatchesSinceRetry = 0;
+			retryOneTurn = !retryOneTurn;
+		}
+
+		private ScheduledChunk poll(
+				ConcurrentLinkedDeque<Long> queue, Set<Long> membership, RetryStage stage) {
 			Long packed;
 			while ((packed = queue.pollFirst()) != null) {
+				if (packed == null) {
+					return null;
+				}
 				membership.remove(packed);
 				if (coverage.contains(packed)
 						&& !finished.contains(packed)
 						&& activeChunks.add(packed)) {
-					return packed;
+					return new ScheduledChunk(packed, stage, nextDecorationSequence++);
 				}
 			}
 			return null;
 		}
 
-		private void enqueueRetry(long packed) {
-			if (coverage.contains(packed) && retryQueued.add(packed)) {
-				retries.addLast(packed);
+		private void handleFailure(ScheduledChunk task) {
+			long packed = task.packed();
+			if (retiring || !coverage.contains(packed)) {
+				return;
+			}
+			switch (task.stage()) {
+				case NORMAL -> {
+					if (retryOneQueued.add(packed)) {
+						retryOne.addLast(packed);
+					}
+				}
+				case FIRST -> {
+					if (retryTwoQueued.add(packed)) {
+						retryTwo.addLast(packed);
+					}
+				}
+				case SECOND -> {
+					failedChunks.add(packed);
+					markFinished(packed);
+				}
 			}
 		}
 
@@ -613,22 +777,70 @@ final class VoxygenGenerationService {
 				}
 			}
 		}
+
+		private void awaitDecorationSequence(long sequence) {
+			synchronized (decorationOrderLock) {
+				while (!retiring && decorationSequenceToRun != sequence) {
+					try {
+						decorationOrderLock.wait();
+					} catch (InterruptedException exception) {
+						Thread.currentThread().interrupt();
+						throw new CancellationException(
+								"Interrupted while waiting for ordered feature generation");
+					}
+				}
+				if (retiring) {
+					throw new CancellationException("Voxygen session was retired");
+				}
+			}
+		}
+
+		private void finishDecorationSequence(long sequence) {
+			synchronized (decorationOrderLock) {
+				if (sequence < decorationSequenceToRun) {
+					return;
+				}
+				completedDecorationSequences.add(sequence);
+				while (completedDecorationSequences.remove(decorationSequenceToRun)) {
+					decorationSequenceToRun++;
+				}
+				decorationOrderLock.notifyAll();
+			}
+		}
 	}
 
-	private static boolean generateOne(Session owner, int chunkX, int chunkZ) {
+	private record ScheduledChunk(long packed, RetryStage stage, long decorationSequence) {}
+
+	private enum RetryStage {
+		NORMAL,
+		FIRST,
+		SECOND
+	}
+
+	private static boolean generateOne(
+			Session owner, int chunkX, int chunkZ, long decorationSequence) {
 		if (hasVoxyData(owner.engine, owner.context.height, chunkX, chunkZ)) {
 			owner.skippedVoxy.incrementAndGet();
 			return true;
 		}
 
-		ProtoChunk chunk = owner.context.generateTerrain(chunkX, chunkZ);
+		owner.context.prepareFull(chunkX, chunkZ);
+		owner.awaitDecorationSequence(decorationSequence);
+		GeneratedChunk generated;
+		try {
+			generated = owner.context.generatePreparedFull(chunkX, chunkZ);
+		} finally {
+			owner.finishDecorationSequence(decorationSequence);
+		}
+		ProtoChunk chunk = generated.chunk();
 		owner.generatedChunks.incrementAndGet();
 		if (hasVoxyData(owner.engine, owner.context.height, chunkX, chunkZ)) {
 			owner.skippedVoxy.incrementAndGet();
 			return true;
 		}
 
-		List<VoxelizedSection> voxelized = voxelize(owner.engine, chunk);
+		LevelLightEngine lightEngine = owner.context.light(chunkX, chunkZ);
+		List<VoxelizedSection> voxelized = voxelize(owner.engine, chunk, lightEngine);
 		if (voxelized.isEmpty()) {
 			owner.emptyChunks.incrementAndGet();
 			return true;
@@ -652,7 +864,8 @@ final class VoxygenGenerationService {
 		return true;
 	}
 
-	private static List<VoxelizedSection> voxelize(WorldEngine engine, ProtoChunk chunk) {
+	private static List<VoxelizedSection> voxelize(
+			WorldEngine engine, ProtoChunk chunk, LevelLightEngine lightEngine) {
 		List<VoxelizedSection> result = new ArrayList<>();
 		LevelChunkSection[] sections = chunk.getSections();
 		for (int index = 0; index < sections.length; index++) {
@@ -668,7 +881,22 @@ final class VoxygenGenerationService {
 							engine.getMapper(),
 							section.getStates(),
 							section.getBiomes(),
-							(x, y, z) -> (byte) 0x0F);
+							(x, y, z) -> {
+								BlockPos pos =
+										new BlockPos(
+												(chunk.getPos().x() << 4) + x,
+												(sectionY << 4) + y,
+												(chunk.getPos().z() << 4) + z);
+								int sky =
+										lightEngine
+												.getLayerListener(LightLayer.SKY)
+												.getLightValue(pos);
+								int block =
+										lightEngine
+												.getLayerListener(LightLayer.BLOCK)
+												.getLightValue(pos);
+								return (byte) ((block << 4) | sky);
+							});
 			WorldVoxilizedSectionMipper.mipSection(voxelized, engine.getMapper());
 			result.add(voxelized);
 		}
@@ -715,7 +943,7 @@ final class VoxygenGenerationService {
 				+ (message == null || message.isBlank() ? "" : ": " + message);
 	}
 
-	private static List<Long> squareInChebyshevOrder(int centerX, int centerZ, int radius) {
+	static List<Long> squareInChebyshevOrder(int centerX, int centerZ, int radius) {
 		List<Long> result = new ArrayList<>((radius * 2 + 1) * (radius * 2 + 1));
 		result.add(ChunkPos.pack(centerX, centerZ));
 		for (int distance = 1; distance <= radius; distance++) {
@@ -750,6 +978,29 @@ final class VoxygenGenerationService {
 		private final RandomState randomState;
 		private final PalettedContainerFactory containers;
 		private final long seed;
+		private final ResourceKey<Level> dimension;
+		private final ServerLevel serverLevel;
+		private final StructureTemplateManager structureTemplates;
+		private final ChunkGeneratorStructureState structureState;
+		private final LevelStorageSource.LevelStorageAccess storageAccess;
+		private final ConcurrentHashMap<Long, ProtoChunk> chunks = new ConcurrentHashMap<>();
+		private final ConcurrentHashMap<Long, CompletableFuture<ProtoChunk>> structureStarts =
+				new ConcurrentHashMap<>();
+		private final ConcurrentHashMap<Long, CompletableFuture<ProtoChunk>> structureReferences =
+				new ConcurrentHashMap<>();
+		private final ConcurrentHashMap<Long, CompletableFuture<ProtoChunk>> biomes =
+				new ConcurrentHashMap<>();
+		private final ConcurrentHashMap<Long, CompletableFuture<ProtoChunk>> terrain =
+				new ConcurrentHashMap<>();
+		private final ConcurrentHashMap<Long, CompletableFuture<ProtoChunk>> features =
+				new ConcurrentHashMap<>();
+		private final ReentrantLock[] writeLocks = new ReentrantLock[4096];
+		private final LocalWorld localWorld;
+		private final WorldGenLevel world;
+		private final StructureManager structures;
+		private final WorldGenContext nativeContext;
+		private volatile boolean cancelled;
+		private boolean closed;
 
 		private GenerationContext(
 				ClientLevel sourceLevel,
@@ -758,7 +1009,12 @@ final class VoxygenGenerationService {
 				ChunkGenerator generator,
 				RandomState randomState,
 				PalettedContainerFactory containers,
-				long seed) {
+				long seed,
+				ResourceKey<Level> dimension,
+				ServerLevel serverLevel,
+				StructureTemplateManager structureTemplates,
+				ChunkGeneratorStructureState structureState,
+				LevelStorageSource.LevelStorageAccess storageAccess) {
 			this.sourceLevel = sourceLevel;
 			this.registries = registries;
 			this.height = height;
@@ -766,15 +1022,43 @@ final class VoxygenGenerationService {
 			this.randomState = randomState;
 			this.containers = containers;
 			this.seed = seed;
+			this.dimension = dimension;
+			this.serverLevel = serverLevel;
+			this.structureTemplates = structureTemplates;
+			this.structureState = structureState;
+			this.storageAccess = storageAccess;
+			if (serverLevel == null) {
+				// ChunkGeneratorStructureState lazily fills ordinary FastUtil maps. Its
+				// first call is not safe when several remote-world workers arrive at once.
+				// Finish that one-time initialization before publishing this context.
+				structureState.ensureStructuresGenerated();
+			}
+			for (int index = 0; index < writeLocks.length; index++) {
+				writeLocks[index] = new ReentrantLock();
+			}
+			this.localWorld = new LocalWorld(this, chunks);
+			this.world = localWorld.proxy();
+			this.structures =
+					new StructureManager(world, new WorldOptions(seed, false, false), null);
+			this.nativeContext =
+					serverLevel == null
+							? null
+							: new WorldGenContext(
+									serverLevel,
+									generator,
+									structureTemplates,
+									serverLevel.getChunkSource().getLightEngine(),
+									Runnable::run,
+									ignored -> {});
 		}
 
 		private static GenerationContext create(
 				ClientLevel level, ResourceKey<Level> dimension, long seed) {
-			RegistryAccess registries = worldgenRegistries();
 			Minecraft client = Minecraft.getInstance();
 			if (client.getSingleplayerServer() != null) {
 				ServerLevel serverLevel = client.getSingleplayerServer().getLevel(dimension);
 				if (serverLevel != null) {
+					RegistryAccess registries = serverLevel.registryAccess();
 					ChunkGenerator serverGenerator = serverLevel.getChunkSource().getGenerator();
 					return new GenerationContext(
 							level,
@@ -784,10 +1068,16 @@ final class VoxygenGenerationService {
 							serverGenerator,
 							serverLevel.getChunkSource().randomState(),
 							PalettedContainerFactory.create(registries),
-							seed);
+							seed,
+							dimension,
+							serverLevel,
+							serverLevel.getStructureTemplateManager(),
+							serverLevel.getChunkSource().getGeneratorState(),
+							null);
 				}
 			}
 
+			RegistryAccess registries = worldgenRegistries();
 			Holder<NoiseGeneratorSettings> settings;
 			BiomeSource biomes;
 			if (Level.OVERWORLD.equals(dimension)) {
@@ -827,6 +1117,32 @@ final class VoxygenGenerationService {
 			RandomState randomState = RandomState.create(noises, seed, settings.value());
 			LevelHeightAccessor height =
 					LevelHeightAccessor.create(level.getMinY(), level.getHeight());
+			LevelStorageSource storage =
+					LevelStorageSource.createDefault(
+							client.gameDirectory.toPath().resolve("voxygen-virtual"));
+			String encodedDimension =
+					Base64.getUrlEncoder()
+							.withoutPadding()
+							.encodeToString(
+									dimension
+											.identifier()
+											.toString()
+											.getBytes(StandardCharsets.UTF_8));
+			LevelStorageSource.LevelStorageAccess access;
+			try {
+				access = storage.createAccess(seed + "-" + encodedDimension);
+			} catch (IOException exception) {
+				throw new IllegalStateException("Cannot open the virtual world", exception);
+			}
+			StructureTemplateManager templates =
+					new StructureTemplateManager(
+							vanillaDataResources,
+							access,
+							DataFixers.getDataFixer(),
+							registries.lookupOrThrow(Registries.BLOCK));
+			ChunkGeneratorStructureState structureState =
+					generator.createState(
+							registries.lookupOrThrow(Registries.STRUCTURE_SET), randomState, seed);
 			return new GenerationContext(
 					level,
 					registries,
@@ -834,7 +1150,12 @@ final class VoxygenGenerationService {
 					generator,
 					randomState,
 					PalettedContainerFactory.create(registries),
-					seed);
+					seed,
+					dimension,
+					null,
+					templates,
+					structureState,
+					access);
 		}
 
 		private static RegistryAccess worldgenRegistries() {
@@ -881,52 +1202,496 @@ final class VoxygenGenerationService {
 			}
 		}
 
-		private ProtoChunk generateTerrain(int targetX, int targetZ) {
-			Map<Long, ProtoChunk> chunks = new ConcurrentHashMap<>();
-			ProtoChunk chunk =
-					new ProtoChunk(
-							new ChunkPos(targetX, targetZ),
-							UpgradeData.EMPTY,
-							height,
-							containers,
-							null);
-			chunks.put(ChunkPos.pack(targetX, targetZ), chunk);
+		private void prepareFull(int targetX, int targetZ) {
+			for (int z = targetZ - 1; z <= targetZ + 1; z++) {
+				for (int x = targetX - 1; x <= targetX + 1; x++) {
+					prepareFeatureDependencies(x, z);
+				}
+			}
+		}
 
-			LocalWorld handler = new LocalWorld(this, chunks);
-			WorldGenLevel world = handler.proxy();
-			StructureManager structures =
-					new StructureManager(world, new WorldOptions(seed, false, false), null);
-			BiomeManager biomeManager = new BiomeManager(world, BiomeManager.obfuscateSeed(seed));
+		private GeneratedChunk generatePreparedFull(int targetX, int targetZ) {
+			for (int z = targetZ - 1; z <= targetZ + 1; z++) {
+				for (int x = targetX - 1; x <= targetX + 1; x++) {
+					ensureFeatures(x, z);
+				}
+			}
+			ProtoChunk chunk = chunks.get(ChunkPos.pack(targetX, targetZ));
+			chunk.setPersistedStatus(ChunkStatus.FULL);
+			return new GeneratedChunk(chunk);
+		}
 
-			generator.createBiomes(randomState, Blender.empty(), structures, chunk).join();
-			chunk.setPersistedStatus(ChunkStatus.BIOMES);
-			generator
-					.buildTerrain(
-							chunk,
-							Blender.empty(),
-							randomState,
-							structures,
-							biomeManager,
-							null,
-							generator.getBiomeSource().possibleBiomes())
-					.join();
-			Heightmap.primeHeightmaps(
-					chunk,
-					EnumSet.of(
-							Heightmap.Types.MOTION_BLOCKING,
-							Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
-							Heightmap.Types.OCEAN_FLOOR,
-							Heightmap.Types.WORLD_SURFACE));
-			chunk.setPersistedStatus(ChunkStatus.TERRAIN);
+		private ProtoChunk ensureStructureStarts(int x, int z) {
+			long key = ChunkPos.pack(x, z);
+			return ensure(
+					structureStarts,
+					key,
+					() -> {
+						ProtoChunk chunk = chunk(x, z);
+						if (nativeContext != null) {
+							ChunkStep step =
+									ChunkPyramid.GENERATION_PYRAMID.getStepTo(
+											ChunkStatus.STRUCTURE_STARTS);
+							ChunkStatusTasks.generateStructureStarts(
+											nativeContext, step, nativeCache(x, z, step), chunk)
+									.join();
+						} else {
+							WorldgenSeedContext.run(
+									seed,
+									() ->
+											generator.createStructures(
+													registries,
+													structureState,
+													structures,
+													chunk,
+													structureTemplates,
+													dimension));
+						}
+						chunk.setPersistedStatus(ChunkStatus.STRUCTURE_STARTS);
+						return chunk;
+					});
+		}
+
+		private ProtoChunk ensureBiomes(int x, int z) {
+			long key = ChunkPos.pack(x, z);
+			return ensure(
+					biomes,
+					key,
+					() -> {
+						ProtoChunk chunk = ensureStructureReferences(x, z);
+						if (nativeContext != null) {
+							ChunkStep step =
+									ChunkPyramid.GENERATION_PYRAMID.getStepTo(ChunkStatus.BIOMES);
+							ChunkStatusTasks.generateBiomes(
+											nativeContext, step, nativeCache(x, z, step), chunk)
+									.join();
+						} else {
+							generator
+									.createBiomes(randomState, Blender.empty(), structures, chunk)
+									.join();
+						}
+						chunk.setPersistedStatus(ChunkStatus.BIOMES);
+						return chunk;
+					});
+		}
+
+		private ProtoChunk ensureStructureReferences(int x, int z) {
+			long key = ChunkPos.pack(x, z);
+			return ensure(
+					structureReferences,
+					key,
+					() -> {
+						ChunkStep step =
+								ChunkPyramid.GENERATION_PYRAMID.getStepTo(
+										ChunkStatus.STRUCTURE_REFERENCES);
+						int radius = step.directDependencies().size() - 1;
+						for (int startZ = z - radius; startZ <= z + radius; startZ++) {
+							for (int startX = x - radius; startX <= x + radius; startX++) {
+								ensureStructureStarts(startX, startZ);
+							}
+						}
+						ProtoChunk chunk = chunks.get(key);
+						if (nativeContext != null) {
+							ChunkStatusTasks.generateStructureReferences(
+											nativeContext, step, nativeCache(x, z, step), chunk)
+									.join();
+						} else {
+							WorldgenSeedContext.run(
+									seed,
+									() -> generator.createReferences(world, structures, chunk));
+						}
+						chunk.setPersistedStatus(ChunkStatus.STRUCTURE_REFERENCES);
+						return chunk;
+					});
+		}
+
+		private ProtoChunk ensureTerrain(int x, int z) {
+			long key = ChunkPos.pack(x, z);
+			return ensure(
+					terrain,
+					key,
+					() -> {
+						for (int biomeZ = z - 1; biomeZ <= z + 1; biomeZ++) {
+							for (int biomeX = x - 1; biomeX <= x + 1; biomeX++) {
+								ensureBiomes(biomeX, biomeZ);
+							}
+						}
+						ProtoChunk chunk = chunks.get(key);
+						if (nativeContext != null) {
+							ChunkStep step =
+									ChunkPyramid.GENERATION_PYRAMID.getStepTo(ChunkStatus.TERRAIN);
+							ChunkStatusTasks.buildTerrain(
+											nativeContext, step, nativeCache(x, z, step), chunk)
+									.join();
+						} else {
+							generator
+									.buildTerrain(
+											chunk,
+											Blender.empty(),
+											randomState,
+											structures,
+											new BiomeManager(
+													world, BiomeManager.obfuscateSeed(seed)),
+											null,
+											generator.getBiomeSource().possibleBiomes())
+									.join();
+						}
+						Heightmap.primeHeightmaps(
+								chunk,
+								EnumSet.of(
+										Heightmap.Types.MOTION_BLOCKING,
+										Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
+										Heightmap.Types.OCEAN_FLOOR,
+										Heightmap.Types.WORLD_SURFACE));
+						chunk.setPersistedStatus(ChunkStatus.TERRAIN);
+						return chunk;
+					});
+		}
+
+		private ProtoChunk ensureFeatures(int x, int z) {
+			long key = ChunkPos.pack(x, z);
+			return ensure(
+					features,
+					key,
+					() -> {
+						prepareFeatureDependencies(x, z);
+						List<ReentrantLock> locks = lockArea(x, z, 1);
+						try {
+							ProtoChunk chunk = chunks.get(key);
+							List<ChunkSnapshot> snapshots = snapshotArea(x, z, 1);
+							try {
+								if (nativeContext != null) {
+									ChunkStep step =
+											ChunkPyramid.GENERATION_PYRAMID.getStepTo(
+													ChunkStatus.FEATURES);
+									ChunkStatusTasks.generateFeatures(
+													nativeContext,
+													step,
+													nativeCache(x, z, step),
+													chunk)
+											.join();
+								} else {
+									localWorld.runInGenerationRegion(
+											x,
+											z,
+											() ->
+													WorldgenSeedContext.run(
+															seed,
+															structureTemplates,
+															() ->
+																	generator.applyBiomeDecoration(
+																			world,
+																			chunk,
+																			structures)));
+								}
+							} catch (RuntimeException | Error throwable) {
+								for (ChunkSnapshot snapshot : snapshots) {
+									snapshot.restore();
+								}
+								throw throwable;
+							}
+							chunk.setPersistedStatus(ChunkStatus.FEATURES);
+							return chunk;
+						} finally {
+							unlock(locks);
+						}
+					});
+		}
+
+		private void prepareFeatureDependencies(int x, int z) {
+			for (int neighborZ = z - 1; neighborZ <= z + 1; neighborZ++) {
+				for (int neighborX = x - 1; neighborX <= x + 1; neighborX++) {
+					ensureTerrain(neighborX, neighborZ);
+				}
+			}
+			int dependencyRadius =
+					ChunkPyramid.GENERATION_PYRAMID
+									.getStepTo(ChunkStatus.FEATURES)
+									.directDependencies()
+									.size()
+							- 1;
+			for (int startZ = z - dependencyRadius; startZ <= z + dependencyRadius; startZ++) {
+				for (int startX = x - dependencyRadius; startX <= x + dependencyRadius; startX++) {
+					ensureStructureStarts(startX, startZ);
+				}
+			}
+		}
+
+		private StaticCache2D<GenerationChunkHolder> nativeCache(
+				int centerX, int centerZ, ChunkStep step) {
+			int radius = step.directDependencies().size() - 1;
+			return StaticCache2D.create(
+					centerX,
+					centerZ,
+					radius,
+					(x, z) -> new VirtualGenerationChunkHolder(chunks.get(ChunkPos.pack(x, z))));
+		}
+
+		private LevelLightEngine light(int x, int z) {
+			LevelLightEngine lightEngine =
+					new LevelLightEngine(
+							new VirtualLightChunkGetter(this),
+							true,
+							sourceLevel.dimensionType().hasSkyLight());
+			for (int chunkZ = z - 1; chunkZ <= z + 1; chunkZ++) {
+				for (int chunkX = x - 1; chunkX <= x + 1; chunkX++) {
+					ProtoChunk chunk = ensureFeatures(chunkX, chunkZ);
+					chunk.initializeLightSources();
+					chunk.setLightEngine(lightEngine);
+					LevelChunkSection[] sections = chunk.getSections();
+					for (int index = 0; index < sections.length; index++) {
+						lightEngine.updateSectionStatus(
+								SectionPos.of(chunk.getPos(), chunk.getMinSectionY() + index),
+								sections[index].hasOnlyAir());
+					}
+					lightEngine.setLightEnabled(chunk.getPos(), true);
+					lightEngine.propagateLightSources(chunk.getPos());
+				}
+			}
+			while (lightEngine.hasLightWork()) {
+				lightEngine.runLightUpdates();
+			}
+			chunks.get(ChunkPos.pack(x, z)).setLightCorrect(true);
+			return lightEngine;
+		}
+
+		private ProtoChunk chunk(int x, int z) {
+			return chunks.computeIfAbsent(
+					ChunkPos.pack(x, z),
+					ignored ->
+							new ProtoChunk(
+									new ChunkPos(x, z),
+									UpgradeData.EMPTY,
+									height,
+									containers,
+									null));
+		}
+
+		private ProtoChunk ensure(
+				ConcurrentHashMap<Long, CompletableFuture<ProtoChunk>> stages,
+				long key,
+				ChunkOperation operation) {
+			if (cancelled) {
+				throw new CancellationException("Voxygen session was retired");
+			}
+			CompletableFuture<ProtoChunk> created = new CompletableFuture<>();
+			CompletableFuture<ProtoChunk> existing = stages.putIfAbsent(key, created);
+			if (existing != null) {
+				return existing.join();
+			}
+			try {
+				ProtoChunk result = operation.run();
+				created.complete(result);
+				return result;
+			} catch (Throwable throwable) {
+				stages.remove(key, created);
+				created.completeExceptionally(throwable);
+				throw throwable;
+			}
+		}
+
+		private List<ReentrantLock> lockArea(int centerX, int centerZ, int radius) {
+			TreeMap<Integer, ReentrantLock> ordered = new TreeMap<>();
+			for (int z = centerZ - radius; z <= centerZ + radius; z++) {
+				for (int x = centerX - radius; x <= centerX + radius; x++) {
+					int index =
+							Math.floorMod(Long.hashCode(ChunkPos.pack(x, z)), writeLocks.length);
+					ordered.put(index, writeLocks[index]);
+				}
+			}
+			List<ReentrantLock> result = new ArrayList<>(ordered.values());
+			for (ReentrantLock lock : result) {
+				lock.lock();
+			}
+			return result;
+		}
+
+		private List<ChunkSnapshot> snapshotArea(int centerX, int centerZ, int radius) {
+			List<ChunkSnapshot> snapshots = new ArrayList<>();
+			for (int z = centerZ - radius; z <= centerZ + radius; z++) {
+				for (int x = centerX - radius; x <= centerX + radius; x++) {
+					ProtoChunk chunk = chunks.get(ChunkPos.pack(x, z));
+					if (chunk != null) {
+						snapshots.add(ChunkSnapshot.capture(chunk));
+					}
+				}
+			}
+			return snapshots;
+		}
+
+		private static void unlock(List<ReentrantLock> locks) {
+			for (int index = locks.size() - 1; index >= 0; index--) {
+				locks.get(index).unlock();
+			}
+		}
+
+		private void cancel() {
+			cancelled = true;
+		}
+
+		private synchronized void close() {
+			if (closed) {
+				return;
+			}
+			closed = true;
+			if (storageAccess != null) {
+				try {
+					storageAccess.close();
+				} catch (IOException exception) {
+					LOGGER.warn("Cannot close Voxygen virtual world", exception);
+				}
+			}
+		}
+
+		private record ChunkSnapshot(
+				ProtoChunk chunk,
+				LevelChunkSection[] sections,
+				Map<Heightmap.Types, long[]> heightmaps,
+				Map<BlockPos, BlockEntity> blockEntities,
+				Map<BlockPos, CompoundTag> pendingBlockEntities,
+				ShortList[] postProcessing) {
+			private static ChunkSnapshot capture(ProtoChunk chunk) {
+				LevelChunkSection[] originalSections = chunk.getSections();
+				LevelChunkSection[] sections = new LevelChunkSection[originalSections.length];
+				for (int index = 0; index < originalSections.length; index++) {
+					sections[index] = originalSections[index].copy();
+				}
+
+				Map<Heightmap.Types, long[]> heightmaps = new HashMap<>();
+				for (Map.Entry<Heightmap.Types, Heightmap> entry : chunk.getHeightmaps()) {
+					heightmaps.put(entry.getKey(), entry.getValue().getRawData().clone());
+				}
+
+				Map<BlockPos, BlockEntity> blockEntities = new HashMap<>(chunk.getBlockEntities());
+				Map<BlockPos, CompoundTag> pendingBlockEntities = new HashMap<>();
+				for (Map.Entry<BlockPos, CompoundTag> entry :
+						chunk.getBlockEntityNbts().entrySet()) {
+					pendingBlockEntities.put(entry.getKey(), entry.getValue().copy());
+				}
+
+				ShortList[] sourcePostProcessing = chunk.getPostProcessing();
+				ShortList[] postProcessing = new ShortList[sourcePostProcessing.length];
+				for (int index = 0; index < sourcePostProcessing.length; index++) {
+					ShortList positions = sourcePostProcessing[index];
+					postProcessing[index] =
+							positions == null ? null : new ShortArrayList(positions);
+				}
+				return new ChunkSnapshot(
+						chunk,
+						sections,
+						heightmaps,
+						blockEntities,
+						pendingBlockEntities,
+						postProcessing);
+			}
+
+			private void restore() {
+				System.arraycopy(sections, 0, chunk.getSections(), 0, sections.length);
+				for (Map.Entry<Heightmap.Types, long[]> entry : heightmaps.entrySet()) {
+					chunk.setHeightmap(entry.getKey(), entry.getValue().clone());
+				}
+
+				Map<BlockPos, BlockEntity> currentBlockEntities = chunk.getBlockEntities();
+				currentBlockEntities.clear();
+				for (Map.Entry<BlockPos, BlockEntity> entry : blockEntities.entrySet()) {
+					BlockEntity blockEntity = entry.getValue();
+					blockEntity.setBlockState(chunk.getBlockState(entry.getKey()));
+					currentBlockEntities.put(entry.getKey(), blockEntity);
+				}
+
+				Map<BlockPos, CompoundTag> currentPending = chunk.getBlockEntityNbts();
+				currentPending.clear();
+				for (Map.Entry<BlockPos, CompoundTag> entry : pendingBlockEntities.entrySet()) {
+					currentPending.put(entry.getKey(), entry.getValue().copy());
+				}
+
+				ShortList[] currentPostProcessing = chunk.getPostProcessing();
+				for (int index = 0; index < currentPostProcessing.length; index++) {
+					currentPostProcessing[index] =
+							postProcessing[index] == null
+									? null
+									: new ShortArrayList(postProcessing[index]);
+				}
+			}
+		}
+	}
+
+	@FunctionalInterface
+	private interface ChunkOperation {
+		ProtoChunk run();
+	}
+
+	private record GeneratedChunk(ProtoChunk chunk) {}
+
+	/** Exposes an already generated in-memory chunk to vanilla's WorldGenRegion. */
+	private static final class VirtualGenerationChunkHolder extends GenerationChunkHolder {
+		private final ProtoChunk chunk;
+
+		private VirtualGenerationChunkHolder(ProtoChunk chunk) {
+			super(chunk.getPos());
+			this.chunk = chunk;
+		}
+
+		@Override
+		protected void addSaveDependency(CompletableFuture<?> dependency) {}
+
+		@Override
+		public int getTicketLevel() {
+			return 0;
+		}
+
+		@Override
+		public int getQueueLevel() {
+			return 0;
+		}
+
+		@Override
+		public ChunkAccess getChunkIfPresentUnchecked(ChunkStatus status) {
 			return chunk;
+		}
+
+		@Override
+		public ChunkAccess getChunkIfPresent(ChunkStatus status) {
+			return chunk;
+		}
+
+		@Override
+		public ChunkAccess getLatestChunk() {
+			return chunk;
+		}
+
+		@Override
+		public ChunkStatus getPersistedStatus() {
+			return chunk.getPersistedStatus();
+		}
+	}
+
+	private static final class VirtualLightChunkGetter implements LightChunkGetter {
+		private final GenerationContext context;
+
+		private VirtualLightChunkGetter(GenerationContext context) {
+			this.context = context;
+		}
+
+		@Override
+		public LightChunk getChunkForLighting(int x, int z) {
+			return context.chunks.get(ChunkPos.pack(x, z));
+		}
+
+		@Override
+		public net.minecraft.world.level.BlockGetter getLevel() {
+			return context.world;
 		}
 	}
 
 	private static final class LocalWorld implements InvocationHandler {
+		private static final Identifier WORLDGEN_REGION_RANDOM =
+				Identifier.withDefaultNamespace("worldgen_region_random");
 		private final GenerationContext context;
 		private final Map<Long, ProtoChunk> chunks;
 		private final AtomicLong subTicks = new AtomicLong();
 		private final LocalChunkSource chunkSource;
+		private final ThreadLocal<RandomSource> generationRegionRandom = new ThreadLocal<>();
 		private WorldGenLevel proxy;
 
 		private LocalWorld(GenerationContext context, Map<Long, ProtoChunk> chunks) {
@@ -945,6 +1710,24 @@ final class VoxygenGenerationService {
 										this);
 			}
 			return proxy;
+		}
+
+		private void runInGenerationRegion(int chunkX, int chunkZ, Runnable action) {
+			RandomSource previous = generationRegionRandom.get();
+			RandomSource random =
+					context.randomState
+							.getOrCreateRandomFactory(WORLDGEN_REGION_RANDOM)
+							.at(new ChunkPos(chunkX, chunkZ).getWorldPosition());
+			generationRegionRandom.set(random);
+			try {
+				action.run();
+			} finally {
+				if (previous == null) {
+					generationRegionRandom.remove();
+				} else {
+					generationRegionRandom.set(previous);
+				}
+			}
 		}
 
 		@Override
@@ -986,8 +1769,17 @@ final class VoxygenGenerationService {
 				case "getUncachedNoiseBiome" -> noiseBiome(args);
 				case "getBiomeManager" ->
 						new BiomeManager(proxy(), BiomeManager.obfuscateSeed(context.seed));
-				case "getRandom" -> RandomSource.create(context.seed);
-				case "nextSubTickCount" -> subTicks.incrementAndGet();
+				case "getRandom" -> {
+					RandomSource random = generationRegionRandom.get();
+					yield random == null ? RandomSource.create(context.seed) : random;
+				}
+				case "getCurrentDifficultyAt" ->
+						new DifficultyInstance(
+								context.sourceLevel.getDifficulty(),
+								context.sourceLevel.getGameTime(),
+								0L,
+								0.0F);
+				case "nextSubTickCount" -> subTicks.getAndIncrement();
 				case "getBlockTicks", "getFluidTicks" -> BlackholeTickAccess.emptyLevelList();
 				case "getEntities", "players" -> Collections.emptyList();
 				case "isClientSide" -> false;
@@ -1017,10 +1809,24 @@ final class VoxygenGenerationService {
 			}
 			net.minecraft.world.level.levelgen.Heightmap.Types type =
 					(net.minecraft.world.level.levelgen.Heightmap.Types) args[0];
-			int x = (int) args[1];
-			int z = (int) args[2];
+			int x;
+			int z;
+			if (args.length == 2 && args[1] instanceof BlockPos pos) {
+				x = pos.getX();
+				z = pos.getZ();
+			} else if (args.length == 3
+					&& args[1] instanceof Integer xCoordinate
+					&& args[2] instanceof Integer zCoordinate) {
+				x = xCoordinate;
+				z = zCoordinate;
+			} else {
+				throw new IllegalArgumentException(
+						"Unsupported getHeight overload: " + method.toGenericString());
+			}
 			ChunkAccess chunk = chunkAt(x >> 4, z >> 4);
-			return chunk == null ? context.height.getMinY() : chunk.getHeight(type, x & 15, z & 15);
+			return chunk == null
+					? context.height.getMinY()
+					: chunk.getHeight(type, x & 15, z & 15) + 1;
 		}
 
 		private Object getChunk(Object[] args) {
@@ -1057,7 +1863,22 @@ final class VoxygenGenerationService {
 				return false;
 			}
 			int flags = args.length > 2 ? (int) args[2] : 0;
-			chunk.setBlockState(pos, (BlockState) args[1], flags);
+			BlockState state = (BlockState) args[1];
+			BlockEntity current = chunk.getBlockEntity(pos);
+			chunk.setBlockState(pos, state, flags);
+			if (state.getBlock() instanceof EntityBlock entityBlock) {
+				if (current == null || !current.getType().isValid(state)) {
+					if (current != null) {
+						chunk.removeBlockEntity(pos);
+					}
+					BlockEntity replacement = entityBlock.newBlockEntity(pos, state);
+					if (replacement != null) {
+						chunk.setBlockEntity(replacement);
+					}
+				}
+			} else if (current != null) {
+				chunk.removeBlockEntity(pos);
+			}
 			return true;
 		}
 
@@ -1067,6 +1888,7 @@ final class VoxygenGenerationService {
 				return false;
 			}
 			chunk.setBlockState(pos, Blocks.AIR.defaultBlockState(), 0);
+			chunk.removeBlockEntity(pos);
 			return true;
 		}
 

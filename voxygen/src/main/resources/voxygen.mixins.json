@@ -1,0 +1,13 @@
+{
+	"required": true,
+	"package": "com.example.voxygen.mixin",
+	"compatibilityLevel": "JAVA_25",
+	"client": [
+		"CappedProcessorMixin",
+		"StructureTemplatePaletteMixin",
+		"TemplateFeatureMixin"
+	],
+	"injectors": {
+		"defaultRequire": 1
+	}
+}
