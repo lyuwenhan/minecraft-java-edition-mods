@@ -127,14 +127,11 @@ final class VoxygenGenerationService {
 			Executors.newSingleThreadScheduledExecutor(new WindowThreadFactory());
 	private static volatile RegistryAccess vanillaWorldgenRegistries;
 	private static volatile MultiPackResourceManager vanillaDataResources;
-	private static final long SESSION_START_DELAY_NANOS = TimeUnit.SECONDS.toNanos(2);
 	private static final int REGION_CHUNK_SHIFT = 4;
 	private static final int REGION_CHUNK_SIZE = 1 << REGION_CHUNK_SHIFT;
 	private static final long NO_ACTIVE_REGION = Long.MIN_VALUE;
 
 	private static volatile Session session;
-	private static volatile ClientLevel eligibleLevel;
-	private static volatile long eligibleSinceNanos;
 	private static volatile Component state =
 			Component.translatable("command.voxygen.state.inactive");
 
@@ -181,11 +178,6 @@ final class VoxygenGenerationService {
 			return;
 		}
 
-		long now = System.nanoTime();
-		if (eligibleLevel != level) {
-			eligibleLevel = level;
-			eligibleSinceNanos = now;
-		}
 		int centerX = Math.floorDiv(client.player.chunkPosition().x(), REGION_CHUNK_SIZE);
 		int centerZ = Math.floorDiv(client.player.chunkPosition().z(), REGION_CHUNK_SIZE);
 		int radius =
@@ -207,13 +199,6 @@ final class VoxygenGenerationService {
 		}
 
 		if (current == null) {
-			if (now - eligibleSinceNanos < SESSION_START_DELAY_NANOS) {
-				state =
-						Component.translatable(
-								"command.voxygen.state.preparing",
-								dimension.identifier().toString());
-				return;
-			}
 			current =
 					new Session(
 							level,
@@ -302,8 +287,6 @@ final class VoxygenGenerationService {
 				session = null;
 			}
 		}
-		eligibleLevel = null;
-		eligibleSinceNanos = 0L;
 		state = reason;
 	}
 
@@ -627,7 +610,7 @@ final class VoxygenGenerationService {
 			int startX = ChunkPos.getX(region) << REGION_CHUNK_SHIFT;
 			int startZ = ChunkPos.getZ(region) << REGION_CHUNK_SHIFT;
 			switch (traversalFor(region)) {
-				case CENTER, SOUTH -> {
+				case SOUTH -> {
 					for (int offsetZ = 0; offsetZ < REGION_CHUNK_SIZE; offsetZ++) {
 						for (int offsetX = 0; offsetX < REGION_CHUNK_SIZE; offsetX++) {
 							enqueueChunk(startX + offsetX, startZ + offsetZ);
@@ -648,7 +631,7 @@ final class VoxygenGenerationService {
 						}
 					}
 				}
-				case EAST -> {
+				case CENTER, EAST -> {
 					for (int offsetX = 0; offsetX < REGION_CHUNK_SIZE; offsetX++) {
 						for (int offsetZ = 0; offsetZ < REGION_CHUNK_SIZE; offsetZ++) {
 							enqueueChunk(startX + offsetX, startZ + offsetZ);
