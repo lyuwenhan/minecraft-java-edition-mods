@@ -24,11 +24,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-/**
- * FossilFeature reaches through WorldGenLevel to a real ServerLevel solely to obtain its structure
- * template manager. Remote multiplayer generation uses a lightweight WorldGenLevel proxy, so repeat
- * the vanilla method with the template manager already installed in the generation thread context.
- */
 @Mixin(FossilFeature.class)
 abstract class FossilFeatureMixin {
 	@Inject(method = "place", at = @At("HEAD"), cancellable = true)

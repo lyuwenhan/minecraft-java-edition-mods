@@ -4,6 +4,7 @@
 	"compatibilityLevel": "JAVA_25",
 	"client": [
 		"CappedProcessorMixin",
+		"ChunkGeneratorStructureStateMixin",
 		"EndSpikeEntityMixin",
 		"FossilFeatureMixin",
 		"MineshaftEntityMixin",

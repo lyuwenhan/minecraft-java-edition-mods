@@ -112,7 +112,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.locks.ReentrantLock;
 
-/** Generates vanilla chunks off-thread and inserts their voxelized sections into Voxy. */
 final class VoxygenGenerationService {
 	private static final Logger LOGGER = LoggerFactory.getLogger("voxygen");
 	private static final ThreadPoolExecutor EXECUTOR =
@@ -648,9 +647,6 @@ final class VoxygenGenerationService {
 			if (distance == 0) {
 				return RegionTraversal.CENTER;
 			}
-			// Each corner belongs to the edge that reaches it. The north-east corner
-			// therefore closes this ring. The first region of the next ring continues
-			// east from that corner before the east edge turns south.
 			if (deltaX == distance && deltaZ == 1 - distance) {
 				return RegionTraversal.EAST;
 			}
@@ -809,9 +805,6 @@ final class VoxygenGenerationService {
 								finishDecorationSequence(next.decorationSequence());
 								activeChunks.remove(packed);
 								if (abandoned) {
-									// The world or Voxy engine no longer accepts work. The
-									// replacement
-									// session will create its own coverage and queues.
 								} else if (succeeded) {
 									failedChunks.remove(packed);
 									failureCounts.remove(packed);
@@ -1080,8 +1073,6 @@ final class VoxygenGenerationService {
 			int minZ = centerZ - distance;
 			int maxZ = centerZ + distance;
 
-			// Continue from the previous ring's north-east corner by stepping east,
-			// then walk clockwise along the east, south, west, and north edges.
 			for (int z = minZ + 1; z <= maxZ; z++) {
 				result.add(ChunkPos.pack(maxX, z));
 			}
@@ -1159,9 +1150,6 @@ final class VoxygenGenerationService {
 			this.structureState = structureState;
 			this.storageAccess = storageAccess;
 			if (serverLevel == null) {
-				// ChunkGeneratorStructureState lazily fills ordinary FastUtil maps. Its
-				// first call is not safe when several remote-world workers arrive at once.
-				// Finish that one-time initialization before publishing this context.
 				structureState.ensureStructuresGenerated();
 			}
 			for (int index = 0; index < writeLocks.length; index++) {
@@ -1274,6 +1262,7 @@ final class VoxygenGenerationService {
 			ChunkGeneratorStructureState structureState =
 					generator.createState(
 							registries.lookupOrThrow(Registries.STRUCTURE_SET), randomState, seed);
+			((VirtualStructureState) structureState).voxygen$markVirtual();
 			return new GenerationContext(
 					level,
 					registries,
@@ -1641,8 +1630,6 @@ final class VoxygenGenerationService {
 									.directDependencies()
 									.size()
 							- 1;
-			// Target -> feature neighbor -> terrain neighbor -> biome/reference neighbor,
-			// plus one conservative ring for structures extending across chunk edges.
 			return structureReferenceRadius + 4;
 		}
 
@@ -1799,7 +1786,7 @@ final class VoxygenGenerationService {
 				LevelChunkSection[] originalSections = chunk.getSections();
 				LevelChunkSection[] sections = new LevelChunkSection[originalSections.length];
 				for (int index = 0; index < originalSections.length; index++) {
-					sections[index] = originalSections[index].copy();
+					sections[index] = copySection(originalSections[index]);
 				}
 
 				Map<Heightmap.Types, long[]> heightmaps = new HashMap<>();
@@ -1951,7 +1938,7 @@ final class VoxygenGenerationService {
 			if (index < 0 || index >= ownedSections.length || ownedSections[index]) {
 				return;
 			}
-			super.getSections()[index] = super.getSections()[index].copy();
+			super.getSections()[index] = copySection(super.getSections()[index]);
 			ownedSections[index] = true;
 		}
 
@@ -1989,7 +1976,12 @@ final class VoxygenGenerationService {
 		}
 	}
 
-	/** Exposes an already generated in-memory chunk to vanilla's WorldGenRegion. */
+	private static LevelChunkSection copySection(LevelChunkSection source) {
+		LevelChunkSection copy = source.copy();
+		copy.recalcBlockCounts();
+		return copy;
+	}
+
 	private static final class VirtualGenerationChunkHolder extends GenerationChunkHolder {
 		private final ProtoChunk chunk;
 

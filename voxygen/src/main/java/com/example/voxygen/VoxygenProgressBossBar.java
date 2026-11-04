@@ -8,7 +8,6 @@ import net.minecraft.world.BossEvent;
 
 import java.util.UUID;
 
-/** Maintains a client-only boss bar through the vanilla boss overlay packet API. */
 final class VoxygenProgressBossBar {
 	private static final long COMPLETION_DISPLAY_NANOS = 2_000_000_000L;
 	private static final UUID EVENT_ID = UUID.fromString("f884cc78-3a7c-4d4d-b823-10bfafefbb34");
