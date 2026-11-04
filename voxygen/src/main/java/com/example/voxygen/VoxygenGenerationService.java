@@ -367,6 +367,10 @@ final class VoxygenGenerationService {
 		private final AtomicInteger skippedVoxy = new AtomicInteger();
 		private final AtomicInteger emptyChunks = new AtomicInteger();
 		private final AtomicInteger verificationFailures = new AtomicInteger();
+		private final AtomicInteger finishedSinceCacheCleanup = new AtomicInteger();
+		private int cacheCenterX;
+		private int cacheCenterZ;
+		private int evictedInnerRadius = -1;
 		private volatile GenerationContext context;
 		private volatile Throwable preparationFailure;
 		private volatile boolean preparing;
@@ -391,6 +395,8 @@ final class VoxygenGenerationService {
 			this.requestedCenterX = centerX;
 			this.requestedCenterZ = centerZ;
 			this.requestedRadius = radius;
+			this.cacheCenterX = centerX;
+			this.cacheCenterZ = centerZ;
 			this.requestedWindowVersion = 1L;
 			this.preparing = true;
 			EXECUTOR.execute(
@@ -560,6 +566,11 @@ final class VoxygenGenerationService {
 				centerX = newCenterX;
 				centerZ = newCenterZ;
 				radius = newRadius;
+				if (cacheCenterX != newCenterX || cacheCenterZ != newCenterZ) {
+					cacheCenterX = newCenterX;
+					cacheCenterZ = newCenterZ;
+					evictedInnerRadius = -1;
+				}
 				windowReady = true;
 			}
 			synchronized (windowLock) {
@@ -619,12 +630,20 @@ final class VoxygenGenerationService {
 				EXECUTOR.execute(
 						() -> {
 							boolean succeeded = false;
+							boolean abandoned = false;
 							try {
 								succeeded =
 										generateOne(
 												this, chunkX, chunkZ, next.decorationSequence());
 							} catch (Throwable throwable) {
-								if (!retiring) {
+								if (throwable instanceof CancellationException
+										|| retiring
+										|| !engine.isLive()) {
+									abandoned = true;
+									if (!engine.isLive()) {
+										retire();
+									}
+								} else {
 									LOGGER.warn(
 											"Failed to generate chunk [{}, {}], reason: {}",
 											chunkX,
@@ -635,7 +654,10 @@ final class VoxygenGenerationService {
 							} finally {
 								finishDecorationSequence(next.decorationSequence());
 								activeChunks.remove(packed);
-								if (succeeded) {
+								if (abandoned) {
+									// The world or Voxy engine no longer accepts work. The replacement
+									// session will create its own coverage and queues.
+								} else if (succeeded) {
 									failedChunks.remove(packed);
 									markFinished(packed);
 								} else {
@@ -776,6 +798,47 @@ final class VoxygenGenerationService {
 					finished.add(packed);
 				}
 			}
+			if (finishedSinceCacheCleanup.incrementAndGet() >= 128
+					&& finishedSinceCacheCleanup.getAndSet(0) >= 128) {
+				cleanupFinishedInnerCache();
+			}
+		}
+
+		private void cleanupFinishedInnerCache() {
+			GenerationContext currentContext = context;
+			if (currentContext == null || retiring) {
+				return;
+			}
+			synchronized (coverageLock) {
+				int minimumUnfinishedDistance = Integer.MAX_VALUE;
+				for (long candidate : coverage) {
+					if (!finished.contains(candidate)) {
+						int distance =
+								Math.max(
+										Math.abs(ChunkPos.getX(candidate) - cacheCenterX),
+										Math.abs(ChunkPos.getZ(candidate) - cacheCenterZ));
+						minimumUnfinishedDistance =
+								Math.min(minimumUnfinishedDistance, distance);
+					}
+				}
+				int safeRadius;
+				if (minimumUnfinishedDistance == Integer.MAX_VALUE) {
+					safeRadius = radius + currentContext.cacheDependencyMargin();
+				} else {
+					safeRadius =
+							minimumUnfinishedDistance
+									- currentContext.cacheDependencyMargin()
+									- 1;
+				}
+				if (safeRadius > evictedInnerRadius) {
+					currentContext.evictInnerRings(
+							cacheCenterX,
+							cacheCenterZ,
+							evictedInnerRadius + 1,
+							safeRadius);
+					evictedInnerRadius = safeRadius;
+				}
+			}
 		}
 
 		private void awaitDecorationSequence(long sequence) {
@@ -819,6 +882,9 @@ final class VoxygenGenerationService {
 
 	private static boolean generateOne(
 			Session owner, int chunkX, int chunkZ, long decorationSequence) {
+		if (owner.retiring || !owner.engine.isLive()) {
+			throw new CancellationException("Voxygen world is no longer live");
+		}
 		if (hasVoxyData(owner.engine, owner.context.height, chunkX, chunkZ)) {
 			owner.skippedVoxy.incrementAndGet();
 			return true;
@@ -1496,6 +1562,50 @@ final class VoxygenGenerationService {
 									height,
 									containers,
 									null));
+		}
+
+		private int cacheDependencyMargin() {
+			int structureReferenceRadius =
+					ChunkPyramid.GENERATION_PYRAMID
+							.getStepTo(ChunkStatus.STRUCTURE_REFERENCES)
+							.directDependencies()
+							.size()
+							- 1;
+			// Target -> feature neighbor -> terrain neighbor -> biome/reference neighbor,
+			// plus one conservative ring for structures extending across chunk edges.
+			return structureReferenceRadius + 4;
+		}
+
+		private void evictInnerRings(
+				int centerX, int centerZ, int firstRadius, int lastRadius) {
+			for (int distance = Math.max(0, firstRadius); distance <= lastRadius; distance++) {
+				if (distance == 0) {
+					evict(ChunkPos.pack(centerX, centerZ));
+					continue;
+				}
+				int minX = centerX - distance;
+				int maxX = centerX + distance;
+				int minZ = centerZ - distance;
+				int maxZ = centerZ + distance;
+				for (int x = minX; x <= maxX; x++) {
+					evict(ChunkPos.pack(x, minZ));
+					evict(ChunkPos.pack(x, maxZ));
+				}
+				for (int z = minZ + 1; z < maxZ; z++) {
+					evict(ChunkPos.pack(minX, z));
+					evict(ChunkPos.pack(maxX, z));
+				}
+			}
+		}
+
+		private void evict(long key) {
+			features.remove(key);
+			featurePreparations.remove(key);
+			terrain.remove(key);
+			biomes.remove(key);
+			structureReferences.remove(key);
+			structureStarts.remove(key);
+			chunks.remove(key);
 		}
 
 		private ProtoChunk ensure(
