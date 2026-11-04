@@ -1,41 +1,35 @@
 # Languages (语言)
 
-[EN/English](https://lyuwenhan.github.io/extensions/minecraft-java/voxygen/README/README.html) | [ZH-CN/简体中文](https://lyuwenhan.github.io/extensions/minecraft-java/voxygen/README/README_ZH-CN.html)
+[EN/English](https://lyuwenhan.github.io/extensions/minecraft-java/voxygen/README/README.html)|[ZH-CN/简体中文](https://lyuwenhan.github.io/extensions/minecraft-java/voxygen/README/README_ZH-CN.html)
 
 # Voxygen
 
-一个客户端 Fabric 模组，通过按服务器记录的种子和客户端命令，将未生成的原版区块生成到 Voxy 中。
+一个客户端 Fabric 模组，在客户端本地生成原版地形，再将结果提交给 [Voxy](https://modrinth.com/mod/voxy)，从而填充远处的 Voxy 地形，而不要求服务器加载或生成每一个来源区块。
+
+> [!IMPORTANT]
+> 多人服务器生成必须使用完全正确的世界种子。错误的种子会产生与服务器不一致的地形。受 [MC-55596](https://bugs.mojang.com/browse/MC/issues/MC-55596) 影响，即使种子正确，树木等生成地物也有可能与服务器不一致。
 
 ## 命令
 
-```text
-/voxygen on
-/voxygen off
-/voxygen status
-/voxygen toggle
-/voxygen radius
-/voxygen radius <radius>
-/voxygen threads
-/voxygen threads <threads>
-/voxygen progress
-/voxygen progress on|off|toggle
-/voxygen seed
-/voxygen seed <seed>
-```
+|命令|说明|
+|---|---|
+|`/voxygen on`|启用 Voxygen。|
+|`/voxygen off`|禁用 Voxygen 并停止当前会话。|
+|`/voxygen toggle`|切换启用状态。|
+|`/voxygen status`|显示世界、种子、半径、进度、线程使用情况和结果统计。|
+|`/voxygen radius`|查看半径，单位为原版区块。|
+|`/voxygen radius <radius>`|设置半径。默认 `64`，最小 `1`。|
+|`/voxygen threads`|查看工作线程数。|
+|`/voxygen threads <threads>`|设置 `1` 至 `256` 个工作线程，默认 `32`。|
+|`/voxygen progress`|查看进度 BossBar 是否启用。|
+|`/voxygen progress on\|off\|toggle`|控制进度 BossBar，默认关闭。|
+|`/voxygen seed`|查看当前世界的有效种子。|
+|`/voxygen seed <seed>`|设置多人服务器种子；整合服务器可直接提供种子时隐藏。|
 
-- `on`、`off`：全局启用或禁用 Voxygen。
-- `status`：显示当前启用状态以及当前世界已记录的种子。
-- `toggle`：切换启用状态。
-- `radius`：查看当前半径，单位为区块。
-- `radius <radius>`：将半径设置为正整数，默认值为 `64` 个区块。
-- `threads`：查看当前工作线程数。
-- `threads <threads>`：将工作线程数设置为 `1` 至 `256`，默认值为 `32`。
-- `progress`：查看生成进度 BossBar 是否启用。
-- `progress on|off|toggle`：控制黄色的 `Voxygen` 生成进度 BossBar。默认关闭，生成完成两秒后自动消失。
-- `seed`：查看当前世界已记录的种子。
-- `seed <seed>`：本地整合服务器 seed 无法直接取得时用于手动设置；能直接读取本地 seed 时会隐藏此参数。
+## 性能说明
 
-在单人世界中，Voxygen 会直接读取 Minecraft 整合服务器的真实 seed 并使用，不写入配置。无法读取本地 seed 时，才通过 `/voxygen seed <seed>` 显式设置。
+- 区块生成会大量使用 CPU 和内存。建议逐步提高 `threads`，不要直接使用全部逻辑处理器。
+- 半径增大时，大区块总数会按平方增长。
 
 ## 支持版本
 
