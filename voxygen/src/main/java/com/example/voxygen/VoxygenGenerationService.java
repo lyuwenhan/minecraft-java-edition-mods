@@ -992,6 +992,8 @@ final class VoxygenGenerationService {
 				new ConcurrentHashMap<>();
 		private final ConcurrentHashMap<Long, CompletableFuture<ProtoChunk>> terrain =
 				new ConcurrentHashMap<>();
+		private final ConcurrentHashMap<Long, CompletableFuture<Void>> featurePreparations =
+				new ConcurrentHashMap<>();
 		private final ConcurrentHashMap<Long, CompletableFuture<ProtoChunk>> features =
 				new ConcurrentHashMap<>();
 		private final ReentrantLock[] writeLocks = new ReentrantLock[4096];
@@ -1205,7 +1207,7 @@ final class VoxygenGenerationService {
 		private void prepareFull(int targetX, int targetZ) {
 			for (int z = targetZ - 1; z <= targetZ + 1; z++) {
 				for (int x = targetX - 1; x <= targetX + 1; x++) {
-					prepareFeatureDependencies(x, z);
+					prepareFeatureDependenciesOnce(x, z);
 				}
 			}
 		}
@@ -1354,7 +1356,7 @@ final class VoxygenGenerationService {
 					features,
 					key,
 					() -> {
-						prepareFeatureDependencies(x, z);
+						prepareFeatureDependenciesOnce(x, z);
 						List<ReentrantLock> locks = lockArea(x, z, 1);
 						try {
 							ProtoChunk chunk = chunks.get(key);
@@ -1417,6 +1419,30 @@ final class VoxygenGenerationService {
 			}
 		}
 
+		private void prepareFeatureDependenciesOnce(int x, int z) {
+			long key = ChunkPos.pack(x, z);
+			CompletableFuture<Void> existing = featurePreparations.get(key);
+			if (existing != null) {
+				existing.join();
+				return;
+			}
+
+			CompletableFuture<Void> created = new CompletableFuture<>();
+			existing = featurePreparations.putIfAbsent(key, created);
+			if (existing != null) {
+				existing.join();
+				return;
+			}
+			try {
+				prepareFeatureDependencies(x, z);
+				created.complete(null);
+			} catch (Throwable throwable) {
+				featurePreparations.remove(key, created);
+				created.completeExceptionally(throwable);
+				throw throwable;
+			}
+		}
+
 		private StaticCache2D<GenerationChunkHolder> nativeCache(
 				int centerX, int centerZ, ChunkStep step) {
 			int radius = step.directDependencies().size() - 1;
@@ -1474,8 +1500,12 @@ final class VoxygenGenerationService {
 			if (cancelled) {
 				throw new CancellationException("Voxygen session was retired");
 			}
+			CompletableFuture<ProtoChunk> existing = stages.get(key);
+			if (existing != null) {
+				return existing.join();
+			}
 			CompletableFuture<ProtoChunk> created = new CompletableFuture<>();
-			CompletableFuture<ProtoChunk> existing = stages.putIfAbsent(key, created);
+			existing = stages.putIfAbsent(key, created);
 			if (existing != null) {
 				return existing.join();
 			}
