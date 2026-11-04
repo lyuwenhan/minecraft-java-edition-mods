@@ -4,7 +4,15 @@
 	"compatibilityLevel": "JAVA_25",
 	"client": [
 		"CappedProcessorMixin",
+		"EndSpikeEntityMixin",
+		"FossilFeatureMixin",
+		"MineshaftEntityMixin",
+		"OceanMonumentEntityMixin",
+		"PaleMossDecoratorMixin",
+		"StructureMarkerEntityMixin",
+		"StructureTemplateEntityMixin",
 		"StructureTemplatePaletteMixin",
+		"SwampHutEntityMixin",
 		"TemplateFeatureMixin"
 	],
 	"injectors": {

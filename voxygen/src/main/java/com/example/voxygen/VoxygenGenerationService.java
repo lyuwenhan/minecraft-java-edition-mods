@@ -1380,6 +1380,7 @@ final class VoxygenGenerationService {
 													WorldgenSeedContext.run(
 															seed,
 															structureTemplates,
+													generator,
 															() ->
 																	generator.applyBiomeDecoration(
 																			world,
@@ -1388,7 +1389,11 @@ final class VoxygenGenerationService {
 								}
 							} catch (RuntimeException | Error throwable) {
 								for (ChunkSnapshot snapshot : snapshots) {
-									snapshot.restore();
+									try {
+										snapshot.restore();
+									} catch (RuntimeException | Error rollbackFailure) {
+										throwable.addSuppressed(rollbackFailure);
+									}
 								}
 								throw throwable;
 							}
@@ -1621,18 +1626,17 @@ final class VoxygenGenerationService {
 					chunk.setHeightmap(entry.getKey(), entry.getValue().clone());
 				}
 
-				Map<BlockPos, BlockEntity> currentBlockEntities = chunk.getBlockEntities();
-				currentBlockEntities.clear();
+				for (BlockPos pos : chunk.getBlockEntitiesPos()) {
+					chunk.removeBlockEntity(pos);
+				}
 				for (Map.Entry<BlockPos, BlockEntity> entry : blockEntities.entrySet()) {
 					BlockEntity blockEntity = entry.getValue();
 					blockEntity.setBlockState(chunk.getBlockState(entry.getKey()));
-					currentBlockEntities.put(entry.getKey(), blockEntity);
+					chunk.setBlockEntity(blockEntity);
 				}
 
-				Map<BlockPos, CompoundTag> currentPending = chunk.getBlockEntityNbts();
-				currentPending.clear();
 				for (Map.Entry<BlockPos, CompoundTag> entry : pendingBlockEntities.entrySet()) {
-					currentPending.put(entry.getKey(), entry.getValue().copy());
+					chunk.setBlockEntityNbt(entry.getValue().copy());
 				}
 
 				ShortList[] currentPostProcessing = chunk.getPostProcessing();

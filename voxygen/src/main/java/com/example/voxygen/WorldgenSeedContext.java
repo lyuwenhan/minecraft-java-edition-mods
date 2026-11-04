@@ -1,6 +1,7 @@
 package com.example.voxygen;
 
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplateManager;
 
 import java.util.function.Supplier;
@@ -8,6 +9,7 @@ import java.util.function.Supplier;
 public final class WorldgenSeedContext {
 	private static final ThreadLocal<Long> SEED = new ThreadLocal<>();
 	private static final ThreadLocal<StructureTemplateManager> TEMPLATES = new ThreadLocal<>();
+	private static final ThreadLocal<ChunkGenerator> GENERATOR = new ThreadLocal<>();
 
 	private WorldgenSeedContext() {}
 
@@ -30,11 +32,25 @@ public final class WorldgenSeedContext {
 	}
 
 	public static void run(long seed, StructureTemplateManager templates, Runnable action) {
+		run(seed, templates, null, action);
+	}
+
+	public static void run(
+			long seed,
+			StructureTemplateManager templates,
+			ChunkGenerator generator,
+			Runnable action) {
 		StructureTemplateManager previousTemplates = TEMPLATES.get();
+		ChunkGenerator previousGenerator = GENERATOR.get();
 		if (templates == null) {
 			TEMPLATES.remove();
 		} else {
 			TEMPLATES.set(templates);
+		}
+		if (generator == null) {
+			GENERATOR.remove();
+		} else {
+			GENERATOR.set(generator);
 		}
 		call(
 				seed,
@@ -48,12 +64,25 @@ public final class WorldgenSeedContext {
 						} else {
 							TEMPLATES.set(previousTemplates);
 						}
+						if (previousGenerator == null) {
+							GENERATOR.remove();
+						} else {
+							GENERATOR.set(previousGenerator);
+						}
 					}
 				});
 	}
 
 	public static StructureTemplateManager templates() {
 		return TEMPLATES.get();
+	}
+
+	public static ChunkGenerator generator() {
+		return GENERATOR.get();
+	}
+
+	public static boolean isVirtualWorldActive() {
+		return GENERATOR.get() != null;
 	}
 
 	public static long seedOrLevel(ServerLevel level) {
