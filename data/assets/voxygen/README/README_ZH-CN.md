@@ -23,13 +23,10 @@
 |`/voxygen threads <threads>`|设置 `1` 至 `256` 个工作线程，默认 `32`。|
 |`/voxygen progress`|查看进度 BossBar 是否启用。|
 |`/voxygen progress on\|off\|toggle`|控制进度 BossBar，默认关闭。|
+|`/voxygen generateforfreecam`|查看 Freecam 优先生成是否启用。|
+|`/voxygen generateforfreecam on\|off\|toggle`|优先生成当前摄像机周围 3×3 个大区块，默认关闭。|
 |`/voxygen seed`|查看当前世界的有效种子。|
 |`/voxygen seed <seed>`|设置多人服务器种子；整合服务器可直接提供种子时隐藏。|
-
-## 性能说明
-
-- 区块生成会大量使用 CPU 和内存。建议逐步提高 `threads`，不要直接使用全部逻辑处理器。
-- 半径增大时，大区块总数会按平方增长。
 
 ## 支持版本
 
