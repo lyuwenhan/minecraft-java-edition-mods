@@ -1,7 +1,7 @@
 {
 	"command.voxygen.enabled": "Voxygen enabled.",
 	"command.voxygen.disabled": "Voxygen disabled.",
-	"command.voxygen.status": "Voxygen: %s\nWorld: %s\nSeed: %s\nRadius: %s chunks\nStatus: %s",
+	"command.voxygen.status": "Voxygen: %s\nWorld: %s\nSeed: %s\nRadius: %s chunks\nFreecam generation: %s\nStatus: %s",
 	"command.voxygen.generator.details": "%s\nProgress: %s/%s (%s%%)\nThreads: %s, active tasks: %s\nGenerated: %s chunks, inserted: %s chunks / %s sections\nSkipped: %s already in Voxy, empty chunks: %s\nErrors: %s, verification failures: %s",
 	"command.voxygen.state.inactive": "Inactive",
 	"command.voxygen.state.waiting_world": "Waiting to enter a world",
@@ -20,6 +20,8 @@
 	"command.voxygen.threads_set": "Voxygen generation threads set to %s.",
 	"command.voxygen.progress": "Voxygen generation progress display: %s.",
 	"command.voxygen.progress_set": "Voxygen generation progress display set to %s.",
+	"command.voxygen.freecam": "Voxygen Freecam generation: %s.",
+	"command.voxygen.freecam_set": "Voxygen Freecam generation set to %s.",
 	"command.voxygen.option.on": "on",
 	"command.voxygen.option.off": "off",
 	"command.voxygen.seed": "Seed for world %s: %s",

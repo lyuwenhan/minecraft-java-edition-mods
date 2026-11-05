@@ -1,7 +1,7 @@
 {
 	"command.voxygen.enabled": "Voxygen 已启用。",
 	"command.voxygen.disabled": "Voxygen 已禁用。",
-	"command.voxygen.status": "Voxygen：%s\n世界：%s\n种子：%s\n半径：%s 区块\n状态：%s",
+	"command.voxygen.status": "Voxygen：%s\n世界：%s\n种子：%s\n半径：%s 区块\nFreecam 生成：%s\n状态：%s",
 	"command.voxygen.generator.details": "%s\n进度：%s/%s（%s%%）\n线程：%s，活动任务：%s\n生成 / 写入：%s / %s 区块（%s 区段）\n跳过：Voxy 已有 %s，空区块：%s\n错误：%s，验证失败：%s",
 	"command.voxygen.state.inactive": "未运行",
 	"command.voxygen.state.waiting_world": "正在等待进入世界",
@@ -20,6 +20,8 @@
 	"command.voxygen.threads_set": "已将 Voxygen 生成线程数设置为 %s。",
 	"command.voxygen.progress": "Voxygen 生成进度显示：%s。",
 	"command.voxygen.progress_set": "已将 Voxygen 生成进度显示设置为%s。",
+	"command.voxygen.freecam": "Voxygen Freecam 生成：%s。",
+	"command.voxygen.freecam_set": "已将 Voxygen Freecam 生成设置为%s。",
 	"command.voxygen.option.on": "开启",
 	"command.voxygen.option.off": "关闭",
 	"command.voxygen.seed": "世界 %s 的种子：%s",

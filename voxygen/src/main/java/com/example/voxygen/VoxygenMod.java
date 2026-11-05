@@ -91,6 +91,23 @@ public final class VoxygenMod implements ClientModInitializer {
 																context.getSource(),
 																!config.showProgress))));
 		root.then(
+				ClientCommands.literal("generateforfreecam")
+						.executes(context -> sendFreecam(context.getSource()))
+						.then(
+								ClientCommands.literal("on")
+										.executes(context -> setFreecam(context.getSource(), true)))
+						.then(
+								ClientCommands.literal("off")
+										.executes(
+												context -> setFreecam(context.getSource(), false)))
+						.then(
+								ClientCommands.literal("toggle")
+										.executes(
+												context ->
+														setFreecam(
+																context.getSource(),
+																!config.generateForFreecam))));
+		root.then(
 				ClientCommands.literal("seed")
 						.executes(context -> sendSeed(context.getSource()))
 						.then(
@@ -133,6 +150,10 @@ public final class VoxygenMod implements ClientModInitializer {
 						getCurrentWorldLabel(),
 						seedText(getEffectiveSeed(Minecraft.getInstance(), worldKey)),
 						config.radius,
+						Component.translatable(
+								config.generateForFreecam
+										? "command.voxygen.option.on"
+										: "command.voxygen.option.off"),
 						VoxygenGenerationService.describeState()));
 		return Command.SINGLE_SUCCESS;
 	}
@@ -181,6 +202,30 @@ public final class VoxygenMod implements ClientModInitializer {
 		source.sendFeedback(
 				Component.translatable(
 						"command.voxygen.progress_set",
+						Component.translatable(
+								enabled
+										? "command.voxygen.option.on"
+										: "command.voxygen.option.off")));
+		return Command.SINGLE_SUCCESS;
+	}
+
+	private static int sendFreecam(FabricClientCommandSource source) {
+		source.sendFeedback(
+				Component.translatable(
+						"command.voxygen.freecam",
+						Component.translatable(
+								config.generateForFreecam
+										? "command.voxygen.option.on"
+										: "command.voxygen.option.off")));
+		return Command.SINGLE_SUCCESS;
+	}
+
+	private static int setFreecam(FabricClientCommandSource source, boolean enabled) {
+		config.generateForFreecam = enabled;
+		config.save();
+		source.sendFeedback(
+				Component.translatable(
+						"command.voxygen.freecam_set",
 						Component.translatable(
 								enabled
 										? "command.voxygen.option.on"

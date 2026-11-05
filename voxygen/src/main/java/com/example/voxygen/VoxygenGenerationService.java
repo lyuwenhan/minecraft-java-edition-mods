@@ -182,6 +182,7 @@ final class VoxygenGenerationService {
 		int radius =
 				Math.floorDiv(
 						Math.max(0, config.radius) + REGION_CHUNK_SIZE - 1, REGION_CHUNK_SIZE);
+		long priorityCenter = freecamPriorityCenter(client, config.generateForFreecam);
 		Session current = session;
 		if (current != null
 				&& (current.level != level || current.seed != seed || current.engine != engine)) {
@@ -207,6 +208,7 @@ final class VoxygenGenerationService {
 							centerX,
 							centerZ,
 							radius,
+							priorityCenter,
 							config.threads);
 			session = current;
 			state =
@@ -215,8 +217,19 @@ final class VoxygenGenerationService {
 		}
 
 		current.setWorkerCount(config.threads);
-		current.requestWindowUpdate(centerX, centerZ, radius);
+		current.requestWindowUpdate(centerX, centerZ, radius, priorityCenter);
 		current.pump();
+	}
+
+	private static long freecamPriorityCenter(Minecraft client, boolean enabled) {
+		if (!enabled || !client.gameRenderer.mainCamera().isInitialized()) {
+			return NO_ACTIVE_REGION;
+		}
+		var position = client.gameRenderer.mainCamera().position();
+		int chunkX = Math.floorDiv((int) Math.floor(position.x()), 16);
+		int chunkZ = Math.floorDiv((int) Math.floor(position.z()), 16);
+		return ChunkPos.pack(
+				Math.floorDiv(chunkX, REGION_CHUNK_SIZE), Math.floorDiv(chunkZ, REGION_CHUNK_SIZE));
 	}
 
 	static void invalidate() {
@@ -322,6 +335,7 @@ final class VoxygenGenerationService {
 		private int requestedCenterX;
 		private int requestedCenterZ;
 		private int requestedRadius;
+		private long requestedPriorityCenter;
 		private long requestedWindowVersion;
 		private long nextWindowUpdateNanos;
 		private boolean windowTaskScheduled;
@@ -330,6 +344,7 @@ final class VoxygenGenerationService {
 		private volatile boolean windowReady;
 		private final Set<Long> coverage = ConcurrentHashMap.newKeySet();
 		private final Set<Long> regionCoverage = ConcurrentHashMap.newKeySet();
+		private final Set<Long> priorityRegionCoverage = new HashSet<>();
 		private final Set<Long> finished = ConcurrentHashMap.newKeySet();
 		private final Set<Long> queued = ConcurrentHashMap.newKeySet();
 		private final Set<Long> queuedRegions = ConcurrentHashMap.newKeySet();
@@ -350,6 +365,9 @@ final class VoxygenGenerationService {
 		private final AtomicInteger verificationFailures = new AtomicInteger();
 		private int evictedInnerRegionRadius = -1;
 		private boolean generationCacheCleared;
+		private long priorityCenter;
+		private long cachedPriorityCenter = NO_ACTIVE_REGION;
+		private boolean processingPriorityRegions;
 		private volatile GenerationContext context;
 		private volatile Throwable preparationFailure;
 		private volatile boolean preparing;
@@ -363,6 +381,7 @@ final class VoxygenGenerationService {
 				int centerX,
 				int centerZ,
 				int radius,
+				long priorityCenter,
 				int workerCount) {
 			this.level = level;
 			this.engine = engine;
@@ -374,6 +393,8 @@ final class VoxygenGenerationService {
 			this.requestedCenterX = centerX;
 			this.requestedCenterZ = centerZ;
 			this.requestedRadius = radius;
+			this.priorityCenter = priorityCenter;
+			this.requestedPriorityCenter = priorityCenter;
 			this.requestedWindowVersion = 1L;
 			this.preparing = true;
 			EXECUTOR.execute(
@@ -438,19 +459,22 @@ final class VoxygenGenerationService {
 			}
 		}
 
-		private void requestWindowUpdate(int newCenterX, int newCenterZ, int newRadius) {
+		private void requestWindowUpdate(
+				int newCenterX, int newCenterZ, int newRadius, long newPriorityCenter) {
 			synchronized (windowLock) {
 				if (retiring) {
 					return;
 				}
 				if (requestedCenterX == newCenterX
 						&& requestedCenterZ == newCenterZ
-						&& requestedRadius == newRadius) {
+						&& requestedRadius == newRadius
+						&& requestedPriorityCenter == newPriorityCenter) {
 					if (!windowTaskScheduled
 							&& (!windowReady
 									|| centerX != newCenterX
 									|| centerZ != newCenterZ
-									|| radius != newRadius)) {
+									|| radius != newRadius
+									|| priorityCenter != newPriorityCenter)) {
 						long delay = Math.max(0L, nextWindowUpdateNanos - System.nanoTime());
 						scheduleWindowUpdate(delay);
 					}
@@ -459,6 +483,7 @@ final class VoxygenGenerationService {
 				requestedCenterX = newCenterX;
 				requestedCenterZ = newCenterZ;
 				requestedRadius = newRadius;
+				requestedPriorityCenter = newPriorityCenter;
 				requestedWindowVersion++;
 				if (!windowTaskScheduled) {
 					long delay = Math.max(0L, nextWindowUpdateNanos - System.nanoTime());
@@ -496,6 +521,7 @@ final class VoxygenGenerationService {
 			int newCenterX;
 			int newCenterZ;
 			int newRadius;
+			long newPriorityCenter;
 			long version;
 			synchronized (windowLock) {
 				if (retiring) {
@@ -505,10 +531,31 @@ final class VoxygenGenerationService {
 				newCenterX = requestedCenterX;
 				newCenterZ = requestedCenterZ;
 				newRadius = requestedRadius;
+				newPriorityCenter = requestedPriorityCenter;
 				version = requestedWindowVersion;
 			}
 
-			List<Long> orderedRegions = squareInChebyshevOrder(newCenterX, newCenterZ, newRadius);
+			List<Long> orderedPlayerRegions =
+					squareInChebyshevOrder(newCenterX, newCenterZ, newRadius);
+			List<Long> orderedPriorityRegions;
+			if (newPriorityCenter == NO_ACTIVE_REGION) {
+				orderedPriorityRegions = List.of();
+			} else {
+				orderedPriorityRegions =
+						squareInChebyshevOrder(
+								ChunkPos.getX(newPriorityCenter),
+								ChunkPos.getZ(newPriorityCenter),
+								1);
+			}
+			Set<Long> nextPriorityRegionCoverage = new HashSet<>(orderedPriorityRegions);
+			List<Long> orderedRegions =
+					new ArrayList<>(orderedPriorityRegions.size() + orderedPlayerRegions.size());
+			orderedRegions.addAll(orderedPriorityRegions);
+			for (long region : orderedPlayerRegions) {
+				if (!nextPriorityRegionCoverage.contains(region)) {
+					orderedRegions.add(region);
+				}
+			}
 			Set<Long> nextRegionCoverage = new HashSet<>(orderedRegions);
 			Set<Long> nextCoverage =
 					new HashSet<>(orderedRegions.size() * REGION_CHUNK_SIZE * REGION_CHUNK_SIZE);
@@ -526,6 +573,9 @@ final class VoxygenGenerationService {
 				coverage.retainAll(nextCoverage);
 				regionCoverage.clear();
 				regionCoverage.addAll(nextRegionCoverage);
+				priorityRegionCoverage.clear();
+				priorityRegionCoverage.addAll(nextPriorityRegionCoverage);
+				priorityCenter = newPriorityCenter;
 				finished.retainAll(nextCoverage);
 				failedChunks.retainAll(nextCoverage);
 				failureCounts.keySet().retainAll(nextCoverage);
@@ -625,8 +675,14 @@ final class VoxygenGenerationService {
 		}
 
 		private RegionTraversal traversalFor(long region) {
-			int deltaX = ChunkPos.getX(region) - centerX;
-			int deltaZ = ChunkPos.getZ(region) - centerZ;
+			int traversalCenterX = centerX;
+			int traversalCenterZ = centerZ;
+			if (priorityCenter != NO_ACTIVE_REGION && priorityRegionCoverage.contains(region)) {
+				traversalCenterX = ChunkPos.getX(priorityCenter);
+				traversalCenterZ = ChunkPos.getZ(priorityCenter);
+			}
+			int deltaX = ChunkPos.getX(region) - traversalCenterX;
+			int deltaZ = ChunkPos.getZ(region) - traversalCenterZ;
 			int distance = Math.max(Math.abs(deltaX), Math.abs(deltaZ));
 			if (distance == 0) {
 				return RegionTraversal.CENTER;
@@ -672,7 +728,7 @@ final class VoxygenGenerationService {
 					if (!regionCoverage.contains(nextRegion)) {
 						continue;
 					}
-					evictCompletedInnerRegionRings(nextRegion);
+					prepareCacheForRegion(nextRegion);
 					activeRegion = nextRegion;
 					generationCacheCleared = false;
 					enqueueRegionChunks(nextRegion);
@@ -685,8 +741,35 @@ final class VoxygenGenerationService {
 					context.clearGenerationCache();
 					generationCacheCleared = true;
 				}
+				processingPriorityRegions = false;
+				cachedPriorityCenter = NO_ACTIVE_REGION;
+				evictedInnerRegionRadius = -1;
 				return false;
 			}
+		}
+
+		private void prepareCacheForRegion(long nextRegion) {
+			GenerationContext currentContext = context;
+			if (currentContext == null || retiring) {
+				return;
+			}
+			boolean priority = priorityRegionCoverage.contains(nextRegion);
+			if (priority) {
+				if (!processingPriorityRegions || cachedPriorityCenter != priorityCenter) {
+					currentContext.clearGenerationCache();
+					processingPriorityRegions = true;
+					cachedPriorityCenter = priorityCenter;
+					evictedInnerRegionRadius = -1;
+				}
+				return;
+			}
+			if (processingPriorityRegions) {
+				currentContext.clearGenerationCache();
+				processingPriorityRegions = false;
+				cachedPriorityCenter = NO_ACTIVE_REGION;
+				evictedInnerRegionRadius = -1;
+			}
+			evictCompletedInnerRegionRings(nextRegion);
 		}
 
 		private void evictCompletedInnerRegionRings(long nextRegion) {
