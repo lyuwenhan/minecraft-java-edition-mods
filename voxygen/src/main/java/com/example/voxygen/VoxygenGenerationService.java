@@ -342,10 +342,6 @@ final class VoxygenGenerationService {
 		private final Map<Long, Integer> failureCounts = new ConcurrentHashMap<>();
 		private final AtomicInteger inFlight = new AtomicInteger();
 		private volatile long activeRegion = NO_ACTIVE_REGION;
-		private final Object decorationOrderLock = new Object();
-		private final Set<Long> completedDecorationSequences = new HashSet<>();
-		private long nextDecorationSequence;
-		private long decorationSequenceToRun;
 		private final AtomicInteger generatedChunks = new AtomicInteger();
 		private final AtomicInteger insertedChunks = new AtomicInteger();
 		private final AtomicInteger insertedSections = new AtomicInteger();
@@ -418,9 +414,6 @@ final class VoxygenGenerationService {
 
 		private void retire() {
 			retiring = true;
-			synchronized (decorationOrderLock) {
-				decorationOrderLock.notifyAll();
-			}
 			GenerationContext currentContext = context;
 			if (currentContext != null) {
 				currentContext.cancel();
@@ -781,9 +774,7 @@ final class VoxygenGenerationService {
 							boolean abandoned = false;
 							Set<Long> accessed = context.beginAccessTracking();
 							try {
-								succeeded =
-										generateOne(
-												this, chunkX, chunkZ, next.decorationSequence());
+								succeeded = generateOne(this, chunkX, chunkZ);
 							} catch (Throwable throwable) {
 								if (throwable instanceof CancellationException
 										|| retiring
@@ -802,7 +793,6 @@ final class VoxygenGenerationService {
 								}
 							} finally {
 								context.endAccessTracking(accessed);
-								finishDecorationSequence(next.decorationSequence());
 								activeChunks.remove(packed);
 								if (abandoned) {
 								} else if (succeeded) {
@@ -832,7 +822,7 @@ final class VoxygenGenerationService {
 				if (coverage.contains(packed)
 						&& !finished.contains(packed)
 						&& activeChunks.add(packed)) {
-					return new ScheduledChunk(packed, nextDecorationSequence++);
+					return new ScheduledChunk(packed);
 				}
 			}
 			return null;
@@ -891,39 +881,9 @@ final class VoxygenGenerationService {
 				}
 			}
 		}
-
-		private void awaitDecorationSequence(long sequence) {
-			synchronized (decorationOrderLock) {
-				while (!retiring && decorationSequenceToRun != sequence) {
-					try {
-						decorationOrderLock.wait();
-					} catch (InterruptedException exception) {
-						Thread.currentThread().interrupt();
-						throw new CancellationException(
-								"Interrupted while waiting for ordered feature generation");
-					}
-				}
-				if (retiring) {
-					throw new CancellationException("Voxygen session was retired");
-				}
-			}
-		}
-
-		private void finishDecorationSequence(long sequence) {
-			synchronized (decorationOrderLock) {
-				if (sequence < decorationSequenceToRun) {
-					return;
-				}
-				completedDecorationSequences.add(sequence);
-				while (completedDecorationSequences.remove(decorationSequenceToRun)) {
-					decorationSequenceToRun++;
-				}
-				decorationOrderLock.notifyAll();
-			}
-		}
 	}
 
-	private record ScheduledChunk(long packed, long decorationSequence) {}
+	private record ScheduledChunk(long packed) {}
 
 	private record FailedAttempt(long target, Set<Long> accessedChunks) {}
 
@@ -935,8 +895,7 @@ final class VoxygenGenerationService {
 		EAST
 	}
 
-	private static boolean generateOne(
-			Session owner, int chunkX, int chunkZ, long decorationSequence) {
+	private static boolean generateOne(Session owner, int chunkX, int chunkZ) {
 		if (owner.retiring || !owner.engine.isLive()) {
 			throw new CancellationException("Voxygen world is no longer live");
 		}
@@ -946,13 +905,7 @@ final class VoxygenGenerationService {
 		}
 
 		owner.context.prepareFull(chunkX, chunkZ);
-		owner.awaitDecorationSequence(decorationSequence);
-		GeneratedChunk generated;
-		try {
-			generated = owner.context.generatePreparedFull(chunkX, chunkZ);
-		} finally {
-			owner.finishDecorationSequence(decorationSequence);
-		}
+		GeneratedChunk generated = owner.context.generatePreparedFull(chunkX, chunkZ);
 		ProtoChunk chunk = generated.chunk();
 		owner.generatedChunks.incrementAndGet();
 		if (hasVoxyData(owner.engine, owner.context.height, chunkX, chunkZ)) {
