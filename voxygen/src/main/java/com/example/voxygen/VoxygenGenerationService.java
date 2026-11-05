@@ -348,10 +348,8 @@ final class VoxygenGenerationService {
 		private final AtomicInteger skippedVoxy = new AtomicInteger();
 		private final AtomicInteger emptyChunks = new AtomicInteger();
 		private final AtomicInteger verificationFailures = new AtomicInteger();
-		private final AtomicInteger finishedSinceCacheCleanup = new AtomicInteger();
-		private int cacheCenterX;
-		private int cacheCenterZ;
-		private int evictedInnerRadius = -1;
+		private int evictedInnerRegionRadius = -1;
+		private boolean generationCacheCleared;
 		private volatile GenerationContext context;
 		private volatile Throwable preparationFailure;
 		private volatile boolean preparing;
@@ -376,8 +374,6 @@ final class VoxygenGenerationService {
 			this.requestedCenterX = centerX;
 			this.requestedCenterZ = centerZ;
 			this.requestedRadius = radius;
-			this.cacheCenterX = (centerX << REGION_CHUNK_SHIFT) + (REGION_CHUNK_SIZE >>> 1);
-			this.cacheCenterZ = (centerZ << REGION_CHUNK_SHIFT) + (REGION_CHUNK_SIZE >>> 1);
 			this.requestedWindowVersion = 1L;
 			this.preparing = true;
 			EXECUTOR.execute(
@@ -552,18 +548,13 @@ final class VoxygenGenerationService {
 						pendingRegions.addLast(region);
 					}
 				}
+				if (centerX != newCenterX || centerZ != newCenterZ) {
+					evictedInnerRegionRadius = -1;
+				}
 				centerX = newCenterX;
 				centerZ = newCenterZ;
 				radius = newRadius;
-				int newCacheCenterX =
-						(newCenterX << REGION_CHUNK_SHIFT) + (REGION_CHUNK_SIZE >>> 1);
-				int newCacheCenterZ =
-						(newCenterZ << REGION_CHUNK_SHIFT) + (REGION_CHUNK_SIZE >>> 1);
-				if (cacheCenterX != newCacheCenterX || cacheCenterZ != newCacheCenterZ) {
-					cacheCenterX = newCacheCenterX;
-					cacheCenterZ = newCacheCenterZ;
-					evictedInnerRadius = -1;
-				}
+				generationCacheCleared = false;
 				windowReady = true;
 			}
 			synchronized (windowLock) {
@@ -681,15 +672,39 @@ final class VoxygenGenerationService {
 					if (!regionCoverage.contains(nextRegion)) {
 						continue;
 					}
+					evictCompletedInnerRegionRings(nextRegion);
 					activeRegion = nextRegion;
+					generationCacheCleared = false;
 					enqueueRegionChunks(nextRegion);
 					if (!pending.isEmpty()) {
 						return true;
 					}
 					activeRegion = NO_ACTIVE_REGION;
 				}
+				if (!generationCacheCleared && context != null) {
+					context.clearGenerationCache();
+					generationCacheCleared = true;
+				}
 				return false;
 			}
+		}
+
+		private void evictCompletedInnerRegionRings(long nextRegion) {
+			GenerationContext currentContext = context;
+			if (currentContext == null || retiring) {
+				return;
+			}
+			int activeRing =
+					Math.max(
+							Math.abs(ChunkPos.getX(nextRegion) - centerX),
+							Math.abs(ChunkPos.getZ(nextRegion) - centerZ));
+			int lastSafeRing = activeRing - 2;
+			if (lastSafeRing <= evictedInnerRegionRadius) {
+				return;
+			}
+			currentContext.evictRegionRings(
+					centerX, centerZ, evictedInnerRegionRadius + 1, lastSafeRing);
+			evictedInnerRegionRadius = lastSafeRing;
 		}
 
 		private boolean recoverFailedAttempts() {
@@ -842,44 +857,6 @@ final class VoxygenGenerationService {
 					finished.add(packed);
 				}
 			}
-			if (finishedSinceCacheCleanup.incrementAndGet() >= 128
-					&& finishedSinceCacheCleanup.getAndSet(0) >= 128) {
-				cleanupFinishedInnerCache();
-			}
-		}
-
-		private void cleanupFinishedInnerCache() {
-			GenerationContext currentContext = context;
-			if (currentContext == null || retiring) {
-				return;
-			}
-			synchronized (coverageLock) {
-				int minimumUnfinishedDistance = Integer.MAX_VALUE;
-				for (long candidate : coverage) {
-					if (!finished.contains(candidate)) {
-						int distance =
-								Math.max(
-										Math.abs(ChunkPos.getX(candidate) - cacheCenterX),
-										Math.abs(ChunkPos.getZ(candidate) - cacheCenterZ));
-						minimumUnfinishedDistance = Math.min(minimumUnfinishedDistance, distance);
-					}
-				}
-				int safeRadius;
-				if (minimumUnfinishedDistance == Integer.MAX_VALUE) {
-					safeRadius =
-							radius * REGION_CHUNK_SIZE
-									+ (REGION_CHUNK_SIZE >>> 1)
-									+ currentContext.cacheDependencyMargin();
-				} else {
-					safeRadius =
-							minimumUnfinishedDistance - currentContext.cacheDependencyMargin() - 1;
-				}
-				if (safeRadius > evictedInnerRadius) {
-					currentContext.evictInnerRings(
-							cacheCenterX, cacheCenterZ, evictedInnerRadius + 1, safeRadius);
-					evictedInnerRadius = safeRadius;
-				}
-			}
 		}
 	}
 
@@ -927,13 +904,12 @@ final class VoxygenGenerationService {
 			for (VoxelizedSection section : voxelized) {
 				WorldUpdater.insertUpdate(owner.engine, section);
 			}
-			owner.insertedChunks.incrementAndGet();
-			owner.insertedSections.addAndGet(voxelized.size());
-			if (!hasVoxyData(owner.engine, owner.context.height, chunkX, chunkZ)) {
-				owner.verificationFailures.incrementAndGet();
-				LOGGER.warn(
-						"Voxy data was not visible after inserting chunk [{}, {}]", chunkX, chunkZ);
-			}
+		}
+		owner.insertedChunks.incrementAndGet();
+		owner.insertedSections.addAndGet(voxelized.size());
+		if (!hasVoxyData(owner.engine, owner.context.height, chunkX, chunkZ)) {
+			owner.verificationFailures.incrementAndGet();
+			LOGGER.warn("Voxy data was not visible after inserting chunk [{}, {}]", chunkX, chunkZ);
 		}
 		return true;
 	}
@@ -941,6 +917,12 @@ final class VoxygenGenerationService {
 	private static List<VoxelizedSection> voxelize(
 			WorldEngine engine, ProtoChunk chunk, LevelLightEngine lightEngine) {
 		List<VoxelizedSection> result = new ArrayList<>();
+		Mapper mapper = engine.getMapper();
+		BlockPos.MutableBlockPos mutablePos = new BlockPos.MutableBlockPos();
+		var skyLight = lightEngine.getLayerListener(LightLayer.SKY);
+		var blockLight = lightEngine.getLayerListener(LightLayer.BLOCK);
+		int chunkBaseX = chunk.getPos().x() << 4;
+		int chunkBaseZ = chunk.getPos().z() << 4;
 		LevelChunkSection[] sections = chunk.getSections();
 		for (int index = 0; index < sections.length; index++) {
 			LevelChunkSection section = sections[index];
@@ -948,30 +930,21 @@ final class VoxygenGenerationService {
 				continue;
 			}
 			int sectionY = chunk.getMinSectionY() + index;
+			int sectionBaseY = sectionY << 4;
 			VoxelizedSection voxelized =
 					WorldConversionFactory.convert(
 							VoxelizedSection.createEmpty()
 									.setPosition(chunk.getPos().x(), sectionY, chunk.getPos().z()),
-							engine.getMapper(),
+							mapper,
 							section.getStates(),
 							section.getBiomes(),
 							(x, y, z) -> {
-								BlockPos pos =
-										new BlockPos(
-												(chunk.getPos().x() << 4) + x,
-												(sectionY << 4) + y,
-												(chunk.getPos().z() << 4) + z);
-								int sky =
-										lightEngine
-												.getLayerListener(LightLayer.SKY)
-												.getLightValue(pos);
-								int block =
-										lightEngine
-												.getLayerListener(LightLayer.BLOCK)
-												.getLightValue(pos);
+								mutablePos.set(chunkBaseX + x, sectionBaseY + y, chunkBaseZ + z);
+								int sky = skyLight.getLightValue(mutablePos);
+								int block = blockLight.getLightValue(mutablePos);
 								return (byte) ((block << 4) | sky);
 							});
-			WorldVoxilizedSectionMipper.mipSection(voxelized, engine.getMapper());
+			WorldVoxilizedSectionMipper.mipSection(voxelized, mapper);
 			result.add(voxelized);
 		}
 		return result;
@@ -988,15 +961,20 @@ final class VoxygenGenerationService {
 				continue;
 			}
 			try {
+				if (section.getNonEmptyBlockCount() == 0) {
+					continue;
+				}
 				long[] data = section._unsafeGetRawDataArray();
 				int startX = (chunkX & 1) << 4;
 				int startY = (sectionY & 1) << 4;
 				int startZ = (chunkZ & 1) << 4;
 				for (int y = 0; y < 16; y++) {
+					int yOffset = (startY + y) << 10;
 					for (int z = 0; z < 16; z++) {
-						for (int x = 0; x < 16; x++) {
-							long mapping =
-									data[WorldSection.getIndex(startX + x, startY + y, startZ + z)];
+						int startIndex = yOffset | ((startZ + z) << 5) | startX;
+						int endIndex = startIndex + 16;
+						for (int dataIndex = startIndex; dataIndex < endIndex; dataIndex++) {
+							long mapping = data[dataIndex];
 							if (mapping != Mapper.UNKNOWN_MAPPING
 									&& Mapper.isNotAirInt(mapping) != 0) {
 								return true;
@@ -1544,7 +1522,12 @@ final class VoxygenGenerationService {
 							sourceLevel.dimensionType().hasSkyLight());
 			for (int chunkZ = z - 1; chunkZ <= z + 1; chunkZ++) {
 				for (int chunkX = x - 1; chunkX <= x + 1; chunkX++) {
-					ProtoChunk chunk = ensureFeatures(chunkX, chunkZ);
+					ProtoChunk chunk = chunks.get(ChunkPos.pack(chunkX, chunkZ));
+					if (chunk == null
+							|| chunk.getPersistedStatus().isBefore(ChunkStatus.FEATURES)) {
+						throw new IllegalStateException(
+								"Missing prepared feature chunk [" + chunkX + ", " + chunkZ + "]");
+					}
 					chunk.initializeLightSources();
 					chunk.setLightEngine(lightEngine);
 					LevelChunkSection[] sections = chunk.getSections();
@@ -1576,20 +1559,10 @@ final class VoxygenGenerationService {
 									null));
 		}
 
-		private int cacheDependencyMargin() {
-			int structureReferenceRadius =
-					ChunkPyramid.GENERATION_PYRAMID
-									.getStepTo(ChunkStatus.STRUCTURE_REFERENCES)
-									.directDependencies()
-									.size()
-							- 1;
-			return structureReferenceRadius + 4;
-		}
-
-		private void evictInnerRings(int centerX, int centerZ, int firstRadius, int lastRadius) {
+		private void evictRegionRings(int centerX, int centerZ, int firstRadius, int lastRadius) {
 			for (int distance = Math.max(0, firstRadius); distance <= lastRadius; distance++) {
 				if (distance == 0) {
-					evict(ChunkPos.pack(centerX, centerZ));
+					evictRegion(centerX, centerZ);
 					continue;
 				}
 				int minX = centerX - distance;
@@ -1597,14 +1570,34 @@ final class VoxygenGenerationService {
 				int minZ = centerZ - distance;
 				int maxZ = centerZ + distance;
 				for (int x = minX; x <= maxX; x++) {
-					evict(ChunkPos.pack(x, minZ));
-					evict(ChunkPos.pack(x, maxZ));
+					evictRegion(x, minZ);
+					evictRegion(x, maxZ);
 				}
 				for (int z = minZ + 1; z < maxZ; z++) {
-					evict(ChunkPos.pack(minX, z));
-					evict(ChunkPos.pack(maxX, z));
+					evictRegion(minX, z);
+					evictRegion(maxX, z);
 				}
 			}
+		}
+
+		private void evictRegion(int regionX, int regionZ) {
+			int startX = regionX << REGION_CHUNK_SHIFT;
+			int startZ = regionZ << REGION_CHUNK_SHIFT;
+			for (int offsetZ = 0; offsetZ < REGION_CHUNK_SIZE; offsetZ++) {
+				for (int offsetX = 0; offsetX < REGION_CHUNK_SIZE; offsetX++) {
+					evict(ChunkPos.pack(startX + offsetX, startZ + offsetZ));
+				}
+			}
+		}
+
+		private void clearGenerationCache() {
+			features.clear();
+			featurePreparations.clear();
+			terrain.clear();
+			biomes.clear();
+			structureReferences.clear();
+			structureStarts.clear();
+			chunks.clear();
 		}
 
 		private void evict(long key) {
