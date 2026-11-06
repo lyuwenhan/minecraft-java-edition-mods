@@ -35,6 +35,14 @@
 				"26.3": "1.2.0"
 			}
 		},
+		"baritone-patrol": {
+			"hasIcon": true,
+			"displayName": "Baritone Patrol",
+			"description": "Records an ordered route and makes Baritone continuously patrol its waypoints in a loop.",
+			"versions": {
+				"26.3": "1.2.0"
+			}
+		},
 		"best-armor": {
 			"hasIcon": true,
 			"displayName": "Best Armor",
@@ -345,6 +353,10 @@
 		},
 		"cfc9466aa9f96da17b9cfce6e7d1b35b38557018": {
 			"id": "auto-login",
+			"version": "1.2.0"
+		},
+		"85b39b5d2a2c3c4dd092aeb7fba49984138cda2b": {
+			"id": "baritone-patrol",
 			"version": "1.2.0"
 		},
 		"d42f7d2933de96af85ffa480a47ecb9f9530dbe9": {

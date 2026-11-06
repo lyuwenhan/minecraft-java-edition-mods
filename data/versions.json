@@ -65,6 +65,15 @@
 			"Planet Minecraft": "https://www.planetminecraft.com/mod/auto-login"
 		}
 	},
+	"baritone-patrol": {
+		"versions": [
+			"1.2.0"
+		],
+		"hasIcon": true,
+		"displayName": "Baritone Patrol",
+		"description": "Records an ordered route and makes Baritone continuously patrol its waypoints in a loop.",
+		"link": {}
+	},
 	"best-armor": {
 		"versions": [
 			"1.1.0",
