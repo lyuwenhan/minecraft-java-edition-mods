@@ -233,7 +233,7 @@
 			"displayName": "Voxygen",
 			"description": "Generates missing vanilla chunks into Voxy using per-server seeds and client-side commands.",
 			"versions": {
-				"26.3": "1.2.6"
+				"26.3": "1.2.7"
 			}
 		},
 		"who-i-am": {
@@ -890,6 +890,10 @@
 		"399dcff5823ac336cc7a7956f9afaa25c25603a8": {
 			"id": "voxygen",
 			"version": "1.2.6"
+		},
+		"8f87623b7549714aa67aef11b3c5f994ebc0bef8": {
+			"id": "voxygen",
+			"version": "1.2.7"
 		},
 		"e9373af234358247e937b3153ae516e6beb46690": {
 			"id": "who-i-am",
