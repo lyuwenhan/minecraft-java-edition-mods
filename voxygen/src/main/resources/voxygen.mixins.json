@@ -14,7 +14,8 @@
 		"StructureTemplateEntityMixin",
 		"StructureTemplatePaletteMixin",
 		"SwampHutEntityMixin",
-		"TemplateFeatureMixin"
+		"TemplateFeatureMixin",
+		"WorldGenerationContextMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1
