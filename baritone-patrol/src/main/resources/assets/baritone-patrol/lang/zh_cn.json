@@ -1,0 +1,14 @@
+{
+	"message.baritone-patrol.no_world": "[巡逻] 当前没有进入世界。",
+	"message.baritone-patrol.added": "[巡逻] 已添加路径点 #%s：(%s, %s, %s)",
+	"message.baritone-patrol.no_waypoints": "[巡逻] 当前路线没有路径点，请先使用 /patrol add。",
+	"message.baritone-patrol.started": "[巡逻] 巡逻已开始，共 %s 个路径点。",
+	"message.baritone-patrol.stopped": "[巡逻] 巡逻已停止。",
+	"message.baritone-patrol.not_running": "[巡逻] 当前没有正在运行的巡逻。",
+	"message.baritone-patrol.cleared": "[巡逻] 已清除当前世界或服务器的全部路径点。",
+	"message.baritone-patrol.empty": "[巡逻] 当前路线没有路径点。",
+	"message.baritone-patrol.list_header": "[巡逻] 路线 %s 共有 %s 个路径点：",
+	"message.baritone-patrol.list_item": "[巡逻] #%s (%s, %s, %s)",
+	"message.baritone-patrol.going_to": "[巡逻] 正在前往 #%s (%s, %s, %s)",
+	"message.baritone-patrol.baritone_unavailable": "[巡逻] 无法调用 Baritone，请确认已安装兼容版本。"
+}

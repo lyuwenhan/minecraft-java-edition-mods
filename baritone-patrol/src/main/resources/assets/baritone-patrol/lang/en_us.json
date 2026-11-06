@@ -1,0 +1,14 @@
+{
+	"message.baritone-patrol.no_world": "[Patrol] You are not currently in a world.",
+	"message.baritone-patrol.added": "[Patrol] Added waypoint #%s: (%s, %s, %s)",
+	"message.baritone-patrol.no_waypoints": "[Patrol] This route has no waypoints. Use /patrol add first.",
+	"message.baritone-patrol.started": "[Patrol] Patrol started with %s waypoint(s).",
+	"message.baritone-patrol.stopped": "[Patrol] Patrol stopped.",
+	"message.baritone-patrol.not_running": "[Patrol] No patrol is currently running.",
+	"message.baritone-patrol.cleared": "[Patrol] Cleared all waypoints for the current world or server.",
+	"message.baritone-patrol.empty": "[Patrol] This route has no waypoints.",
+	"message.baritone-patrol.list_header": "[Patrol] Route %s has %s waypoint(s):",
+	"message.baritone-patrol.list_item": "[Patrol] #%s (%s, %s, %s)",
+	"message.baritone-patrol.going_to": "[Patrol] Going to #%s (%s, %s, %s)",
+	"message.baritone-patrol.baritone_unavailable": "[Patrol] Unable to use Baritone. Make sure a compatible version is installed."
+}

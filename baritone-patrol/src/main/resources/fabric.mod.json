@@ -1,0 +1,23 @@
+{
+	"schemaVersion": 1,
+	"id": "baritone-patrol",
+	"version": "${version}",
+	"name": "Baritone Patrol",
+	"description": "Records an ordered route and makes Baritone continuously patrol its waypoints in a loop.",
+	"authors": [
+		"Wenhan"
+	],
+	"environment": "client",
+	"entrypoints": {
+		"client": [
+			"com.example.baritonepatrol.BaritonePatrolClient"
+		]
+	},
+	"depends": {
+		"fabricloader": ">=0.19.5",
+		"fabric-api": "*",
+		"minecraft": "26.3",
+		"java": ">=25",
+		"baritone": "*"
+	}
+}
