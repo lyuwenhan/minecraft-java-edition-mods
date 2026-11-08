@@ -10,6 +10,14 @@ base {
     archivesName = "auto-greeting-server"
 }
 
+loom {
+    runs {
+        client {
+            programArguments.addAll("--username", "TestPlayer")
+        }
+    }
+}
+
 repositories {
     mavenCentral()
 }

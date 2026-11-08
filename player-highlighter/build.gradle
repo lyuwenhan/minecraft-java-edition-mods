@@ -10,6 +10,14 @@ base {
     archivesName = "player-highlighter"
 }
 
+loom {
+    runs {
+        client {
+            programArguments.addAll("--username", "TestPlayer")
+        }
+    }
+}
+
 repositories {
     mavenCentral()
 }

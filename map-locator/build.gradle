@@ -10,6 +10,14 @@ base {
     archivesName = "map-locator"
 }
 
+loom {
+    runs {
+        client {
+            programArguments.addAll("--username", "TestPlayer")
+        }
+    }
+}
+
 repositories {
     mavenCentral()
 }

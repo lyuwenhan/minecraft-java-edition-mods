@@ -10,6 +10,14 @@ base {
     archivesName = "creeper-no-break"
 }
 
+loom {
+    runs {
+        client {
+            programArguments.addAll("--username", "TestPlayer")
+        }
+    }
+}
+
 repositories {
     mavenCentral()
 }

@@ -10,6 +10,14 @@ base {
     archivesName = "best-armor"
 }
 
+loom {
+    runs {
+        client {
+            programArguments.addAll("--username", "TestPlayer")
+        }
+    }
+}
+
 repositories {
     mavenCentral()
 }

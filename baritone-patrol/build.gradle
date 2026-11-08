@@ -10,6 +10,14 @@ base {
     archivesName = "baritone-patrol"
 }
 
+loom {
+    runs {
+        client {
+            programArguments.addAll("--username", "TestPlayer")
+        }
+    }
+}
+
 repositories {
     mavenCentral()
 }

@@ -10,6 +10,14 @@ base {
     archivesName = "shared-player-data"
 }
 
+loom {
+    runs {
+        client {
+            programArguments.addAll("--username", "TestPlayer")
+        }
+    }
+}
+
 repositories {
     mavenCentral()
     maven {

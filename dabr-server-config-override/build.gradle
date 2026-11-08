@@ -10,6 +10,14 @@ base {
     archivesName = "dabr-server-config-override"
 }
 
+loom {
+    runs {
+        client {
+            programArguments.addAll("--username", "TestPlayer")
+        }
+    }
+}
+
 repositories {
     mavenCentral()
     maven {

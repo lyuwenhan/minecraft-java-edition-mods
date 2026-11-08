@@ -10,6 +10,14 @@ base {
     archivesName = "flight-disabler"
 }
 
+loom {
+    runs {
+        client {
+            programArguments.addAll("--username", "TestPlayer")
+        }
+    }
+}
+
 repositories {
     mavenCentral()
 }

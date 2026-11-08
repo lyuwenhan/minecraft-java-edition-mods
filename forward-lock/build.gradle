@@ -10,6 +10,14 @@ base {
     archivesName = "forward-lock"
 }
 
+loom {
+    runs {
+        client {
+            programArguments.addAll("--username", "TestPlayer")
+        }
+    }
+}
+
 repositories {
     mavenCentral()
     maven {
