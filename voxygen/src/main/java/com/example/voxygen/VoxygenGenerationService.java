@@ -2259,7 +2259,7 @@ final class VoxygenGenerationService {
 						"getRawBrightness",
 						"getMaxLocalRawBrightness",
 						"getEffectiveSkyBrightness" ->
-						15;
+						0;
 				case "canSeeSky" -> context.sourceLevel.dimensionType().hasSkyLight();
 				case "getLightEngine" -> null;
 				case "getServer", "getLevel" -> null;
