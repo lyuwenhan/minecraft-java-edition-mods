@@ -1108,6 +1108,7 @@ final class VoxygenGenerationService {
 		private final RegistryAccess registries;
 		private final LevelHeightAccessor height;
 		private final ChunkGenerator generator;
+		private final ChunkGenerator structureGenerator;
 		private final RandomState randomState;
 		private final PalettedContainerFactory containers;
 		private final long seed;
@@ -1143,6 +1144,7 @@ final class VoxygenGenerationService {
 				RegistryAccess registries,
 				LevelHeightAccessor height,
 				ChunkGenerator generator,
+				ChunkGenerator structureGenerator,
 				RandomState randomState,
 				PalettedContainerFactory containers,
 				long seed,
@@ -1155,6 +1157,7 @@ final class VoxygenGenerationService {
 			this.registries = registries;
 			this.height = height;
 			this.generator = generator;
+			this.structureGenerator = structureGenerator;
 			this.randomState = randomState;
 			this.containers = containers;
 			this.seed = seed;
@@ -1172,7 +1175,7 @@ final class VoxygenGenerationService {
 			this.localWorld = new LocalWorld(this, chunks);
 			this.world = localWorld.proxy();
 			this.structures =
-					new StructureManager(world, new WorldOptions(seed, false, false), null);
+					new StructureManager(world, new WorldOptions(seed, true, false), null);
 			this.nativeContext =
 					serverLevel == null
 							? null
@@ -1193,19 +1196,35 @@ final class VoxygenGenerationService {
 				if (serverLevel != null) {
 					RegistryAccess registries = serverLevel.registryAccess();
 					ChunkGenerator serverGenerator = serverLevel.getChunkSource().getGenerator();
+					ChunkGenerator virtualGenerator =
+							VoxygenWorldgenRules.simplifyGenerator(
+									serverGenerator, registries, dimension);
+					RandomState virtualRandomState = serverLevel.getChunkSource().randomState();
+					ChunkGeneratorStructureState virtualStructureState =
+							serverLevel.getChunkSource().getGeneratorState();
+					if (virtualGenerator != serverGenerator
+							&& virtualGenerator
+									instanceof NoiseBasedChunkGenerator noiseGenerator) {
+						virtualRandomState =
+								RandomState.create(
+										registries.lookupOrThrow(Registries.NOISE),
+										seed,
+										noiseGenerator.generatorSettings().value());
+					}
 					return new GenerationContext(
 							level,
 							registries,
 							LevelHeightAccessor.create(
 									serverLevel.getMinY(), serverLevel.getHeight()),
+							virtualGenerator,
 							serverGenerator,
-							serverLevel.getChunkSource().randomState(),
+							virtualRandomState,
 							PalettedContainerFactory.create(registries),
 							seed,
 							dimension,
 							serverLevel,
 							serverLevel.getStructureTemplateManager(),
-							serverLevel.getChunkSource().getGeneratorState(),
+							virtualStructureState,
 							null);
 				}
 			}
@@ -1246,8 +1265,14 @@ final class VoxygenGenerationService {
 			}
 
 			HolderGetter<NormalNoise> noises = registries.lookupOrThrow(Registries.NOISE);
-			NoiseBasedChunkGenerator generator = new NoiseBasedChunkGenerator(biomes, settings);
-			RandomState randomState = RandomState.create(noises, seed, settings.value());
+			NoiseBasedChunkGenerator structureGenerator =
+					new NoiseBasedChunkGenerator(biomes, settings);
+			ChunkGenerator generator =
+					VoxygenWorldgenRules.simplifyGenerator(
+							structureGenerator, registries, dimension);
+			NoiseGeneratorSettings activeSettings =
+					((NoiseBasedChunkGenerator) generator).generatorSettings().value();
+			RandomState randomState = RandomState.create(noises, seed, activeSettings);
 			LevelHeightAccessor height =
 					LevelHeightAccessor.create(level.getMinY(), level.getHeight());
 			LevelStorageSource storage =
@@ -1273,15 +1298,19 @@ final class VoxygenGenerationService {
 							access,
 							DataFixers.getDataFixer(),
 							registries.lookupOrThrow(Registries.BLOCK));
+			RandomState structureRandomState = RandomState.create(noises, seed, settings.value());
 			ChunkGeneratorStructureState structureState =
-					generator.createState(
-							registries.lookupOrThrow(Registries.STRUCTURE_SET), randomState, seed);
+					structureGenerator.createState(
+							registries.lookupOrThrow(Registries.STRUCTURE_SET),
+							structureRandomState,
+							seed);
 			((VirtualStructureState) structureState).voxygen$markVirtual();
 			return new GenerationContext(
 					level,
 					registries,
 					height,
 					generator,
+					structureGenerator,
 					randomState,
 					PalettedContainerFactory.create(registries),
 					seed,
@@ -1366,14 +1395,24 @@ final class VoxygenGenerationService {
 							ChunkStep step =
 									ChunkPyramid.GENERATION_PYRAMID.getStepTo(
 											ChunkStatus.STRUCTURE_STARTS);
-							ChunkStatusTasks.generateStructureStarts(
-											nativeContext, step, nativeCache(x, z, step), chunk)
-									.join();
+							WorldgenSeedContext.run(
+									seed,
+									structureTemplates,
+									generator,
+									() ->
+											ChunkStatusTasks.generateStructureStarts(
+															nativeContext,
+															step,
+															nativeCache(x, z, step),
+															chunk)
+													.join());
 						} else {
 							WorldgenSeedContext.run(
 									seed,
+									structureTemplates,
+									structureGenerator,
 									() ->
-											generator.createStructures(
+											structureGenerator.createStructures(
 													registries,
 													structureState,
 													structures,
@@ -1432,7 +1471,11 @@ final class VoxygenGenerationService {
 						} else {
 							WorldgenSeedContext.run(
 									seed,
-									() -> generator.createReferences(world, structures, chunk));
+									structureTemplates,
+									structureGenerator,
+									() ->
+											structureGenerator.createReferences(
+													world, structures, chunk));
 						}
 						chunk.setPersistedStatus(ChunkStatus.STRUCTURE_REFERENCES);
 						return chunk;
@@ -1498,12 +1541,17 @@ final class VoxygenGenerationService {
 									ChunkStep step =
 											ChunkPyramid.GENERATION_PYRAMID.getStepTo(
 													ChunkStatus.FEATURES);
-									ChunkStatusTasks.generateFeatures(
-													nativeContext,
-													step,
-													nativeCache(x, z, step),
-													chunk)
-											.join();
+									WorldgenSeedContext.run(
+											seed,
+											structureTemplates,
+											generator,
+											() ->
+													ChunkStatusTasks.generateFeatures(
+																	nativeContext,
+																	step,
+																	nativeCache(x, z, step),
+																	chunk)
+															.join());
 								} catch (RuntimeException | Error throwable) {
 									for (ChunkSnapshot snapshot : snapshots) {
 										try {
@@ -1525,12 +1573,13 @@ final class VoxygenGenerationService {
 													WorldgenSeedContext.run(
 															seed,
 															structureTemplates,
-															generator,
+															structureGenerator,
 															() ->
-																	generator.applyBiomeDecoration(
-																			world,
-																			workingChunk,
-																			structures)));
+																	structureGenerator
+																			.applyBiomeDecoration(
+																					world,
+																					workingChunk,
+																					structures)));
 									transaction.commit();
 								} finally {
 									localWorld.endTransaction(transaction);
@@ -1603,6 +1652,7 @@ final class VoxygenGenerationService {
 							new VirtualLightChunkGetter(this),
 							true,
 							sourceLevel.dimensionType().hasSkyLight());
+			List<ProtoChunk> lightingArea = new ArrayList<>(9);
 			for (int chunkZ = z - 1; chunkZ <= z + 1; chunkZ++) {
 				for (int chunkX = x - 1; chunkX <= x + 1; chunkX++) {
 					ProtoChunk chunk = chunks.get(ChunkPos.pack(chunkX, chunkZ));
@@ -1611,6 +1661,7 @@ final class VoxygenGenerationService {
 						throw new IllegalStateException(
 								"Missing prepared feature chunk [" + chunkX + ", " + chunkZ + "]");
 					}
+					lightingArea.add(chunk);
 					chunk.initializeLightSources();
 					chunk.setLightEngine(lightEngine);
 					LevelChunkSection[] sections = chunk.getSections();
@@ -1619,9 +1670,16 @@ final class VoxygenGenerationService {
 								SectionPos.of(chunk.getPos(), chunk.getMinSectionY() + index),
 								sections[index].hasOnlyAir());
 					}
-					lightEngine.setLightEnabled(chunk.getPos(), true);
-					lightEngine.propagateLightSources(chunk.getPos());
 				}
+			}
+			while (lightEngine.hasLightWork()) {
+				lightEngine.runLightUpdates();
+			}
+			for (ProtoChunk chunk : lightingArea) {
+				lightEngine.setLightEnabled(chunk.getPos(), true);
+			}
+			for (ProtoChunk chunk : lightingArea) {
+				lightEngine.propagateLightSources(chunk.getPos());
 			}
 			while (lightEngine.hasLightWork()) {
 				lightEngine.runLightUpdates();
@@ -1633,13 +1691,17 @@ final class VoxygenGenerationService {
 		private ProtoChunk chunk(int x, int z) {
 			return chunks.computeIfAbsent(
 					ChunkPos.pack(x, z),
-					ignored ->
-							new ProtoChunk(
-									new ChunkPos(x, z),
-									UpgradeData.EMPTY,
-									height,
-									containers,
-									null));
+					ignored -> {
+						ProtoChunk created =
+								new ProtoChunk(
+										new ChunkPos(x, z),
+										UpgradeData.EMPTY,
+										height,
+										containers,
+										null);
+						VoxygenWorldgenRules.registerChunk(created, dimension);
+						return created;
+					});
 		}
 
 		private void evictRegionRings(int centerX, int centerZ, int firstRadius, int lastRadius) {
@@ -1680,6 +1742,9 @@ final class VoxygenGenerationService {
 			biomes.clear();
 			structureReferences.clear();
 			structureStarts.clear();
+			for (ProtoChunk chunk : chunks.values()) {
+				VoxygenWorldgenRules.unregisterChunk(chunk);
+			}
 			chunks.clear();
 		}
 
@@ -1690,7 +1755,7 @@ final class VoxygenGenerationService {
 			biomes.remove(key);
 			structureReferences.remove(key);
 			structureStarts.remove(key);
-			chunks.remove(key);
+			VoxygenWorldgenRules.unregisterChunk(chunks.remove(key));
 		}
 
 		private Set<Long> beginAccessTracking() {
@@ -2268,12 +2333,15 @@ final class VoxygenGenerationService {
 
 		private boolean setBlock(Object[] args) {
 			BlockPos pos = (BlockPos) args[0];
+			BlockState state = (BlockState) args[1];
+			if (VoxygenWorldgenRules.shouldRejectGeneratedBlock(state)) {
+				return false;
+			}
 			ProtoChunk chunk = chunkAt(pos.getX() >> 4, pos.getZ() >> 4);
 			if (chunk == null || !context.height.isInsideBuildHeight(pos)) {
 				return false;
 			}
 			int flags = args.length > 2 ? (int) args[2] : 0;
-			BlockState state = (BlockState) args[1];
 			BlockEntity current = chunk.getBlockEntity(pos);
 			chunk.setBlockState(pos, state, flags);
 			if (state.getBlock() instanceof EntityBlock entityBlock) {

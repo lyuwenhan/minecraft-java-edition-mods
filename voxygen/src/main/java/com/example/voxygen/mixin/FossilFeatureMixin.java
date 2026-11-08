@@ -1,5 +1,6 @@
 package com.example.voxygen.mixin;
 
+import com.example.voxygen.VoxygenWorldgenRules;
 import com.example.voxygen.WorldgenSeedContext;
 
 import net.minecraft.core.BlockPos;
@@ -33,6 +34,10 @@ abstract class FossilFeatureMixin {
 			RandomSource random,
 			BlockPos origin,
 			CallbackInfoReturnable<Boolean> callback) {
+		if (VoxygenWorldgenRules.isVirtualGeneration(world, origin)) {
+			callback.setReturnValue(false);
+			return;
+		}
 		StructureTemplateManager templates = WorldgenSeedContext.templates();
 		if (templates == null) {
 			return;
