@@ -1,5 +1,7 @@
 package com.example.voxygen;
 
+import it.unimi.dsi.fastutil.longs.LongOpenHashSet;
+import it.unimi.dsi.fastutil.longs.LongSet;
 import it.unimi.dsi.fastutil.shorts.ShortArrayList;
 import it.unimi.dsi.fastutil.shorts.ShortList;
 
@@ -56,9 +58,11 @@ import net.minecraft.world.level.chunk.ChunkAccess;
 import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.chunk.ChunkGeneratorStructureState;
 import net.minecraft.world.level.chunk.ChunkSource;
+import net.minecraft.world.level.chunk.DataLayer;
 import net.minecraft.world.level.chunk.LevelChunkSection;
 import net.minecraft.world.level.chunk.LightChunk;
 import net.minecraft.world.level.chunk.LightChunkGetter;
+import net.minecraft.world.level.chunk.PalettedContainer;
 import net.minecraft.world.level.chunk.PalettedContainerFactory;
 import net.minecraft.world.level.chunk.ProtoChunk;
 import net.minecraft.world.level.chunk.UpgradeData;
@@ -73,6 +77,8 @@ import net.minecraft.world.level.levelgen.NoiseGeneratorSettings;
 import net.minecraft.world.level.levelgen.RandomState;
 import net.minecraft.world.level.levelgen.WorldOptions;
 import net.minecraft.world.level.levelgen.blending.Blender;
+import net.minecraft.world.level.levelgen.structure.Structure;
+import net.minecraft.world.level.levelgen.structure.StructureStart;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplateManager;
 import net.minecraft.world.level.levelgen.synth.NormalNoise;
 import net.minecraft.world.level.lighting.LevelLightEngine;
@@ -128,6 +134,10 @@ final class VoxygenGenerationService {
 	private static volatile MultiPackResourceManager vanillaDataResources;
 	private static final int REGION_CHUNK_SHIFT = 4;
 	private static final int REGION_CHUNK_SIZE = 1 << REGION_CHUNK_SHIFT;
+	private static final int CHUNK_STATE_FINISHED = 1;
+	private static final int CHUNK_STATE_QUEUED = 1 << 1;
+	private static final int CHUNK_STATE_ACTIVE = 1 << 2;
+	private static final int CHUNK_STATE_FAILED = 1 << 3;
 	private static final long NO_ACTIVE_REGION = Long.MIN_VALUE;
 
 	private static volatile Session session;
@@ -241,8 +251,8 @@ final class VoxygenGenerationService {
 		if (current == null) {
 			return state;
 		}
-		int completed = current.finished.size();
-		int total = current.coverage.size();
+		int completed = current.countState(CHUNK_STATE_FINISHED);
+		int total = current.totalChunks();
 		int percent = total == 0 ? 100 : (int) ((long) completed * 100L / total);
 		return Component.translatable(
 				"command.voxygen.generator.details",
@@ -257,8 +267,7 @@ final class VoxygenGenerationService {
 				current.insertedSections.get(),
 				current.skippedVoxy.get(),
 				current.emptyChunks.get(),
-				current.failedChunks.size(),
-				current.verificationFailures.get());
+				current.countState(CHUNK_STATE_FAILED));
 	}
 
 	static ProgressSnapshot progressSnapshot() {
@@ -270,11 +279,11 @@ final class VoxygenGenerationService {
 				|| !current.windowReady) {
 			return null;
 		}
-		int total = current.coverage.size();
+		int total = current.totalChunks();
 		if (total == 0) {
 			return null;
 		}
-		int completed = Math.min(current.finished.size(), total);
+		int completed = Math.min(current.countState(CHUNK_STATE_FINISHED), total);
 		boolean complete;
 		synchronized (current.windowLock) {
 			complete =
@@ -342,19 +351,16 @@ final class VoxygenGenerationService {
 		private boolean windowTaskRunning;
 		private ScheduledFuture<?> windowFuture;
 		private volatile boolean windowReady;
-		private final Set<Long> coverage = ConcurrentHashMap.newKeySet();
 		private final Set<Long> regionCoverage = ConcurrentHashMap.newKeySet();
 		private final Set<Long> priorityRegionCoverage = new HashSet<>();
-		private final Set<Long> finished = ConcurrentHashMap.newKeySet();
-		private final Set<Long> queued = ConcurrentHashMap.newKeySet();
+		private final ChunkStateTable chunkStates = new ChunkStateTable();
 		private final Set<Long> queuedRegions = ConcurrentHashMap.newKeySet();
-		private final Set<Long> activeChunks = ConcurrentHashMap.newKeySet();
-		private final Set<Long> failedChunks = ConcurrentHashMap.newKeySet();
 		private final ConcurrentLinkedDeque<Long> pending = new ConcurrentLinkedDeque<>();
 		private final ConcurrentLinkedDeque<Long> pendingRegions = new ConcurrentLinkedDeque<>();
 		private final ConcurrentLinkedDeque<FailedAttempt> failedAttempts =
 				new ConcurrentLinkedDeque<>();
 		private final Map<Long, Integer> failureCounts = new ConcurrentHashMap<>();
+		private final Set<Long> forcedRetries = ConcurrentHashMap.newKeySet();
 		private final AtomicInteger inFlight = new AtomicInteger();
 		private volatile long activeRegion = NO_ACTIVE_REGION;
 		private final AtomicInteger generatedChunks = new AtomicInteger();
@@ -362,7 +368,6 @@ final class VoxygenGenerationService {
 		private final AtomicInteger insertedSections = new AtomicInteger();
 		private final AtomicInteger skippedVoxy = new AtomicInteger();
 		private final AtomicInteger emptyChunks = new AtomicInteger();
-		private final AtomicInteger verificationFailures = new AtomicInteger();
 		private int evictedInnerRegionRadius = -1;
 		private boolean generationCacheCleared;
 		private long priorityCenter;
@@ -557,11 +562,6 @@ final class VoxygenGenerationService {
 				}
 			}
 			Set<Long> nextRegionCoverage = new HashSet<>(orderedRegions);
-			Set<Long> nextCoverage =
-					new HashSet<>(orderedRegions.size() * REGION_CHUNK_SIZE * REGION_CHUNK_SIZE);
-			for (long region : orderedRegions) {
-				addRegionChunks(nextCoverage, region);
-			}
 			synchronized (windowLock) {
 				if (retiring || version != requestedWindowVersion) {
 					completeWindowUpdate(version);
@@ -570,19 +570,18 @@ final class VoxygenGenerationService {
 			}
 
 			synchronized (coverageLock) {
-				coverage.retainAll(nextCoverage);
 				regionCoverage.clear();
 				regionCoverage.addAll(nextRegionCoverage);
+				chunkStates.retainRegions(nextRegionCoverage);
+				chunkStates.ensureRegions(nextRegionCoverage);
 				priorityRegionCoverage.clear();
 				priorityRegionCoverage.addAll(nextPriorityRegionCoverage);
 				priorityCenter = newPriorityCenter;
-				finished.retainAll(nextCoverage);
-				failedChunks.retainAll(nextCoverage);
-				failureCounts.keySet().retainAll(nextCoverage);
-				failedAttempts.removeIf(failure -> !nextCoverage.contains(failure.target()));
-				coverage.addAll(nextCoverage);
+				failureCounts.keySet().removeIf(key -> !isCovered(key));
+				forcedRetries.removeIf(key -> !isCovered(key));
+				failedAttempts.removeIf(failure -> !isCovered(failure.target()));
 				pending.clear();
-				queued.clear();
+				chunkStates.clearState(CHUNK_STATE_QUEUED);
 				pendingRegions.clear();
 				queuedRegions.clear();
 				boolean keepActive =
@@ -627,16 +626,6 @@ final class VoxygenGenerationService {
 			windowTaskScheduled = false;
 			windowTaskRunning = false;
 			windowFuture = null;
-		}
-
-		private static void addRegionChunks(Set<Long> destination, long region) {
-			int startX = ChunkPos.getX(region) << REGION_CHUNK_SHIFT;
-			int startZ = ChunkPos.getZ(region) << REGION_CHUNK_SHIFT;
-			for (int offsetZ = 0; offsetZ < REGION_CHUNK_SIZE; offsetZ++) {
-				for (int offsetX = 0; offsetX < REGION_CHUNK_SIZE; offsetX++) {
-					destination.add(ChunkPos.pack(startX + offsetX, startZ + offsetZ));
-				}
-			}
 		}
 
 		private void enqueueRegionChunks(long region) {
@@ -704,10 +693,10 @@ final class VoxygenGenerationService {
 
 		private void enqueueChunk(int chunkX, int chunkZ) {
 			long packed = ChunkPos.pack(chunkX, chunkZ);
-			if (coverage.contains(packed)
-					&& !finished.contains(packed)
-					&& !activeChunks.contains(packed)
-					&& queued.add(packed)) {
+			if (isCovered(packed)
+					&& !chunkStates.contains(packed, CHUNK_STATE_FINISHED)
+					&& !chunkStates.contains(packed, CHUNK_STATE_ACTIVE)
+					&& chunkStates.add(packed, CHUNK_STATE_QUEUED)) {
 				pending.addLast(packed);
 			}
 		}
@@ -720,6 +709,9 @@ final class VoxygenGenerationService {
 				}
 				if (activeRegion != NO_ACTIVE_REGION && recoverFailedAttempts()) {
 					return true;
+				}
+				if (activeRegion != NO_ACTIVE_REGION && context != null) {
+					context.archiveGenerationUnit(activeRegion);
 				}
 				activeRegion = NO_ACTIVE_REGION;
 				Long nextRegion;
@@ -753,6 +745,7 @@ final class VoxygenGenerationService {
 			if (currentContext == null || retiring) {
 				return;
 			}
+			currentContext.compactCompletedStageCaches();
 			boolean priority = priorityRegionCoverage.contains(nextRegion);
 			if (priority) {
 				if (!processingPriorityRegions || cachedPriorityCenter != priorityCenter) {
@@ -795,29 +788,36 @@ final class VoxygenGenerationService {
 			Set<Long> retryTargets = new HashSet<>();
 			FailedAttempt failure;
 			while ((failure = failedAttempts.pollFirst()) != null) {
-				accessed.addAll(failure.accessedChunks());
+				if (failure.invalidateAccessed()) {
+					accessed.addAll(failure.accessedChunks());
+				}
 				int failureCount = failureCounts.merge(failure.target(), 1, Integer::sum);
 				if (failureCount <= 2) {
 					retryTargets.add(failure.target());
+					forcedRetries.add(failure.target());
 				} else {
-					failedChunks.add(failure.target());
-					finished.add(failure.target());
+					forcedRetries.remove(failure.target());
+					chunkStates.add(failure.target(), CHUNK_STATE_FAILED);
+					chunkStates.add(failure.target(), CHUNK_STATE_FINISHED);
 				}
 			}
 			if (accessed.isEmpty() && retryTargets.isEmpty()) {
 				return false;
 			}
 
-			context.invalidateAccessed(accessed);
+			if (!accessed.isEmpty()) {
+				context.invalidateStructurePreparation(activeRegion);
+				context.invalidateAccessed(accessed);
+			}
 			for (long packed : accessed) {
 				if (isInRegion(packed, activeRegion)
-						&& coverage.contains(packed)
-						&& !failedChunks.contains(packed)) {
-					finished.remove(packed);
+						&& isCovered(packed)
+						&& !chunkStates.contains(packed, CHUNK_STATE_FAILED)) {
+					chunkStates.remove(packed, CHUNK_STATE_FINISHED);
 				}
 			}
 			for (long packed : retryTargets) {
-				finished.remove(packed);
+				chunkStates.remove(packed, CHUNK_STATE_FINISHED);
 			}
 			enqueueRegionChunks(activeRegion);
 			return !pending.isEmpty();
@@ -827,6 +827,18 @@ final class VoxygenGenerationService {
 			return Math.floorDiv(ChunkPos.getX(chunk), REGION_CHUNK_SIZE) == ChunkPos.getX(region)
 					&& Math.floorDiv(ChunkPos.getZ(chunk), REGION_CHUNK_SIZE)
 							== ChunkPos.getZ(region);
+		}
+
+		private boolean isCovered(long chunk) {
+			return regionCoverage.contains(ChunkStateTable.regionKey(chunk));
+		}
+
+		private int totalChunks() {
+			return regionCoverage.size() * REGION_CHUNK_SIZE * REGION_CHUNK_SIZE;
+		}
+
+		private int countState(int state) {
+			return chunkStates.count(regionCoverage, state);
 		}
 
 		private void pump() {
@@ -865,15 +877,21 @@ final class VoxygenGenerationService {
 				long packed = next.packed();
 				int chunkX = ChunkPos.getX(packed);
 				int chunkZ = ChunkPos.getZ(packed);
+				boolean forcedRetry = forcedRetries.contains(packed);
 
 				EXECUTOR.execute(
 						() -> {
 							boolean succeeded = false;
 							boolean abandoned = false;
+							boolean isolatedFailure = false;
 							Set<Long> accessed = context.beginAccessTracking();
 							try {
-								succeeded = generateOne(this, chunkX, chunkZ);
+								succeeded = generateOne(this, chunkX, chunkZ, forcedRetry);
 							} catch (Throwable throwable) {
+								if (throwable instanceof IsolatedTaskFailure isolated) {
+									isolatedFailure = true;
+									throwable = isolated.getCause();
+								}
 								if (throwable instanceof CancellationException
 										|| retiring
 										|| !engine.isLive()) {
@@ -891,14 +909,15 @@ final class VoxygenGenerationService {
 								}
 							} finally {
 								context.endAccessTracking(accessed);
-								activeChunks.remove(packed);
+								chunkStates.remove(packed, CHUNK_STATE_ACTIVE);
 								if (abandoned) {
 								} else if (succeeded) {
-									failedChunks.remove(packed);
+									forcedRetries.remove(packed);
+									chunkStates.remove(packed, CHUNK_STATE_FAILED);
 									failureCounts.remove(packed);
 									markFinished(packed);
 								} else {
-									handleFailure(next, accessed);
+									handleFailure(next, accessed, !isolatedFailure);
 								}
 								inFlight.decrementAndGet();
 							}
@@ -907,45 +926,176 @@ final class VoxygenGenerationService {
 		}
 
 		private ScheduledChunk pollNext() {
-			return poll(pending, queued);
+			return poll(pending);
 		}
 
-		private ScheduledChunk poll(ConcurrentLinkedDeque<Long> queue, Set<Long> membership) {
+		private ScheduledChunk poll(ConcurrentLinkedDeque<Long> queue) {
 			Long packed;
 			while ((packed = queue.pollFirst()) != null) {
 				if (packed == null) {
 					return null;
 				}
-				membership.remove(packed);
-				if (coverage.contains(packed)
-						&& !finished.contains(packed)
-						&& activeChunks.add(packed)) {
+				chunkStates.remove(packed, CHUNK_STATE_QUEUED);
+				if (isCovered(packed)
+						&& !chunkStates.contains(packed, CHUNK_STATE_FINISHED)
+						&& chunkStates.add(packed, CHUNK_STATE_ACTIVE)) {
 					return new ScheduledChunk(packed);
 				}
 			}
 			return null;
 		}
 
-		private void handleFailure(ScheduledChunk task, Set<Long> accessed) {
+		private void handleFailure(
+				ScheduledChunk task, Set<Long> accessed, boolean invalidateAccessed) {
 			long packed = task.packed();
-			if (retiring || !coverage.contains(packed)) {
+			if (retiring || !isCovered(packed)) {
 				return;
 			}
-			failedAttempts.addLast(new FailedAttempt(packed, Set.copyOf(accessed)));
+			failedAttempts.addLast(
+					new FailedAttempt(packed, Set.copyOf(accessed), invalidateAccessed));
 		}
 
 		private void markFinished(long packed) {
 			synchronized (coverageLock) {
-				if (coverage.contains(packed)) {
-					finished.add(packed);
+				if (isCovered(packed)) {
+					chunkStates.add(packed, CHUNK_STATE_FINISHED);
 				}
+			}
+		}
+	}
+
+	private static final class ChunkStateTable {
+		private final ConcurrentHashMap<Long, RegionChunkStates> regions =
+				new ConcurrentHashMap<>();
+
+		private static long regionKey(long chunk) {
+			return ChunkPos.pack(
+					Math.floorDiv(ChunkPos.getX(chunk), REGION_CHUNK_SIZE),
+					Math.floorDiv(ChunkPos.getZ(chunk), REGION_CHUNK_SIZE));
+		}
+
+		private static int index(long chunk) {
+			return (ChunkPos.getZ(chunk) & (REGION_CHUNK_SIZE - 1)) << REGION_CHUNK_SHIFT
+					| (ChunkPos.getX(chunk) & (REGION_CHUNK_SIZE - 1));
+		}
+
+		private void ensureRegions(Set<Long> regionKeys) {
+			for (long key : regionKeys) {
+				regions.computeIfAbsent(key, ignored -> new RegionChunkStates());
+			}
+		}
+
+		private void retainRegions(Set<Long> regionKeys) {
+			regions.keySet().retainAll(regionKeys);
+		}
+
+		private boolean contains(long chunk, int state) {
+			RegionChunkStates region = regions.get(regionKey(chunk));
+			return region != null && region.contains(index(chunk), state);
+		}
+
+		private boolean add(long chunk, int state) {
+			RegionChunkStates region = regions.get(regionKey(chunk));
+			return region != null && region.add(index(chunk), state);
+		}
+
+		private boolean remove(long chunk, int state) {
+			RegionChunkStates region = regions.get(regionKey(chunk));
+			return region != null && region.remove(index(chunk), state);
+		}
+
+		private void clearState(int state) {
+			for (RegionChunkStates region : regions.values()) {
+				region.clear(state);
+			}
+		}
+
+		private int count(Set<Long> regionKeys, int state) {
+			int total = 0;
+			for (long key : regionKeys) {
+				RegionChunkStates region = regions.get(key);
+				if (region != null) {
+					total += region.count(state);
+				}
+			}
+			return total;
+		}
+	}
+
+	private static final class RegionChunkStates {
+		private final byte[] states = new byte[REGION_CHUNK_SIZE * REGION_CHUNK_SIZE];
+		private int finished;
+		private int queued;
+		private int active;
+		private int failed;
+
+		private synchronized boolean contains(int index, int state) {
+			return (states[index] & state) != 0;
+		}
+
+		private synchronized boolean add(int index, int state) {
+			if ((states[index] & state) != 0) {
+				return false;
+			}
+			states[index] = (byte) (states[index] | state);
+			adjust(state, 1);
+			return true;
+		}
+
+		private synchronized boolean remove(int index, int state) {
+			if ((states[index] & state) == 0) {
+				return false;
+			}
+			states[index] = (byte) (states[index] & ~state);
+			adjust(state, -1);
+			return true;
+		}
+
+		private synchronized void clear(int state) {
+			if (count(state) == 0) {
+				return;
+			}
+			for (int index = 0; index < states.length; index++) {
+				states[index] = (byte) (states[index] & ~state);
+			}
+			setCount(state, 0);
+		}
+
+		private synchronized int count(int state) {
+			return switch (state) {
+				case CHUNK_STATE_FINISHED -> finished;
+				case CHUNK_STATE_QUEUED -> queued;
+				case CHUNK_STATE_ACTIVE -> active;
+				case CHUNK_STATE_FAILED -> failed;
+				default -> throw new IllegalArgumentException("Unknown chunk state " + state);
+			};
+		}
+
+		private void adjust(int state, int amount) {
+			setCount(state, count(state) + amount);
+		}
+
+		private void setCount(int state, int value) {
+			switch (state) {
+				case CHUNK_STATE_FINISHED -> finished = value;
+				case CHUNK_STATE_QUEUED -> queued = value;
+				case CHUNK_STATE_ACTIVE -> active = value;
+				case CHUNK_STATE_FAILED -> failed = value;
+				default -> throw new IllegalArgumentException("Unknown chunk state " + state);
 			}
 		}
 	}
 
 	private record ScheduledChunk(long packed) {}
 
-	private record FailedAttempt(long target, Set<Long> accessedChunks) {}
+	private record FailedAttempt(
+			long target, Set<Long> accessedChunks, boolean invalidateAccessed) {}
+
+	private static final class IsolatedTaskFailure extends RuntimeException {
+		private IsolatedTaskFailure(Throwable cause) {
+			super(cause);
+		}
+	}
 
 	private enum RegionTraversal {
 		CENTER,
@@ -955,51 +1105,40 @@ final class VoxygenGenerationService {
 		EAST
 	}
 
-	private static boolean generateOne(Session owner, int chunkX, int chunkZ) {
+	private static boolean generateOne(Session owner, int chunkX, int chunkZ, boolean forcedRetry) {
 		if (owner.retiring || !owner.engine.isLive()) {
 			throw new CancellationException("Voxygen world is no longer live");
 		}
-		if (hasVoxyData(owner.engine, owner.context.height, chunkX, chunkZ)) {
+		if (!forcedRetry && hasVoxyData(owner.engine, owner.context.height, chunkX, chunkZ)) {
 			owner.skippedVoxy.incrementAndGet();
 			return true;
 		}
 
+		owner.context.prepareStructureStartsForUnit(
+				ChunkStateTable.regionKey(ChunkPos.pack(chunkX, chunkZ)));
 		owner.context.prepareFull(chunkX, chunkZ);
 		GeneratedChunk generated = owner.context.generatePreparedFull(chunkX, chunkZ);
 		ProtoChunk chunk = generated.chunk();
 		owner.generatedChunks.incrementAndGet();
-		if (hasVoxyData(owner.engine, owner.context.height, chunkX, chunkZ)) {
+		if (!forcedRetry && hasVoxyData(owner.engine, owner.context.height, chunkX, chunkZ)) {
 			owner.skippedVoxy.incrementAndGet();
 			return true;
 		}
 
 		LevelLightEngine lightEngine = owner.context.light(chunkX, chunkZ);
-		List<VoxelizedSection> voxelized = voxelize(owner.engine, chunk, lightEngine);
-		if (voxelized.isEmpty()) {
+		int insertedSections = voxelizeAndInsert(owner.engine, chunk, lightEngine);
+		if (insertedSections == 0) {
 			owner.emptyChunks.incrementAndGet();
 			return true;
 		}
-		synchronized (owner.engine) {
-			if (hasVoxyData(owner.engine, owner.context.height, chunkX, chunkZ)) {
-				owner.skippedVoxy.incrementAndGet();
-				return true;
-			}
-			for (VoxelizedSection section : voxelized) {
-				WorldUpdater.insertUpdate(owner.engine, section);
-			}
-		}
 		owner.insertedChunks.incrementAndGet();
-		owner.insertedSections.addAndGet(voxelized.size());
-		if (!hasVoxyData(owner.engine, owner.context.height, chunkX, chunkZ)) {
-			owner.verificationFailures.incrementAndGet();
-			LOGGER.warn("Voxy data was not visible after inserting chunk [{}, {}]", chunkX, chunkZ);
-		}
+		owner.insertedSections.addAndGet(insertedSections);
 		return true;
 	}
 
-	private static List<VoxelizedSection> voxelize(
+	private static int voxelizeAndInsert(
 			WorldEngine engine, ProtoChunk chunk, LevelLightEngine lightEngine) {
-		List<VoxelizedSection> result = new ArrayList<>();
+		int inserted = 0;
 		Mapper mapper = engine.getMapper();
 		BlockPos.MutableBlockPos mutablePos = new BlockPos.MutableBlockPos();
 		var skyLight = lightEngine.getLayerListener(LightLayer.SKY);
@@ -1009,11 +1148,14 @@ final class VoxygenGenerationService {
 		LevelChunkSection[] sections = chunk.getSections();
 		for (int index = 0; index < sections.length; index++) {
 			LevelChunkSection section = sections[index];
-			if (section.hasOnlyAir()) {
-				continue;
-			}
 			int sectionY = chunk.getMinSectionY() + index;
 			int sectionBaseY = sectionY << 4;
+			SectionPos sectionPos = SectionPos.of(chunk.getPos(), sectionY);
+			DataLayer blockData = blockLight.getDataLayerData(sectionPos);
+			DataLayer skyData = skyLight.getDataLayerData(sectionPos);
+			if (section.hasOnlyAir() && (blockData == null || blockData.isEmpty())) {
+				continue;
+			}
 			VoxelizedSection voxelized =
 					WorldConversionFactory.convert(
 							VoxelizedSection.createEmpty()
@@ -1022,15 +1164,24 @@ final class VoxygenGenerationService {
 							section.getStates(),
 							section.getBiomes(),
 							(x, y, z) -> {
-								mutablePos.set(chunkBaseX + x, sectionBaseY + y, chunkBaseZ + z);
-								int sky = skyLight.getLightValue(mutablePos);
-								int block = blockLight.getLightValue(mutablePos);
+								int sky;
+								if (skyData != null) {
+									sky = skyData.get(x, y, z);
+								} else {
+									mutablePos.set(
+											chunkBaseX + x, sectionBaseY + y, chunkBaseZ + z);
+									sky = skyLight.getLightValue(mutablePos);
+								}
+								int block = blockData == null ? 0 : blockData.get(x, y, z);
 								return (byte) ((block << 4) | sky);
 							});
 			WorldVoxilizedSectionMipper.mipSection(voxelized, mapper);
-			result.add(voxelized);
+			synchronized (engine) {
+				WorldUpdater.insertUpdate(engine, voxelized);
+			}
+			inserted++;
 		}
-		return result;
+		return inserted;
 	}
 
 	private static boolean hasVoxyData(
@@ -1118,17 +1269,10 @@ final class VoxygenGenerationService {
 		private final ChunkGeneratorStructureState structureState;
 		private final LevelStorageSource.LevelStorageAccess storageAccess;
 		private final ConcurrentHashMap<Long, ProtoChunk> chunks = new ConcurrentHashMap<>();
-		private final ConcurrentHashMap<Long, CompletableFuture<ProtoChunk>> structureStarts =
+		private final ConcurrentHashMap<Long, GenerationStages> stageStates =
 				new ConcurrentHashMap<>();
-		private final ConcurrentHashMap<Long, CompletableFuture<ProtoChunk>> structureReferences =
-				new ConcurrentHashMap<>();
-		private final ConcurrentHashMap<Long, CompletableFuture<ProtoChunk>> biomes =
-				new ConcurrentHashMap<>();
-		private final ConcurrentHashMap<Long, CompletableFuture<ProtoChunk>> terrain =
-				new ConcurrentHashMap<>();
-		private final ConcurrentHashMap<Long, CompletableFuture<Void>> featurePreparations =
-				new ConcurrentHashMap<>();
-		private final ConcurrentHashMap<Long, CompletableFuture<ProtoChunk>> features =
+		private final ConcurrentHashMap<Long, UnitArchive> unitArchives = new ConcurrentHashMap<>();
+		private final ConcurrentHashMap<Long, StructureStartPreparation> structurePreparations =
 				new ConcurrentHashMap<>();
 		private final ThreadLocal<Set<Long>> accessTracking = new ThreadLocal<>();
 		private final ReentrantLock[] writeLocks = new ReentrantLock[4096];
@@ -1365,6 +1509,33 @@ final class VoxygenGenerationService {
 			}
 		}
 
+		private void prepareStructureStartsForUnit(long region) {
+			int dependencyRadius =
+					ChunkPyramid.GENERATION_PYRAMID
+									.getStepTo(ChunkStatus.FEATURES)
+									.directDependencies()
+									.size()
+							- 1;
+			StructureStartPreparation preparation =
+					structurePreparations.computeIfAbsent(
+							region,
+							ignored ->
+									new StructureStartPreparation(
+											(ChunkPos.getX(region) << REGION_CHUNK_SHIFT)
+													- dependencyRadius
+													- 1,
+											(ChunkPos.getZ(region) << REGION_CHUNK_SHIFT)
+													- dependencyRadius
+													- 1,
+											REGION_CHUNK_SIZE + ((dependencyRadius + 1) << 1)));
+			try {
+				preparation.prepare(this);
+			} catch (RuntimeException | Error throwable) {
+				structurePreparations.remove(region, preparation);
+				throw throwable;
+			}
+		}
+
 		private void prepareFull(int targetX, int targetZ) {
 			for (int z = targetZ - 1; z <= targetZ + 1; z++) {
 				for (int x = targetX - 1; x <= targetX + 1; x++) {
@@ -1386,12 +1557,19 @@ final class VoxygenGenerationService {
 
 		private ProtoChunk ensureStructureStarts(int x, int z) {
 			long key = ChunkPos.pack(x, z);
+			ProtoChunk completed = completedChunk(key, ChunkStatus.STRUCTURE_STARTS);
+			if (completed != null) {
+				return completed;
+			}
+			Map<Structure, StructureStart> archived = archivedStarts(x, z);
 			return ensure(
-					structureStarts,
+					GenerationStage.STRUCTURE_STARTS,
 					key,
 					() -> {
 						ProtoChunk chunk = chunk(x, z);
-						if (nativeContext != null) {
+						if (archived != null) {
+							chunk.setAllStarts(archived);
+						} else if (nativeContext != null) {
 							ChunkStep step =
 									ChunkPyramid.GENERATION_PYRAMID.getStepTo(
 											ChunkStatus.STRUCTURE_STARTS);
@@ -1427,11 +1605,21 @@ final class VoxygenGenerationService {
 
 		private ProtoChunk ensureBiomes(int x, int z) {
 			long key = ChunkPos.pack(x, z);
+			ProtoChunk completed = completedChunk(key, ChunkStatus.BIOMES);
+			if (completed != null) {
+				return completed;
+			}
+			BiomeSnapshot archived = archivedBiomes(x, z);
 			return ensure(
-					biomes,
+					GenerationStage.BIOMES,
 					key,
 					() -> {
 						ProtoChunk chunk = ensureStructureReferences(x, z);
+						if (archived != null) {
+							archived.restore(chunk);
+							chunk.setPersistedStatus(ChunkStatus.BIOMES);
+							return chunk;
+						}
 						if (nativeContext != null) {
 							ChunkStep step =
 									ChunkPyramid.GENERATION_PYRAMID.getStepTo(ChunkStatus.BIOMES);
@@ -1450,10 +1638,21 @@ final class VoxygenGenerationService {
 
 		private ProtoChunk ensureStructureReferences(int x, int z) {
 			long key = ChunkPos.pack(x, z);
+			ProtoChunk completed = completedChunk(key, ChunkStatus.STRUCTURE_REFERENCES);
+			if (completed != null) {
+				return completed;
+			}
+			Map<Structure, LongSet> archived = archivedReferences(x, z);
 			return ensure(
-					structureReferences,
+					GenerationStage.STRUCTURE_REFERENCES,
 					key,
 					() -> {
+						if (archived != null) {
+							ProtoChunk chunk = ensureStructureStarts(x, z);
+							chunk.setAllReferences(copyStructureReferences(archived));
+							chunk.setPersistedStatus(ChunkStatus.STRUCTURE_REFERENCES);
+							return chunk;
+						}
 						ChunkStep step =
 								ChunkPyramid.GENERATION_PYRAMID.getStepTo(
 										ChunkStatus.STRUCTURE_REFERENCES);
@@ -1484,8 +1683,12 @@ final class VoxygenGenerationService {
 
 		private ProtoChunk ensureTerrain(int x, int z) {
 			long key = ChunkPos.pack(x, z);
+			ProtoChunk completed = completedChunk(key, ChunkStatus.TERRAIN);
+			if (completed != null) {
+				return completed;
+			}
 			return ensure(
-					terrain,
+					GenerationStage.TERRAIN,
 					key,
 					() -> {
 						for (int biomeZ = z - 1; biomeZ <= z + 1; biomeZ++) {
@@ -1527,63 +1730,63 @@ final class VoxygenGenerationService {
 
 		private ProtoChunk ensureFeatures(int x, int z) {
 			long key = ChunkPos.pack(x, z);
+			ProtoChunk completed = completedChunk(key, ChunkStatus.FEATURES);
+			if (completed != null) {
+				return completed;
+			}
 			return ensure(
-					features,
+					GenerationStage.FEATURES,
 					key,
 					() -> {
 						prepareFeatureDependenciesOnce(x, z);
 						List<ReentrantLock> locks = lockArea(x, z, 1);
 						try {
 							ProtoChunk chunk = chunks.get(key);
-							if (nativeContext != null) {
-								List<ChunkSnapshot> snapshots = snapshotArea(x, z, 1);
-								try {
-									ChunkStep step =
-											ChunkPyramid.GENERATION_PYRAMID.getStepTo(
-													ChunkStatus.FEATURES);
-									WorldgenSeedContext.run(
-											seed,
-											structureTemplates,
-											generator,
-											() ->
-													ChunkStatusTasks.generateFeatures(
-																	nativeContext,
-																	step,
-																	nativeCache(x, z, step),
-																	chunk)
-															.join());
-								} catch (RuntimeException | Error throwable) {
-									for (ChunkSnapshot snapshot : snapshots) {
-										try {
-											snapshot.restore();
-										} catch (RuntimeException | Error rollbackFailure) {
-											throwable.addSuppressed(rollbackFailure);
-										}
-									}
-									throw throwable;
-								}
-							} else {
-								ChunkTransaction transaction = localWorld.beginTransaction();
+							ChunkTransaction transaction = localWorld.beginTransaction();
+							try {
 								try {
 									ProtoChunk workingChunk = transaction.shadow(chunk);
-									localWorld.runInGenerationRegion(
-											x,
-											z,
-											() ->
-													WorldgenSeedContext.run(
-															seed,
-															structureTemplates,
-															structureGenerator,
-															() ->
-																	structureGenerator
-																			.applyBiomeDecoration(
-																					world,
-																					workingChunk,
-																					structures)));
-									transaction.commit();
-								} finally {
-									localWorld.endTransaction(transaction);
+									if (nativeContext != null) {
+										ChunkStep step =
+												ChunkPyramid.GENERATION_PYRAMID.getStepTo(
+														ChunkStatus.FEATURES);
+										WorldgenSeedContext.run(
+												seed,
+												structureTemplates,
+												generator,
+												() ->
+														ChunkStatusTasks.generateFeatures(
+																		nativeContext,
+																		step,
+																		nativeCache(
+																				x,
+																				z,
+																				step,
+																				transaction),
+																		workingChunk)
+																.join());
+									} else {
+										localWorld.runInGenerationRegion(
+												x,
+												z,
+												() ->
+														WorldgenSeedContext.run(
+																seed,
+																structureTemplates,
+																structureGenerator,
+																() ->
+																		structureGenerator
+																				.applyBiomeDecoration(
+																						world,
+																						workingChunk,
+																						structures)));
+									}
+								} catch (RuntimeException | Error throwable) {
+									throw new IsolatedTaskFailure(throwable);
 								}
+								transaction.commit();
+							} finally {
+								localWorld.endTransaction(transaction);
 							}
 							chunk.setPersistedStatus(ChunkStatus.FEATURES);
 							return chunk;
@@ -1599,30 +1802,27 @@ final class VoxygenGenerationService {
 					ensureTerrain(neighborX, neighborZ);
 				}
 			}
-			int dependencyRadius =
-					ChunkPyramid.GENERATION_PYRAMID
-									.getStepTo(ChunkStatus.FEATURES)
-									.directDependencies()
-									.size()
-							- 1;
-			for (int startZ = z - dependencyRadius; startZ <= z + dependencyRadius; startZ++) {
-				for (int startX = x - dependencyRadius; startX <= x + dependencyRadius; startX++) {
-					ensureStructureStarts(startX, startZ);
-				}
-			}
 		}
 
 		private void prepareFeatureDependenciesOnce(int x, int z) {
 			long key = ChunkPos.pack(x, z);
-			CompletableFuture<Void> existing = featurePreparations.get(key);
-			if (existing != null) {
-				existing.join();
+			if (completedChunk(key, ChunkStatus.FEATURES) != null) {
 				return;
 			}
-
-			CompletableFuture<Void> created = new CompletableFuture<>();
-			existing = featurePreparations.putIfAbsent(key, created);
-			if (existing != null) {
+			GenerationStages stages =
+					stageStates.computeIfAbsent(key, ignored -> new GenerationStages());
+			CompletableFuture<Void> existing;
+			CompletableFuture<Void> created;
+			synchronized (stages) {
+				existing = stages.featurePreparation;
+				if (existing != null) {
+					created = null;
+				} else {
+					created = new CompletableFuture<>();
+					stages.featurePreparation = created;
+				}
+			}
+			if (created == null) {
 				existing.join();
 				return;
 			}
@@ -1630,7 +1830,11 @@ final class VoxygenGenerationService {
 				prepareFeatureDependencies(x, z);
 				created.complete(null);
 			} catch (Throwable throwable) {
-				featurePreparations.remove(key, created);
+				synchronized (stages) {
+					if (stages.featurePreparation == created) {
+						stages.featurePreparation = null;
+					}
+				}
 				created.completeExceptionally(throwable);
 				throw throwable;
 			}
@@ -1638,12 +1842,24 @@ final class VoxygenGenerationService {
 
 		private StaticCache2D<GenerationChunkHolder> nativeCache(
 				int centerX, int centerZ, ChunkStep step) {
+			return nativeCache(centerX, centerZ, step, null);
+		}
+
+		private StaticCache2D<GenerationChunkHolder> nativeCache(
+				int centerX, int centerZ, ChunkStep step, ChunkTransaction transaction) {
 			int radius = step.directDependencies().size() - 1;
 			return StaticCache2D.create(
 					centerX,
 					centerZ,
 					radius,
-					(x, z) -> new VirtualGenerationChunkHolder(chunks.get(ChunkPos.pack(x, z))));
+					(x, z) -> {
+						ProtoChunk chunk = chunks.get(ChunkPos.pack(x, z));
+						boolean writable = Math.abs(x - centerX) <= 1 && Math.abs(z - centerZ) <= 1;
+						return new VirtualGenerationChunkHolder(
+								transaction == null || !writable
+										? chunk
+										: transaction.shadow(chunk));
+					});
 		}
 
 		private LevelLightEngine light(int x, int z) {
@@ -1704,6 +1920,82 @@ final class VoxygenGenerationService {
 					});
 		}
 
+		private void archiveGenerationUnit(long region) {
+			int startX = ChunkPos.getX(region) << REGION_CHUNK_SHIFT;
+			int startZ = ChunkPos.getZ(region) << REGION_CHUNK_SHIFT;
+			UnitArchive archive = new UnitArchive();
+			List<Long> discard = new ArrayList<>();
+			for (int offsetZ = 0; offsetZ < REGION_CHUNK_SIZE; offsetZ++) {
+				for (int offsetX = 0; offsetX < REGION_CHUNK_SIZE; offsetX++) {
+					long key = ChunkPos.pack(startX + offsetX, startZ + offsetZ);
+					ProtoChunk chunk = chunks.get(key);
+					if (chunk == null) {
+						continue;
+					}
+					int index = UnitArchive.index(offsetX, offsetZ);
+					ChunkStatus status = chunk.getPersistedStatus();
+					if (!status.isBefore(ChunkStatus.STRUCTURE_STARTS)) {
+						archive.starts[index] = Map.copyOf(chunk.getAllStarts());
+					}
+					chunk.setLightEngine(null);
+					chunk.setLightCorrect(false);
+					int edgeDistance =
+							Math.min(
+									Math.min(offsetX, REGION_CHUNK_SIZE - 1 - offsetX),
+									Math.min(offsetZ, REGION_CHUNK_SIZE - 1 - offsetZ));
+					if (edgeDistance == 2 && !status.isBefore(ChunkStatus.BIOMES)) {
+						archive.biomes[index] = BiomeSnapshot.capture(chunk);
+						archive.references[index] =
+								copyStructureReferences(chunk.getAllReferences());
+					}
+					if (edgeDistance >= 2) {
+						discard.add(key);
+					}
+				}
+			}
+			unitArchives.put(region, archive);
+			structurePreparations.remove(region);
+			for (long key : discard) {
+				evict(key);
+			}
+		}
+
+		private Map<Structure, StructureStart> archivedStarts(int x, int z) {
+			UnitArchive archive =
+					unitArchives.get(
+							ChunkPos.pack(
+									Math.floorDiv(x, REGION_CHUNK_SIZE),
+									Math.floorDiv(z, REGION_CHUNK_SIZE)));
+			return archive == null ? null : archive.starts[UnitArchive.index(x, z)];
+		}
+
+		private BiomeSnapshot archivedBiomes(int x, int z) {
+			UnitArchive archive =
+					unitArchives.get(
+							ChunkPos.pack(
+									Math.floorDiv(x, REGION_CHUNK_SIZE),
+									Math.floorDiv(z, REGION_CHUNK_SIZE)));
+			return archive == null ? null : archive.biomes[UnitArchive.index(x, z)];
+		}
+
+		private Map<Structure, LongSet> archivedReferences(int x, int z) {
+			UnitArchive archive =
+					unitArchives.get(
+							ChunkPos.pack(
+									Math.floorDiv(x, REGION_CHUNK_SIZE),
+									Math.floorDiv(z, REGION_CHUNK_SIZE)));
+			return archive == null ? null : archive.references[UnitArchive.index(x, z)];
+		}
+
+		private static Map<Structure, LongSet> copyStructureReferences(
+				Map<Structure, LongSet> source) {
+			Map<Structure, LongSet> copy = new HashMap<>(source.size());
+			for (Map.Entry<Structure, LongSet> entry : source.entrySet()) {
+				copy.put(entry.getKey(), new LongOpenHashSet(entry.getValue()));
+			}
+			return copy;
+		}
+
 		private void evictRegionRings(int centerX, int centerZ, int firstRadius, int lastRadius) {
 			for (int distance = Math.max(0, firstRadius); distance <= lastRadius; distance++) {
 				if (distance == 0) {
@@ -1726,6 +2018,9 @@ final class VoxygenGenerationService {
 		}
 
 		private void evictRegion(int regionX, int regionZ) {
+			long region = ChunkPos.pack(regionX, regionZ);
+			unitArchives.remove(region);
+			structurePreparations.remove(region);
 			int startX = regionX << REGION_CHUNK_SHIFT;
 			int startZ = regionZ << REGION_CHUNK_SHIFT;
 			for (int offsetZ = 0; offsetZ < REGION_CHUNK_SIZE; offsetZ++) {
@@ -1735,13 +2030,36 @@ final class VoxygenGenerationService {
 			}
 		}
 
+		private void compactCompletedStageCaches() {
+			for (Map.Entry<Long, GenerationStages> entry : stageStates.entrySet()) {
+				long key = entry.getKey();
+				GenerationStages stages = entry.getValue();
+				synchronized (stages) {
+					for (GenerationStage stage : GenerationStage.values()) {
+						CompletableFuture<ProtoChunk> future = stages.get(stage);
+						if (future != null
+								&& completedSuccessfully(future)
+								&& completedChunk(key, stage.status) != null) {
+							stages.set(stage, null);
+						}
+					}
+					if (stages.featurePreparation != null
+							&& completedSuccessfully(stages.featurePreparation)
+							&& completedChunk(key, ChunkStatus.FEATURES) != null) {
+						stages.featurePreparation = null;
+					}
+				}
+			}
+		}
+
+		private static boolean completedSuccessfully(CompletableFuture<?> future) {
+			return future.isDone() && !future.isCompletedExceptionally() && !future.isCancelled();
+		}
+
 		private void clearGenerationCache() {
-			features.clear();
-			featurePreparations.clear();
-			terrain.clear();
-			biomes.clear();
-			structureReferences.clear();
-			structureStarts.clear();
+			stageStates.clear();
+			unitArchives.clear();
+			structurePreparations.clear();
 			for (ProtoChunk chunk : chunks.values()) {
 				VoxygenWorldgenRules.unregisterChunk(chunk);
 			}
@@ -1749,12 +2067,7 @@ final class VoxygenGenerationService {
 		}
 
 		private void evict(long key) {
-			features.remove(key);
-			featurePreparations.remove(key);
-			terrain.remove(key);
-			biomes.remove(key);
-			structureReferences.remove(key);
-			structureStarts.remove(key);
+			stageStates.remove(key);
 			VoxygenWorldgenRules.unregisterChunk(chunks.remove(key));
 		}
 
@@ -1782,26 +2095,34 @@ final class VoxygenGenerationService {
 			}
 		}
 
+		private void invalidateStructurePreparation(long region) {
+			structurePreparations.remove(region);
+		}
+
 		private void invalidateAccessed(Set<Long> accessed) {
 			for (long key : accessed) {
 				evict(key);
 			}
 		}
 
-		private ProtoChunk ensure(
-				ConcurrentHashMap<Long, CompletableFuture<ProtoChunk>> stages,
-				long key,
-				ChunkOperation operation) {
+		private ProtoChunk ensure(GenerationStage stage, long key, ChunkOperation operation) {
 			if (cancelled) {
 				throw new CancellationException("Voxygen session was retired");
 			}
 			recordAccess(key);
-			CompletableFuture<ProtoChunk> existing = stages.get(key);
-			if (existing != null) {
-				return existing.join();
+			GenerationStages stages =
+					stageStates.computeIfAbsent(key, ignored -> new GenerationStages());
+			CompletableFuture<ProtoChunk> existing;
+			CompletableFuture<ProtoChunk> created;
+			synchronized (stages) {
+				existing = stages.get(stage);
+				if (existing == null) {
+					created = new CompletableFuture<>();
+					stages.set(stage, created);
+				} else {
+					created = null;
+				}
 			}
-			CompletableFuture<ProtoChunk> created = new CompletableFuture<>();
-			existing = stages.putIfAbsent(key, created);
 			if (existing != null) {
 				return existing.join();
 			}
@@ -1810,10 +2131,19 @@ final class VoxygenGenerationService {
 				created.complete(result);
 				return result;
 			} catch (Throwable throwable) {
-				stages.remove(key, created);
+				synchronized (stages) {
+					if (stages.get(stage) == created) {
+						stages.set(stage, null);
+					}
+				}
 				created.completeExceptionally(throwable);
 				throw throwable;
 			}
+		}
+
+		private ProtoChunk completedChunk(long key, ChunkStatus status) {
+			ProtoChunk chunk = chunks.get(key);
+			return chunk != null && !chunk.getPersistedStatus().isBefore(status) ? chunk : null;
 		}
 
 		private List<ReentrantLock> lockArea(int centerX, int centerZ, int radius) {
@@ -1832,19 +2162,6 @@ final class VoxygenGenerationService {
 			return result;
 		}
 
-		private List<ChunkSnapshot> snapshotArea(int centerX, int centerZ, int radius) {
-			List<ChunkSnapshot> snapshots = new ArrayList<>();
-			for (int z = centerZ - radius; z <= centerZ + radius; z++) {
-				for (int x = centerX - radius; x <= centerX + radius; x++) {
-					ProtoChunk chunk = chunks.get(ChunkPos.pack(x, z));
-					if (chunk != null) {
-						snapshots.add(ChunkSnapshot.capture(chunk));
-					}
-				}
-			}
-			return snapshots;
-		}
-
 		private static void unlock(List<ReentrantLock> locks) {
 			for (int index = locks.size() - 1; index >= 0; index--) {
 				locks.get(index).unlock();
@@ -1860,6 +2177,7 @@ final class VoxygenGenerationService {
 				return;
 			}
 			closed = true;
+			clearGenerationCache();
 			if (storageAccess != null) {
 				try {
 					storageAccess.close();
@@ -1868,75 +2186,126 @@ final class VoxygenGenerationService {
 				}
 			}
 		}
+	}
 
-		private record ChunkSnapshot(
-				ProtoChunk chunk,
-				LevelChunkSection[] sections,
-				Map<Heightmap.Types, long[]> heightmaps,
-				Map<BlockPos, BlockEntity> blockEntities,
-				Map<BlockPos, CompoundTag> pendingBlockEntities,
-				ShortList[] postProcessing) {
-			private static ChunkSnapshot capture(ProtoChunk chunk) {
-				LevelChunkSection[] originalSections = chunk.getSections();
-				LevelChunkSection[] sections = new LevelChunkSection[originalSections.length];
-				for (int index = 0; index < originalSections.length; index++) {
-					sections[index] = copySection(originalSections[index]);
-				}
+	private enum GenerationStage {
+		STRUCTURE_STARTS(ChunkStatus.STRUCTURE_STARTS),
+		STRUCTURE_REFERENCES(ChunkStatus.STRUCTURE_REFERENCES),
+		BIOMES(ChunkStatus.BIOMES),
+		TERRAIN(ChunkStatus.TERRAIN),
+		FEATURES(ChunkStatus.FEATURES);
 
-				Map<Heightmap.Types, long[]> heightmaps = new HashMap<>();
-				for (Map.Entry<Heightmap.Types, Heightmap> entry : chunk.getHeightmaps()) {
-					heightmaps.put(entry.getKey(), entry.getValue().getRawData().clone());
-				}
+		private final ChunkStatus status;
 
-				Map<BlockPos, BlockEntity> blockEntities = new HashMap<>(chunk.getBlockEntities());
-				Map<BlockPos, CompoundTag> pendingBlockEntities = new HashMap<>();
-				for (Map.Entry<BlockPos, CompoundTag> entry :
-						chunk.getBlockEntityNbts().entrySet()) {
-					pendingBlockEntities.put(entry.getKey(), entry.getValue().copy());
-				}
+		GenerationStage(ChunkStatus status) {
+			this.status = status;
+		}
+	}
 
-				ShortList[] sourcePostProcessing = chunk.getPostProcessing();
-				ShortList[] postProcessing = new ShortList[sourcePostProcessing.length];
-				for (int index = 0; index < sourcePostProcessing.length; index++) {
-					ShortList positions = sourcePostProcessing[index];
-					postProcessing[index] =
-							positions == null ? null : new ShortArrayList(positions);
-				}
-				return new ChunkSnapshot(
-						chunk,
-						sections,
-						heightmaps,
-						blockEntities,
-						pendingBlockEntities,
-						postProcessing);
+	private static final class GenerationStages {
+		private CompletableFuture<ProtoChunk> structureStarts;
+		private CompletableFuture<ProtoChunk> structureReferences;
+		private CompletableFuture<ProtoChunk> biomes;
+		private CompletableFuture<ProtoChunk> terrain;
+		private CompletableFuture<ProtoChunk> features;
+		private CompletableFuture<Void> featurePreparation;
+
+		private CompletableFuture<ProtoChunk> get(GenerationStage stage) {
+			return switch (stage) {
+				case STRUCTURE_STARTS -> structureStarts;
+				case STRUCTURE_REFERENCES -> structureReferences;
+				case BIOMES -> biomes;
+				case TERRAIN -> terrain;
+				case FEATURES -> features;
+			};
+		}
+
+		private void set(GenerationStage stage, CompletableFuture<ProtoChunk> future) {
+			switch (stage) {
+				case STRUCTURE_STARTS -> structureStarts = future;
+				case STRUCTURE_REFERENCES -> structureReferences = future;
+				case BIOMES -> biomes = future;
+				case TERRAIN -> terrain = future;
+				case FEATURES -> features = future;
 			}
+		}
+	}
 
-			private void restore() {
-				System.arraycopy(sections, 0, chunk.getSections(), 0, sections.length);
-				for (Map.Entry<Heightmap.Types, long[]> entry : heightmaps.entrySet()) {
-					chunk.setHeightmap(entry.getKey(), entry.getValue().clone());
-				}
+	private static final class UnitArchive {
+		@SuppressWarnings("unchecked")
+		private final Map<Structure, StructureStart>[] starts =
+				(Map<Structure, StructureStart>[])
+						new Map<?, ?>[REGION_CHUNK_SIZE * REGION_CHUNK_SIZE];
 
-				for (BlockPos pos : new ArrayList<>(chunk.getBlockEntitiesPos())) {
-					chunk.removeBlockEntity(pos);
-				}
-				for (Map.Entry<BlockPos, BlockEntity> entry : blockEntities.entrySet()) {
-					BlockEntity blockEntity = entry.getValue();
-					blockEntity.setBlockState(chunk.getBlockState(entry.getKey()));
-					chunk.setBlockEntity(blockEntity);
-				}
+		@SuppressWarnings("unchecked")
+		private final Map<Structure, LongSet>[] references =
+				(Map<Structure, LongSet>[]) new Map<?, ?>[REGION_CHUNK_SIZE * REGION_CHUNK_SIZE];
 
-				for (Map.Entry<BlockPos, CompoundTag> entry : pendingBlockEntities.entrySet()) {
-					chunk.setBlockEntityNbt(entry.getValue().copy());
-				}
+		private final BiomeSnapshot[] biomes =
+				new BiomeSnapshot[REGION_CHUNK_SIZE * REGION_CHUNK_SIZE];
 
-				ShortList[] currentPostProcessing = chunk.getPostProcessing();
-				for (int index = 0; index < currentPostProcessing.length; index++) {
-					currentPostProcessing[index] =
-							postProcessing[index] == null
-									? null
-									: new ShortArrayList(postProcessing[index]);
+		private static int index(int x, int z) {
+			return (z & (REGION_CHUNK_SIZE - 1)) << REGION_CHUNK_SHIFT
+					| (x & (REGION_CHUNK_SIZE - 1));
+		}
+	}
+
+	private static final class StructureStartPreparation {
+		private final int startX;
+		private final int startZ;
+		private final int size;
+		private final int total;
+		private final AtomicInteger next = new AtomicInteger();
+		private final AtomicInteger remaining;
+		private final CompletableFuture<Void> completion = new CompletableFuture<>();
+
+		private StructureStartPreparation(int startX, int startZ, int size) {
+			this.startX = startX;
+			this.startZ = startZ;
+			this.size = size;
+			this.total = size * size;
+			this.remaining = new AtomicInteger(total);
+		}
+
+		private void prepare(GenerationContext context) {
+			if (!completion.isDone()) {
+				try {
+					int index;
+					while (!completion.isDone() && (index = next.getAndIncrement()) < total) {
+						context.ensureStructureStarts(startX + index % size, startZ + index / size);
+						if (remaining.decrementAndGet() == 0) {
+							completion.complete(null);
+						}
+					}
+				} catch (RuntimeException | Error throwable) {
+					completion.completeExceptionally(throwable);
+					throw throwable;
 				}
+			}
+			completion.join();
+		}
+	}
+
+	private record BiomeSnapshot(PalettedContainer<Holder<Biome>>[] sections) {
+		@SuppressWarnings("unchecked")
+		private static BiomeSnapshot capture(ProtoChunk chunk) {
+			LevelChunkSection[] source = chunk.getSections();
+			PalettedContainer<Holder<Biome>>[] sections =
+					(PalettedContainer<Holder<Biome>>[]) new PalettedContainer<?>[source.length];
+			for (int index = 0; index < source.length; index++) {
+				sections[index] = source[index].getBiomes().copy();
+			}
+			return new BiomeSnapshot(sections);
+		}
+
+		private void restore(ProtoChunk chunk) {
+			LevelChunkSection[] target = chunk.getSections();
+			if (target.length != sections.length) {
+				throw new IllegalStateException("Archived biome section count changed");
+			}
+			for (int index = 0; index < target.length; index++) {
+				target[index] =
+						new LevelChunkSection(target[index].getStates(), sections[index].copy());
 			}
 		}
 	}
@@ -1966,6 +2335,15 @@ final class VoxygenGenerationService {
 					ignored -> new TransactionalProtoChunk(context, original));
 		}
 
+		private ProtoChunk view(ProtoChunk original) {
+			if (original == null) {
+				return null;
+			}
+			TransactionalProtoChunk shadow =
+					shadows.get(ChunkPos.pack(original.getPos().x(), original.getPos().z()));
+			return shadow == null ? original : shadow;
+		}
+
 		private void commit() {
 			if (committed) {
 				throw new IllegalStateException("Chunk transaction was already committed");
@@ -1980,6 +2358,8 @@ final class VoxygenGenerationService {
 	private static final class TransactionalProtoChunk extends ProtoChunk {
 		private final ProtoChunk original;
 		private final boolean[] ownedSections;
+		private boolean initializing = true;
+		private boolean metadataDirty;
 
 		private TransactionalProtoChunk(GenerationContext context, ProtoChunk original) {
 			super(original.getPos(), UpgradeData.EMPTY, context.height, context.containers, null);
@@ -2004,6 +2384,11 @@ final class VoxygenGenerationService {
 								context.registries);
 				if (clone != null) {
 					setBlockEntity(clone);
+				} else {
+					throw new IllegalStateException(
+							"Cannot clone block entity at "
+									+ position
+									+ " for feature transaction");
 				}
 			}
 			for (Map.Entry<BlockPos, CompoundTag> entry :
@@ -2020,6 +2405,7 @@ final class VoxygenGenerationService {
 			setPersistedStatus(original.getPersistedStatus());
 			setBelowZeroRetrogen(original.getBelowZeroRetrogen());
 			setLightCorrect(original.isLightCorrect());
+			initializing = false;
 		}
 
 		@Override
@@ -2028,8 +2414,59 @@ final class VoxygenGenerationService {
 			return super.setBlockState(position, state, flags);
 		}
 
+		@Override
+		public LevelChunkSection getSection(int index) {
+			ownSection(index);
+			return super.getSection(index);
+		}
+
+		@Override
+		public LevelChunkSection[] getSections() {
+			if (ownedSections != null) {
+				for (int index = 0; index < ownedSections.length; index++) {
+					ownSection(index);
+				}
+			}
+			return super.getSections();
+		}
+
+		@Override
+		public BlockEntity getBlockEntity(BlockPos position) {
+			if (!initializing) {
+				metadataDirty = true;
+			}
+			return super.getBlockEntity(position);
+		}
+
+		@Override
+		public void setBlockEntity(BlockEntity blockEntity) {
+			if (!initializing) {
+				metadataDirty = true;
+			}
+			super.setBlockEntity(blockEntity);
+		}
+
+		@Override
+		public void removeBlockEntity(BlockPos position) {
+			if (!initializing) {
+				metadataDirty = true;
+			}
+			super.removeBlockEntity(position);
+		}
+
+		@Override
+		public void setBlockEntityNbt(CompoundTag tag) {
+			if (!initializing) {
+				metadataDirty = true;
+			}
+			super.setBlockEntityNbt(tag);
+		}
+
 		private void ownSection(int index) {
-			if (index < 0 || index >= ownedSections.length || ownedSections[index]) {
+			if (ownedSections == null
+					|| index < 0
+					|| index >= ownedSections.length
+					|| ownedSections[index]) {
 				return;
 			}
 			super.getSections()[index] = copySection(super.getSections()[index]);
@@ -2037,6 +2474,13 @@ final class VoxygenGenerationService {
 		}
 
 		private void commit() {
+			boolean sectionDirty = false;
+			for (boolean owned : ownedSections) {
+				sectionDirty |= owned;
+			}
+			if (!sectionDirty && !metadataDirty) {
+				return;
+			}
 			LevelChunkSection[] sourceSections = super.getSections();
 			LevelChunkSection[] targetSections = original.getSections();
 			for (int index = 0; index < ownedSections.length; index++) {
@@ -2294,7 +2738,7 @@ final class VoxygenGenerationService {
 				throw new IllegalArgumentException(
 						"Unsupported getHeight overload: " + method.toGenericString());
 			}
-			ChunkAccess chunk = chunkAt(x >> 4, z >> 4);
+			ChunkAccess chunk = viewChunkAt(x >> 4, z >> 4);
 			return chunk == null
 					? context.height.getMinY()
 					: chunk.getHeight(type, x & 15, z & 15) + 1;
@@ -2308,15 +2752,26 @@ final class VoxygenGenerationService {
 		}
 
 		private ProtoChunk chunkAt(int x, int z) {
+			return chunkAt(x, z, true);
+		}
+
+		private ProtoChunk viewChunkAt(int x, int z) {
+			return chunkAt(x, z, false);
+		}
+
+		private ProtoChunk chunkAt(int x, int z, boolean writable) {
 			long key = ChunkPos.pack(x, z);
 			context.recordAccess(key);
 			ProtoChunk chunk = chunks.get(key);
 			ChunkTransaction active = transaction.get();
-			return active == null ? chunk : active.shadow(chunk);
+			if (active == null) {
+				return chunk;
+			}
+			return writable ? active.shadow(chunk) : active.view(chunk);
 		}
 
 		private BlockState getBlockState(BlockPos pos) {
-			ProtoChunk chunk = chunkAt(pos.getX() >> 4, pos.getZ() >> 4);
+			ProtoChunk chunk = viewChunkAt(pos.getX() >> 4, pos.getZ() >> 4);
 			return chunk == null || !context.height.isInsideBuildHeight(pos)
 					? Blocks.VOID_AIR.defaultBlockState()
 					: chunk.getBlockState(pos);
@@ -2374,7 +2829,7 @@ final class VoxygenGenerationService {
 			int quartX = (int) args[0];
 			int quartY = (int) args[1];
 			int quartZ = (int) args[2];
-			ProtoChunk chunk = chunkAt(Math.floorDiv(quartX, 4), Math.floorDiv(quartZ, 4));
+			ProtoChunk chunk = viewChunkAt(Math.floorDiv(quartX, 4), Math.floorDiv(quartZ, 4));
 			if (chunk != null) {
 				return chunk.getNoiseBiome(quartX, quartY, quartZ);
 			}

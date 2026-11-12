@@ -65,7 +65,11 @@ public final class VoxygenWorldgenRules {
 					"minecraft:spore_blossom",
 					"minecraft:classic_vines_cave_feature");
 	private static final Set<String> DISABLED_PLACED_FEATURES =
-			Set.of("minecraft:lake_lava_underground");
+			Set.of(
+					"minecraft:lake_lava_underground",
+					"minecraft:spring_water",
+					"minecraft:spring_lava",
+					"minecraft:spring_lava_frozen");
 	private static final Map<ChunkAccess, ResourceKey<Level>> VIRTUAL_CHUNKS =
 			new ConcurrentHashMap<>();
 
