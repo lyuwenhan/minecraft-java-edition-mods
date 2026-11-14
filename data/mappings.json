@@ -228,13 +228,11 @@
 				"26.3": "1.2.0"
 			}
 		},
-		"seedgen": {
+		"voxygen": {
 			"hasIcon": true,
-			"displayName": "Seedgen",
+			"displayName": "Voxygen",
 			"description": "Generates missing vanilla chunks into Voxy using per-server seeds and client-side commands.",
-			"versions": {
-				"26.3": "1.2.10"
-			}
+			"versions": {}
 		},
 		"who-i-am": {
 			"hasIcon": true,
@@ -862,50 +860,6 @@
 		"9e14e4973242e2bc8229791f4daf46e21afaa107": {
 			"id": "shared-player-data",
 			"version": "1.2.0"
-		},
-		"fe35365ba4a7991ccc12a9dd711756eecbc55cb6": {
-			"id": "voxygen",
-			"version": "1.2.0"
-		},
-		"63e17f0acf76acf1fd1206ba8df511bd7ece3591": {
-			"id": "voxygen",
-			"version": "1.2.1"
-		},
-		"08da205b2b864b90efac5f9c4621302b118d9f42": {
-			"id": "voxygen",
-			"version": "1.2.2"
-		},
-		"d1542244cace5373fcf5f052f3bc42c4e9b37616": {
-			"id": "voxygen",
-			"version": "1.2.3"
-		},
-		"29fce84b412d48c817fdcf812732f35680ce2ab6": {
-			"id": "voxygen",
-			"version": "1.2.4"
-		},
-		"d68c351aacb9b5b39f1827d1c7167201a608f3e2": {
-			"id": "voxygen",
-			"version": "1.2.5"
-		},
-		"399dcff5823ac336cc7a7956f9afaa25c25603a8": {
-			"id": "voxygen",
-			"version": "1.2.6"
-		},
-		"8f87623b7549714aa67aef11b3c5f994ebc0bef8": {
-			"id": "voxygen",
-			"version": "1.2.7"
-		},
-		"6c0a49299b2f5025c3313d7278d134190b3d0803": {
-			"id": "voxygen",
-			"version": "1.2.8"
-		},
-		"2dea7772604b2dac6001fc52e50281d4809a1505": {
-			"id": "voxygen",
-			"version": "1.2.9"
-		},
-		"e5db7e52446105c76fcdfc3d1da403c5200708fe": {
-			"id": "voxygen",
-			"version": "1.2.10"
 		},
 		"e9373af234358247e937b3153ae516e6beb46690": {
 			"id": "who-i-am",
