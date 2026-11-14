@@ -1,6 +1,6 @@
 package com.example.seedgen.mixin;
 
-import com.example.seedgen.VirtualStructureState;
+import com.example.seedgen.core.VirtualStructureState;
 import com.mojang.datafixers.util.Pair;
 
 import net.minecraft.core.BlockPos;

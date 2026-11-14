@@ -1,5 +1,7 @@
 package com.example.seedgen;
 
+import com.example.seedgen.core.SeedgenGenerationService;
+import com.example.seedgen.voxy.VoxyChunkReceiver;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.LongArgumentType;
@@ -28,7 +30,11 @@ public final class SeedgenMod implements ClientModInitializer {
 				client -> {
 					String worldKey = getCurrentWorldKey();
 					SeedgenGenerationService.tick(
-							client, config, worldKey, getEffectiveSeed(client, worldKey));
+							client,
+							config,
+							worldKey,
+							getEffectiveSeed(client, worldKey),
+							client.level == null ? null : VoxyChunkReceiver.find(client.level));
 					SeedgenProgressBossBar.tick(client, config.showProgress);
 				});
 	}

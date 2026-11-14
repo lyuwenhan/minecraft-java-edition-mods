@@ -1,7 +1,7 @@
 package com.example.seedgen.mixin;
 
-import com.example.seedgen.SeedgenWorldgenRules;
-import com.example.seedgen.WorldgenSeedContext;
+import com.example.seedgen.core.SeedgenWorldgenRules;
+import com.example.seedgen.core.WorldgenSeedContext;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Vec3i;

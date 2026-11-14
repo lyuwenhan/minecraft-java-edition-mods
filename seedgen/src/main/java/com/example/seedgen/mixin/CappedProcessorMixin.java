@@ -1,6 +1,6 @@
 package com.example.seedgen.mixin;
 
-import com.example.seedgen.WorldgenSeedContext;
+import com.example.seedgen.core.WorldgenSeedContext;
 
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.levelgen.structure.templatesystem.CappedProcessor;

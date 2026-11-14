@@ -1,6 +1,6 @@
 package com.example.seedgen.mixin;
 
-import com.example.seedgen.WorldgenSeedContext;
+import com.example.seedgen.core.WorldgenSeedContext;
 
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.WorldGenLevel;

@@ -1,18 +1,14 @@
-package com.example.seedgen;
+package com.example.seedgen.core;
+
+import com.example.seedgen.SeedgenConfig;
+import com.example.seedgen.freecam.FreecamGenerationTargetProvider;
+import com.example.seedgen.player.PlayerGenerationTargetProvider;
+import com.example.seedgen.voxy.GeneratedChunkReceiver;
 
 import it.unimi.dsi.fastutil.longs.LongOpenHashSet;
 import it.unimi.dsi.fastutil.longs.LongSet;
 import it.unimi.dsi.fastutil.shorts.ShortArrayList;
 import it.unimi.dsi.fastutil.shorts.ShortList;
-
-import me.cortex.voxy.common.voxelization.VoxelizedSection;
-import me.cortex.voxy.common.voxelization.WorldConversionFactory;
-import me.cortex.voxy.common.voxelization.WorldVoxilizedSectionMipper;
-import me.cortex.voxy.common.world.WorldEngine;
-import me.cortex.voxy.common.world.WorldSection;
-import me.cortex.voxy.common.world.WorldUpdater;
-import me.cortex.voxy.common.world.other.Mapper;
-import me.cortex.voxy.commonImpl.WorldIdentifier;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -40,7 +36,6 @@ import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelHeightAccessor;
-import net.minecraft.world.level.LightLayer;
 import net.minecraft.world.level.StructureManager;
 import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.biome.Biome;
@@ -58,7 +53,6 @@ import net.minecraft.world.level.chunk.ChunkAccess;
 import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.chunk.ChunkGeneratorStructureState;
 import net.minecraft.world.level.chunk.ChunkSource;
-import net.minecraft.world.level.chunk.DataLayer;
 import net.minecraft.world.level.chunk.LevelChunkSection;
 import net.minecraft.world.level.chunk.LightChunk;
 import net.minecraft.world.level.chunk.LightChunkGetter;
@@ -118,7 +112,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.locks.ReentrantLock;
 
-final class SeedgenGenerationService {
+public final class SeedgenGenerationService {
 	private static final Logger LOGGER = LoggerFactory.getLogger("seedgen");
 	private static final ThreadPoolExecutor EXECUTOR =
 			new ThreadPoolExecutor(
@@ -146,16 +140,17 @@ final class SeedgenGenerationService {
 
 	private SeedgenGenerationService() {}
 
-	static void initialize() {
+	public static void initialize() {
 		EXECUTOR.allowCoreThreadTimeOut(true);
 	}
 
-	static void tick(
-			Minecraft client, SeedgenConfig config, String serverAddress, Long effectiveSeed) {
-		if (!config.enable
-				|| client.level == null
-				|| client.player == null
-				|| serverAddress == null) {
+	public static void tick(
+			Minecraft client,
+			SeedgenConfig config,
+			String serverAddress,
+			Long effectiveSeed,
+			GeneratedChunkReceiver receiver) {
+		if (!config.enable || client.level == null || serverAddress == null) {
 			retire(
 					Component.translatable(
 							config.enable
@@ -181,21 +176,30 @@ final class SeedgenGenerationService {
 			return;
 		}
 
-		WorldEngine engine = WorldIdentifier.ofEngineNullable(level);
-		if (engine == null || !engine.isLive()) {
+		if (receiver == null || !receiver.isLive()) {
 			retire(Component.translatable("command.seedgen.state.voxy_not_ready"));
 			return;
 		}
 
-		int centerX = Math.floorDiv(client.player.chunkPosition().x(), REGION_CHUNK_SIZE);
-		int centerZ = Math.floorDiv(client.player.chunkPosition().z(), REGION_CHUNK_SIZE);
-		int radius =
-				Math.floorDiv(
-						Math.max(0, config.radius) + REGION_CHUNK_SIZE - 1, REGION_CHUNK_SIZE);
-		long priorityCenter = freecamPriorityCenter(client, config.generateForFreecam);
+		// Provider call order is the priority order: freecam first, then player.
+		GenerationTarget freecamTarget =
+				FreecamGenerationTargetProvider.getTarget(client, config.generateForFreecam);
+		GenerationTarget playerTarget =
+				PlayerGenerationTargetProvider.getTarget(client, config.radius);
+		if (!playerTarget.isActive()) {
+			retire(Component.translatable("command.seedgen.state.waiting_world"));
+			return;
+		}
+		long priorityCenter =
+				freecamTarget.isActive()
+						? ChunkPos.pack(freecamTarget.unitX(), freecamTarget.unitZ())
+						: NO_ACTIVE_REGION;
+		int priorityRadius = freecamTarget.radius();
 		Session current = session;
 		if (current != null
-				&& (current.level != level || current.seed != seed || current.engine != engine)) {
+				&& (current.level != level
+						|| current.seed != seed
+						|| current.receiver.destinationKey() != receiver.destinationKey())) {
 			current.retire();
 			state = Component.translatable("command.seedgen.state.restarting");
 		}
@@ -212,13 +216,14 @@ final class SeedgenGenerationService {
 			current =
 					new Session(
 							level,
-							engine,
+							receiver,
 							seed,
 							dimension,
-							centerX,
-							centerZ,
-							radius,
+							playerTarget.unitX(),
+							playerTarget.unitZ(),
+							playerTarget.radius(),
 							priorityCenter,
+							priorityRadius,
 							config.threads);
 			session = current;
 			state =
@@ -227,26 +232,20 @@ final class SeedgenGenerationService {
 		}
 
 		current.setWorkerCount(config.threads);
-		current.requestWindowUpdate(centerX, centerZ, radius, priorityCenter);
+		current.requestWindowUpdate(
+				playerTarget.unitX(),
+				playerTarget.unitZ(),
+				playerTarget.radius(),
+				priorityCenter,
+				priorityRadius);
 		current.pump();
 	}
 
-	private static long freecamPriorityCenter(Minecraft client, boolean enabled) {
-		if (!enabled || !client.gameRenderer.mainCamera().isInitialized()) {
-			return NO_ACTIVE_REGION;
-		}
-		var position = client.gameRenderer.mainCamera().position();
-		int chunkX = Math.floorDiv((int) Math.floor(position.x()), 16);
-		int chunkZ = Math.floorDiv((int) Math.floor(position.z()), 16);
-		return ChunkPos.pack(
-				Math.floorDiv(chunkX, REGION_CHUNK_SIZE), Math.floorDiv(chunkZ, REGION_CHUNK_SIZE));
-	}
-
-	static void invalidate() {
+	public static void invalidate() {
 		retire(Component.translatable("command.seedgen.state.restarting"));
 	}
 
-	static Component describeState() {
+	public static Component describeState() {
 		Session current = session;
 		if (current == null) {
 			return state;
@@ -270,7 +269,7 @@ final class SeedgenGenerationService {
 				current.countState(CHUNK_STATE_FAILED));
 	}
 
-	static ProgressSnapshot progressSnapshot() {
+	public static ProgressSnapshot progressSnapshot() {
 		Session current = session;
 		if (current == null
 				|| current.retiring
@@ -297,7 +296,7 @@ final class SeedgenGenerationService {
 		return new ProgressSnapshot(current, (float) completed / (float) total, complete);
 	}
 
-	record ProgressSnapshot(Object sessionKey, float progress, boolean complete) {}
+	public record ProgressSnapshot(Object sessionKey, float progress, boolean complete) {}
 
 	private static void retire(Component reason) {
 		Session current = session;
@@ -333,7 +332,7 @@ final class SeedgenGenerationService {
 
 	private static final class Session {
 		private final ClientLevel level;
-		private final WorldEngine engine;
+		private final GeneratedChunkReceiver receiver;
 		private final long seed;
 		private volatile int centerX;
 		private volatile int centerZ;
@@ -345,6 +344,7 @@ final class SeedgenGenerationService {
 		private int requestedCenterZ;
 		private int requestedRadius;
 		private long requestedPriorityCenter;
+		private int requestedPriorityRadius;
 		private long requestedWindowVersion;
 		private long nextWindowUpdateNanos;
 		private boolean windowTaskScheduled;
@@ -363,6 +363,7 @@ final class SeedgenGenerationService {
 		private final Set<Long> forcedRetries = ConcurrentHashMap.newKeySet();
 		private final AtomicInteger inFlight = new AtomicInteger();
 		private volatile long activeRegion = NO_ACTIVE_REGION;
+		private long completionOnlyRegion = NO_ACTIVE_REGION;
 		private final AtomicInteger generatedChunks = new AtomicInteger();
 		private final AtomicInteger insertedChunks = new AtomicInteger();
 		private final AtomicInteger insertedSections = new AtomicInteger();
@@ -371,6 +372,7 @@ final class SeedgenGenerationService {
 		private int evictedInnerRegionRadius = -1;
 		private boolean generationCacheCleared;
 		private long priorityCenter;
+		private int priorityRadius;
 		private long cachedPriorityCenter = NO_ACTIVE_REGION;
 		private boolean processingPriorityRegions;
 		private volatile GenerationContext context;
@@ -380,16 +382,17 @@ final class SeedgenGenerationService {
 
 		private Session(
 				ClientLevel level,
-				WorldEngine engine,
+				GeneratedChunkReceiver receiver,
 				long seed,
 				ResourceKey<Level> dimension,
 				int centerX,
 				int centerZ,
 				int radius,
 				long priorityCenter,
+				int priorityRadius,
 				int workerCount) {
 			this.level = level;
-			this.engine = engine;
+			this.receiver = receiver;
 			this.seed = seed;
 			this.centerX = centerX;
 			this.centerZ = centerZ;
@@ -399,7 +402,9 @@ final class SeedgenGenerationService {
 			this.requestedCenterZ = centerZ;
 			this.requestedRadius = radius;
 			this.priorityCenter = priorityCenter;
+			this.priorityRadius = priorityRadius;
 			this.requestedPriorityCenter = priorityCenter;
+			this.requestedPriorityRadius = priorityRadius;
 			this.requestedWindowVersion = 1L;
 			this.preparing = true;
 			EXECUTOR.execute(
@@ -465,7 +470,11 @@ final class SeedgenGenerationService {
 		}
 
 		private void requestWindowUpdate(
-				int newCenterX, int newCenterZ, int newRadius, long newPriorityCenter) {
+				int newCenterX,
+				int newCenterZ,
+				int newRadius,
+				long newPriorityCenter,
+				int newPriorityRadius) {
 			synchronized (windowLock) {
 				if (retiring) {
 					return;
@@ -473,13 +482,15 @@ final class SeedgenGenerationService {
 				if (requestedCenterX == newCenterX
 						&& requestedCenterZ == newCenterZ
 						&& requestedRadius == newRadius
-						&& requestedPriorityCenter == newPriorityCenter) {
+						&& requestedPriorityCenter == newPriorityCenter
+						&& requestedPriorityRadius == newPriorityRadius) {
 					if (!windowTaskScheduled
 							&& (!windowReady
 									|| centerX != newCenterX
 									|| centerZ != newCenterZ
 									|| radius != newRadius
-									|| priorityCenter != newPriorityCenter)) {
+									|| priorityCenter != newPriorityCenter
+									|| priorityRadius != newPriorityRadius)) {
 						long delay = Math.max(0L, nextWindowUpdateNanos - System.nanoTime());
 						scheduleWindowUpdate(delay);
 					}
@@ -489,6 +500,7 @@ final class SeedgenGenerationService {
 				requestedCenterZ = newCenterZ;
 				requestedRadius = newRadius;
 				requestedPriorityCenter = newPriorityCenter;
+				requestedPriorityRadius = newPriorityRadius;
 				requestedWindowVersion++;
 				if (!windowTaskScheduled) {
 					long delay = Math.max(0L, nextWindowUpdateNanos - System.nanoTime());
@@ -527,6 +539,7 @@ final class SeedgenGenerationService {
 			int newCenterZ;
 			int newRadius;
 			long newPriorityCenter;
+			int newPriorityRadius;
 			long version;
 			synchronized (windowLock) {
 				if (retiring) {
@@ -537,6 +550,7 @@ final class SeedgenGenerationService {
 				newCenterZ = requestedCenterZ;
 				newRadius = requestedRadius;
 				newPriorityCenter = requestedPriorityCenter;
+				newPriorityRadius = requestedPriorityRadius;
 				version = requestedWindowVersion;
 			}
 
@@ -550,7 +564,7 @@ final class SeedgenGenerationService {
 						squareInChebyshevOrder(
 								ChunkPos.getX(newPriorityCenter),
 								ChunkPos.getZ(newPriorityCenter),
-								1);
+								newPriorityRadius);
 			}
 			Set<Long> nextPriorityRegionCoverage = new HashSet<>(orderedPriorityRegions);
 			List<Long> orderedRegions =
@@ -570,6 +584,15 @@ final class SeedgenGenerationService {
 			}
 
 			synchronized (coverageLock) {
+				boolean finishCurrentRegion =
+						activeRegion != NO_ACTIVE_REGION
+								&& !nextRegionCoverage.contains(activeRegion);
+				if (finishCurrentRegion) {
+					nextRegionCoverage.add(activeRegion);
+					completionOnlyRegion = activeRegion;
+				} else {
+					completionOnlyRegion = NO_ACTIVE_REGION;
+				}
 				regionCoverage.clear();
 				regionCoverage.addAll(nextRegionCoverage);
 				chunkStates.retainRegions(nextRegionCoverage);
@@ -577,6 +600,7 @@ final class SeedgenGenerationService {
 				priorityRegionCoverage.clear();
 				priorityRegionCoverage.addAll(nextPriorityRegionCoverage);
 				priorityCenter = newPriorityCenter;
+				priorityRadius = newPriorityRadius;
 				failureCounts.keySet().removeIf(key -> !isCovered(key));
 				forcedRetries.removeIf(key -> !isCovered(key));
 				failedAttempts.removeIf(failure -> !isCovered(failure.target()));
@@ -593,7 +617,7 @@ final class SeedgenGenerationService {
 					activeRegion = NO_ACTIVE_REGION;
 				}
 				for (long region : orderedRegions) {
-					if (region != activeRegion && queuedRegions.add(region)) {
+					if ((!keepActive || region != activeRegion) && queuedRegions.add(region)) {
 						pendingRegions.addLast(region);
 					}
 				}
@@ -712,6 +736,10 @@ final class SeedgenGenerationService {
 				}
 				if (activeRegion != NO_ACTIVE_REGION && context != null) {
 					context.archiveGenerationUnit(activeRegion);
+				}
+				if (activeRegion == completionOnlyRegion) {
+					regionCoverage.remove(activeRegion);
+					completionOnlyRegion = NO_ACTIVE_REGION;
 				}
 				activeRegion = NO_ACTIVE_REGION;
 				Long nextRegion;
@@ -894,9 +922,9 @@ final class SeedgenGenerationService {
 								}
 								if (throwable instanceof CancellationException
 										|| retiring
-										|| !engine.isLive()) {
+										|| !receiver.isLive()) {
 									abandoned = true;
-									if (!engine.isLive()) {
+									if (!receiver.isLive()) {
 										retire();
 									}
 								} else {
@@ -1106,10 +1134,10 @@ final class SeedgenGenerationService {
 	}
 
 	private static boolean generateOne(Session owner, int chunkX, int chunkZ, boolean forcedRetry) {
-		if (owner.retiring || !owner.engine.isLive()) {
+		if (owner.retiring || !owner.receiver.isLive()) {
 			throw new CancellationException("Seedgen world is no longer live");
 		}
-		if (!forcedRetry && hasVoxyData(owner.engine, owner.context.height, chunkX, chunkZ)) {
+		if (!forcedRetry && owner.receiver.hasData(owner.context.height, chunkX, chunkZ)) {
 			owner.skippedVoxy.incrementAndGet();
 			return true;
 		}
@@ -1120,13 +1148,13 @@ final class SeedgenGenerationService {
 		GeneratedChunk generated = owner.context.generatePreparedFull(chunkX, chunkZ);
 		ProtoChunk chunk = generated.chunk();
 		owner.generatedChunks.incrementAndGet();
-		if (!forcedRetry && hasVoxyData(owner.engine, owner.context.height, chunkX, chunkZ)) {
+		if (!forcedRetry && owner.receiver.hasData(owner.context.height, chunkX, chunkZ)) {
 			owner.skippedVoxy.incrementAndGet();
 			return true;
 		}
 
 		LevelLightEngine lightEngine = owner.context.light(chunkX, chunkZ);
-		int insertedSections = voxelizeAndInsert(owner.engine, chunk, lightEngine);
+		int insertedSections = owner.receiver.receive(chunk, lightEngine);
 		if (insertedSections == 0) {
 			owner.emptyChunks.incrementAndGet();
 			return true;
@@ -1134,93 +1162,6 @@ final class SeedgenGenerationService {
 		owner.insertedChunks.incrementAndGet();
 		owner.insertedSections.addAndGet(insertedSections);
 		return true;
-	}
-
-	private static int voxelizeAndInsert(
-			WorldEngine engine, ProtoChunk chunk, LevelLightEngine lightEngine) {
-		int inserted = 0;
-		Mapper mapper = engine.getMapper();
-		BlockPos.MutableBlockPos mutablePos = new BlockPos.MutableBlockPos();
-		var skyLight = lightEngine.getLayerListener(LightLayer.SKY);
-		var blockLight = lightEngine.getLayerListener(LightLayer.BLOCK);
-		int chunkBaseX = chunk.getPos().x() << 4;
-		int chunkBaseZ = chunk.getPos().z() << 4;
-		LevelChunkSection[] sections = chunk.getSections();
-		for (int index = 0; index < sections.length; index++) {
-			LevelChunkSection section = sections[index];
-			int sectionY = chunk.getMinSectionY() + index;
-			int sectionBaseY = sectionY << 4;
-			SectionPos sectionPos = SectionPos.of(chunk.getPos(), sectionY);
-			DataLayer blockData = blockLight.getDataLayerData(sectionPos);
-			DataLayer skyData = skyLight.getDataLayerData(sectionPos);
-			if (section.hasOnlyAir() && (blockData == null || blockData.isEmpty())) {
-				continue;
-			}
-			VoxelizedSection voxelized =
-					WorldConversionFactory.convert(
-							VoxelizedSection.createEmpty()
-									.setPosition(chunk.getPos().x(), sectionY, chunk.getPos().z()),
-							mapper,
-							section.getStates(),
-							section.getBiomes(),
-							(x, y, z) -> {
-								int sky;
-								if (skyData != null) {
-									sky = skyData.get(x, y, z);
-								} else {
-									mutablePos.set(
-											chunkBaseX + x, sectionBaseY + y, chunkBaseZ + z);
-									sky = skyLight.getLightValue(mutablePos);
-								}
-								int block = blockData == null ? 0 : blockData.get(x, y, z);
-								return (byte) ((block << 4) | sky);
-							});
-			WorldVoxilizedSectionMipper.mipSection(voxelized, mapper);
-			synchronized (engine) {
-				WorldUpdater.insertUpdate(engine, voxelized);
-			}
-			inserted++;
-		}
-		return inserted;
-	}
-
-	private static boolean hasVoxyData(
-			WorldEngine engine, LevelHeightAccessor height, int chunkX, int chunkZ) {
-		for (int sectionY = height.getMinSectionY();
-				sectionY < height.getMaxSectionY();
-				sectionY++) {
-			WorldSection section =
-					engine.acquireIfExists(0, chunkX >> 1, sectionY >> 1, chunkZ >> 1);
-			if (section == null) {
-				continue;
-			}
-			try {
-				if (section.getNonEmptyBlockCount() == 0) {
-					continue;
-				}
-				long[] data = section._unsafeGetRawDataArray();
-				int startX = (chunkX & 1) << 4;
-				int startY = (sectionY & 1) << 4;
-				int startZ = (chunkZ & 1) << 4;
-				for (int y = 0; y < 16; y++) {
-					int yOffset = (startY + y) << 10;
-					for (int z = 0; z < 16; z++) {
-						int startIndex = yOffset | ((startZ + z) << 5) | startX;
-						int endIndex = startIndex + 16;
-						for (int dataIndex = startIndex; dataIndex < endIndex; dataIndex++) {
-							long mapping = data[dataIndex];
-							if (mapping != Mapper.UNKNOWN_MAPPING
-									&& Mapper.isNotAirInt(mapping) != 0) {
-								return true;
-							}
-						}
-					}
-				}
-			} finally {
-				section.release();
-			}
-		}
-		return false;
 	}
 
 	private static String failureReason(Throwable throwable) {

@@ -1,6 +1,6 @@
 package com.example.seedgen.mixin;
 
-import com.example.seedgen.SeedgenWorldgenRules;
+import com.example.seedgen.core.SeedgenWorldgenRules;
 
 import net.minecraft.server.level.WorldGenRegion;
 import net.minecraft.world.level.biome.BiomeManager;
