@@ -442,7 +442,7 @@
 		"displayName": "Voxygen",
 		"description": "Generates missing vanilla chunks into Voxy using per-server seeds and client-side commands.",
 		"link": {
-			"Curseforge": "https://www.curseforge.com/minecraft/mc-mods/voxygen",
+			"Curseforge": "https://www.curseforge.com/minecraft/mc-mods/seedgen",
 			"Planet Minecraft": "https://www.planetminecraft.com/mod/voxygen"
 		}
 	},
