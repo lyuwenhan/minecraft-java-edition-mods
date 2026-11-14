@@ -1,0 +1,29 @@
+{
+	"required": true,
+	"package": "com.example.seedgen.mixin",
+	"compatibilityLevel": "JAVA_25",
+	"client": [
+		"CappedProcessorMixin",
+		"ChunkGeneratorStructureStateMixin",
+		"EndSpikeEntityMixin",
+		"FossilFeatureMixin",
+		"MineshaftEntityMixin",
+		"NoiseBasedChunkGeneratorMixin",
+		"OceanMonumentEntityMixin",
+		"PaleMossDecoratorMixin",
+		"PlacedFeatureMixin",
+		"ProtoChunkMixin",
+		"RuinedPortalStructureMixin",
+		"StructureMixin",
+		"StructureMarkerEntityMixin",
+		"StructureTemplateEntityMixin",
+		"StructureTemplatePaletteMixin",
+		"SwampHutEntityMixin",
+		"TemplateFeatureMixin",
+		"UndergroundFeatureMixin",
+		"WorldGenerationContextMixin"
+	],
+	"injectors": {
+		"defaultRequire": 1
+	}
+}
