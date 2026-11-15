@@ -238,8 +238,6 @@ abstract class XaeroMapWriterMixin {
 							.getMapSaveLoad()
 							.requestLoad(region, "Seedgen generated chunk", false);
 				}
-				// The target map region is not loaded yet. Keep this chunk at the front
-				// and yield to Xaero so its loader can finish before requesting more regions.
 				XaeroWorldMapWriteBridge.retryFirst(pending);
 				waitForXaero = true;
 			}

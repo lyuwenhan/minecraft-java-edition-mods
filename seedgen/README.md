@@ -6,7 +6,7 @@
 
 A client-side Fabric mod that locally generates vanilla terrain from a known world seed without asking the server to load or generate every source chunk.
 
-Supported mods: [Voxy](https://modrinth.com/mod/voxy), [Xaero's World Map](https://modrinth.com/mod/xaeros-world-map).
+Supported mods: [Voxy](https://modrinth.com/mod/voxy), [Xaero's World Map](https://modrinth.com/mod/xaeros-world-map), [JourneyMap](https://modrinth.com/plugin/journeymap).
 
 > [!IMPORTANT]
 > Multiplayer generation requires the exact world seed. A wrong seed produces terrain that does not match the server. Due to [MC-55596](https://bugs.mojang.com/browse/MC/issues/MC-55596), generated features such as trees may be inconsistent with the server even when the seed is correct.
@@ -28,7 +28,7 @@ Supported mods: [Voxy](https://modrinth.com/mod/voxy), [Xaero's World Map](https
 |`/seedgen generateforfreecam`|Show whether Freecam target generation is enabled.|
 |`/seedgen generateforfreecam on\|off\|toggle`|Control whether to generate around the current camera. Disabled by default.|
 |`/seedgen generateforworldmapcenter`|Show whether world-map-center target generation is enabled.|
-|`/seedgen generateforworldmapcenter on\|off\|toggle`|Use the center of an open world map as a generation target. Disabled by default.|
+|`/seedgen generateforworldmapcenter on\|off\|toggle`|Use the center of an open Xaero or JourneyMap full-screen map as a generation target. Disabled by default.|
 |`/seedgen seed`|Show the effective seed for the current world.|
 |`/seedgen seed <seed>`|Set the multiplayer seed. Hidden when the integrated server provides it.|
 
@@ -40,6 +40,7 @@ Supported mods: [Voxy](https://modrinth.com/mod/voxy), [Xaero's World Map](https
 - Java 25
 - Voxy (Optional)
 - Xaero's World Map (Optional)
+- JourneyMap (Optional)
 
 ## License
 

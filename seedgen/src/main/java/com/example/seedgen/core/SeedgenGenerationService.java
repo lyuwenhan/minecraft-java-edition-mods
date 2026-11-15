@@ -2,6 +2,7 @@ package com.example.seedgen.core;
 
 import com.example.seedgen.SeedgenConfig;
 import com.example.seedgen.freecam.FreecamGenerationTargetProvider;
+import com.example.seedgen.journeymap.JourneyMapCompat;
 import com.example.seedgen.player.PlayerGenerationTargetProvider;
 import com.example.seedgen.voxy.GeneratedChunkReceiver;
 import com.example.seedgen.xaero.XaeroWorldMapGenerationTargetProvider;
@@ -92,6 +93,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.concurrent.CancellationException;
@@ -178,28 +180,40 @@ public final class SeedgenGenerationService {
 			return;
 		}
 
-		// Provider priority order: freecam, Xaero map, then player.
-		GenerationTarget xaeroMapTarget =
-				XaeroWorldMapGenerationTargetProvider.getTarget(client, config.generateForXaeroMap);
 		GenerationTarget freecamTarget =
 				FreecamGenerationTargetProvider.getTarget(client, config.generateForFreecam);
+		GenerationTarget xaeroMapTarget =
+				XaeroWorldMapGenerationTargetProvider.getTarget(
+						client, config.generateForWorldMapCenter);
+		GenerationTarget journeyMapTarget =
+				JourneyMapCompat.getTarget(client, config.generateForWorldMapCenter);
 		GenerationTarget playerTarget =
 				PlayerGenerationTargetProvider.getTarget(client, config.radius);
 		if (!playerTarget.isActive()) {
 			retire(Component.translatable("command.seedgen.state.waiting_world"));
 			return;
 		}
-		GenerationTarget priorityTarget = freecamTarget.isActive() ? freecamTarget : xaeroMapTarget;
-		long priorityCenter =
-				priorityTarget.isActive()
-						? ChunkPos.pack(priorityTarget.unitX(), priorityTarget.unitZ())
+		long freecamCenter =
+				freecamTarget.isActive()
+						? ChunkPos.pack(freecamTarget.unitX(), freecamTarget.unitZ())
 						: NO_ACTIVE_REGION;
-		int priorityRadius = priorityTarget.radius();
+		int freecamRadius = freecamTarget.radius();
+		long xaeroMapCenter =
+				xaeroMapTarget.isActive()
+						? ChunkPos.pack(xaeroMapTarget.unitX(), xaeroMapTarget.unitZ())
+						: NO_ACTIVE_REGION;
+		int xaeroMapRadius = xaeroMapTarget.radius();
+		long journeyMapCenter =
+				journeyMapTarget.isActive()
+						? ChunkPos.pack(journeyMapTarget.unitX(), journeyMapTarget.unitZ())
+						: NO_ACTIVE_REGION;
+		int journeyMapRadius = journeyMapTarget.radius();
 		Session current = session;
 		if (current != null
 				&& (current.level != level
 						|| current.seed != seed
-						|| current.receiver.destinationKey() != receiver.destinationKey())) {
+						|| !Objects.equals(
+								current.receiver.destinationKey(), receiver.destinationKey()))) {
 			current.retire();
 			state = Component.translatable("command.seedgen.state.restarting");
 		}
@@ -222,8 +236,12 @@ public final class SeedgenGenerationService {
 							playerTarget.unitX(),
 							playerTarget.unitZ(),
 							playerTarget.radius(),
-							priorityCenter,
-							priorityRadius,
+							freecamCenter,
+							freecamRadius,
+							xaeroMapCenter,
+							xaeroMapRadius,
+							journeyMapCenter,
+							journeyMapRadius,
 							config.threads);
 			session = current;
 			state =
@@ -236,8 +254,12 @@ public final class SeedgenGenerationService {
 				playerTarget.unitX(),
 				playerTarget.unitZ(),
 				playerTarget.radius(),
-				priorityCenter,
-				priorityRadius);
+				freecamCenter,
+				freecamRadius,
+				xaeroMapCenter,
+				xaeroMapRadius,
+				journeyMapCenter,
+				journeyMapRadius);
 		current.pump();
 	}
 
@@ -344,6 +366,10 @@ public final class SeedgenGenerationService {
 		private int requestedRadius;
 		private long requestedPriorityCenter;
 		private int requestedPriorityRadius;
+		private long requestedSecondaryPriorityCenter;
+		private int requestedSecondaryPriorityRadius;
+		private long requestedTertiaryPriorityCenter;
+		private int requestedTertiaryPriorityRadius;
 		private long requestedWindowVersion;
 		private long nextWindowUpdateNanos;
 		private boolean windowTaskScheduled;
@@ -352,6 +378,8 @@ public final class SeedgenGenerationService {
 		private volatile boolean windowReady;
 		private final Set<Long> regionCoverage = ConcurrentHashMap.newKeySet();
 		private final Set<Long> priorityRegionCoverage = new HashSet<>();
+		private final Set<Long> secondaryPriorityRegionCoverage = new HashSet<>();
+		private final Set<Long> tertiaryPriorityRegionCoverage = new HashSet<>();
 		private final ChunkStateTable chunkStates = new ChunkStateTable();
 		private final Set<Long> queuedRegions = ConcurrentHashMap.newKeySet();
 		private final ConcurrentLinkedDeque<Long> pending = new ConcurrentLinkedDeque<>();
@@ -369,6 +397,10 @@ public final class SeedgenGenerationService {
 		private boolean generationCacheCleared;
 		private long priorityCenter;
 		private int priorityRadius;
+		private long secondaryPriorityCenter;
+		private int secondaryPriorityRadius;
+		private long tertiaryPriorityCenter;
+		private int tertiaryPriorityRadius;
 		private long cachedPriorityCenter = NO_ACTIVE_REGION;
 		private boolean processingPriorityRegions;
 		private volatile GenerationContext context;
@@ -386,6 +418,10 @@ public final class SeedgenGenerationService {
 				int radius,
 				long priorityCenter,
 				int priorityRadius,
+				long secondaryPriorityCenter,
+				int secondaryPriorityRadius,
+				long tertiaryPriorityCenter,
+				int tertiaryPriorityRadius,
 				int workerCount) {
 			this.level = level;
 			this.receiver = receiver;
@@ -399,8 +435,16 @@ public final class SeedgenGenerationService {
 			this.requestedRadius = radius;
 			this.priorityCenter = priorityCenter;
 			this.priorityRadius = priorityRadius;
+			this.secondaryPriorityCenter = secondaryPriorityCenter;
+			this.secondaryPriorityRadius = secondaryPriorityRadius;
+			this.tertiaryPriorityCenter = tertiaryPriorityCenter;
+			this.tertiaryPriorityRadius = tertiaryPriorityRadius;
 			this.requestedPriorityCenter = priorityCenter;
 			this.requestedPriorityRadius = priorityRadius;
+			this.requestedSecondaryPriorityCenter = secondaryPriorityCenter;
+			this.requestedSecondaryPriorityRadius = secondaryPriorityRadius;
+			this.requestedTertiaryPriorityCenter = tertiaryPriorityCenter;
+			this.requestedTertiaryPriorityRadius = tertiaryPriorityRadius;
 			this.requestedWindowVersion = 1L;
 			this.preparing = true;
 			EXECUTOR.execute(
@@ -470,7 +514,11 @@ public final class SeedgenGenerationService {
 				int newCenterZ,
 				int newRadius,
 				long newPriorityCenter,
-				int newPriorityRadius) {
+				int newPriorityRadius,
+				long newSecondaryPriorityCenter,
+				int newSecondaryPriorityRadius,
+				long newTertiaryPriorityCenter,
+				int newTertiaryPriorityRadius) {
 			synchronized (windowLock) {
 				if (retiring) {
 					return;
@@ -479,14 +527,22 @@ public final class SeedgenGenerationService {
 						&& requestedCenterZ == newCenterZ
 						&& requestedRadius == newRadius
 						&& requestedPriorityCenter == newPriorityCenter
-						&& requestedPriorityRadius == newPriorityRadius) {
+						&& requestedPriorityRadius == newPriorityRadius
+						&& requestedSecondaryPriorityCenter == newSecondaryPriorityCenter
+						&& requestedSecondaryPriorityRadius == newSecondaryPriorityRadius
+						&& requestedTertiaryPriorityCenter == newTertiaryPriorityCenter
+						&& requestedTertiaryPriorityRadius == newTertiaryPriorityRadius) {
 					if (!windowTaskScheduled
 							&& (!windowReady
 									|| centerX != newCenterX
 									|| centerZ != newCenterZ
 									|| radius != newRadius
 									|| priorityCenter != newPriorityCenter
-									|| priorityRadius != newPriorityRadius)) {
+									|| priorityRadius != newPriorityRadius
+									|| secondaryPriorityCenter != newSecondaryPriorityCenter
+									|| secondaryPriorityRadius != newSecondaryPriorityRadius
+									|| tertiaryPriorityCenter != newTertiaryPriorityCenter
+									|| tertiaryPriorityRadius != newTertiaryPriorityRadius)) {
 						long delay = Math.max(0L, nextWindowUpdateNanos - System.nanoTime());
 						scheduleWindowUpdate(delay);
 					}
@@ -497,6 +553,10 @@ public final class SeedgenGenerationService {
 				requestedRadius = newRadius;
 				requestedPriorityCenter = newPriorityCenter;
 				requestedPriorityRadius = newPriorityRadius;
+				requestedSecondaryPriorityCenter = newSecondaryPriorityCenter;
+				requestedSecondaryPriorityRadius = newSecondaryPriorityRadius;
+				requestedTertiaryPriorityCenter = newTertiaryPriorityCenter;
+				requestedTertiaryPriorityRadius = newTertiaryPriorityRadius;
 				requestedWindowVersion++;
 				if (!windowTaskScheduled) {
 					long delay = Math.max(0L, nextWindowUpdateNanos - System.nanoTime());
@@ -536,6 +596,10 @@ public final class SeedgenGenerationService {
 			int newRadius;
 			long newPriorityCenter;
 			int newPriorityRadius;
+			long newSecondaryPriorityCenter;
+			int newSecondaryPriorityRadius;
+			long newTertiaryPriorityCenter;
+			int newTertiaryPriorityRadius;
 			long version;
 			synchronized (windowLock) {
 				if (retiring) {
@@ -547,6 +611,10 @@ public final class SeedgenGenerationService {
 				newRadius = requestedRadius;
 				newPriorityCenter = requestedPriorityCenter;
 				newPriorityRadius = requestedPriorityRadius;
+				newSecondaryPriorityCenter = requestedSecondaryPriorityCenter;
+				newSecondaryPriorityRadius = requestedSecondaryPriorityRadius;
+				newTertiaryPriorityCenter = requestedTertiaryPriorityCenter;
+				newTertiaryPriorityRadius = requestedTertiaryPriorityRadius;
 				version = requestedWindowVersion;
 			}
 
@@ -562,12 +630,57 @@ public final class SeedgenGenerationService {
 								ChunkPos.getZ(newPriorityCenter),
 								newPriorityRadius);
 			}
+			List<Long> orderedSecondaryPriorityRegions;
+			if (newSecondaryPriorityCenter == NO_ACTIVE_REGION) {
+				orderedSecondaryPriorityRegions = List.of();
+			} else {
+				orderedSecondaryPriorityRegions =
+						squareInChebyshevOrder(
+								ChunkPos.getX(newSecondaryPriorityCenter),
+								ChunkPos.getZ(newSecondaryPriorityCenter),
+								newSecondaryPriorityRadius);
+			}
+			List<Long> orderedTertiaryPriorityRegions;
+			if (newTertiaryPriorityCenter == NO_ACTIVE_REGION) {
+				orderedTertiaryPriorityRegions = List.of();
+			} else {
+				orderedTertiaryPriorityRegions =
+						squareInChebyshevOrder(
+								ChunkPos.getX(newTertiaryPriorityCenter),
+								ChunkPos.getZ(newTertiaryPriorityCenter),
+								newTertiaryPriorityRadius);
+			}
 			Set<Long> nextPriorityRegionCoverage = new HashSet<>(orderedPriorityRegions);
+			Set<Long> nextSecondaryPriorityRegionCoverage =
+					new HashSet<>(orderedSecondaryPriorityRegions);
+			nextSecondaryPriorityRegionCoverage.removeAll(nextPriorityRegionCoverage);
+			Set<Long> nextTertiaryPriorityRegionCoverage =
+					new HashSet<>(orderedTertiaryPriorityRegions);
+			nextTertiaryPriorityRegionCoverage.removeAll(nextPriorityRegionCoverage);
+			nextTertiaryPriorityRegionCoverage.removeAll(nextSecondaryPriorityRegionCoverage);
+			Set<Long> nextAllPriorityRegionCoverage = new HashSet<>(nextPriorityRegionCoverage);
+			nextAllPriorityRegionCoverage.addAll(nextSecondaryPriorityRegionCoverage);
+			nextAllPriorityRegionCoverage.addAll(nextTertiaryPriorityRegionCoverage);
 			List<Long> orderedRegions =
-					new ArrayList<>(orderedPriorityRegions.size() + orderedPlayerRegions.size());
+					new ArrayList<>(
+							orderedPriorityRegions.size()
+									+ orderedSecondaryPriorityRegions.size()
+									+ orderedTertiaryPriorityRegions.size()
+									+ orderedPlayerRegions.size());
 			orderedRegions.addAll(orderedPriorityRegions);
-			for (long region : orderedPlayerRegions) {
+			for (long region : orderedSecondaryPriorityRegions) {
 				if (!nextPriorityRegionCoverage.contains(region)) {
+					orderedRegions.add(region);
+				}
+			}
+			for (long region : orderedTertiaryPriorityRegions) {
+				if (!nextPriorityRegionCoverage.contains(region)
+						&& !nextSecondaryPriorityRegionCoverage.contains(region)) {
+					orderedRegions.add(region);
+				}
+			}
+			for (long region : orderedPlayerRegions) {
+				if (!nextAllPriorityRegionCoverage.contains(region)) {
 					orderedRegions.add(region);
 				}
 			}
@@ -595,8 +708,16 @@ public final class SeedgenGenerationService {
 				chunkStates.ensureRegions(nextRegionCoverage);
 				priorityRegionCoverage.clear();
 				priorityRegionCoverage.addAll(nextPriorityRegionCoverage);
+				secondaryPriorityRegionCoverage.clear();
+				secondaryPriorityRegionCoverage.addAll(nextSecondaryPriorityRegionCoverage);
+				tertiaryPriorityRegionCoverage.clear();
+				tertiaryPriorityRegionCoverage.addAll(nextTertiaryPriorityRegionCoverage);
 				priorityCenter = newPriorityCenter;
 				priorityRadius = newPriorityRadius;
+				secondaryPriorityCenter = newSecondaryPriorityCenter;
+				secondaryPriorityRadius = newSecondaryPriorityRadius;
+				tertiaryPriorityCenter = newTertiaryPriorityCenter;
+				tertiaryPriorityRadius = newTertiaryPriorityRadius;
 				failureCounts.keySet().removeIf(key -> !isCovered(key));
 				forcedRetries.removeIf(key -> !isCovered(key));
 				failedAttempts.removeIf(failure -> !isCovered(failure.target()));
@@ -689,6 +810,14 @@ public final class SeedgenGenerationService {
 			if (priorityCenter != NO_ACTIVE_REGION && priorityRegionCoverage.contains(region)) {
 				traversalCenterX = ChunkPos.getX(priorityCenter);
 				traversalCenterZ = ChunkPos.getZ(priorityCenter);
+			} else if (secondaryPriorityCenter != NO_ACTIVE_REGION
+					&& secondaryPriorityRegionCoverage.contains(region)) {
+				traversalCenterX = ChunkPos.getX(secondaryPriorityCenter);
+				traversalCenterZ = ChunkPos.getZ(secondaryPriorityCenter);
+			} else if (tertiaryPriorityCenter != NO_ACTIVE_REGION
+					&& tertiaryPriorityRegionCoverage.contains(region)) {
+				traversalCenterX = ChunkPos.getX(tertiaryPriorityCenter);
+				traversalCenterZ = ChunkPos.getZ(tertiaryPriorityCenter);
 			}
 			int deltaX = ChunkPos.getX(region) - traversalCenterX;
 			int deltaZ = ChunkPos.getZ(region) - traversalCenterZ;
@@ -770,12 +899,12 @@ public final class SeedgenGenerationService {
 				return;
 			}
 			currentContext.compactCompletedStageCaches();
-			boolean priority = priorityRegionCoverage.contains(nextRegion);
-			if (priority) {
-				if (!processingPriorityRegions || cachedPriorityCenter != priorityCenter) {
+			long targetPriorityCenter = priorityCenterFor(nextRegion);
+			if (targetPriorityCenter != NO_ACTIVE_REGION) {
+				if (!processingPriorityRegions || cachedPriorityCenter != targetPriorityCenter) {
 					currentContext.clearGenerationCache();
 					processingPriorityRegions = true;
-					cachedPriorityCenter = priorityCenter;
+					cachedPriorityCenter = targetPriorityCenter;
 					evictedInnerRegionRadius = -1;
 				}
 				return;
@@ -787,6 +916,19 @@ public final class SeedgenGenerationService {
 				evictedInnerRegionRadius = -1;
 			}
 			evictCompletedInnerRegionRings(nextRegion);
+		}
+
+		private long priorityCenterFor(long region) {
+			if (priorityRegionCoverage.contains(region)) {
+				return priorityCenter;
+			}
+			if (secondaryPriorityRegionCoverage.contains(region)) {
+				return secondaryPriorityCenter;
+			}
+			if (tertiaryPriorityRegionCoverage.contains(region)) {
+				return tertiaryPriorityCenter;
+			}
+			return NO_ACTIVE_REGION;
 		}
 
 		private void evictCompletedInnerRegionRings(long nextRegion) {

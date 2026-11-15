@@ -1,6 +1,7 @@
 package com.example.seedgen;
 
 import com.example.seedgen.core.SeedgenGenerationService;
+import com.example.seedgen.journeymap.JourneyMapCompat;
 import com.example.seedgen.voxy.GeneratedChunkReceiver;
 import com.example.seedgen.voxy.VoxyCompat;
 import com.example.seedgen.xaero.XaeroWorldMapCompat;
@@ -33,12 +34,10 @@ public final class SeedgenMod implements ClientModInitializer {
 					String worldKey = getCurrentWorldKey();
 					GeneratedChunkReceiver receiver =
 							client.level == null ? null : VoxyCompat.find(client.level);
+					receiver = XaeroWorldMapCompat.addReceiver(receiver, client.level);
+					receiver = JourneyMapCompat.addReceiver(receiver, client.level);
 					SeedgenGenerationService.tick(
-							client,
-							config,
-							worldKey,
-							getEffectiveSeed(client, worldKey),
-							XaeroWorldMapCompat.addReceiver(receiver, client.level));
+							client, config, worldKey, getEffectiveSeed(client, worldKey), receiver);
 					SeedgenProgressBossBar.tick(client, config.showProgress);
 				});
 	}
@@ -119,22 +118,26 @@ public final class SeedgenMod implements ClientModInitializer {
 																!config.generateForFreecam))));
 		root.then(
 				ClientCommands.literal("generateforworldmapcenter")
-						.executes(context -> sendXaeroMap(context.getSource()))
+						.executes(context -> sendWorldMapCenter(context.getSource()))
 						.then(
 								ClientCommands.literal("on")
 										.executes(
-												context -> setXaeroMap(context.getSource(), true)))
+												context ->
+														setWorldMapCenter(
+																context.getSource(), true)))
 						.then(
 								ClientCommands.literal("off")
 										.executes(
-												context -> setXaeroMap(context.getSource(), false)))
+												context ->
+														setWorldMapCenter(
+																context.getSource(), false)))
 						.then(
 								ClientCommands.literal("toggle")
 										.executes(
 												context ->
-														setXaeroMap(
+														setWorldMapCenter(
 																context.getSource(),
-																!config.generateForXaeroMap))));
+																!config.generateForWorldMapCenter))));
 		root.then(
 				ClientCommands.literal("seed")
 						.executes(context -> sendSeed(context.getSource()))
@@ -186,7 +189,7 @@ public final class SeedgenMod implements ClientModInitializer {
 										? "command.seedgen.option.on"
 										: "command.seedgen.option.off"),
 						Component.translatable(
-								config.generateForXaeroMap
+								config.generateForWorldMapCenter
 										? "command.seedgen.option.on"
 										: "command.seedgen.option.off"),
 						SeedgenGenerationService.describeState()));
@@ -268,19 +271,19 @@ public final class SeedgenMod implements ClientModInitializer {
 		return Command.SINGLE_SUCCESS;
 	}
 
-	private static int sendXaeroMap(FabricClientCommandSource source) {
+	private static int sendWorldMapCenter(FabricClientCommandSource source) {
 		source.sendFeedback(
 				Component.translatable(
 						"command.seedgen.world_map_center",
 						Component.translatable(
-								config.generateForXaeroMap
+								config.generateForWorldMapCenter
 										? "command.seedgen.option.on"
 										: "command.seedgen.option.off")));
 		return Command.SINGLE_SUCCESS;
 	}
 
-	private static int setXaeroMap(FabricClientCommandSource source, boolean enabled) {
-		config.generateForXaeroMap = enabled;
+	private static int setWorldMapCenter(FabricClientCommandSource source, boolean enabled) {
+		config.generateForWorldMapCenter = enabled;
 		config.save();
 		source.sendFeedback(
 				Component.translatable(

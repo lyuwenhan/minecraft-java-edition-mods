@@ -7,16 +7,19 @@ import net.minecraft.world.level.lighting.LevelLightEngine;
 public final class CompositeGeneratedChunkReceiver implements GeneratedChunkReceiver {
 	private final GeneratedChunkReceiver primary;
 	private final GeneratedChunkReceiver secondary;
+	private final DestinationKey destinationKey;
 
 	public CompositeGeneratedChunkReceiver(
 			GeneratedChunkReceiver primary, GeneratedChunkReceiver secondary) {
 		this.primary = primary;
 		this.secondary = secondary;
+		this.destinationKey =
+				new DestinationKey(primary.destinationKey(), secondary.destinationKey());
 	}
 
 	@Override
 	public Object destinationKey() {
-		return primary.destinationKey();
+		return destinationKey;
 	}
 
 	@Override
@@ -42,4 +45,6 @@ public final class CompositeGeneratedChunkReceiver implements GeneratedChunkRece
 		}
 		return primarySections;
 	}
+
+	private record DestinationKey(Object primary, Object secondary) {}
 }

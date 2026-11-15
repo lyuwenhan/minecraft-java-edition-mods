@@ -25,8 +25,6 @@ abstract class StructureTemplateManagerMixin {
 		if (storage != null) {
 			return storage.getLevelPath(resource);
 		}
-		// Seedgen only reads built-in data-pack templates. Point the unused world-template
-		// source below a regular file so it remains non-existent without creating a directory.
 		return Minecraft.getInstance()
 				.gameDirectory
 				.toPath()

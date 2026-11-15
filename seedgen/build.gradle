@@ -32,6 +32,10 @@ repositories {
         name = "Xaero's Maven"
         url = "https://chocolateminecraft.com/maven"
     }
+    maven {
+        name = "JourneyMap Maven"
+        url = "https://maven.blamejared.com"
+    }
 }
 
 dependencies {
@@ -40,9 +44,12 @@ dependencies {
     implementation "net.fabricmc.fabric-api:fabric-api:${fabric_api_version}"
 
     compileOnly "maven.modrinth:voxy:${voxy_version}"
+    compileOnly "maven.modrinth:journeymap:${journeymap_version}"
     compileOnly "xaero.map:xaeroworldmap-fabric-${minecraft_version}:${xaero_world_map_version}"
+    compileOnly "info.journeymap:journeymap-api-fabric:${journeymap_api_version}"
 
     runtimeOnly "maven.modrinth:sodium:${sodium_version}"
+    runtimeOnly "maven.modrinth:journeymap:${journeymap_version}"
     runtimeOnly "maven.modrinth:voxy:${voxy_version}"
     runtimeOnly "xaero.map:xaeroworldmap-fabric-${minecraft_version}:${xaero_world_map_version}"
 }

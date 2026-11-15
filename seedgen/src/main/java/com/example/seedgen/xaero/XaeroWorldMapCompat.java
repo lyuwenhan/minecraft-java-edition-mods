@@ -16,6 +16,9 @@ public final class XaeroWorldMapCompat {
 			return current;
 		}
 		XaeroWorldMapWriteBridge.useLevel(level);
+		if (!XaeroWorldMapGeneratedChunkReceiver.INSTANCE.isLive()) {
+			return current;
+		}
 		if (current == null) {
 			return XaeroWorldMapGeneratedChunkReceiver.INSTANCE;
 		}

@@ -3,6 +3,7 @@ package com.example.seedgen;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonParseException;
+import com.google.gson.annotations.SerializedName;
 
 import net.fabricmc.loader.api.FabricLoader;
 
@@ -24,7 +25,10 @@ public final class SeedgenConfig {
 	public boolean enable = true;
 	public boolean showProgress = false;
 	public boolean generateForFreecam = false;
-	public boolean generateForXaeroMap = false;
+
+	@SerializedName(value = "generateForWorldMapCenter", alternate = "generateForXaeroMap")
+	public boolean generateForWorldMapCenter = false;
+
 	public int radius = 64;
 	public int threads = 32;
 	public Map<String, Long> seeds = new HashMap<>();

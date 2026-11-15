@@ -3,7 +3,7 @@
 	"id": "seedgen",
 	"version": "${version}",
 	"name": "Seedgen",
-	"description": "Locally generates vanilla terrain from a known world seed without requiring the server to generate it. Supports Voxy and Xaero's World Map.",
+	"description": "Locally generates vanilla terrain from a known world seed without requiring the server to generate it.",
 	"authors": [
 		"Wenhan"
 	],
@@ -24,6 +24,7 @@
 	},
 	"suggests": {
 		"voxy": "*",
-		"xaeroworldmap": "*"
+		"xaeroworldmap": "*",
+		"journeymap": "*"
 	}
 }

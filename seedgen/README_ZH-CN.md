@@ -6,7 +6,7 @@
 
 一个客户端 Fabric 模组, 根据已知世界种子在客户端本地生成原版地形, 无需服务器加载或生成每一个来源区块。
 
-支持的模组：[Voxy](https://modrinth.com/mod/voxy), [Xaero's World Map](https://modrinth.com/mod/xaeros-world-map)。
+支持的模组：[Voxy](https://modrinth.com/mod/voxy)、[Xaero's World Map](https://modrinth.com/mod/xaeros-world-map)、[JourneyMap](https://modrinth.com/plugin/journeymap)。
 
 > [!IMPORTANT]
 > 多人服务器生成必须使用完全正确的世界种子。错误的种子会产生与服务器不一致的地形。受 [MC-55596](https://bugs.mojang.com/browse/MC/issues/MC-55596) 影响, 即使种子正确, 树木等生成地物也有可能与服务器不一致。
@@ -28,7 +28,7 @@
 |`/seedgen generateforfreecam`|查看是否在 Freecam 位置生成。|
 |`/seedgen generateforfreecam on\|off\|toggle`|控制是否针对当前摄像机周围区域生成, 默认关闭。|
 |`/seedgen generateforworldmapcenter`|查看世界地图中心位置生成是否启用。|
-|`/seedgen generateforworldmapcenter on\|off\|toggle`|将打开的世界地图中心作为生成目标, 默认关闭。|
+|`/seedgen generateforworldmapcenter on\|off\|toggle`|将打开的 Xaero 或 JourneyMap 全屏地图中心作为生成目标, 默认关闭。|
 |`/seedgen seed`|查看当前世界的有效种子。|
 |`/seedgen seed <seed>`|设置多人服务器种子；本地游戏可直接提供种子时隐藏。|
 
@@ -40,6 +40,7 @@
 - Java 25
 - Voxy (可选)
 - Xaero's World Map (可选)
+- JourneyMap (可选)
 
 ## License
 
