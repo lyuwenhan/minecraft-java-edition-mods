@@ -4,6 +4,7 @@ import com.example.seedgen.SeedgenConfig;
 import com.example.seedgen.freecam.FreecamGenerationTargetProvider;
 import com.example.seedgen.player.PlayerGenerationTargetProvider;
 import com.example.seedgen.voxy.GeneratedChunkReceiver;
+import com.example.seedgen.xaero.XaeroWorldMapGenerationTargetProvider;
 
 import it.unimi.dsi.fastutil.longs.LongOpenHashSet;
 import it.unimi.dsi.fastutil.longs.LongSet;
@@ -76,19 +77,15 @@ import net.minecraft.world.level.levelgen.structure.StructureStart;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplateManager;
 import net.minecraft.world.level.levelgen.synth.NormalNoise;
 import net.minecraft.world.level.lighting.LevelLightEngine;
-import net.minecraft.world.level.storage.LevelStorageSource;
 import net.minecraft.world.ticks.BlackholeTickAccess;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Base64;
 import java.util.Collections;
 import java.util.EnumSet;
 import java.util.HashMap;
@@ -177,11 +174,13 @@ public final class SeedgenGenerationService {
 		}
 
 		if (receiver == null || !receiver.isLive()) {
-			retire(Component.translatable("command.seedgen.state.voxy_not_ready"));
+			retire(Component.translatable("command.seedgen.state.destination_not_ready"));
 			return;
 		}
 
-		// Provider call order is the priority order: freecam first, then player.
+		// Provider priority order: freecam, Xaero map, then player.
+		GenerationTarget xaeroMapTarget =
+				XaeroWorldMapGenerationTargetProvider.getTarget(client, config.generateForXaeroMap);
 		GenerationTarget freecamTarget =
 				FreecamGenerationTargetProvider.getTarget(client, config.generateForFreecam);
 		GenerationTarget playerTarget =
@@ -190,11 +189,12 @@ public final class SeedgenGenerationService {
 			retire(Component.translatable("command.seedgen.state.waiting_world"));
 			return;
 		}
+		GenerationTarget priorityTarget = freecamTarget.isActive() ? freecamTarget : xaeroMapTarget;
 		long priorityCenter =
-				freecamTarget.isActive()
-						? ChunkPos.pack(freecamTarget.unitX(), freecamTarget.unitZ())
+				priorityTarget.isActive()
+						? ChunkPos.pack(priorityTarget.unitX(), priorityTarget.unitZ())
 						: NO_ACTIVE_REGION;
-		int priorityRadius = freecamTarget.radius();
+		int priorityRadius = priorityTarget.radius();
 		Session current = session;
 		if (current != null
 				&& (current.level != level
@@ -262,10 +262,9 @@ public final class SeedgenGenerationService {
 				current.workerCount,
 				current.inFlight.get(),
 				current.generatedChunks.get(),
-				current.insertedChunks.get(),
-				current.insertedSections.get(),
-				current.skippedVoxy.get(),
-				current.emptyChunks.get(),
+				completed,
+				total,
+				current.skippedExisting.get(),
 				current.countState(CHUNK_STATE_FAILED));
 	}
 
@@ -365,10 +364,7 @@ public final class SeedgenGenerationService {
 		private volatile long activeRegion = NO_ACTIVE_REGION;
 		private long completionOnlyRegion = NO_ACTIVE_REGION;
 		private final AtomicInteger generatedChunks = new AtomicInteger();
-		private final AtomicInteger insertedChunks = new AtomicInteger();
-		private final AtomicInteger insertedSections = new AtomicInteger();
-		private final AtomicInteger skippedVoxy = new AtomicInteger();
-		private final AtomicInteger emptyChunks = new AtomicInteger();
+		private final AtomicInteger skippedExisting = new AtomicInteger();
 		private int evictedInnerRegionRadius = -1;
 		private boolean generationCacheCleared;
 		private long priorityCenter;
@@ -1138,7 +1134,7 @@ public final class SeedgenGenerationService {
 			throw new CancellationException("Seedgen world is no longer live");
 		}
 		if (!forcedRetry && owner.receiver.hasData(owner.context.height, chunkX, chunkZ)) {
-			owner.skippedVoxy.incrementAndGet();
+			owner.skippedExisting.incrementAndGet();
 			return true;
 		}
 
@@ -1149,18 +1145,12 @@ public final class SeedgenGenerationService {
 		ProtoChunk chunk = generated.chunk();
 		owner.generatedChunks.incrementAndGet();
 		if (!forcedRetry && owner.receiver.hasData(owner.context.height, chunkX, chunkZ)) {
-			owner.skippedVoxy.incrementAndGet();
+			owner.skippedExisting.incrementAndGet();
 			return true;
 		}
 
 		LevelLightEngine lightEngine = owner.context.light(chunkX, chunkZ);
-		int insertedSections = owner.receiver.receive(chunk, lightEngine);
-		if (insertedSections == 0) {
-			owner.emptyChunks.incrementAndGet();
-			return true;
-		}
-		owner.insertedChunks.incrementAndGet();
-		owner.insertedSections.addAndGet(insertedSections);
+		owner.receiver.receive(chunk, lightEngine);
 		return true;
 	}
 
@@ -1208,7 +1198,6 @@ public final class SeedgenGenerationService {
 		private final ServerLevel serverLevel;
 		private final StructureTemplateManager structureTemplates;
 		private final ChunkGeneratorStructureState structureState;
-		private final LevelStorageSource.LevelStorageAccess storageAccess;
 		private final ConcurrentHashMap<Long, ProtoChunk> chunks = new ConcurrentHashMap<>();
 		private final ConcurrentHashMap<Long, GenerationStages> stageStates =
 				new ConcurrentHashMap<>();
@@ -1236,8 +1225,7 @@ public final class SeedgenGenerationService {
 				ResourceKey<Level> dimension,
 				ServerLevel serverLevel,
 				StructureTemplateManager structureTemplates,
-				ChunkGeneratorStructureState structureState,
-				LevelStorageSource.LevelStorageAccess storageAccess) {
+				ChunkGeneratorStructureState structureState) {
 			this.sourceLevel = sourceLevel;
 			this.registries = registries;
 			this.height = height;
@@ -1250,7 +1238,6 @@ public final class SeedgenGenerationService {
 			this.serverLevel = serverLevel;
 			this.structureTemplates = structureTemplates;
 			this.structureState = structureState;
-			this.storageAccess = storageAccess;
 			if (serverLevel == null) {
 				structureState.ensureStructuresGenerated();
 			}
@@ -1309,8 +1296,7 @@ public final class SeedgenGenerationService {
 							dimension,
 							serverLevel,
 							serverLevel.getStructureTemplateManager(),
-							virtualStructureState,
-							null);
+							virtualStructureState);
 				}
 			}
 
@@ -1360,27 +1346,10 @@ public final class SeedgenGenerationService {
 			RandomState randomState = RandomState.create(noises, seed, activeSettings);
 			LevelHeightAccessor height =
 					LevelHeightAccessor.create(level.getMinY(), level.getHeight());
-			LevelStorageSource storage =
-					LevelStorageSource.createDefault(
-							client.gameDirectory.toPath().resolve("seedgen-virtual"));
-			String encodedDimension =
-					Base64.getUrlEncoder()
-							.withoutPadding()
-							.encodeToString(
-									dimension
-											.identifier()
-											.toString()
-											.getBytes(StandardCharsets.UTF_8));
-			LevelStorageSource.LevelStorageAccess access;
-			try {
-				access = storage.createAccess(seed + "-" + encodedDimension);
-			} catch (IOException exception) {
-				throw new IllegalStateException("Cannot open the virtual world", exception);
-			}
 			StructureTemplateManager templates =
 					new StructureTemplateManager(
 							vanillaDataResources,
-							access,
+							null,
 							DataFixers.getDataFixer(),
 							registries.lookupOrThrow(Registries.BLOCK));
 			RandomState structureRandomState = RandomState.create(noises, seed, settings.value());
@@ -1402,8 +1371,7 @@ public final class SeedgenGenerationService {
 					dimension,
 					null,
 					templates,
-					structureState,
-					access);
+					structureState);
 		}
 
 		private static RegistryAccess worldgenRegistries() {
@@ -2119,13 +2087,6 @@ public final class SeedgenGenerationService {
 			}
 			closed = true;
 			clearGenerationCache();
-			if (storageAccess != null) {
-				try {
-					storageAccess.close();
-				} catch (IOException exception) {
-					LOGGER.warn("Cannot close Seedgen virtual world", exception);
-				}
-			}
 		}
 	}
 

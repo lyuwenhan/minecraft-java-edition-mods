@@ -1,6 +1,7 @@
 {
 	"required": true,
 	"package": "com.example.seedgen.mixin",
+	"plugin": "com.example.seedgen.mixin.SeedgenMixinPlugin",
 	"compatibilityLevel": "JAVA_25",
 	"client": [
 		"CappedProcessorMixin",
@@ -16,12 +17,15 @@
 		"RuinedPortalStructureMixin",
 		"StructureMixin",
 		"StructureMarkerEntityMixin",
+		"StructureTemplateManagerMixin",
 		"StructureTemplateEntityMixin",
 		"StructureTemplatePaletteMixin",
 		"SwampHutEntityMixin",
 		"TemplateFeatureMixin",
 		"UndergroundFeatureMixin",
-		"WorldGenerationContextMixin"
+		"WorldGenerationContextMixin",
+		"XaeroGuiMapMixin",
+		"XaeroMapWriterMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1

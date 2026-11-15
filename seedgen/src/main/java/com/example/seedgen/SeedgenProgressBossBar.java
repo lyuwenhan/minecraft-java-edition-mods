@@ -16,7 +16,7 @@ final class SeedgenProgressBossBar {
 	private static final ServerBossEvent EVENT =
 			new ServerBossEvent(
 					EVENT_ID,
-					Component.literal("Seedgen"),
+					Component.translatable("gui.seedgen.progress"),
 					BossEvent.BossBarColor.YELLOW,
 					BossEvent.BossBarOverlay.PROGRESS);
 	private static boolean visible;

@@ -24,6 +24,7 @@ public final class SeedgenConfig {
 	public boolean enable = true;
 	public boolean showProgress = false;
 	public boolean generateForFreecam = false;
+	public boolean generateForXaeroMap = false;
 	public int radius = 64;
 	public int threads = 32;
 	public Map<String, Long> seeds = new HashMap<>();

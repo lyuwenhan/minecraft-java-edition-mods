@@ -1,14 +1,14 @@
 {
 	"command.seedgen.enabled": "Seedgen enabled.",
 	"command.seedgen.disabled": "Seedgen disabled.",
-	"command.seedgen.status": "Seedgen: %s\nWorld: %s\nSeed: %s\nRadius: %s chunks\nFreecam generation: %s\nStatus: %s",
-	"command.seedgen.generator.details": "%s\nProgress: %s/%s (%s%%)\nThreads: %s, active tasks: %s\nGenerated: %s chunks, inserted: %s chunks / %s sections\nSkipped: %s already in Voxy, empty chunks: %s\nErrors: %s",
+	"command.seedgen.status": "Seedgen: %s\nWorld: %s\nSeed: %s\nRadius: %s chunks\nFreecam generation: %s\nWorld map center generation: %s\nStatus: %s",
+	"command.seedgen.generator.details": "%s\nProgress: %s/%s (%s%%)\nThreads: %s, active tasks: %s\nGenerated: %s chunks; processed: %s/%s chunks\nSkipped because all destinations already had data: %s\nErrors: %s",
 	"command.seedgen.state.inactive": "Inactive",
 	"command.seedgen.state.waiting_world": "Waiting to enter a world",
 	"command.seedgen.state.disabled": "Disabled",
 	"command.seedgen.state.no_seed": "Paused: no seed for this world",
 	"command.seedgen.state.unsupported_dimension": "Paused: unsupported dimension %s",
-	"command.seedgen.state.voxy_not_ready": "Paused: Voxy world is not ready",
+	"command.seedgen.state.destination_not_ready": "Paused: a generated-chunk destination is not ready",
 	"command.seedgen.state.preparing": "Preparing %s",
 	"command.seedgen.state.restarting": "Restarting",
 	"command.seedgen.state.running": "Generating %s",
@@ -22,11 +22,14 @@
 	"command.seedgen.progress_set": "Seedgen generation progress display set to %s.",
 	"command.seedgen.freecam": "Seedgen Freecam generation: %s.",
 	"command.seedgen.freecam_set": "Seedgen Freecam generation set to %s.",
+	"command.seedgen.world_map_center": "Seedgen world map center generation: %s.",
+	"command.seedgen.world_map_center_set": "Seedgen world map center generation set to %s.",
 	"command.seedgen.option.on": "on",
 	"command.seedgen.option.off": "off",
 	"command.seedgen.seed": "Seed for world %s: %s",
 	"command.seedgen.seed_set": "Seed for world %s set to %s.",
 	"command.seedgen.seed_local_read_only": "The local server provides its real seed; manual seed setting is disabled.",
 	"command.seedgen.seed_unset": "not set",
-	"command.seedgen.no_server": "You are not in a world."
+	"command.seedgen.no_server": "You are not in a world.",
+	"gui.seedgen.progress": "Seedgen"
 }

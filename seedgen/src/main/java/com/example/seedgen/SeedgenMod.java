@@ -1,7 +1,9 @@
 package com.example.seedgen;
 
 import com.example.seedgen.core.SeedgenGenerationService;
-import com.example.seedgen.voxy.VoxyChunkReceiver;
+import com.example.seedgen.voxy.GeneratedChunkReceiver;
+import com.example.seedgen.voxy.VoxyCompat;
+import com.example.seedgen.xaero.XaeroWorldMapCompat;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.LongArgumentType;
@@ -29,12 +31,14 @@ public final class SeedgenMod implements ClientModInitializer {
 		ClientTickEvents.END_CLIENT_TICK.register(
 				client -> {
 					String worldKey = getCurrentWorldKey();
+					GeneratedChunkReceiver receiver =
+							client.level == null ? null : VoxyCompat.find(client.level);
 					SeedgenGenerationService.tick(
 							client,
 							config,
 							worldKey,
 							getEffectiveSeed(client, worldKey),
-							client.level == null ? null : VoxyChunkReceiver.find(client.level));
+							XaeroWorldMapCompat.addReceiver(receiver, client.level));
 					SeedgenProgressBossBar.tick(client, config.showProgress);
 				});
 	}
@@ -114,6 +118,24 @@ public final class SeedgenMod implements ClientModInitializer {
 																context.getSource(),
 																!config.generateForFreecam))));
 		root.then(
+				ClientCommands.literal("generateforworldmapcenter")
+						.executes(context -> sendXaeroMap(context.getSource()))
+						.then(
+								ClientCommands.literal("on")
+										.executes(
+												context -> setXaeroMap(context.getSource(), true)))
+						.then(
+								ClientCommands.literal("off")
+										.executes(
+												context -> setXaeroMap(context.getSource(), false)))
+						.then(
+								ClientCommands.literal("toggle")
+										.executes(
+												context ->
+														setXaeroMap(
+																context.getSource(),
+																!config.generateForXaeroMap))));
+		root.then(
 				ClientCommands.literal("seed")
 						.executes(context -> sendSeed(context.getSource()))
 						.then(
@@ -152,12 +174,19 @@ public final class SeedgenMod implements ClientModInitializer {
 		source.sendFeedback(
 				Component.translatable(
 						"command.seedgen.status",
-						config.enable ? "ON" : "OFF",
+						Component.translatable(
+								config.enable
+										? "command.seedgen.option.on"
+										: "command.seedgen.option.off"),
 						getCurrentWorldLabel(),
 						seedText(getEffectiveSeed(Minecraft.getInstance(), worldKey)),
 						config.radius,
 						Component.translatable(
 								config.generateForFreecam
+										? "command.seedgen.option.on"
+										: "command.seedgen.option.off"),
+						Component.translatable(
+								config.generateForXaeroMap
 										? "command.seedgen.option.on"
 										: "command.seedgen.option.off"),
 						SeedgenGenerationService.describeState()));
@@ -232,6 +261,30 @@ public final class SeedgenMod implements ClientModInitializer {
 		source.sendFeedback(
 				Component.translatable(
 						"command.seedgen.freecam_set",
+						Component.translatable(
+								enabled
+										? "command.seedgen.option.on"
+										: "command.seedgen.option.off")));
+		return Command.SINGLE_SUCCESS;
+	}
+
+	private static int sendXaeroMap(FabricClientCommandSource source) {
+		source.sendFeedback(
+				Component.translatable(
+						"command.seedgen.world_map_center",
+						Component.translatable(
+								config.generateForXaeroMap
+										? "command.seedgen.option.on"
+										: "command.seedgen.option.off")));
+		return Command.SINGLE_SUCCESS;
+	}
+
+	private static int setXaeroMap(FabricClientCommandSource source, boolean enabled) {
+		config.generateForXaeroMap = enabled;
+		config.save();
+		source.sendFeedback(
+				Component.translatable(
+						"command.seedgen.world_map_center_set",
 						Component.translatable(
 								enabled
 										? "command.seedgen.option.on"

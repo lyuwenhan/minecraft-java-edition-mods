@@ -28,6 +28,10 @@ repositories {
                 name = "Modrinth"
                 url = "https://api.modrinth.com/maven"
     }
+    maven {
+        name = "Xaero's Maven"
+        url = "https://chocolateminecraft.com/maven"
+    }
 }
 
 dependencies {
@@ -36,9 +40,11 @@ dependencies {
     implementation "net.fabricmc.fabric-api:fabric-api:${fabric_api_version}"
 
     compileOnly "maven.modrinth:voxy:${voxy_version}"
+    compileOnly "xaero.map:xaeroworldmap-fabric-${minecraft_version}:${xaero_world_map_version}"
 
     runtimeOnly "maven.modrinth:sodium:${sodium_version}"
     runtimeOnly "maven.modrinth:voxy:${voxy_version}"
+    runtimeOnly "xaero.map:xaeroworldmap-fabric-${minecraft_version}:${xaero_world_map_version}"
 }
 
 java {
