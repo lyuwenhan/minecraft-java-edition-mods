@@ -1,10 +1,12 @@
 # Languages (语言)
 
-[EN/English](https://lyuwenhan.github.io/extensions/minecraft-java/voxygen/README/README.html)|[ZH-CN/简体中文](https://lyuwenhan.github.io/extensions/minecraft-java/voxygen/README/README_ZH-CN.html)
+[EN/English](https://lyuwenhan.github.io/extensions/minecraft-java/seedgen/README/README.html)|[ZH-CN/简体中文](https://lyuwenhan.github.io/extensions/minecraft-java/seedgen/README/README_ZH-CN.html)
 
-# Voxygen
+# Seedgen
 
-A client-side Fabric mod that generates vanilla terrain locally and submits it to [Voxy](https://modrinth.com/mod/voxy). It fills distant Voxy terrain without asking the server to load or generate every source chunk.
+A client-side Fabric mod that locally generates vanilla terrain from a known world seed without asking the server to load or generate every source chunk.
+
+Supported mods: [Voxy](https://modrinth.com/mod/voxy), [Xaero's World Map](https://modrinth.com/mod/xaeros-world-map), [JourneyMap](https://modrinth.com/plugin/journeymap).
 
 > [!IMPORTANT]
 > Multiplayer generation requires the exact world seed. A wrong seed produces terrain that does not match the server. Due to [MC-55596](https://bugs.mojang.com/browse/MC/issues/MC-55596), generated features such as trees may be inconsistent with the server even when the seed is correct.
@@ -13,23 +15,22 @@ A client-side Fabric mod that generates vanilla terrain locally and submits it t
 
 |Command|Description|
 |---|---|
-|`/voxygen on`|Enable Voxygen.|
-|`/voxygen off`|Disable Voxygen and stop the active session.|
-|`/voxygen toggle`|Toggle Voxygen.|
-|`/voxygen status`|Show the world, seed, radius, progress, thread usage, and result counters.|
-|`/voxygen radius`|Show the configured radius in vanilla chunks.|
-|`/voxygen radius <radius>`|Set the radius. Default: `64`; minimum: `1`.|
-|`/voxygen threads`|Show the worker-thread count.|
-|`/voxygen threads <threads>`|Set worker threads from `1` to `256`. Default: `32`.|
-|`/voxygen progress`|Show whether the progress boss bar is enabled.|
-|`/voxygen progress on\|off\|toggle`|Control the progress boss bar. It is disabled by default.|
-|`/voxygen seed`|Show the effective seed for the current world.|
-|`/voxygen seed <seed>`|Set the multiplayer seed. Hidden when the integrated server provides it.|
-
-## Performance notes
-
-- Chunk generation is CPU- and memory-intensive. Increase `threads` gradually rather than immediately using every available logical processor.
-- A larger radius increases the number of large regions quadratically.
+|`/seedgen on`|Enable Seedgen.|
+|`/seedgen off`|Disable Seedgen and stop the active session.|
+|`/seedgen toggle`|Toggle Seedgen.|
+|`/seedgen status`|Show the world, seed, radius, progress, thread usage, and result counters.|
+|`/seedgen radius`|Show the configured radius in vanilla chunks.|
+|`/seedgen radius <radius>`|Set the radius. Default: `64`; minimum: `1`.|
+|`/seedgen threads`|Show the worker-thread count.|
+|`/seedgen threads <threads>`|Set worker threads from `1` to `256`. Default: `32`.|
+|`/seedgen progress`|Show whether the progress boss bar is enabled.|
+|`/seedgen progress on\|off\|toggle`|Control the progress boss bar. It is disabled by default.|
+|`/seedgen generateforfreecam`|Show whether Freecam target generation is enabled.|
+|`/seedgen generateforfreecam on\|off\|toggle`|Control whether to generate around the current camera. Disabled by default.|
+|`/seedgen generateforworldmapcenter`|Show whether world-map-center target generation is enabled.|
+|`/seedgen generateforworldmapcenter on\|off\|toggle`|Use the center of an open Xaero or JourneyMap full-screen map as a generation target. Disabled by default.|
+|`/seedgen seed`|Show the effective seed for the current world.|
+|`/seedgen seed <seed>`|Set the multiplayer seed. Hidden when the integrated server provides it.|
 
 ## Supported Versions
 
@@ -37,7 +38,9 @@ A client-side Fabric mod that generates vanilla terrain locally and submits it t
 - Fabric Loader 0.19.5+
 - Fabric API 0.160.5+
 - Java 25
-- Voxy (Required)
+- Voxy (Optional)
+- Xaero's World Map (Optional)
+- JourneyMap (Optional)
 
 ## License
 

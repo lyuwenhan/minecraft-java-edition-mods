@@ -394,6 +394,15 @@
 			"Planet Minecraft": "https://www.planetminecraft.com/mod/player-highlighter"
 		}
 	},
+	"seedgen": {
+		"versions": [
+			"1.2.11"
+		],
+		"hasIcon": true,
+		"displayName": "Seedgen",
+		"description": "Locally generates vanilla terrain from a known world seed without requiring the server to generate it.",
+		"link": {}
+	},
 	"server-manager": {
 		"versions": [
 			"1.1.0",
