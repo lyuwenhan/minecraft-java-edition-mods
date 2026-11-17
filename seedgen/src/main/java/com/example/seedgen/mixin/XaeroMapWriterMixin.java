@@ -174,72 +174,81 @@ abstract class XaeroMapWriterMixin {
 			playerChunkZ = generatedChunkZ;
 			insideX = generatedChunkX & 3;
 			insideZ = generatedChunkZ & 3;
-			LevelChunk snapshot = pending.snapshot();
-			XaeroWorldMapWriteBridge.runWithChunk(
-					snapshot,
-					() ->
-							skipped[0] =
-									writer.writeChunk(
-											level,
-											blockRegistry,
-											1,
-											false,
-											biomeRegistry,
-											overlayManager,
-											true,
-											true,
-											ignoreHeightmaps,
-											flowers,
-											detailedDebug,
-											mutablePos,
-											blockTintProvider,
-											caveDepth,
-											caveStart,
-											writingLayer,
-											generatedChunkX >> 2,
-											generatedChunkZ >> 2,
-											(generatedChunkX >> 2) & 7,
-											(generatedChunkZ >> 2) & 7,
-											generatedChunkX,
-											generatedChunkZ,
-											fastConfig));
-
 			MapTile tile =
 					writer.getMapProcessor()
 							.getMapTile(writingLayer, generatedChunkX, generatedChunkZ);
-			if (!skipped[0]) {
-				MapTileChunk tileChunk =
-						writer.getMapProcessor()
-								.getMapChunk(
-										writingLayer, generatedChunkX >> 2, generatedChunkZ >> 2);
-				if (tileChunk != null) {
-					tileChunk.updateBuffers(
-							writer.getMapProcessor(),
-							blockTintProvider,
-							overlayManager,
-							detailedDebug,
-							blockStateShortShapeCache,
-							fastConfig);
-					tileChunk.setChanged(false);
-				}
-			}
-			if (!skipped[0] || (tile != null && tile.wasWrittenOnce())) {
+			if (tile != null && (tile.isLoaded() || tile.wasWrittenOnce())) {
 				XaeroWorldMapWriteBridge.complete(pending);
 			} else {
-				MapRegion region =
+				LevelChunk snapshot = pending.snapshot();
+				XaeroWorldMapWriteBridge.runWithChunk(
+						snapshot,
+						() ->
+								skipped[0] =
+										writer.writeChunk(
+												level,
+												blockRegistry,
+												1,
+												false,
+												biomeRegistry,
+												overlayManager,
+												true,
+												true,
+												ignoreHeightmaps,
+												flowers,
+												detailedDebug,
+												mutablePos,
+												blockTintProvider,
+												caveDepth,
+												caveStart,
+												writingLayer,
+												generatedChunkX >> 2,
+												generatedChunkZ >> 2,
+												(generatedChunkX >> 2) & 7,
+												(generatedChunkZ >> 2) & 7,
+												generatedChunkX,
+												generatedChunkZ,
+												fastConfig));
+
+				tile =
 						writer.getMapProcessor()
-								.getLeafMapRegion(
-										writingLayer,
-										generatedChunkX >> 5,
-										generatedChunkZ >> 5,
-										true);
-				if (region != null && region.getLoadState() != 2) {
-					writer.getMapProcessor()
-							.getMapSaveLoad()
-							.requestLoad(region, "Seedgen generated chunk", false);
+								.getMapTile(writingLayer, generatedChunkX, generatedChunkZ);
+				if (!skipped[0]) {
+					MapTileChunk tileChunk =
+							writer.getMapProcessor()
+									.getMapChunk(
+											writingLayer,
+											generatedChunkX >> 2,
+											generatedChunkZ >> 2);
+					if (tileChunk != null) {
+						tileChunk.updateBuffers(
+								writer.getMapProcessor(),
+								blockTintProvider,
+								overlayManager,
+								detailedDebug,
+								blockStateShortShapeCache,
+								fastConfig);
+						tileChunk.setChanged(false);
+					}
+					XaeroWorldMapWriteBridge.complete(pending);
+				} else if (tile != null && (tile.isLoaded() || tile.wasWrittenOnce())) {
+					XaeroWorldMapWriteBridge.complete(pending);
+				} else {
+					MapRegion region =
+							writer.getMapProcessor()
+									.getLeafMapRegion(
+											writingLayer,
+											generatedChunkX >> 5,
+											generatedChunkZ >> 5,
+											true);
+					if (region != null && region.getLoadState() != 2) {
+						writer.getMapProcessor()
+								.getMapSaveLoad()
+								.requestLoad(region, "Seedgen generated chunk", false);
+					}
+					XaeroWorldMapWriteBridge.retryFirst(pending);
+					waitForXaero = true;
 				}
-				XaeroWorldMapWriteBridge.retryFirst(pending);
-				waitForXaero = true;
 			}
 		} catch (Throwable throwable) {
 			XaeroWorldMapWriteBridge.fail(pending, throwable);

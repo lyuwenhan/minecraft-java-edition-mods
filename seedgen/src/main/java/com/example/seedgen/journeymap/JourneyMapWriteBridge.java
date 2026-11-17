@@ -142,6 +142,12 @@ final class JourneyMapWriteBridge {
 					continue;
 				}
 				try {
+					if (hasAuthoritativeData(
+							pending.key().level(), pending.chunkX(), pending.chunkZ())) {
+						AVAILABLE.add(pending.key());
+						QUEUED.remove(pending.key());
+						continue;
+					}
 					LevelChunk chunk = snapshot(pending.key().level(), pending.source());
 					ChunkMD metadata = new ChunkMD(chunk, true);
 					MapType mapType = MapType.day(pending.key().level().dimension());
@@ -182,7 +188,18 @@ final class JourneyMapWriteBridge {
 		}
 	}
 
+	private static boolean hasAuthoritativeData(ClientLevel level, int chunkX, int chunkZ) {
+		ChunkKey key = new ChunkKey(level, ChunkPos.pack(chunkX, chunkZ));
+		scanRegion(level, chunkX, chunkZ, true);
+		return AVAILABLE.contains(key);
+	}
+
 	private static void scanRegion(ClientLevel level, int chunkX, int chunkZ) {
+		scanRegion(level, chunkX, chunkZ, false);
+	}
+
+	private static void scanRegion(
+			ClientLevel level, int chunkX, int chunkZ, boolean forceRefresh) {
 		Minecraft minecraft = Minecraft.getInstance();
 		File worldDir = FileHandler.getJMWorldDir(minecraft);
 		MapType mapType = MapType.day(level.dimension());
@@ -192,7 +209,7 @@ final class JourneyMapWriteBridge {
 				new RegionKey(level, region.regionX, region.regionZ, imageFile.getAbsolutePath());
 		long modified = imageFile.isFile() ? imageFile.lastModified() : 0L;
 		Long previous = SCANNED_REGIONS.putIfAbsent(regionKey, modified);
-		if (previous != null && previous == modified) {
+		if (!forceRefresh && previous != null && previous == modified) {
 			return;
 		}
 		SCANNED_REGIONS.put(regionKey, modified);

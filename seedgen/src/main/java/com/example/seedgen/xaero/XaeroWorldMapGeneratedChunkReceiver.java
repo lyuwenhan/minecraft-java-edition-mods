@@ -35,7 +35,7 @@ public final class XaeroWorldMapGeneratedChunkReceiver implements GeneratedChunk
 			return false;
 		}
 		MapTile tile = processor.getMapTile(processor.getCurrentCaveLayer(), chunkX, chunkZ);
-		return tile != null && tile.wasWrittenOnce();
+		return tile != null && (tile.isLoaded() || tile.wasWrittenOnce());
 	}
 
 	@Override

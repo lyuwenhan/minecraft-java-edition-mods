@@ -131,6 +131,7 @@ public final class SeedgenGenerationService {
 	private static final int CHUNK_STATE_QUEUED = 1 << 1;
 	private static final int CHUNK_STATE_ACTIVE = 1 << 2;
 	private static final int CHUNK_STATE_FAILED = 1 << 3;
+	private static final int BACKGROUND_TARGET_RADIUS = 5;
 	private static final long NO_ACTIVE_REGION = Long.MIN_VALUE;
 
 	private static volatile Session session;
@@ -380,6 +381,9 @@ public final class SeedgenGenerationService {
 		private final Set<Long> priorityRegionCoverage = new HashSet<>();
 		private final Set<Long> secondaryPriorityRegionCoverage = new HashSet<>();
 		private final Set<Long> tertiaryPriorityRegionCoverage = new HashSet<>();
+		private final Set<Long> freecamBackgroundRegionCoverage = new HashSet<>();
+		private final Set<Long> xaeroMapBackgroundRegionCoverage = new HashSet<>();
+		private final Set<Long> journeyMapBackgroundRegionCoverage = new HashSet<>();
 		private final ChunkStateTable chunkStates = new ChunkStateTable();
 		private final Set<Long> queuedRegions = ConcurrentHashMap.newKeySet();
 		private final ConcurrentLinkedDeque<Long> pending = new ConcurrentLinkedDeque<>();
@@ -650,6 +654,36 @@ public final class SeedgenGenerationService {
 								ChunkPos.getZ(newTertiaryPriorityCenter),
 								newTertiaryPriorityRadius);
 			}
+			List<Long> orderedFreecamBackgroundRegions;
+			if (newPriorityCenter == NO_ACTIVE_REGION) {
+				orderedFreecamBackgroundRegions = List.of();
+			} else {
+				orderedFreecamBackgroundRegions =
+						squareInChebyshevOrder(
+								ChunkPos.getX(newPriorityCenter),
+								ChunkPos.getZ(newPriorityCenter),
+								BACKGROUND_TARGET_RADIUS);
+			}
+			List<Long> orderedXaeroMapBackgroundRegions;
+			if (newSecondaryPriorityCenter == NO_ACTIVE_REGION) {
+				orderedXaeroMapBackgroundRegions = List.of();
+			} else {
+				orderedXaeroMapBackgroundRegions =
+						squareInChebyshevOrder(
+								ChunkPos.getX(newSecondaryPriorityCenter),
+								ChunkPos.getZ(newSecondaryPriorityCenter),
+								BACKGROUND_TARGET_RADIUS);
+			}
+			List<Long> orderedJourneyMapBackgroundRegions;
+			if (newTertiaryPriorityCenter == NO_ACTIVE_REGION) {
+				orderedJourneyMapBackgroundRegions = List.of();
+			} else {
+				orderedJourneyMapBackgroundRegions =
+						squareInChebyshevOrder(
+								ChunkPos.getX(newTertiaryPriorityCenter),
+								ChunkPos.getZ(newTertiaryPriorityCenter),
+								BACKGROUND_TARGET_RADIUS);
+			}
 			Set<Long> nextPriorityRegionCoverage = new HashSet<>(orderedPriorityRegions);
 			Set<Long> nextSecondaryPriorityRegionCoverage =
 					new HashSet<>(orderedSecondaryPriorityRegions);
@@ -661,12 +695,31 @@ public final class SeedgenGenerationService {
 			Set<Long> nextAllPriorityRegionCoverage = new HashSet<>(nextPriorityRegionCoverage);
 			nextAllPriorityRegionCoverage.addAll(nextSecondaryPriorityRegionCoverage);
 			nextAllPriorityRegionCoverage.addAll(nextTertiaryPriorityRegionCoverage);
+			Set<Long> nextPlayerRegionCoverage = new HashSet<>(orderedPlayerRegions);
+			nextPlayerRegionCoverage.removeAll(nextAllPriorityRegionCoverage);
+			Set<Long> coveredBeforeBackground = new HashSet<>(nextAllPriorityRegionCoverage);
+			coveredBeforeBackground.addAll(nextPlayerRegionCoverage);
+			Set<Long> nextFreecamBackgroundRegionCoverage =
+					new HashSet<>(orderedFreecamBackgroundRegions);
+			nextFreecamBackgroundRegionCoverage.removeAll(coveredBeforeBackground);
+			Set<Long> nextXaeroMapBackgroundRegionCoverage =
+					new HashSet<>(orderedXaeroMapBackgroundRegions);
+			nextXaeroMapBackgroundRegionCoverage.removeAll(coveredBeforeBackground);
+			nextXaeroMapBackgroundRegionCoverage.removeAll(nextFreecamBackgroundRegionCoverage);
+			Set<Long> nextJourneyMapBackgroundRegionCoverage =
+					new HashSet<>(orderedJourneyMapBackgroundRegions);
+			nextJourneyMapBackgroundRegionCoverage.removeAll(coveredBeforeBackground);
+			nextJourneyMapBackgroundRegionCoverage.removeAll(nextFreecamBackgroundRegionCoverage);
+			nextJourneyMapBackgroundRegionCoverage.removeAll(nextXaeroMapBackgroundRegionCoverage);
 			List<Long> orderedRegions =
 					new ArrayList<>(
 							orderedPriorityRegions.size()
 									+ orderedSecondaryPriorityRegions.size()
 									+ orderedTertiaryPriorityRegions.size()
-									+ orderedPlayerRegions.size());
+									+ orderedPlayerRegions.size()
+									+ orderedFreecamBackgroundRegions.size()
+									+ orderedXaeroMapBackgroundRegions.size()
+									+ orderedJourneyMapBackgroundRegions.size());
 			orderedRegions.addAll(orderedPriorityRegions);
 			for (long region : orderedSecondaryPriorityRegions) {
 				if (!nextPriorityRegionCoverage.contains(region)) {
@@ -681,6 +734,21 @@ public final class SeedgenGenerationService {
 			}
 			for (long region : orderedPlayerRegions) {
 				if (!nextAllPriorityRegionCoverage.contains(region)) {
+					orderedRegions.add(region);
+				}
+			}
+			for (long region : orderedFreecamBackgroundRegions) {
+				if (nextFreecamBackgroundRegionCoverage.contains(region)) {
+					orderedRegions.add(region);
+				}
+			}
+			for (long region : orderedXaeroMapBackgroundRegions) {
+				if (nextXaeroMapBackgroundRegionCoverage.contains(region)) {
+					orderedRegions.add(region);
+				}
+			}
+			for (long region : orderedJourneyMapBackgroundRegions) {
+				if (nextJourneyMapBackgroundRegionCoverage.contains(region)) {
 					orderedRegions.add(region);
 				}
 			}
@@ -712,6 +780,12 @@ public final class SeedgenGenerationService {
 				secondaryPriorityRegionCoverage.addAll(nextSecondaryPriorityRegionCoverage);
 				tertiaryPriorityRegionCoverage.clear();
 				tertiaryPriorityRegionCoverage.addAll(nextTertiaryPriorityRegionCoverage);
+				freecamBackgroundRegionCoverage.clear();
+				freecamBackgroundRegionCoverage.addAll(nextFreecamBackgroundRegionCoverage);
+				xaeroMapBackgroundRegionCoverage.clear();
+				xaeroMapBackgroundRegionCoverage.addAll(nextXaeroMapBackgroundRegionCoverage);
+				journeyMapBackgroundRegionCoverage.clear();
+				journeyMapBackgroundRegionCoverage.addAll(nextJourneyMapBackgroundRegionCoverage);
 				priorityCenter = newPriorityCenter;
 				priorityRadius = newPriorityRadius;
 				secondaryPriorityCenter = newSecondaryPriorityCenter;
@@ -816,6 +890,18 @@ public final class SeedgenGenerationService {
 				traversalCenterZ = ChunkPos.getZ(secondaryPriorityCenter);
 			} else if (tertiaryPriorityCenter != NO_ACTIVE_REGION
 					&& tertiaryPriorityRegionCoverage.contains(region)) {
+				traversalCenterX = ChunkPos.getX(tertiaryPriorityCenter);
+				traversalCenterZ = ChunkPos.getZ(tertiaryPriorityCenter);
+			} else if (priorityCenter != NO_ACTIVE_REGION
+					&& freecamBackgroundRegionCoverage.contains(region)) {
+				traversalCenterX = ChunkPos.getX(priorityCenter);
+				traversalCenterZ = ChunkPos.getZ(priorityCenter);
+			} else if (secondaryPriorityCenter != NO_ACTIVE_REGION
+					&& xaeroMapBackgroundRegionCoverage.contains(region)) {
+				traversalCenterX = ChunkPos.getX(secondaryPriorityCenter);
+				traversalCenterZ = ChunkPos.getZ(secondaryPriorityCenter);
+			} else if (tertiaryPriorityCenter != NO_ACTIVE_REGION
+					&& journeyMapBackgroundRegionCoverage.contains(region)) {
 				traversalCenterX = ChunkPos.getX(tertiaryPriorityCenter);
 				traversalCenterZ = ChunkPos.getZ(tertiaryPriorityCenter);
 			}
@@ -926,6 +1012,15 @@ public final class SeedgenGenerationService {
 				return secondaryPriorityCenter;
 			}
 			if (tertiaryPriorityRegionCoverage.contains(region)) {
+				return tertiaryPriorityCenter;
+			}
+			if (freecamBackgroundRegionCoverage.contains(region)) {
+				return priorityCenter;
+			}
+			if (xaeroMapBackgroundRegionCoverage.contains(region)) {
+				return secondaryPriorityCenter;
+			}
+			if (journeyMapBackgroundRegionCoverage.contains(region)) {
 				return tertiaryPriorityCenter;
 			}
 			return NO_ACTIVE_REGION;
