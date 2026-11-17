@@ -215,7 +215,7 @@
 			"displayName": "Seedgen",
 			"description": "Locally generates vanilla terrain from a known world seed without requiring the server to generate it.",
 			"versions": {
-				"26.3": "1.2.11"
+				"26.3": "1.2.12"
 			}
 		},
 		"server-manager": {
@@ -848,6 +848,10 @@
 		"007e3e06725e3cde293bd415dfabdf021b0af11c": {
 			"id": "seedgen",
 			"version": "1.2.11"
+		},
+		"3d89661fd21ecb780dab2876973b473d54981043": {
+			"id": "seedgen",
+			"version": "1.2.12"
 		},
 		"adb1af2503ce759566bf071e103f7cad9ca91aba": {
 			"id": "server-manager",
