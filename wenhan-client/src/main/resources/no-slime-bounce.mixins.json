@@ -1,0 +1,11 @@
+{
+	"required": true,
+	"package": "com.example.wenhanclient.noslimebounce.mixin",
+	"compatibilityLevel": "JAVA_25",
+	"client": [
+		"EntityMixin"
+	],
+	"injectors": {
+		"defaultRequire": 1
+	}
+}

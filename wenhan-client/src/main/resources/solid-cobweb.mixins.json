@@ -1,0 +1,11 @@
+{
+	"required": true,
+	"package": "com.example.wenhanclient.solidcobweb.mixin",
+	"compatibilityLevel": "JAVA_25",
+	"client": [
+		"EntityCollisionContextMixin"
+	],
+	"injectors": {
+		"defaultRequire": 1
+	}
+}

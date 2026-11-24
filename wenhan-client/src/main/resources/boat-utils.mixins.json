@@ -1,0 +1,14 @@
+{
+	"required": true,
+	"package": "com.example.wenhanclient.boatutils.mixin",
+	"compatibilityLevel": "JAVA_25",
+	"client": [
+		"AbstractBoatAccessor",
+		"AbstractBoatMixin",
+		"EntityMixin",
+		"MouseHandlerMixin"
+	],
+	"injectors": {
+		"defaultRequire": 1
+	}
+}

@@ -1,0 +1,11 @@
+{
+	"required": true,
+	"package": "com.example.wenhanclient.noflightreset.mixin",
+	"compatibilityLevel": "JAVA_25",
+	"client": [
+		"LocalPlayerMixin"
+	],
+	"injectors": {
+		"defaultRequire": 1
+	}
+}

@@ -1,0 +1,12 @@
+{
+	"required": true,
+	"package": "com.example.wenhanclient.entityhighlighter.mixin",
+	"compatibilityLevel": "JAVA_25",
+	"client": [
+		"EntityHighlightMixin",
+		"DisplayHighlightColorMixin"
+	],
+	"injectors": {
+		"defaultRequire": 1
+	}
+}

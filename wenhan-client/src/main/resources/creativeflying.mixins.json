@@ -1,0 +1,12 @@
+{
+	"required": true,
+	"package": "com.example.wenhanclient.creativeflying.mixin",
+	"compatibilityLevel": "JAVA_25",
+	"client": [
+		"ConnectionMixin",
+		"LocalPlayerMixin"
+	],
+	"injectors": {
+		"defaultRequire": 1
+	}
+}

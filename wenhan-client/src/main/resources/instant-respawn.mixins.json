@@ -1,0 +1,11 @@
+{
+	"required": true,
+	"package": "com.example.wenhanclient.instantrespawn.mixin",
+	"compatibilityLevel": "JAVA_25",
+	"client": [
+		"DeathScreenMixin"
+	],
+	"injectors": {
+		"defaultRequire": 1
+	}
+}

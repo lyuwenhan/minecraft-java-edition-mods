@@ -1,0 +1,14 @@
+{
+	"required": true,
+	"package": "com.example.wenhanclient.transparentblocks.mixin",
+	"compatibilityLevel": "JAVA_25",
+	"client": [
+		"BarrierBlockMixin",
+		"ClientLevelMixin",
+		"LightBlockMixin",
+		"StructureVoidBlockMixin"
+	],
+	"injectors": {
+		"defaultRequire": 1
+	}
+}

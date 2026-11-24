@@ -1,0 +1,78 @@
+{
+	"schemaVersion": 1,
+	"id": "wenhan-client",
+	"version": "${version}",
+	"name": "Wenhan Client",
+	"description": "Client-side utility collection.",
+	"authors": [
+		"Wenhan"
+	],
+	"environment": "client",
+	"entrypoints": {
+		"client": [
+			"com.example.wenhanclient.WenhanClientMod"
+		],
+		"modmenu": [
+			"com.example.wenhanclient.client.compat.WenhanClientModMenuIntegration"
+		]
+	},
+	"mixins": [
+		"auto-aim.mixins.json",
+		"attack-through-foliage.mixins.json",
+		"better-step.mixins.json",
+		"block-explosion-guard.mixins.json",
+		"wenhan-client.mixins.json",
+		"boat-item-visibility.mixins.json",
+		"boat-utils.mixins.json",
+		"client-pseudo-unrestrict.mixins.json",
+		"no-slowdown.mixins.json",
+		"creativeflying.mixins.json",
+		"dabr-server-config-override.mixins.json",
+		"delayed-falling.mixins.json",
+		"double-jump.mixins.json",
+		"elytra-cancel.mixins.json",
+		"entityhighlighter.mixins.json",
+		"flight-disabler.mixins.json",
+		"fluid-platform.mixins.json",
+		"freecam-interaction.mixins.json",
+		"fly-speed-modifier.mixins.json",
+		"forward-lock.client.mixins.json",
+		"hide-realms.mixins.json",
+		"hide-password.mixins.json",
+		"instant-respawn.mixins.json",
+		"interaction-delay.mixins.json",
+		"jump-height.mixins.json",
+		"maplocator.mixins.json",
+		"no-camera-collision.mixins.json",
+		"no-collision.mixins.json",
+		"no-flight-reset.mixins.json",
+		"no-fog.mixins.json",
+		"no-jump-delay.mixins.json",
+		"no-levitation.mixins.json",
+		"no-slow-falling.mixins.json",
+		"no-slime-bounce.mixins.json",
+		"no-texture-rotation.mixins.json",
+		"no-texture-rotation-sodium.mixins.json",
+		"numeric-enchantment-levels.mixins.json",
+		"playerhighlighter.mixins.json",
+		"placement-restriction.mixins.json",
+		"remove-commands-length-limit.mixins.json",
+		"safe-drop.mixins.json",
+		"solid-cobweb.mixins.json",
+		"stable-mining.mixins.json",
+		"transparent-blocks.mixins.json",
+		"void-floor.mixins.json",
+		"wall-climb.mixins.json",
+		"who-i-am.mixins.json"
+	],
+	"depends": {
+		"fabricloader": ">=0.19.5",
+		"fabric-api": "*",
+		"minecraft": "26.3",
+		"java": ">=25"
+	},
+	"suggests": {
+		"modmenu": "*",
+		"yet_another_config_lib_v3": "*"
+	}
+}

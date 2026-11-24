@@ -1,0 +1,77 @@
+{
+	"render_type": "minecraft:cutout",
+	"textures": {
+		"all": "minecraft:block/structure_void",
+		"particle": "minecraft:block/structure_void"
+	},
+	"elements": [
+		{
+			"from": [
+				5,
+				5,
+				5
+			],
+			"to": [
+				11,
+				11,
+				11
+			],
+			"faces": {
+				"down": {
+					"uv": [
+						0,
+						0,
+						16,
+						16
+					],
+					"texture": "#all"
+				},
+				"up": {
+					"uv": [
+						0,
+						0,
+						16,
+						16
+					],
+					"texture": "#all"
+				},
+				"north": {
+					"uv": [
+						0,
+						0,
+						16,
+						16
+					],
+					"texture": "#all"
+				},
+				"south": {
+					"uv": [
+						0,
+						0,
+						16,
+						16
+					],
+					"texture": "#all"
+				},
+				"west": {
+					"uv": [
+						0,
+						0,
+						16,
+						16
+					],
+					"texture": "#all"
+				},
+				"east": {
+					"uv": [
+						0,
+						0,
+						16,
+						16
+					],
+					"texture": "#all"
+				}
+			}
+		}
+	]
+}

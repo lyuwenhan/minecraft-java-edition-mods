@@ -1,0 +1,11 @@
+{
+	"required": true,
+	"package": "com.example.wenhanclient.playerhighlighter.mixin",
+	"compatibilityLevel": "JAVA_25",
+	"client": [
+		"EntityGlowingMixin"
+	],
+	"injectors": {
+		"defaultRequire": 1
+	}
+}

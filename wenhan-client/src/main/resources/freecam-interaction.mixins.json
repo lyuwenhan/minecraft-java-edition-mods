@@ -1,0 +1,12 @@
+{
+	"required": true,
+	"package": "com.example.wenhanclient.freecaminteraction.mixin",
+	"compatibilityLevel": "JAVA_25",
+	"client": [
+		"MinecraftMixin",
+		"MultiPlayerGameModeMixin"
+	],
+	"injectors": {
+		"defaultRequire": 1
+	}
+}
