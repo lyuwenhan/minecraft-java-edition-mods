@@ -242,6 +242,14 @@
 			"description": "Generates missing vanilla chunks into Voxy using per-server seeds and client-side commands.",
 			"versions": {}
 		},
+		"wenhan-client": {
+			"hasIcon": true,
+			"displayName": "Wenhan Client",
+			"description": "Client-side utility collection.",
+			"versions": {
+				"26.3": "1.2.0"
+			}
+		},
 		"who-i-am": {
 			"hasIcon": true,
 			"displayName": "Who I Am",
@@ -875,6 +883,10 @@
 		},
 		"9e14e4973242e2bc8229791f4daf46e21afaa107": {
 			"id": "shared-player-data",
+			"version": "1.2.0"
+		},
+		"5d516ed00aa2860640ea13bffa9b913883417930": {
+			"id": "wenhan-client",
 			"version": "1.2.0"
 		},
 		"e9373af234358247e937b3153ae516e6beb46690": {

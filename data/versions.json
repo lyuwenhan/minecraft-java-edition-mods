@@ -456,6 +456,15 @@
 			"Planet Minecraft": "https://www.planetminecraft.com/mod/voxygen"
 		}
 	},
+	"wenhan-client": {
+		"versions": [
+			"1.2.0"
+		],
+		"hasIcon": true,
+		"displayName": "Wenhan Client",
+		"description": "Client-side utility collection.",
+		"link": {}
+	},
 	"who-i-am": {
 		"versions": [
 			"1.1.0",
