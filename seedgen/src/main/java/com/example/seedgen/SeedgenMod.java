@@ -16,8 +16,11 @@ import net.fabricmc.fabric.api.client.command.v2.ClientCommands;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.storage.LevelResource;
 
 public final class SeedgenMod implements ClientModInitializer {
@@ -348,6 +351,15 @@ public final class SeedgenMod implements ClientModInitializer {
 							.toAbsolutePath()
 							.normalize();
 		}
+		String serverKey = getServerSeedKey();
+		if (serverKey == null) {
+			return null;
+		}
+		return serverKey + "#" + getCurrentWorldName(client);
+	}
+
+	private static String getServerSeedKey() {
+		Minecraft client = Minecraft.getInstance();
 		ServerData server = client.getCurrentServer();
 		if (server == null || server.ip == null || server.ip.isBlank()) {
 			return null;
@@ -355,13 +367,22 @@ public final class SeedgenMod implements ClientModInitializer {
 		return server.ip;
 	}
 
+	private static String getCurrentWorldName(Minecraft client) {
+		return client.level == null
+				? "unknown"
+				: client.level.dimension().identifier().toString();
+	}
+
 	private static String getCurrentWorldLabel() {
 		Minecraft client = Minecraft.getInstance();
 		if (client.getSingleplayerServer() != null) {
 			return client.getSingleplayerServer().getWorldData().getLevelName();
 		}
-		ServerData server = client.getCurrentServer();
-		return server == null ? "unknown" : server.ip;
+		String serverKey = getServerSeedKey();
+		if (serverKey == null) {
+			return "unknown";
+		}
+		return serverKey + " (" + getCurrentWorldName(client) + ")";
 	}
 
 	private static Long getEffectiveSeed(Minecraft client, String worldKey) {
@@ -369,7 +390,37 @@ public final class SeedgenMod implements ClientModInitializer {
 		if (localSeed != null) {
 			return localSeed;
 		}
-		return worldKey == null ? null : config.seeds.get(worldKey);
+		if (worldKey == null) {
+			return null;
+		}
+		Long seed = config.seeds.get(worldKey);
+		if (seed != null) {
+			return seed;
+		}
+		String serverKey = getServerSeedKey();
+		if (serverKey == null) {
+			return null;
+		}
+		if (!isVanillaWorld(client.level)) {
+			// Custom server worlds must have their own explicit seed; a
+			// server-wide seed does not apply to them.
+			return null;
+		}
+		if (!Level.OVERWORLD.equals(client.level.dimension())) {
+			// The vanilla Nether and End share the seed of the Overworld.
+			seed = config.seeds.get(serverKey + "#" + Level.OVERWORLD.identifier());
+			if (seed != null) {
+				return seed;
+			}
+		}
+		return config.seeds.get(serverKey);
+	}
+
+	private static boolean isVanillaWorld(ClientLevel level) {
+		ResourceKey<Level> dimension = level == null ? null : level.dimension();
+		return Level.OVERWORLD.equals(dimension)
+				|| Level.NETHER.equals(dimension)
+				|| Level.END.equals(dimension);
 	}
 
 	private static Long getLocalServerSeed() {

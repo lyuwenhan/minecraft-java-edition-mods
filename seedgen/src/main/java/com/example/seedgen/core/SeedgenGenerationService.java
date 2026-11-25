@@ -67,6 +67,8 @@ import net.minecraft.world.level.chunk.status.ChunkStatus;
 import net.minecraft.world.level.chunk.status.ChunkStatusTasks;
 import net.minecraft.world.level.chunk.status.ChunkStep;
 import net.minecraft.world.level.chunk.status.WorldGenContext;
+import net.minecraft.world.level.dimension.BuiltinDimensionTypes;
+import net.minecraft.world.level.dimension.DimensionType;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.levelgen.NoiseBasedChunkGenerator;
 import net.minecraft.world.level.levelgen.NoiseGeneratorSettings;
@@ -168,13 +170,6 @@ public final class SeedgenGenerationService {
 		ClientLevel level = client.level;
 		configureWorkers(config.threads);
 		ResourceKey<Level> dimension = level.dimension();
-		if (!isSupportedDimension(dimension)) {
-			retire(
-					Component.translatable(
-							"command.seedgen.state.unsupported_dimension",
-							dimension.identifier().toString()));
-			return;
-		}
 
 		if (receiver == null || !receiver.isLive()) {
 			retire(Component.translatable("command.seedgen.state.destination_not_ready"));
@@ -330,12 +325,6 @@ public final class SeedgenGenerationService {
 			}
 		}
 		state = reason;
-	}
-
-	private static boolean isSupportedDimension(ResourceKey<Level> dimension) {
-		return Level.OVERWORLD.equals(dimension)
-				|| Level.NETHER.equals(dimension)
-				|| Level.END.equals(dimension);
 	}
 
 	private static synchronized void configureWorkers(int requestedThreads) {
@@ -1538,19 +1527,10 @@ public final class SeedgenGenerationService {
 			}
 
 			RegistryAccess registries = worldgenRegistries();
+			GenerationRules rules = generationRulesFor(level, dimension);
 			Holder<NoiseGeneratorSettings> settings;
 			BiomeSource biomes;
-			if (Level.OVERWORLD.equals(dimension)) {
-				settings =
-						registries
-								.lookupOrThrow(Registries.NOISE_SETTINGS)
-								.getOrThrow(NoiseGeneratorSettings.OVERWORLD);
-				Holder<MultiNoiseBiomeSourceParameterList> preset =
-						registries
-								.lookupOrThrow(Registries.MULTI_NOISE_BIOME_SOURCE_PARAMETER_LIST)
-								.getOrThrow(MultiNoiseBiomeSourceParameterLists.OVERWORLD);
-				biomes = MultiNoiseBiomeSource.createFromPreset(preset);
-			} else if (Level.NETHER.equals(dimension)) {
+			if (rules == GenerationRules.NETHER) {
 				settings =
 						registries
 								.lookupOrThrow(Registries.NOISE_SETTINGS)
@@ -1560,7 +1540,7 @@ public final class SeedgenGenerationService {
 								.lookupOrThrow(Registries.MULTI_NOISE_BIOME_SOURCE_PARAMETER_LIST)
 								.getOrThrow(MultiNoiseBiomeSourceParameterLists.NETHER);
 				biomes = MultiNoiseBiomeSource.createFromPreset(preset);
-			} else if (Level.END.equals(dimension)) {
+			} else if (rules == GenerationRules.END) {
 				settings =
 						registries
 								.lookupOrThrow(Registries.NOISE_SETTINGS)
@@ -1568,16 +1548,28 @@ public final class SeedgenGenerationService {
 				HolderGetter<Biome> biomeLookup = registries.lookupOrThrow(Registries.BIOME);
 				biomes = TheEndBiomeSource.create(biomeLookup);
 			} else {
-				throw new IllegalArgumentException(
-						"Unsupported dimension " + dimension.identifier());
+				// Overworld and custom server worlds.
+				settings =
+						registries
+								.lookupOrThrow(Registries.NOISE_SETTINGS)
+								.getOrThrow(NoiseGeneratorSettings.OVERWORLD);
+				Holder<MultiNoiseBiomeSourceParameterList> preset =
+						registries
+								.lookupOrThrow(Registries.MULTI_NOISE_BIOME_SOURCE_PARAMETER_LIST)
+								.getOrThrow(MultiNoiseBiomeSourceParameterLists.OVERWORLD);
+				biomes = MultiNoiseBiomeSource.createFromPreset(preset);
 			}
 
 			HolderGetter<NormalNoise> noises = registries.lookupOrThrow(Registries.NOISE);
 			NoiseBasedChunkGenerator structureGenerator =
 					new NoiseBasedChunkGenerator(biomes, settings);
+			ResourceKey<Level> rulesDimension =
+					rules == GenerationRules.NETHER
+							? Level.NETHER
+							: rules == GenerationRules.END ? Level.END : Level.OVERWORLD;
 			ChunkGenerator generator =
 					SeedgenWorldgenRules.simplifyGenerator(
-							structureGenerator, registries, dimension);
+							structureGenerator, registries, rulesDimension);
 			NoiseGeneratorSettings activeSettings =
 					((NoiseBasedChunkGenerator) generator).generatorSettings().value();
 			RandomState randomState = RandomState.create(noises, seed, activeSettings);
@@ -1609,6 +1601,35 @@ public final class SeedgenGenerationService {
 					null,
 					templates,
 					structureState);
+		}
+
+		private static GenerationRules generationRulesFor(
+				ClientLevel level, ResourceKey<Level> dimension) {
+			if (Level.NETHER.equals(dimension)) {
+				return GenerationRules.NETHER;
+			}
+			if (Level.END.equals(dimension)) {
+				return GenerationRules.END;
+			}
+			if (!Level.OVERWORLD.equals(dimension)) {
+				// Custom server dimensions follow the vanilla dimension type
+				// they reuse (for example a custom Nether world).
+				Holder<DimensionType> type = level.dimensionTypeRegistration();
+				if (type.is(BuiltinDimensionTypes.NETHER)) {
+					return GenerationRules.NETHER;
+				}
+				if (type.is(BuiltinDimensionTypes.END)
+						|| level.dimensionType().skybox() == DimensionType.Skybox.END) {
+					return GenerationRules.END;
+				}
+			}
+			return GenerationRules.OVERWORLD;
+		}
+
+		private enum GenerationRules {
+			OVERWORLD,
+			NETHER,
+			END
 		}
 
 		private static RegistryAccess worldgenRegistries() {

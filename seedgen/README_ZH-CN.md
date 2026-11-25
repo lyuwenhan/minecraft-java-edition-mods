@@ -10,6 +10,8 @@
 
 > [!IMPORTANT]
 > 多人服务器生成必须使用完全正确的世界种子。错误的种子会产生与服务器不一致的地形。受 [MC-55596](https://bugs.mojang.com/browse/MC/issues/MC-55596) 影响, 即使种子正确, 树木等生成地物也有可能与服务器不一致。
+>
+> 种子按服务器和世界 (维度) 分别保存。当服务器运行多个种子不同的世界 (例如大厅世界、资源世界和建筑世界) 时, 请站在各个世界中分别用 `/seedgen seed <seed>` 设置各自的种子。当一个世界包含多个维度时, 请在每个维度中输入相同的种子；原版下界和末地会自动继承已为主世界设置的种子。
 
 ## 命令
 
@@ -30,7 +32,7 @@
 |`/seedgen generateforworldmapcenter`|查看世界地图中心位置生成是否启用。|
 |`/seedgen generateforworldmapcenter on\|off\|toggle`|将打开的 Xaero 或 JourneyMap 全屏地图中心作为生成目标, 默认关闭。|
 |`/seedgen seed`|查看当前世界的有效种子。|
-|`/seedgen seed <seed>`|设置多人服务器种子；本地游戏可直接提供种子时隐藏。|
+|`/seedgen seed <seed>`|设置当前世界的多人服务器种子；本地游戏可直接提供种子时隐藏。|
 
 ## 支持版本
 

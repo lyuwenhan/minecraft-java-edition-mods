@@ -10,6 +10,8 @@ Supported mods: [Voxy](https://modrinth.com/mod/voxy), [Xaero's World Map](https
 
 > [!IMPORTANT]
 > Multiplayer generation requires the exact world seed. A wrong seed produces terrain that does not match the server. Due to [MC-55596](https://bugs.mojang.com/browse/MC/issues/MC-55596), generated features such as trees may be inconsistent with the server even when the seed is correct.
+>
+> Seeds are stored per server and per world (dimension). On servers that run several worlds with different seeds (for example a lobby, a resource and a building world), stand in each world and set its own seed with `/seedgen seed <seed>`. If a world spans several dimensions, enter the same seed inside each of them; the vanilla Nether and End automatically inherit the seed set for the Overworld.
 
 ## Commands
 
@@ -30,7 +32,7 @@ Supported mods: [Voxy](https://modrinth.com/mod/voxy), [Xaero's World Map](https
 |`/seedgen generateforworldmapcenter`|Show whether world-map-center target generation is enabled.|
 |`/seedgen generateforworldmapcenter on\|off\|toggle`|Use the center of an open Xaero or JourneyMap full-screen map as a generation target. Disabled by default.|
 |`/seedgen seed`|Show the effective seed for the current world.|
-|`/seedgen seed <seed>`|Set the multiplayer seed. Hidden when the integrated server provides it.|
+|`/seedgen seed <seed>`|Set the multiplayer seed for the current world. Hidden when the integrated server provides it.|
 
 ## Supported Versions
 
