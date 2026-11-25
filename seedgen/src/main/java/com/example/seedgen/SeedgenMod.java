@@ -34,6 +34,7 @@ public final class SeedgenMod implements ClientModInitializer {
 				(dispatcher, registryAccess) -> dispatcher.register(buildCommand()));
 		ClientTickEvents.END_CLIENT_TICK.register(
 				client -> {
+					ClientWorldSeeds.capture(client.level);
 					String worldKey = getCurrentWorldKey();
 					GeneratedChunkReceiver receiver =
 							client.level == null ? null : VoxyCompat.find(client.level);
@@ -355,7 +356,17 @@ public final class SeedgenMod implements ClientModInitializer {
 		if (serverKey == null) {
 			return null;
 		}
-		return serverKey + "#" + getCurrentWorldName(client);
+		return appendWorldHash(client, serverKey + "#" + getCurrentWorldName(client));
+	}
+
+	private static String appendWorldHash(Minecraft client, String key) {
+		String worldHash = getWorldHash(client);
+		return worldHash == null ? key : key + "#" + worldHash;
+	}
+
+	private static String getWorldHash(Minecraft client) {
+		Long hashedSeed = ClientWorldSeeds.hashedSeedOf(client.level);
+		return hashedSeed == null ? null : String.format("%016x", hashedSeed);
 	}
 
 	private static String getServerSeedKey() {
@@ -382,7 +393,11 @@ public final class SeedgenMod implements ClientModInitializer {
 		if (serverKey == null) {
 			return "unknown";
 		}
-		return serverKey + " (" + getCurrentWorldName(client) + ")";
+		String label = serverKey + " (" + getCurrentWorldName(client);
+		String worldHash = getWorldHash(client);
+		return worldHash == null
+				? label + ")"
+				: label + ", " + worldHash.substring(0, 8) + ")";
 	}
 
 	private static Long getEffectiveSeed(Minecraft client, String worldKey) {
@@ -401,19 +416,27 @@ public final class SeedgenMod implements ClientModInitializer {
 		if (serverKey == null) {
 			return null;
 		}
-		if (!isVanillaWorld(client.level)) {
-			// Custom server worlds must have their own explicit seed; a
-			// server-wide seed does not apply to them.
-			return null;
-		}
-		if (!Level.OVERWORLD.equals(client.level.dimension())) {
-			// The vanilla Nether and End share the seed of the Overworld.
-			seed = config.seeds.get(serverKey + "#" + Level.OVERWORLD.identifier());
-			if (seed != null) {
-				return seed;
+		if (isVanillaWorld(client.level)) {
+			if (!Level.OVERWORLD.equals(client.level.dimension())) {
+				// The vanilla Nether and End share the seed of the Overworld
+				// of their world.
+				seed =
+						config.seeds.get(
+								appendWorldHash(
+										client, serverKey + "#" + Level.OVERWORLD.identifier()));
+				if (seed != null) {
+					return seed;
+				}
 			}
+			// Fall back to entries written before world-seed hashes were
+			// tracked, then to the server-wide seed.
+			seed = config.seeds.get(serverKey + "#" + getCurrentWorldName(client));
+			return seed != null ? seed : config.seeds.get(serverKey);
 		}
-		return config.seeds.get(serverKey);
+		// Custom server worlds must have their own explicit seed; a
+		// server-wide seed does not apply to them.
+		seed = config.seeds.get(serverKey + "#" + getCurrentWorldName(client));
+		return seed;
 	}
 
 	private static boolean isVanillaWorld(ClientLevel level) {

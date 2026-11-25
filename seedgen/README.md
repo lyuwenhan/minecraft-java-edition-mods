@@ -11,7 +11,7 @@ Supported mods: [Voxy](https://modrinth.com/mod/voxy), [Xaero's World Map](https
 > [!IMPORTANT]
 > Multiplayer generation requires the exact world seed. A wrong seed produces terrain that does not match the server. Due to [MC-55596](https://bugs.mojang.com/browse/MC/issues/MC-55596), generated features such as trees may be inconsistent with the server even when the seed is correct.
 >
-> Seeds are stored per server and per world (dimension). On servers that run several worlds with different seeds (for example a lobby, a resource and a building world), stand in each world and set its own seed with `/seedgen seed <seed>`. If a world spans several dimensions, enter the same seed inside each of them; the vanilla Nether and End automatically inherit the seed set for the Overworld.
+> Seeds are stored per server and per world. A multiplayer world is identified by its dimension id and the hashed world seed that the server reports, so worlds that share one server address and dimension (for example the lobby, resource and building servers of a proxy network) still get separate seed entries. Stand in each world and set its own seed with `/seedgen seed <seed>`. The vanilla Nether and End automatically inherit the seed set for the Overworld of their world; a world that is split into several custom dimensions needs the seed set inside each of them.
 
 ## Commands
 

@@ -6,6 +6,7 @@
 	"client": [
 		"CappedProcessorMixin",
 		"ChunkGeneratorStructureStateMixin",
+		"ClientPacketListenerMixin",
 		"EndSpikeEntityMixin",
 		"FossilFeatureMixin",
 		"MineshaftEntityMixin",
